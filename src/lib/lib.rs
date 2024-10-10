@@ -2,7 +2,7 @@
 //
 //
 //! A Library which contains useful traits and methods for thermal 
-//! hydraulics calculations.
+//! hydraulics calculations in salt loops
 //!
 //!
 //! This crate has heavy reliance on units of measure (uom) released under 
@@ -34,13 +34,13 @@
 //!    Research and Safety Initiative, Per F. Peterson, University of 
 //!    California, Berkeley Thermal Hydraulics Laboratory
 //!
-//!    thermal_hydraulics_rs is free software; you can 
+//!    tuas_boussinesq_solver is free software; you can 
 //!    redistribute it and/or modify it
 //!    under the terms of the GNU General Public License as published by the
 //!    Free Software Foundation; either version 2 of the License, or (at your
 //!    option) any later version.
 //!
-//!    thermal_hydraulics_rs is distributed in the hope 
+//!    tuas_boussinesq_solver is distributed in the hope 
 //!    that it will be useful, but WITHOUT
 //!    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
 //!    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
@@ -89,7 +89,7 @@ extern crate uom;
 #[macro_use]
 extern crate peroxide;
 
-/// provides error types for thermal_hydraulics_rs
+/// provides error types for tuas_boussinesq_solver
 pub mod thermal_hydraulics_error;
 
 #[warn(missing_docs)]

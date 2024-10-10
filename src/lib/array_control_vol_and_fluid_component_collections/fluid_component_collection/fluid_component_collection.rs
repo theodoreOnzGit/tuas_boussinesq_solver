@@ -12,7 +12,7 @@ use std::fmt::Debug;
 //
 //
 /// License
-///    This file is part of thermal_hydraulics_rs, a partial library of the
+///    This file is part of tuas_boussinesq_solver, a partial library of the
 ///    thermal hydraulics library written in rust meant to help with the
 ///    fluid mechanics and heat transfer aspects of the calculations
 ///     
@@ -20,12 +20,12 @@ use std::fmt::Debug;
 ///    Research and Safety Initiative, Per F. Peterson, University of 
 ///    California, Berkeley Thermal Hydraulics Laboratory
 ///
-///    thermal_hydraulics_rs is free software; you can redistribute it and/or modify it
+///    tuas_boussinesq_solver is free software; you can redistribute it and/or modify it
 ///    under the terms of the GNU General Public License as published by the
 ///    Free Software Foundation; either version 2 of the License, or (at your
 ///    option) any later version.
 ///
-///    thermal_hydraulics_rs is distributed in the hope that it will be useful, but WITHOUT
+///    tuas_boussinesq_solver is distributed in the hope that it will be useful, but WITHOUT
 ///    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
 ///    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
 ///    for more details.

@@ -13,14 +13,14 @@ those traits for your own projects.
 An easy way to start is to use cargo to add the fluid mechanics rust
 package
 ```bash
-cargo add thermal_hydraulics_rs
+cargo add tuas_boussinesq_solver
 ```
 
 If you want the full thermal hydraulics library: 
 
 ```rust 
-extern crate thermal_hydraulics_rs;
-use thermal_hydraulics_rs::prelude::beta_testing::*;
+extern crate tuas_boussinesq_solver
+use tuas_boussinesq_solver::prelude::beta_testing::*;
 ```
 
 Do note that the alpha nightly API 
@@ -127,7 +127,7 @@ For Profiling:
 
 ```bash
 sudo sysctl kernel.perf_event_paranoid=2
-cargo flamegraph --unit-test thermal_hydraulics_rs
+cargo flamegraph --unit-test tuas_boussinesq_solver
 ```
 
 
