@@ -27,13 +27,13 @@ use super::liquid_database::dowtherm_a::get_dowtherm_a_density;
 /// use uom::si::f64::*;
 /// use uom::si::pressure::atmosphere;
 /// use uom::si::thermodynamic_temperature::kelvin;
-/// use thermal_hydraulics_rs::tuas_boussinesq_solver::
+/// use tuas_boussinesq_solver::
 /// boussinesq_thermophysical_properties::density::try_get_rho;
 ///
-/// use thermal_hydraulics_rs::tuas_boussinesq_solver::
+/// use tuas_boussinesq_solver::
 /// boussinesq_thermophysical_properties::SolidMaterial::SteelSS304L;
 ///
-/// use thermal_hydraulics_rs::tuas_boussinesq_solver::
+/// use tuas_boussinesq_solver::
 /// boussinesq_thermophysical_properties::Material;
 ///
 /// let steel = Material::Solid(SteelSS304L);

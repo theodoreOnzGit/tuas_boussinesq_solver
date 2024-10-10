@@ -30,7 +30,7 @@ ndarray-linalg = { version = "0.16.0", features = ["intel-mkl-static"] }
 ndarray-linalg = { version = "0.16.0", features = ["openblas-system"] }
 
 [lib]
-name = "thermal_hydraulics_rs"
+name = "tuas_boussinesq_solver"
 path = "src/lib/lib.rs"
 
 

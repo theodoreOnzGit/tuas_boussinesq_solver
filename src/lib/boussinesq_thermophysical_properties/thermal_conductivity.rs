@@ -25,11 +25,11 @@ use super::liquid_database::dowtherm_a::get_dowtherm_a_thermal_conductivity;
 /// use uom::si::f64::*;
 /// use uom::si::thermal_conductivity::watt_per_meter_kelvin;
 /// use uom::si::thermodynamic_temperature::kelvin;
-/// use thermal_hydraulics_rs::tuas_boussinesq_solver::boussinesq_thermophysical_properties::
+/// use tuas_boussinesq_solver::boussinesq_thermophysical_properties::
 /// SolidMaterial::SteelSS304L;
-/// use thermal_hydraulics_rs::tuas_boussinesq_solver::boussinesq_thermophysical_properties::
+/// use tuas_boussinesq_solver::boussinesq_thermophysical_properties::
 /// Material;
-/// use thermal_hydraulics_rs::tuas_boussinesq_solver::boussinesq_thermophysical_properties::
+/// use tuas_boussinesq_solver::boussinesq_thermophysical_properties::
 /// thermal_conductivity::try_get_kappa_thermal_conductivity;
 ///
 /// use uom::si::pressure::atmosphere;

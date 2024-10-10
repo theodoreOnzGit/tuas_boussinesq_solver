@@ -9,15 +9,15 @@ use crate::thermal_hydraulics_error::ThermalHydraulicsLibError;
 /// use uom::si::f64::*;
 /// use uom::si::pressure::atmosphere;
 /// use uom::si::thermodynamic_temperature::degree_celsius;
-/// use thermal_hydraulics_rs::tuas_boussinesq_solver::
+/// use tuas_boussinesq_solver::
 /// boussinesq_thermophysical_properties::thermal_diffusivity::try_get_alpha_thermal_diffusivity;
-/// use thermal_hydraulics_rs::tuas_boussinesq_solver::
+/// use tuas_boussinesq_solver::
 /// boussinesq_thermophysical_properties::thermal_conductivity::try_get_kappa_thermal_conductivity;
 ///
-/// use thermal_hydraulics_rs::tuas_boussinesq_solver::
+/// use tuas_boussinesq_solver::
 /// boussinesq_thermophysical_properties::SolidMaterial::SteelSS304L;
 ///
-/// use thermal_hydraulics_rs::tuas_boussinesq_solver::
+/// use tuas_boussinesq_solver::
 /// boussinesq_thermophysical_properties::Material;
 ///
 /// let steel = Material::Solid(SteelSS304L);

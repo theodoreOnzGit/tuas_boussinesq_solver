@@ -51,7 +51,7 @@ use uom::si::f64::*;
 ///
 /// use uom::si::{temperature_interval, thermodynamic_temperature};
 /// use uom::si::f64::*;
-/// use thermal_hydraulics_rs::tuas_boussinesq_solver::heat_transfer_correlations::
+/// use tuas_boussinesq_solver::heat_transfer_correlations::
 /// thermal_resistance::subtract_two_thermodynamic_temperatures;
 ///
 /// let t1 = ThermodynamicTemperature::new::

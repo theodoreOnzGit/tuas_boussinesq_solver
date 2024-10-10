@@ -14,7 +14,7 @@ use uom::si::f64::*;
 ///
 /// use uom::si::length::meter;
 /// use uom::si::f64::*;
-/// use thermal_hydraulics_rs::tuas_boussinesq_solver::control_volume_dimensions
+/// use tuas_boussinesq_solver::control_volume_dimensions
 /// ::XThicknessThermalConduction;
 ///
 /// // let's say you have a thickness of 0.5 which you want to describe

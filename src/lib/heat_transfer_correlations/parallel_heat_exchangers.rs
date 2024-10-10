@@ -13,7 +13,7 @@ thermal_resistance::subtract_two_thermodynamic_temperatures;
 ///
 /// ```rust
 /// extern crate approx;
-/// use thermal_hydraulics_rs::tuas_boussinesq_solver::heat_transfer_correlations::
+/// use tuas_boussinesq_solver::heat_transfer_correlations::
 /// parallel_heat_exchangers::log_mean_temperature_difference;
 /// 
 ///

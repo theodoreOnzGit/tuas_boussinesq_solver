@@ -19,13 +19,13 @@ use super::liquid_database;
 /// use uom::si::f64::*;
 /// use uom::si::pressure::atmosphere;
 /// use uom::si::thermodynamic_temperature::kelvin;
-/// use thermal_hydraulics_rs::tuas_boussinesq_solver::
+/// use tuas_boussinesq_solver::
 /// boussinesq_thermophysical_properties::dynamic_viscosity::try_get_mu_viscosity;
 ///
-/// use thermal_hydraulics_rs::tuas_boussinesq_solver::boussinesq_thermophysical_properties
+/// use tuas_boussinesq_solver::boussinesq_thermophysical_properties
 /// ::LiquidMaterial::DowthermA;
 ///
-/// use thermal_hydraulics_rs::tuas_boussinesq_solver::
+/// use tuas_boussinesq_solver::
 /// boussinesq_thermophysical_properties::Material;
 ///
 /// let dowtherm_a = Material::Liquid(DowthermA);

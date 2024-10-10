@@ -24,11 +24,11 @@ use temperature_from_specific_enthalpy::*;
 /// joule_per_gram_degree_celsius};
 /// use uom::si::thermodynamic_temperature::kelvin;
 /// use uom::si::temperature_interval::degree_celsius;
-/// use thermal_hydraulics_rs::tuas_boussinesq_solver::boussinesq_thermophysical_properties::
+/// use tuas_boussinesq_solver::boussinesq_thermophysical_properties::
 /// SolidMaterial::{SteelSS304L,Copper};
-/// use thermal_hydraulics_rs::tuas_boussinesq_solver::boussinesq_thermophysical_properties::
+/// use tuas_boussinesq_solver::boussinesq_thermophysical_properties::
 /// Material;
-/// use thermal_hydraulics_rs::tuas_boussinesq_solver::boussinesq_thermophysical_properties::
+/// use tuas_boussinesq_solver::boussinesq_thermophysical_properties::
 /// specific_enthalpy::try_get_h;
 ///
 /// use uom::si::pressure::atmosphere;
@@ -120,16 +120,16 @@ pub fn try_get_h(material: Material,
 /// use uom::si::thermodynamic_temperature::{kelvin,degree_celsius};
 /// use uom::si::temperature_interval::degree_celsius as 
 /// interval_degree_celsius;
-/// use thermal_hydraulics_rs::tuas_boussinesq_solver::boussinesq_thermophysical_properties::
+/// use tuas_boussinesq_solver::boussinesq_thermophysical_properties::
 /// SolidMaterial::{SteelSS304L,Copper};
-/// use thermal_hydraulics_rs::tuas_boussinesq_solver::boussinesq_thermophysical_properties::
+/// use tuas_boussinesq_solver::boussinesq_thermophysical_properties::
 /// Material;
-/// use thermal_hydraulics_rs::tuas_boussinesq_solver::boussinesq_thermophysical_properties::
+/// use tuas_boussinesq_solver::boussinesq_thermophysical_properties::
 /// specific_enthalpy::try_get_h;
 ///
 /// use uom::si::pressure::atmosphere;
 ///
-/// use thermal_hydraulics_rs::tuas_boussinesq_solver::boussinesq_thermophysical_properties::
+/// use tuas_boussinesq_solver::boussinesq_thermophysical_properties::
 /// specific_enthalpy::try_get_temperature_from_h;
 ///
 ///

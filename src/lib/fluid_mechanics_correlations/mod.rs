@@ -102,7 +102,7 @@ use crate::thermal_hydraulics_error::ThermalHydraulicsLibError;
 /// However, Re = 0 will not work!
 /// ```rust
 /// let darcy_friction_factor = 
-///     thermal_hydraulics_rs::tuas_boussinesq_solver::
+///     tuas_boussinesq_solver::
 ///     fluid_mechanics_correlations::darcy(1800.0,0.0015).unwrap();
 ///
 /// println!("{}", darcy_friction_factor);
@@ -124,7 +124,7 @@ ThermalHydraulicsLibError>{
 /// However, Re = 0 will not work!
 /// ```rust
 /// let moody_friction_factor = 
-///     thermal_hydraulics_rs::tuas_boussinesq_solver::
+///     tuas_boussinesq_solver::
 ///     fluid_mechanics_correlations::moody(1800.0,0.0015).unwrap();
 ///
 /// println!("{}", moody_friction_factor);
@@ -151,7 +151,7 @@ ThermalHydraulicsLibError>{
 /// However, Re = 0 will not work!
 /// ```rust
 ///    let fldk = 
-///        thermal_hydraulics_rs::tuas_boussinesq_solver:: 
+///        tuas_boussinesq_solver:: 
 ///        fluid_mechanics_correlations::fldk(
 ///            15000.0,0.00014,10.0,5.0).unwrap();
 ///
@@ -202,21 +202,21 @@ pub fn fldk(reynolds_number: f64,
 ///
 /// ```rust
 /// let bejan_d = 
-///     thermal_hydraulics_rs::tuas_boussinesq_solver::
+///     tuas_boussinesq_solver::
 ///     fluid_mechanics_correlations::get_bejan_d(
 ///         0.00000000000001,0.00014,10.0,5.0).unwrap();
 ///
 /// println!("{}", bejan_d);
 ///
 /// let bejan_d = 
-///     thermal_hydraulics_rs::tuas_boussinesq_solver::
+///     tuas_boussinesq_solver::
 ///     fluid_mechanics_correlations::get_bejan_d(
 ///         -5000.0,0.00014,10.0,5.0).unwrap();
 ///
 /// println!("{}", bejan_d);
 ///
 /// let bejan_d = 
-///     thermal_hydraulics_rs::tuas_boussinesq_solver::
+///     tuas_boussinesq_solver::
 ///     fluid_mechanics_correlations::get_bejan_d(
 ///         0.0,0.00014,10.0,5.0).unwrap();
 ///
@@ -273,14 +273,14 @@ pub fn get_bejan_d(reynolds_number: f64,
 ///
 /// extern crate approx;
 /// let bejan_d = 
-/// thermal_hydraulics_rs::tuas_boussinesq_solver::fluid_mechanics_correlations::
+/// tuas_boussinesq_solver::fluid_mechanics_correlations::
 ///     get_bejan_d(
 ///         5000.0,0.00014,10.0,5.0).unwrap();
 ///
 /// println!("{}", bejan_d);
 ///
 /// let reynolds_number = 
-/// thermal_hydraulics_rs::tuas_boussinesq_solver::fluid_mechanics_correlations::
+/// tuas_boussinesq_solver::fluid_mechanics_correlations::
 ///     get_reynolds_number(
 ///         bejan_d,0.00014,10.0,5.0).unwrap();
 ///
