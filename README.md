@@ -80,6 +80,9 @@ sudo pacman -S openblas
 
 Tested on Arch Linux and Linux Mint distros. 
 
+## Development To Do 
+
+1. Shell and Tube Heat Exchanger (STHE) constructor
 
 ## Cargo update dependencies 
 
