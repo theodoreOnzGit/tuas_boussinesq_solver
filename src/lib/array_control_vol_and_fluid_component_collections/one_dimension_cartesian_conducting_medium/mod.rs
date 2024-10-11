@@ -7,7 +7,7 @@ use crate::single_control_vol::SingleCVNode;
 use crate::heat_transfer_correlations::nusselt_number_correlations::enums::NusseltCorrelation;
 use crate::boussinesq_thermophysical_properties::Material;
 
-use crate::thermal_hydraulics_error::TuasLibError;
+use crate::tuas_lib_error::TuasLibError;
 
 
 /// for 1D Cartesian Conduction array,

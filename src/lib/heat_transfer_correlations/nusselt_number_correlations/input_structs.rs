@@ -1,6 +1,6 @@
 use uom::{si::{f64::*, ratio::ratio}, ConstZero};
 
-use crate::thermal_hydraulics_error::TuasLibError;
+use crate::tuas_lib_error::TuasLibError;
 
 use super::pipe_correlations::*;
 /// contains information Nusselt Prandtl Reynold's

@@ -1,4 +1,4 @@
-use crate::thermal_hydraulics_error::TuasLibError;
+use crate::tuas_lib_error::TuasLibError;
 use uom::si::f64::*;
 
 use super::{solid_database::{copper::copper_surf_roughness, fiberglass::fiberglass_surf_roughness}, Material};

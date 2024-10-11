@@ -4,7 +4,7 @@ use crate::boussinesq_thermophysical_properties::Material;
 use crate::single_control_vol::SingleCVNode;
 use crate::heat_transfer_correlations::heat_transfer_interactions::heat_transfer_interaction_enums::HeatTransferInteractionType;
 
-use crate::thermal_hydraulics_error::TuasLibError;
+use crate::tuas_lib_error::TuasLibError;
 
 /// calculates the interaction between a heat addition BC and 
 /// a control volume 

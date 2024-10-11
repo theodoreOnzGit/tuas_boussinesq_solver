@@ -1,5 +1,5 @@
 use uom::si::f64::*;
-use crate::thermal_hydraulics_error::TuasLibError;
+use crate::tuas_lib_error::TuasLibError;
 
 use super::liquid_database;
 use super::liquid_database::flibe::get_flibe_constant_pressure_specific_heat_capacity;

@@ -5,7 +5,7 @@ thermal_conductivity::try_get_kappa_thermal_conductivity;
 use crate::control_volume_dimensions::*;
 use crate::boussinesq_thermophysical_properties::Material;
 use crate::heat_transfer_correlations::thermal_resistance::try_get_thermal_conductance_annular_cylinder;
-use crate::thermal_hydraulics_error::TuasLibError;
+use crate::tuas_lib_error::TuasLibError;
 use uom::si::f64::*;
 use uom::si::thermal_conductance::watt_per_kelvin;
 use uom::si::thermodynamic_temperature::kelvin;

@@ -1,5 +1,5 @@
 use uom::si::f64::*;
-use crate::thermal_hydraulics_error::TuasLibError;
+use crate::tuas_lib_error::TuasLibError;
 use crate::heat_transfer_correlations::
 thermal_resistance::subtract_two_thermodynamic_temperatures;
 /// LMTD = (delta T in - delta T out) / (ln delta T in - ln delta T out)

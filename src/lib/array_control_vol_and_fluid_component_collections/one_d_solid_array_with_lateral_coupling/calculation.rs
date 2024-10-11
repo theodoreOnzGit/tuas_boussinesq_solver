@@ -10,7 +10,7 @@ use ndarray::*;
 use uom::si::power::watt;
 
 
-use crate::thermal_hydraulics_error::TuasLibError;
+use crate::tuas_lib_error::TuasLibError;
 use ndarray_linalg::error::LinalgError;
 
 use super::SolidColumn;

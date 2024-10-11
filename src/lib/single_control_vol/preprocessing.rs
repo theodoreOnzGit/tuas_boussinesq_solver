@@ -1,4 +1,4 @@
-use crate::thermal_hydraulics_error::TuasLibError;
+use crate::tuas_lib_error::TuasLibError;
 use crate::boussinesq_thermophysical_properties::
 density::try_get_rho;
 use crate::boussinesq_thermophysical_properties::

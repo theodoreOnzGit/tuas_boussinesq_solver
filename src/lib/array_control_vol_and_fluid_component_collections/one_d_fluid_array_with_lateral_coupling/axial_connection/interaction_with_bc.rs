@@ -4,7 +4,7 @@ use crate::single_control_vol::boundary_condition_interactions::constant_heat_ad
 use crate::single_control_vol::boundary_condition_interactions::constant_heat_addition_to_bcs::calculate_constant_heat_addition_front_single_cv_back;
 use crate::single_control_vol::SingleCVNode;
 
-use crate::thermal_hydraulics_error::TuasLibError;
+use crate::tuas_lib_error::TuasLibError;
 
 use std::f64::consts::PI;
 

@@ -67,7 +67,7 @@ extern crate peroxide;
 use peroxide::prelude::*;
 
 use crate::boussinesq_thermophysical_properties::{range_check, LiquidMaterial, Material};
-use crate::thermal_hydraulics_error::TuasLibError;
+use crate::tuas_lib_error::TuasLibError;
 
 /// function to obtain dowtherm A density
 /// given a temperature

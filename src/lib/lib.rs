@@ -90,7 +90,7 @@ extern crate uom;
 extern crate peroxide;
 
 /// provides error types for tuas_boussinesq_solver
-pub mod thermal_hydraulics_error;
+pub mod tuas_lib_error;
 
 #[warn(missing_docs)]
 /// prelude, for easy importing 

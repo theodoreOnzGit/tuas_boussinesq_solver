@@ -1,5 +1,5 @@
 use super::SimpleShellAndTubeHeatExchanger;
-use crate::thermal_hydraulics_error::TuasLibError;
+use crate::tuas_lib_error::TuasLibError;
 use uom::si::f64::*;
 use uom::si::power::watt;
 use crate::array_control_vol_and_fluid_component_collections::one_d_fluid_array_with_lateral_coupling::FluidArray;

@@ -6,7 +6,7 @@ use super::cv_types::CVType;
 
 use crate::boundary_conditions::BCType;
 use crate::boussinesq_thermophysical_properties::density::try_get_rho;
-use crate::thermal_hydraulics_error::TuasLibError;
+use crate::tuas_lib_error::TuasLibError;
 
 impl HeatTransferEntity {
 

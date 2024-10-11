@@ -5,7 +5,7 @@ use uom::si::mass_density::kilogram_per_cubic_meter;
 use uom::si::specific_heat_capacity::joule_per_kilogram_kelvin;
 use uom::si::thermal_conductivity::watt_per_meter_kelvin;
 use crate::boussinesq_thermophysical_properties::*;
-use crate::thermal_hydraulics_error::TuasLibError;
+use crate::tuas_lib_error::TuasLibError;
 use uom::si::thermodynamic_temperature::kelvin;
 
 /// density ranges not quite given in original text 

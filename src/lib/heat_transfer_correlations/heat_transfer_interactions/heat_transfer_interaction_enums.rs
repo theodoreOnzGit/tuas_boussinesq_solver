@@ -5,7 +5,7 @@ use uom::si::f64::*;
 use super::heat_transfer_geometry::*;
 
 use crate::heat_transfer_correlations::heat_transfer_interactions::*;
-use crate::thermal_hydraulics_error::TuasLibError;
+use crate::tuas_lib_error::TuasLibError;
 
 
 

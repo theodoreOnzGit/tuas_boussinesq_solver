@@ -16,7 +16,7 @@ use crate::array_control_vol_and_fluid_component_collections::one_d_solid_array_
 use crate::array_control_vol_and_fluid_component_collections::one_d_fluid_array_with_lateral_coupling::FluidArray;
 use crate::array_control_vol_and_fluid_component_collections::fluid_component_collection::fluid_component_traits::FluidComponentTrait;
 
-use crate::thermal_hydraulics_error::TuasLibError;
+use crate::tuas_lib_error::TuasLibError;
 
 // preprocessing is where heat transfer entities 
 // are connected to each other whether axially or laterally

@@ -68,7 +68,7 @@ use uom::si::available_energy::joule_per_kilogram;
 extern crate peroxide;
 use peroxide::fuga::*;
 
-use crate::thermal_hydraulics_error::TuasLibError;
+use crate::tuas_lib_error::TuasLibError;
 
 /// function to obtain custom fluid density
 /// given a temperature

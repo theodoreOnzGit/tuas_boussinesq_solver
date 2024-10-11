@@ -1,7 +1,7 @@
 //! This module contains a library of liquid and solid 
 //! thermophysical properties
 
-use crate::thermal_hydraulics_error::TuasLibError;
+use crate::tuas_lib_error::TuasLibError;
 use uom::si::f64::*;
 use uom::si::thermodynamic_temperature::degree_celsius;
 

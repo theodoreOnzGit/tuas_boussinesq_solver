@@ -1,5 +1,5 @@
 use uom::{si::f64::*, ConstZero};
-use crate::thermal_hydraulics_error::TuasLibError;
+use crate::tuas_lib_error::TuasLibError;
 
 use super::heat_transfer_interaction_enums::{DataAdvection, HeatTransferInteractionType};
 /// now, advection is quite tricky because for conduction, the 

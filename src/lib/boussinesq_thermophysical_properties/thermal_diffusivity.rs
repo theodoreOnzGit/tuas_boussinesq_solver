@@ -1,7 +1,7 @@
 use uom::si::f64::*;
 
 use super::{density, specific_heat_capacity, thermal_conductivity, LiquidMaterial, Material, SolidMaterial};
-use crate::thermal_hydraulics_error::TuasLibError;
+use crate::tuas_lib_error::TuasLibError;
 
 
 /// calculates thermal diffusivity of a material

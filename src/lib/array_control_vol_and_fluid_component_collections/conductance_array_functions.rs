@@ -7,7 +7,7 @@ use uom::si::thermodynamic_temperature::kelvin;
 
 use crate::boussinesq_thermophysical_properties::specific_enthalpy::try_get_h;
 use crate::single_control_vol::SingleCVNode;
-use crate::thermal_hydraulics_error::TuasLibError;
+use crate::tuas_lib_error::TuasLibError;
 
 use super::standalone_fluid_nodes::solve_conductance_matrix_power_vector;
 

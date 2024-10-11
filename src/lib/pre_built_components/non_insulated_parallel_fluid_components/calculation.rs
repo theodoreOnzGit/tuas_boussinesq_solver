@@ -8,7 +8,7 @@ use crate::boussinesq_thermophysical_properties::prandtl::try_get_prandtl;
 use crate::boussinesq_thermophysical_properties::specific_enthalpy::try_get_h;
 use crate::boussinesq_thermophysical_properties::thermal_conductivity::try_get_kappa_thermal_conductivity;
 use crate::boussinesq_thermophysical_properties::volumetric_heat_capacity::try_get_rho_cp;
-use crate::thermal_hydraulics_error::TuasLibError;
+use crate::tuas_lib_error::TuasLibError;
 use std::thread::JoinHandle;
 use std::thread;
 use ndarray::*;

@@ -4,7 +4,7 @@ use super::SimpleShellAndTubeHeatExchanger;
 use uom::si::f64::*;
 use uom::si::ratio::ratio;
 use uom::si::pressure::atmosphere;
-use crate::thermal_hydraulics_error::TuasLibError;
+use crate::tuas_lib_error::TuasLibError;
 use crate::heat_transfer_correlations::nusselt_number_correlations::enums::NusseltCorrelation;
 use crate::boussinesq_thermophysical_properties::SolidMaterial;
 use crate::boussinesq_thermophysical_properties::LiquidMaterial;

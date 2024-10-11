@@ -1,7 +1,7 @@
 use uom::si::f64::*;
 
 use super::{churchill_friction_factor, dimensionalisation};
-use crate::thermal_hydraulics_error::TuasLibError;
+use crate::tuas_lib_error::TuasLibError;
 
 /// a function calculates pressure
 /// loss given a mass flowrate and pipe properties

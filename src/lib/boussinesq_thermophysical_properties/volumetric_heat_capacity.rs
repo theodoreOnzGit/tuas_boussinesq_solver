@@ -1,6 +1,6 @@
 use uom::si::f64::*;
 
-use crate::thermal_hydraulics_error::TuasLibError;
+use crate::tuas_lib_error::TuasLibError;
 
 use super::{Material, density, specific_heat_capacity};
 

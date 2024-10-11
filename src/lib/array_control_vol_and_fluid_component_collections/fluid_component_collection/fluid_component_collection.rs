@@ -53,7 +53,7 @@ use uom::si::mass_rate::kilogram_per_second;
 use super::collection_series_and_parallel_functions::FluidComponentCollectionSeriesAssociatedFunctions;
 use super::collection_series_and_parallel_functions::FluidComponentCollectionParallelAssociatedFunctions;
 use super::fluid_component::FluidComponent;
-use crate::thermal_hydraulics_error::TuasLibError;
+use crate::tuas_lib_error::TuasLibError;
 
 
 /// a fluid component collection,

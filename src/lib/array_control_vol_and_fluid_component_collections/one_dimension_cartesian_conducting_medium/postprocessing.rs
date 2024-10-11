@@ -1,5 +1,5 @@
 use super::CartesianConduction1DArray;
-use crate::thermal_hydraulics_error::TuasLibError;
+use crate::tuas_lib_error::TuasLibError;
 use uom::si::f64::*;
 
 impl CartesianConduction1DArray {

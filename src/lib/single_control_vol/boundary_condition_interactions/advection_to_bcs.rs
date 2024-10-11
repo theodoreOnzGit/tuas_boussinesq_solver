@@ -7,7 +7,7 @@ use crate::boussinesq_thermophysical_properties::specific_enthalpy::try_get_h;
 use crate::heat_transfer_correlations::heat_transfer_interactions::advection_heat_rate;
 use crate::heat_transfer_correlations::heat_transfer_interactions::heat_transfer_interaction_enums::DataAdvection;
 use crate::single_control_vol::SingleCVNode;
-use crate::thermal_hydraulics_error::TuasLibError;
+use crate::tuas_lib_error::TuasLibError;
 
 
 impl SingleCVNode {

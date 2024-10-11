@@ -9,7 +9,7 @@ use crate::boussinesq_thermophysical_properties::thermal_diffusivity::try_get_al
 use crate::boussinesq_thermophysical_properties::Material;
 use crate::heat_transfer_correlations::heat_transfer_interactions::heat_transfer_interaction_enums::HeatTransferInteractionType;
 use crate::single_control_vol::SingleCVNode;
-use crate::thermal_hydraulics_error::TuasLibError;
+use crate::tuas_lib_error::TuasLibError;
 
 impl SingleCVNode {
     /// calculates a conductance interaction between the constant 

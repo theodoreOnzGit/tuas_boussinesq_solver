@@ -5,7 +5,7 @@ use uom::si::mass_rate::kilogram_per_second;
 use uom::ConstZero;
 
 use crate::array_control_vol_and_fluid_component_collections::one_d_fluid_array_with_lateral_coupling::fluid_component_calculation::DimensionlessDarcyLossCorrelations;
-use crate::thermal_hydraulics_error::TuasLibError;
+use crate::tuas_lib_error::TuasLibError;
 use crate::fluid_mechanics_correlations::dimensionalisation;
 use crate::fluid_mechanics_correlations::churchill_friction_factor;
 /// This is a generic fluid component trait,

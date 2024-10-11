@@ -1,5 +1,5 @@
 use self::cv_types::CVType;
-use crate::thermal_hydraulics_error::TuasLibError;
+use crate::tuas_lib_error::TuasLibError;
 use crate::boundary_conditions::BCType;
 use uom::num_traits::Zero;
 use uom::si::f64::*;

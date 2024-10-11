@@ -1,5 +1,5 @@
 use uom::si::f64::*;
-use crate::thermal_hydraulics_error::TuasLibError;
+use crate::tuas_lib_error::TuasLibError;
 use super::{Material, LiquidMaterial};
 use super::dynamic_viscosity::try_get_mu_viscosity;
 use super::specific_heat_capacity::try_get_cp;

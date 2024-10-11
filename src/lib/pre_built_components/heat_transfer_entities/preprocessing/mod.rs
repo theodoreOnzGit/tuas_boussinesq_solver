@@ -10,7 +10,7 @@ use crate::heat_transfer_correlations::heat_transfer_interactions::heat_transfer
 use crate::heat_transfer_correlations::heat_transfer_interactions::*;
 use crate::single_control_vol::boundary_condition_interactions::constant_heat_addition_to_bcs::calculate_single_cv_front_constant_heat_addition_back;
 use crate::single_control_vol::SingleCVNode;
-use crate::thermal_hydraulics_error::TuasLibError;
+use crate::tuas_lib_error::TuasLibError;
 use crate::heat_transfer_correlations::heat_transfer_interactions::heat_transfer_interaction_enums::HeatTransferInteractionType;
 
 use self::single_cv_and_bc_interactions::calculate_bc_front_cv_back_advection_for_heat_flux_or_heat_addition;

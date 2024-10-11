@@ -1,6 +1,6 @@
 use super::SolidColumn;
 use uom::si::f64::*;
-use crate::thermal_hydraulics_error::TuasLibError;
+use crate::tuas_lib_error::TuasLibError;
 
 impl SolidColumn { 
     /// obtains a clone of the temperature vector within the CV 

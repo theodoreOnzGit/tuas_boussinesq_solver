@@ -1,7 +1,7 @@
 use uom::num_traits::Zero;
 use uom::si::f64::*;
 
-use crate::thermal_hydraulics_error::TuasLibError;
+use crate::tuas_lib_error::TuasLibError;
 
 /// Contains all the types of Boundary Conditions (BCs) you can use 
 #[derive(Debug,Clone,Copy,PartialEq)]

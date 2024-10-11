@@ -4,7 +4,7 @@ use uom::si::f64::*;
 use uom::si::pressure::atmosphere;
 
 use super::boussinesq_thermophysical_properties::Material;
-use crate::thermal_hydraulics_error::TuasLibError;
+use crate::tuas_lib_error::TuasLibError;
 use crate::boussinesq_thermophysical_properties::
 density::try_get_rho;
 use crate::boussinesq_thermophysical_properties::
@@ -662,3 +662,6 @@ pub mod boundary_condition_interactions;
 /// such as that of calculating 
 /// between conductance and advection interactions 
 pub mod wrappers_for_heat_transfer_interaction;
+
+/// tests for single control volume 
+pub mod tests;

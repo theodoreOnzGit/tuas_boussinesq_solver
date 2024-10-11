@@ -5,7 +5,7 @@ use crate::boussinesq_thermophysical_properties::specific_enthalpy::try_get_h;
 use uom::si::f64::*;
 use ndarray::*;
 
-use crate::thermal_hydraulics_error::TuasLibError;
+use crate::tuas_lib_error::TuasLibError;
 use ndarray_linalg::error::LinalgError;
 
 use self::fluid_component_calculation::DimensionlessDarcyLossCorrelations;

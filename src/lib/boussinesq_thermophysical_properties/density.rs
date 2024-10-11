@@ -1,7 +1,7 @@
 use uom::si::f64::MassDensity;
 use uom::si::f64::Pressure;
 use uom::si::f64::ThermodynamicTemperature;
-use crate::thermal_hydraulics_error::TuasLibError;
+use crate::tuas_lib_error::TuasLibError;
 
 use super::liquid_database;
 use super::liquid_database::flibe::get_flibe_density;

@@ -1,4 +1,4 @@
-use crate::thermal_hydraulics_error::TuasLibError;
+use crate::tuas_lib_error::TuasLibError;
 
 use super::SingleCVNode;
 use uom::si::f64::*;

@@ -4,7 +4,7 @@ use uom::si::f64::*;
 use ndarray::*;
 use uom::si::thermodynamic_temperature::kelvin;
 
-use crate::thermal_hydraulics_error::TuasLibError;
+use crate::tuas_lib_error::TuasLibError;
 
 use super::SolidColumn;
 

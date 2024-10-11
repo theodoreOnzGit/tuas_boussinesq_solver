@@ -6,7 +6,7 @@ use crate::boussinesq_thermophysical_properties::thermal_conductivity::try_get_k
 use crate::boussinesq_thermophysical_properties::volumetric_heat_capacity::try_get_rho_cp;
 use crate::boussinesq_thermophysical_properties::Material;
 use crate::control_volume_dimensions::UNIT_AREA_SQ_METER_FOR_ONE_DIMENSIONAL_CALCS;
-use crate::thermal_hydraulics_error::TuasLibError;
+use crate::tuas_lib_error::TuasLibError;
 use crate::boussinesq_thermophysical_properties::thermal_diffusivity::try_get_alpha_thermal_diffusivity;
 
 

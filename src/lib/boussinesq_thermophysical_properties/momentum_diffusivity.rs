@@ -1,7 +1,7 @@
 use uom::si::f64::*;
 
 use super::{density, dynamic_viscosity, LiquidMaterial, Material};
-use crate::thermal_hydraulics_error::TuasLibError;
+use crate::tuas_lib_error::TuasLibError;
 
 /// gets kinematic viscosity
 #[inline]
