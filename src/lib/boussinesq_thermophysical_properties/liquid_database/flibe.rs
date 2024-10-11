@@ -67,7 +67,7 @@ extern crate peroxide;
 use peroxide::prelude::*;
 
 use crate::boussinesq_thermophysical_properties::{range_check, LiquidMaterial, Material};
-use crate::thermal_hydraulics_error::ThermalHydraulicsLibError;
+use crate::tuas_lib_error::TuasLibError;
 
 /// function to obtain flibe salt density
 /// given a temperature
@@ -91,7 +91,7 @@ use crate::thermal_hydraulics_error::ThermalHydraulicsLibError;
 /// There is slight non-linearity for flibe density
 /// but I'm ignoring that for now
 pub fn get_flibe_density(
-    fluid_temp: ThermodynamicTemperature) -> Result<MassDensity,ThermalHydraulicsLibError> {
+    fluid_temp: ThermodynamicTemperature) -> Result<MassDensity,TuasLibError> {
 
 
     // first we check if fluid temp is between 732.2-1573 K (range of validity)
@@ -156,7 +156,7 @@ pub fn get_flibe_density(
 /// 
 pub fn get_flibe_dynamic_viscosity(
     fluid_temp: ThermodynamicTemperature) -> Result<DynamicViscosity,
-ThermalHydraulicsLibError>{
+TuasLibError>{
 
     range_check_flibe_salt(fluid_temp)?;
     let fluid_temp_kelvin = fluid_temp.get::<kelvin>();
@@ -273,7 +273,7 @@ pub fn flibe_salt_test_viscosity(){
 ///
 pub fn get_flibe_constant_pressure_specific_heat_capacity(
     fluid_temp: ThermodynamicTemperature) -> Result<SpecificHeatCapacity,
-ThermalHydraulicsLibError>{
+TuasLibError>{
 
     range_check_flibe_salt(fluid_temp)?;
     // note, specific entropy and heat capcity are the same unit...
@@ -323,7 +323,7 @@ ThermalHydraulicsLibError>{
 ///
 /// T in kelvin
 pub fn get_flibe_thermal_conductivity(
-    fluid_temp: ThermodynamicTemperature) -> Result<ThermalConductivity,ThermalHydraulicsLibError> {
+    fluid_temp: ThermodynamicTemperature) -> Result<ThermalConductivity,TuasLibError> {
 
 
     range_check_flibe_salt(fluid_temp)?;
@@ -437,7 +437,7 @@ pub fn flibe_prandtl_number(){
 ///
 pub fn get_flibe_specific_enthalpy(
     fluid_temp: ThermodynamicTemperature) -> 
-Result<AvailableEnergy,ThermalHydraulicsLibError>{
+Result<AvailableEnergy,TuasLibError>{
 
     range_check_flibe_salt(fluid_temp)?;
     // note, specific entropy and heat capcity are the same unit...
@@ -481,7 +481,7 @@ Result<AvailableEnergy,ThermalHydraulicsLibError>{
 ///
 ///
 pub fn get_temperature_from_enthalpy(
-    fluid_enthalpy: AvailableEnergy) -> Result<ThermodynamicTemperature,ThermalHydraulicsLibError> {
+    fluid_enthalpy: AvailableEnergy) -> Result<ThermodynamicTemperature,TuasLibError> {
 
     // if enthalpy value below zero,
     // based on me setting zero enthalpy at the lower end of the 
@@ -555,7 +555,7 @@ pub fn get_temperature_from_enthalpy(
 ///
 ///
 pub fn range_check_flibe_salt(fluid_temp: ThermodynamicTemperature) 
-    -> Result<bool,ThermalHydraulicsLibError>{
+    -> Result<bool,TuasLibError>{
 
         // first i convert the fluidTemp object into a degree 
         // celsius

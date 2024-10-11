@@ -10,13 +10,13 @@
 //!    Research and Safety Initiative, Per F. Peterson, University of 
 //!    California, Berkeley Thermal Hydraulics Laboratory
 //!
-//!    thermal_hydrualics_rs is free software; you can 
+//!    tuas_boussinesq_solver is free software; you can 
 //!    redistribute it and/or modify it
 //!    under the terms of the GNU General Public License as published by the
 //!    Free Software Foundation; either version 2 of the License, or (at your
 //!    option) any later version.
 //!
-//!    thermal_hydrualics_rs is distributed in the hope 
+//!    tuas_boussinesq_solver is distributed in the hope 
 //!    that it will be useful, but WITHOUT
 //!    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
 //!    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
@@ -92,7 +92,7 @@ pub mod courant_number;
 
 
 
-use crate::thermal_hydraulics_error::ThermalHydraulicsLibError;
+use crate::tuas_lib_error::TuasLibError;
 /// This function calculates darcy friction factor
 /// It takes in a Reynold's number and roughness ratio
 ///
@@ -108,7 +108,7 @@ use crate::thermal_hydraulics_error::ThermalHydraulicsLibError;
 /// println!("{}", darcy_friction_factor);
 /// ```
 pub fn darcy(reynolds_number: f64, roughness_ratio: f64) -> Result<f64,
-ThermalHydraulicsLibError>{
+TuasLibError>{
     return churchill_friction_factor:: 
         darcy(reynolds_number, roughness_ratio);
 }
@@ -130,7 +130,7 @@ ThermalHydraulicsLibError>{
 /// println!("{}", moody_friction_factor);
 /// ```
 pub fn moody(reynolds_number: f64, roughness_ratio: f64) -> Result<f64,
-ThermalHydraulicsLibError>{
+TuasLibError>{
     return churchill_friction_factor:: 
         moody(reynolds_number, roughness_ratio);
 }
@@ -160,7 +160,7 @@ ThermalHydraulicsLibError>{
 pub fn fldk(reynolds_number: f64,
                    roughness_ratio: f64,
                    length_to_diameter_ratio: f64,
-                   k: f64) -> Result<f64, ThermalHydraulicsLibError>{
+                   k: f64) -> Result<f64, TuasLibError>{
     return churchill_friction_factor::
         f_ldk(reynolds_number,
              roughness_ratio,
@@ -225,7 +225,7 @@ pub fn fldk(reynolds_number: f64,
 pub fn get_bejan_d(reynolds_number: f64,
                    roughness_ratio: f64,
                    length_to_diameter_ratio: f64,
-                   k: f64) -> Result<f64, ThermalHydraulicsLibError> {
+                   k: f64) -> Result<f64, TuasLibError> {
     return churchill_friction_factor::
         get_bejan_number_d(reynolds_number, roughness_ratio,
               length_to_diameter_ratio, k);
@@ -312,7 +312,7 @@ pub fn get_bejan_d(reynolds_number: f64,
 pub fn get_reynolds_number(bejan_d: f64,
              roughness_ratio: f64,
              length_to_diameter: f64,
-             form_loss_k: f64) -> Result<f64,ThermalHydraulicsLibError> {
+             form_loss_k: f64) -> Result<f64,TuasLibError> {
     return churchill_friction_factor::
         get_reynolds_from_bejan(bejan_d, roughness_ratio,
               length_to_diameter, form_loss_k);

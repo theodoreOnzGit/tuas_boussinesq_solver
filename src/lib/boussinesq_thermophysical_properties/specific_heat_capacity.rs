@@ -1,5 +1,5 @@
 use uom::si::f64::*;
-use crate::thermal_hydraulics_error::ThermalHydraulicsLibError;
+use crate::tuas_lib_error::TuasLibError;
 
 use super::liquid_database;
 use super::liquid_database::flibe::get_flibe_constant_pressure_specific_heat_capacity;
@@ -53,7 +53,7 @@ use super::liquid_database::dowtherm_a::get_dowtherm_a_constant_pressure_specifi
 #[inline]
 pub fn try_get_cp(material: Material, 
     temperature: ThermodynamicTemperature,
-    _pressure: Pressure) -> Result<SpecificHeatCapacity, ThermalHydraulicsLibError> {
+    _pressure: Pressure) -> Result<SpecificHeatCapacity, TuasLibError> {
 
     let specific_heat_capacity: SpecificHeatCapacity = match material {
         Material::Solid(_) => solid_specific_heat_capacity(material, temperature)?,
@@ -65,7 +65,7 @@ pub fn try_get_cp(material: Material,
 
 // should the material happen to be a solid, use this function
 fn solid_specific_heat_capacity(material: Material,
-    solid_temp: ThermodynamicTemperature) -> Result<SpecificHeatCapacity, ThermalHydraulicsLibError>{
+    solid_temp: ThermodynamicTemperature) -> Result<SpecificHeatCapacity, TuasLibError>{
     
     // first match the enum
 
@@ -104,7 +104,7 @@ impl LiquidMaterial {
     #[inline]
     pub fn try_get_cp(&self,
         fluid_temp: ThermodynamicTemperature,) 
-        -> Result<SpecificHeatCapacity, ThermalHydraulicsLibError>{
+        -> Result<SpecificHeatCapacity, TuasLibError>{
 
             liquid_specific_heat_capacity(
                 self.clone().into(),
@@ -119,7 +119,7 @@ impl SolidMaterial {
     #[inline]
     pub fn try_get_cp(&self,
         solid_temp: ThermodynamicTemperature,) 
-        -> Result<SpecificHeatCapacity, ThermalHydraulicsLibError>{
+        -> Result<SpecificHeatCapacity, TuasLibError>{
 
             solid_specific_heat_capacity(
                 self.clone().into(),
@@ -132,7 +132,7 @@ impl SolidMaterial {
 // should the material happen to be a liquid, use this function
 fn liquid_specific_heat_capacity(material: Material, 
     fluid_temp: ThermodynamicTemperature) -> Result<SpecificHeatCapacity,
-ThermalHydraulicsLibError>{
+TuasLibError>{
 
     let liquid_material: LiquidMaterial = match material {
         Material::Liquid(DowthermA) => DowthermA,

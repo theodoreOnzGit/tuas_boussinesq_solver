@@ -1,6 +1,6 @@
 use super::NonInsulatedFluidComponent;
 use uom::si::f64::*;
-use crate::thermal_hydraulics_error::ThermalHydraulicsLibError;
+use crate::tuas_lib_error::TuasLibError;
 use std::thread::JoinHandle;
 use std::thread;
 
@@ -10,7 +10,7 @@ impl NonInsulatedFluidComponent {
     /// NonInsulatedPipe
     #[inline]
     pub fn advance_timestep(&mut self, 
-    timestep: Time) -> Result<(),ThermalHydraulicsLibError> {
+    timestep: Time) -> Result<(),TuasLibError> {
 
         self.pipe_fluid_array.advance_timestep_mut_self(timestep)?;
         self.pipe_shell.advance_timestep_mut_self(timestep)?;

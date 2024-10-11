@@ -67,13 +67,13 @@ extern crate peroxide;
 use peroxide::prelude::*;
 
 use crate::boussinesq_thermophysical_properties::{range_check, LiquidMaterial, Material};
-use crate::thermal_hydraulics_error::ThermalHydraulicsLibError;
+use crate::tuas_lib_error::TuasLibError;
 
 /// function to obtain dowtherm A density
 /// given a temperature
 
 pub fn get_dowtherm_a_density(
-    fluid_temp: ThermodynamicTemperature) -> Result<MassDensity,ThermalHydraulicsLibError> {
+    fluid_temp: ThermodynamicTemperature) -> Result<MassDensity,TuasLibError> {
 
     // first we check if fluid temp is between 20-180C (range of validity)
     // panic otherwise
@@ -92,7 +92,7 @@ pub fn get_dowtherm_a_density(
 /// given a temperature
 pub fn get_dowtherm_a_viscosity(
     fluid_temp: ThermodynamicTemperature) -> Result<DynamicViscosity,
-ThermalHydraulicsLibError>{
+TuasLibError>{
 
     range_check_dowtherm_a(fluid_temp)?;
     let temperature_degrees_c_value = fluid_temp.get::<degree_celsius>();
@@ -107,7 +107,7 @@ ThermalHydraulicsLibError>{
 /// given a temperature
 pub fn get_dowtherm_a_constant_pressure_specific_heat_capacity(
     fluid_temp: ThermodynamicTemperature) -> Result<SpecificHeatCapacity,
-ThermalHydraulicsLibError>{
+TuasLibError>{
 
     range_check_dowtherm_a(fluid_temp)?;
     // note, specific entropy and heat capcity are the same unit...
@@ -121,7 +121,7 @@ ThermalHydraulicsLibError>{
 /// function to obtain dowtherm A thermal conductivity
 /// given a temperature
 pub fn get_dowtherm_a_thermal_conductivity(
-    fluid_temp: ThermodynamicTemperature) -> Result<ThermalConductivity,ThermalHydraulicsLibError> {
+    fluid_temp: ThermodynamicTemperature) -> Result<ThermalConductivity,TuasLibError> {
 
 
     range_check_dowtherm_a(fluid_temp)?;
@@ -180,7 +180,7 @@ pub fn get_dowtherm_a_thermal_conductivity(
 /// ```
 pub fn get_dowtherm_a_enthalpy(
     fluid_temp: ThermodynamicTemperature) -> 
-Result<AvailableEnergy,ThermalHydraulicsLibError>{
+Result<AvailableEnergy,TuasLibError>{
 
     range_check_dowtherm_a(fluid_temp)?;
     // note, specific entropy and heat capcity are the same unit...
@@ -254,7 +254,7 @@ Result<AvailableEnergy,ThermalHydraulicsLibError>{
 ///
 /// ```
 pub fn get_temperature_from_enthalpy(
-    fluid_enthalpy: AvailableEnergy) -> Result<ThermodynamicTemperature,ThermalHydraulicsLibError> {
+    fluid_enthalpy: AvailableEnergy) -> Result<ThermodynamicTemperature,TuasLibError> {
 
     if fluid_enthalpy.value < 0_f64 {
         panic!("dowtherm A : get_temperature_from_enthalpy \n
@@ -310,7 +310,7 @@ pub fn get_temperature_from_enthalpy(
 /// TODO: find a dowtherm a correlation with larger temperature range
 /// of validity
 pub fn range_check_dowtherm_a(fluid_temp: ThermodynamicTemperature) 
-    -> Result<bool,ThermalHydraulicsLibError>{
+    -> Result<bool,TuasLibError>{
 
         // first i convert the fluidTemp object into a degree 
         // celsius

@@ -1,5 +1,5 @@
 use uom::si::f64::*;
-use crate::thermal_hydraulics_error::ThermalHydraulicsLibError;
+use crate::tuas_lib_error::TuasLibError;
 
 use super::liquid_database::flibe::get_flibe_dynamic_viscosity;
 use super::liquid_database::flinak::get_flinak_dynamic_viscosity;
@@ -44,12 +44,12 @@ use super::liquid_database;
 #[inline]
 pub fn try_get_mu_viscosity(material: Material, 
     temperature: ThermodynamicTemperature,
-    _pressure: Pressure) -> Result<DynamicViscosity, ThermalHydraulicsLibError> {
+    _pressure: Pressure) -> Result<DynamicViscosity, TuasLibError> {
 
     match material {
         Material::Solid(_) => {
             println!("Error: Solids do not have dynamic viscosity");
-            Err(ThermalHydraulicsLibError::ThermophysicalPropertyError)
+            Err(TuasLibError::ThermophysicalPropertyError)
         },
         Material::Liquid(_) => liquid_dynamic_viscosity(material, temperature)
     }
@@ -61,7 +61,7 @@ pub fn try_get_mu_viscosity(material: Material,
 // should the material happen to be a liquid, use this function
 #[inline]
 fn liquid_dynamic_viscosity(material: Material, 
-    fluid_temp: ThermodynamicTemperature) -> Result<DynamicViscosity,ThermalHydraulicsLibError> {
+    fluid_temp: ThermodynamicTemperature) -> Result<DynamicViscosity,TuasLibError> {
 
     let liquid_material: LiquidMaterial = match material {
         Material::Liquid(DowthermA) => DowthermA,
@@ -100,7 +100,7 @@ impl LiquidMaterial {
     #[inline]
     pub fn try_get_dynamic_viscosity(&self,
         fluid_temp: ThermodynamicTemperature,) -> 
-    Result<DynamicViscosity, ThermalHydraulicsLibError>{
+    Result<DynamicViscosity, TuasLibError>{
 
         let dynamic_viscosity: DynamicViscosity = match self {
             DowthermA => get_dowtherm_a_viscosity(fluid_temp)?,

@@ -4,7 +4,7 @@ use crate::boussinesq_thermophysical_properties::Material;
 use crate::single_control_vol::SingleCVNode;
 use crate::heat_transfer_correlations::heat_transfer_interactions::heat_transfer_interaction_enums::HeatTransferInteractionType;
 
-use crate::thermal_hydraulics_error::ThermalHydraulicsLibError;
+use crate::tuas_lib_error::TuasLibError;
 
 /// calculates the interaction between a heat addition BC and 
 /// a control volume 
@@ -17,7 +17,7 @@ pub fn calculate_constant_heat_addition_front_single_cv_back(
     control_vol: &mut SingleCVNode,
     heat_added_to_control_vol: Power,
     interaction: HeatTransferInteractionType
-    ) -> Result<(), ThermalHydraulicsLibError> {
+    ) -> Result<(), TuasLibError> {
 
     // ensure that the interaction is UserSpecifiedHeatAddition
     // or advection
@@ -45,7 +45,7 @@ pub fn calculate_constant_heat_addition_front_single_cv_back(
             println!("you need to specify that the interaction type \n 
             is UserSpecifiedHeatAddition");
 
-            return Err(ThermalHydraulicsLibError::WrongHeatTransferInteractionType);
+            return Err(TuasLibError::WrongHeatTransferInteractionType);
         },
     };
 
@@ -100,7 +100,7 @@ pub fn calculate_single_cv_front_constant_heat_addition_back(
     heat_added_to_control_vol: Power,
     control_vol: &mut SingleCVNode,
     interaction: HeatTransferInteractionType
-    ) -> Result<(), ThermalHydraulicsLibError> {
+    ) -> Result<(), TuasLibError> {
 
     // ensure that the interaction is UserSpecifiedHeatAddition
     // or advection
@@ -129,7 +129,7 @@ pub fn calculate_single_cv_front_constant_heat_addition_back(
             println!("you need to specify that the interaction type \n 
             is UserSpecifiedHeatAddition");
 
-            return Err(ThermalHydraulicsLibError::WrongHeatTransferInteractionType);
+            return Err(TuasLibError::WrongHeatTransferInteractionType);
         },
     };
 

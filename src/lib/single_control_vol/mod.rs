@@ -4,7 +4,7 @@ use uom::si::f64::*;
 use uom::si::pressure::atmosphere;
 
 use super::boussinesq_thermophysical_properties::Material;
-use crate::thermal_hydraulics_error::ThermalHydraulicsLibError;
+use crate::tuas_lib_error::TuasLibError;
 use crate::boussinesq_thermophysical_properties::
 density::try_get_rho;
 use crate::boussinesq_thermophysical_properties::
@@ -151,7 +151,7 @@ impl SingleCVNode {
     /// CURRENT timestep
     #[inline]
     pub fn get_temperature_from_enthalpy_and_set(&mut self) -> 
-    Result<ThermodynamicTemperature, ThermalHydraulicsLibError>{
+    Result<ThermodynamicTemperature, TuasLibError>{
 
         let cv_temperature = try_get_temperature_from_h(
             self.material_control_volume, 
@@ -170,7 +170,7 @@ impl SingleCVNode {
     #[inline]
     pub (crate)
     fn set_liquid_cv_mass_from_temperature(&mut self) 
-    -> Result<(), ThermalHydraulicsLibError>{
+    -> Result<(), TuasLibError>{
 
         let cv_temperature = self.temperature;
 
@@ -201,7 +201,7 @@ impl SingleCVNode {
     pub fn new_sphere(diameter: Length, 
         material: Material,
         cv_temperature: ThermodynamicTemperature,
-        pressure: Pressure) -> Result<SingleCVNode,ThermalHydraulicsLibError>{
+        pressure: Pressure) -> Result<SingleCVNode,TuasLibError>{
 
 
         let ball_radius: Length = diameter * 0.5;
@@ -268,7 +268,7 @@ impl SingleCVNode {
         material: Material,
         cv_temperature: ThermodynamicTemperature,
         pressure: Pressure) -> Result<
-        SingleCVNode,ThermalHydraulicsLibError>{
+        SingleCVNode,TuasLibError>{
 
 
         let basis_area: Area = Area::new::<square_meter>( 
@@ -341,7 +341,7 @@ impl SingleCVNode {
         material: Material,
         cv_temperature: ThermodynamicTemperature,
         pressure: Pressure) -> Result<SingleCVNode,
-    ThermalHydraulicsLibError>{
+    TuasLibError>{
 
 
         // diameter is pi D^2/4
@@ -415,7 +415,7 @@ impl SingleCVNode {
         material: Material,
         cv_temperature: ThermodynamicTemperature,
         pressure: Pressure) -> Result<SingleCVNode,
-    ThermalHydraulicsLibError>{
+    TuasLibError>{
 
 
         // diameter is pi D^2/4
@@ -493,7 +493,7 @@ impl SingleCVNode {
         material: Material,
         cv_temperature: ThermodynamicTemperature,
         pressure: Pressure) -> Result<SingleCVNode,
-    ThermalHydraulicsLibError>{
+    TuasLibError>{
 
         let id: Length = id.into();
         let od: Length = od.into();
@@ -575,7 +575,7 @@ impl SingleCVNode {
         material: Material,
         cv_temperature: ThermodynamicTemperature,
         pressure: Pressure) -> Result<SingleCVNode,
-    ThermalHydraulicsLibError>{
+    TuasLibError>{
 
 
         let cylinder_vol: Volume = 
@@ -662,3 +662,8 @@ pub mod boundary_condition_interactions;
 /// such as that of calculating 
 /// between conductance and advection interactions 
 pub mod wrappers_for_heat_transfer_interaction;
+
+/// tests for single control volume 
+/// for conjugate heat transfer and lumped heat capacitance
+/// also has semi-infinite medium tests
+pub mod tests;

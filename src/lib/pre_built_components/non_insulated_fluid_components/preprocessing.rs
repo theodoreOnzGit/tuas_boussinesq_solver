@@ -16,7 +16,7 @@ use crate::array_control_vol_and_fluid_component_collections::one_d_solid_array_
 use crate::array_control_vol_and_fluid_component_collections::one_d_fluid_array_with_lateral_coupling::FluidArray;
 use crate::array_control_vol_and_fluid_component_collections::fluid_component_collection::fluid_component_traits::FluidComponentTrait;
 
-use crate::thermal_hydraulics_error::ThermalHydraulicsLibError;
+use crate::tuas_lib_error::TuasLibError;
 
 impl NonInsulatedFluidComponent {
 
@@ -43,7 +43,7 @@ impl NonInsulatedFluidComponent {
     #[inline]
     pub fn lateral_and_miscellaneous_connections_no_wall_correction(&mut self,
         mass_flowrate: MassRate,
-        heater_power: Power) -> Result<(), ThermalHydraulicsLibError>{
+        heater_power: Power) -> Result<(), TuasLibError>{
 
         let correct_prandtl_for_wall_temperatures = false;
 
@@ -76,7 +76,7 @@ impl NonInsulatedFluidComponent {
     #[inline]
     pub fn lateral_and_miscellaneous_connections_wall_correction(&mut self,
         mass_flowrate: MassRate,
-        heater_power: Power) -> Result<(), ThermalHydraulicsLibError>{
+        heater_power: Power) -> Result<(), TuasLibError>{
 
         let correct_prandtl_for_wall_temperatures = true;
 
@@ -106,7 +106,7 @@ impl NonInsulatedFluidComponent {
     pub fn lateral_and_miscellaneous_connections(&mut self,
         mass_flowrate: MassRate,
         heater_power: Power,
-        correct_prandtl_for_wall_temperatures: bool) -> Result<(), ThermalHydraulicsLibError>{
+        correct_prandtl_for_wall_temperatures: bool) -> Result<(), TuasLibError>{
 
 
         // first let's get all the conductances 
@@ -231,7 +231,7 @@ impl NonInsulatedFluidComponent {
     /// use the link to front or back methods within the 
     /// FluidArray or SolidColumn
     #[inline]
-    fn zero_power_bc_axial_connection(&mut self) -> Result<(),ThermalHydraulicsLibError>{
+    fn zero_power_bc_axial_connection(&mut self) -> Result<(),TuasLibError>{
 
         let zero_power: Power = Power::ZERO;
 
@@ -271,7 +271,7 @@ impl NonInsulatedFluidComponent {
     #[inline]
     pub fn get_air_shell_nodal_shell_conductance(&mut self,
     h_air_to_pipe_surf: HeatTransfer) 
-        -> Result<ThermalConductance,ThermalHydraulicsLibError> {
+        -> Result<ThermalConductance,TuasLibError> {
         // first, let's get a clone of the pipe shell surface
         let mut pipe_shell_clone: SolidColumn = 
         self.pipe_shell.clone().try_into()?;
@@ -322,7 +322,7 @@ impl NonInsulatedFluidComponent {
     pub fn get_fluid_array_node_pipe_shell_conductance(
         &mut self, 
         correct_prandtl_for_wall_temperatures: bool) 
-        -> Result<ThermalConductance,ThermalHydraulicsLibError> {
+        -> Result<ThermalConductance,TuasLibError> {
 
         // the thermal conductance here should be based on the 
         // nusselt number correlation
@@ -508,7 +508,7 @@ impl NonInsulatedFluidComponent {
     pub fn get_reynolds_based_on_hydraulic_diameter_and_flow_area(
         &self,
         mass_flowrate: MassRate,
-        temperature: ThermodynamicTemperature) -> Result<Ratio,ThermalHydraulicsLibError> {
+        temperature: ThermodynamicTemperature) -> Result<Ratio,TuasLibError> {
 
         // flow area and hydraulic diameter are ok
         let flow_area: Area = self.get_cross_sectional_area_immutable();

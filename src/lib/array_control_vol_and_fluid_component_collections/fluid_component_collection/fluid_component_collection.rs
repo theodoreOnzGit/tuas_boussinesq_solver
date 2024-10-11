@@ -53,7 +53,7 @@ use uom::si::mass_rate::kilogram_per_second;
 use super::collection_series_and_parallel_functions::FluidComponentCollectionSeriesAssociatedFunctions;
 use super::collection_series_and_parallel_functions::FluidComponentCollectionParallelAssociatedFunctions;
 use super::fluid_component::FluidComponent;
-use crate::thermal_hydraulics_error::ThermalHydraulicsLibError;
+use crate::tuas_lib_error::TuasLibError;
 
 
 /// a fluid component collection,
@@ -122,7 +122,7 @@ impl FluidComponentCollection{
 
     pub fn remove_fluid_component(&mut self,
                               component_index: usize)-> 
-        Result<(),ThermalHydraulicsLibError>{
+        Result<(),TuasLibError>{
 
         // i remove the index from the vector 
         // (note that there may be a case where the vector is smaller than
@@ -140,7 +140,7 @@ impl FluidComponentCollection{
 
     pub fn get_fluid_component(
         &self,
-        component_index: usize) -> Result<FluidComponent,ThermalHydraulicsLibError> {
+        component_index: usize) -> Result<FluidComponent,TuasLibError> {
 
         // first let's access the fluid component
 
@@ -189,7 +189,7 @@ impl FluidComponentCollection{
         <T:TryInto<FluidComponent> + Clone + Debug >(
         &mut self,
         component: &T,
-    ) -> Result<(), ThermalHydraulicsLibError>
+    ) -> Result<(), TuasLibError>
         where <T as TryInto<FluidComponent>>::Error: Debug
     {
 
@@ -225,7 +225,7 @@ impl FluidComponentCollection{
 
     /// empties the vector 
     pub fn empty_vector(&mut self,) -> 
-        Result<(),ThermalHydraulicsLibError>{
+        Result<(),TuasLibError>{
             self.components.clear();
             Ok(())
     }

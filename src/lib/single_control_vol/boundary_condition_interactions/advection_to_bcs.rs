@@ -7,7 +7,7 @@ use crate::boussinesq_thermophysical_properties::specific_enthalpy::try_get_h;
 use crate::heat_transfer_correlations::heat_transfer_interactions::advection_heat_rate;
 use crate::heat_transfer_correlations::heat_transfer_interactions::heat_transfer_interaction_enums::DataAdvection;
 use crate::single_control_vol::SingleCVNode;
-use crate::thermal_hydraulics_error::ThermalHydraulicsLibError;
+use crate::tuas_lib_error::TuasLibError;
 
 
 impl SingleCVNode {
@@ -25,7 +25,7 @@ impl SingleCVNode {
     pub fn calculate_cv_front_bc_back_advection_non_set_temperature(
         &mut self,
         advection_data: DataAdvection
-    ) -> Result<(), ThermalHydraulicsLibError>{
+    ) -> Result<(), TuasLibError>{
 
         let mass_flow_from_bc_to_cv = advection_data.mass_flowrate;
 
@@ -110,7 +110,7 @@ impl SingleCVNode {
     pub fn calculate_bc_front_cv_back_advection_non_set_temperature(
         &mut self,
         advection_data: DataAdvection
-    ) -> Result<(), ThermalHydraulicsLibError>{
+    ) -> Result<(), TuasLibError>{
 
         let mass_flow_from_cv_to_bc = advection_data.mass_flowrate;
 
@@ -192,7 +192,7 @@ impl SingleCVNode {
         &mut self,
         boundary_condition_temperature: ThermodynamicTemperature,
         advection_data: DataAdvection
-    ) -> Result<(), ThermalHydraulicsLibError>{
+    ) -> Result<(), TuasLibError>{
 
 
         let mass_flow_from_bc_to_cv = advection_data.mass_flowrate;
@@ -273,7 +273,7 @@ impl SingleCVNode {
         &mut self,
         boundary_condition_temperature: ThermodynamicTemperature,
         advection_data: DataAdvection
-        ) -> Result<(), ThermalHydraulicsLibError>{
+        ) -> Result<(), TuasLibError>{
 
         let mass_flow_from_cv_to_bc = advection_data.mass_flowrate;
 

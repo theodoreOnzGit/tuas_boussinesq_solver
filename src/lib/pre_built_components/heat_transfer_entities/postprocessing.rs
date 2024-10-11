@@ -6,7 +6,7 @@ use super::cv_types::CVType;
 
 use crate::boundary_conditions::BCType;
 use crate::boussinesq_thermophysical_properties::density::try_get_rho;
-use crate::thermal_hydraulics_error::ThermalHydraulicsLibError;
+use crate::tuas_lib_error::TuasLibError;
 
 impl HeatTransferEntity {
 
@@ -14,7 +14,7 @@ impl HeatTransferEntity {
     /// gets the temperature of the HeatTransferEntity 
     /// usually control volume at the current timestep
     pub fn temperature(entity: &mut HeatTransferEntity) -> 
-    Result<ThermodynamicTemperature, ThermalHydraulicsLibError> {
+    Result<ThermodynamicTemperature, TuasLibError> {
 
         let cv_temperature_result = match entity {
             Self::ControlVolume(cv_type) => {
@@ -37,7 +37,7 @@ impl HeatTransferEntity {
                     },
                     BCType::UserSpecifiedHeatFlux(_) | 
                         BCType::UserSpecifiedHeatAddition(_) => {
-                            return Err(ThermalHydraulicsLibError::NotImplementedForBoundaryConditions(
+                            return Err(TuasLibError::NotImplementedForBoundaryConditions(
                             "getting temperature not \n 
                                 implemented for BoundaryConditions".to_owned()));
                         },
@@ -52,7 +52,7 @@ impl HeatTransferEntity {
     /// gets bulk temperature of the heat transfer entity
     #[inline]
     pub fn try_get_bulk_temperature(&mut self) -> Result<ThermodynamicTemperature,
-    ThermalHydraulicsLibError> {
+    TuasLibError> {
 
         let bulk_temp: ThermodynamicTemperature = 
         HeatTransferEntity::temperature(self)?;
@@ -63,16 +63,16 @@ impl HeatTransferEntity {
     /// gets a vector of temperatures
     #[inline]
     pub fn temperature_vector(entity: &mut HeatTransferEntity) ->
-    Result<Vec<ThermodynamicTemperature>,ThermalHydraulicsLibError> {
+    Result<Vec<ThermodynamicTemperature>,TuasLibError> {
 
 
         // oof nested matching, kind of ugly but I'll live with it for now
         let cv_temperature_vector_result: 
-        Result<Vec<ThermodynamicTemperature>, ThermalHydraulicsLibError>
+        Result<Vec<ThermodynamicTemperature>, TuasLibError>
         = match entity {
             HeatTransferEntity::ControlVolume(cv_type) => {
                 let temp_vector_result:
-                Result<Vec<ThermodynamicTemperature>, ThermalHydraulicsLibError>
+                Result<Vec<ThermodynamicTemperature>, TuasLibError>
                 = match cv_type{
                     CVType::SingleCV(single_cv) => {
                         // the single cv only has one temperature anyway
@@ -109,7 +109,7 @@ impl HeatTransferEntity {
                     },
                     BCType::UserSpecifiedHeatFlux(_) | 
                         BCType::UserSpecifiedHeatAddition(_) => {
-                            return Err(ThermalHydraulicsLibError::NotImplementedForBoundaryConditions(
+                            return Err(TuasLibError::NotImplementedForBoundaryConditions(
                             "getting temperature not \n 
                                 implemented for BoundaryConditions".to_owned()));
                         },
@@ -123,7 +123,7 @@ impl HeatTransferEntity {
     /// gets temperature vector of this HeatTransferEntity 
     #[inline]
     pub fn get_temperature_vector(&mut self) ->
-    Result<Vec<ThermodynamicTemperature>, ThermalHydraulicsLibError>{
+    Result<Vec<ThermodynamicTemperature>, TuasLibError>{
 
         match self {
             HeatTransferEntity::ControlVolume(cv) => {
@@ -141,7 +141,7 @@ impl HeatTransferEntity {
     /// attempts to get a vector of densities
     #[inline]
     pub fn density_vector(entity: &mut HeatTransferEntity) ->
-    Result<Vec<MassDensity>,ThermalHydraulicsLibError> {
+    Result<Vec<MassDensity>,TuasLibError> {
 
         let temperature_vector = Self::temperature_vector(entity)?;
 
@@ -160,7 +160,7 @@ impl HeatTransferEntity {
                 }
             },
             HeatTransferEntity::BoundaryConditions(_) => {
-                return Err(ThermalHydraulicsLibError::
+                return Err(TuasLibError::
                     NotImplementedForBoundaryConditions(
                         "density not implemented for BC".to_string()
                     ));
@@ -182,7 +182,7 @@ impl HeatTransferEntity {
                 }
             },
             HeatTransferEntity::BoundaryConditions(_) => {
-                return Err(ThermalHydraulicsLibError::
+                return Err(TuasLibError::
                     NotImplementedForBoundaryConditions(
                         "density not implemented for BC".to_string()
                     ));

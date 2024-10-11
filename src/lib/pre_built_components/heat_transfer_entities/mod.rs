@@ -1,5 +1,5 @@
 use self::cv_types::CVType;
-use crate::thermal_hydraulics_error::ThermalHydraulicsLibError;
+use crate::tuas_lib_error::TuasLibError;
 use crate::boundary_conditions::BCType;
 use uom::num_traits::Zero;
 use uom::si::f64::*;
@@ -19,7 +19,7 @@ impl HeatTransferEntity {
 
     /// allows the user to override the heat transfer entity 
     pub fn set(&mut self, 
-        user_input_hte: HeatTransferEntity) -> Result<(), ThermalHydraulicsLibError>{
+        user_input_hte: HeatTransferEntity) -> Result<(), TuasLibError>{
         *self = user_input_hte;
 
         Ok(())
@@ -81,3 +81,8 @@ pub mod type_conversion;
 /// that is to say, you can construct a DataAdvection struct from 
 /// a HeatTransferEntity
 pub mod conversion_to_data_advection;
+
+
+/// tests 
+#[cfg(test)]
+pub mod tests;

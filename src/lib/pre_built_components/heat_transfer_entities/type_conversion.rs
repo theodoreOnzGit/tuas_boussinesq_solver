@@ -2,7 +2,7 @@ use crate::array_control_vol_and_fluid_component_collections::one_d_fluid_array_
 use crate::array_control_vol_and_fluid_component_collections::one_d_solid_array_with_lateral_coupling::SolidColumn;
 use crate::boundary_conditions::BCType;
 use crate::single_control_vol::SingleCVNode;
-use crate::thermal_hydraulics_error::ThermalHydraulicsLibError;
+use crate::tuas_lib_error::TuasLibError;
 
 use super::cv_types::CVType;
 use super::HeatTransferEntity;
@@ -16,13 +16,13 @@ impl Into<HeatTransferEntity> for BCType {
 
 
 impl TryFrom<HeatTransferEntity> for BCType {
-    type Error = ThermalHydraulicsLibError;
+    type Error = TuasLibError;
 
     fn try_from(hte: HeatTransferEntity) -> Result<Self, Self::Error> {
         let bc_type: BCType = match hte {
             HeatTransferEntity::ControlVolume(_) => {
                 return Err(
-                    ThermalHydraulicsLibError::TypeConversionErrorHeatTransferEntity)
+                    TuasLibError::TypeConversionErrorHeatTransferEntity)
             },
             HeatTransferEntity::BoundaryConditions(bc_type) => {
                 bc_type
@@ -40,7 +40,7 @@ impl Into<HeatTransferEntity> for CVType {
 }
 
 impl TryFrom<HeatTransferEntity> for CVType {
-    type Error = ThermalHydraulicsLibError;
+    type Error = TuasLibError;
 
     fn try_from(value: HeatTransferEntity) -> Result<Self, Self::Error> {
         match value {
@@ -48,7 +48,7 @@ impl TryFrom<HeatTransferEntity> for CVType {
                 return Ok(cv);
             },
             HeatTransferEntity::BoundaryConditions(_) => {
-                return Err(ThermalHydraulicsLibError::TypeConversionErrorHeatTransferEntity);
+                return Err(TuasLibError::TypeConversionErrorHeatTransferEntity);
             },
         }
     }
@@ -61,7 +61,7 @@ impl Into<HeatTransferEntity> for FluidArray{
 }
 
 impl TryInto<FluidArray> for HeatTransferEntity {
-    type Error = ThermalHydraulicsLibError;
+    type Error = TuasLibError;
 
     fn try_into(self) -> Result<FluidArray, Self::Error> {
         if let HeatTransferEntity::ControlVolume(
@@ -70,7 +70,7 @@ impl TryInto<FluidArray> for HeatTransferEntity {
             Ok(fluid_array)
 
         } else {
-            return Err(ThermalHydraulicsLibError::TypeConversionErrorHeatTransferEntity);
+            return Err(TuasLibError::TypeConversionErrorHeatTransferEntity);
         }
 
     }
@@ -83,7 +83,7 @@ impl Into<HeatTransferEntity> for SolidColumn{
 }
 
 impl TryInto<SolidColumn> for HeatTransferEntity {
-    type Error = ThermalHydraulicsLibError;
+    type Error = TuasLibError;
 
     fn try_into(self) -> Result<SolidColumn, Self::Error> {
         if let HeatTransferEntity::ControlVolume(
@@ -92,7 +92,7 @@ impl TryInto<SolidColumn> for HeatTransferEntity {
             Ok(solid_array)
 
         } else {
-            return Err(ThermalHydraulicsLibError::TypeConversionErrorHeatTransferEntity);
+            return Err(TuasLibError::TypeConversionErrorHeatTransferEntity);
         }
 
     }
@@ -105,7 +105,7 @@ impl Into<HeatTransferEntity> for SingleCVNode{
 }
 
 impl TryInto<SingleCVNode> for HeatTransferEntity {
-    type Error = ThermalHydraulicsLibError;
+    type Error = TuasLibError;
 
     fn try_into(self) -> Result<SingleCVNode, Self::Error> {
         if let HeatTransferEntity::ControlVolume(
@@ -114,7 +114,7 @@ impl TryInto<SingleCVNode> for HeatTransferEntity {
             Ok(single_cv)
 
         } else {
-            return Err(ThermalHydraulicsLibError::TypeConversionErrorHeatTransferEntity);
+            return Err(TuasLibError::TypeConversionErrorHeatTransferEntity);
         }
 
     }

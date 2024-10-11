@@ -1,6 +1,6 @@
 use uom::{si::{f64::*, ratio::ratio}, ConstZero};
 
-use crate::thermal_hydraulics_error::ThermalHydraulicsLibError;
+use crate::tuas_lib_error::TuasLibError;
 
 use super::pipe_correlations::*;
 /// contains information Nusselt Prandtl Reynold's
@@ -49,7 +49,7 @@ impl NusseltPrandtlReynoldsData {
     /// Nu = a + b * Re^c * Pr^d (Pr/Pr_wall)^e
     #[inline]
     pub fn custom_reynolds_prandtl(&self) 
-    -> Result<Ratio,ThermalHydraulicsLibError>{
+    -> Result<Ratio,TuasLibError>{
         let reynolds: Ratio =  self.reynolds;
         let prandtl_bulk: Ratio = self.prandtl_bulk;
         let prandtl_wall: Ratio = self.prandtl_wall;
@@ -73,7 +73,7 @@ impl NusseltPrandtlReynoldsData {
     /// ignores the coefficients, a,b,c,d,e in the struct
     #[inline]
     pub fn ciet_version_2_heater_uncorrected(&self) -> 
-    Result<Ratio, ThermalHydraulicsLibError>{
+    Result<Ratio, TuasLibError>{
 
         let reynolds = self.reynolds;
         let prandtl = self.prandtl_bulk;
@@ -98,7 +98,7 @@ impl NusseltPrandtlReynoldsData {
     /// take the absolute value of reynolds number
     #[inline]
     pub fn ciet_version_2_heater_prandtl_corrected(&self) -> 
-    Result<Ratio, ThermalHydraulicsLibError>{
+    Result<Ratio, TuasLibError>{
         let nusselt_uncorrected 
         =  {
             let ref this = self;
@@ -167,7 +167,7 @@ impl WakaoData {
     /// for bed of packed spheres
     #[inline]
     pub fn get(&self) 
-    -> Result<Ratio,ThermalHydraulicsLibError>{
+    -> Result<Ratio,TuasLibError>{
         let reynolds: Ratio =  self.reynolds;
         let prandtl_bulk: Ratio = self.prandtl_bulk;
         let a: Ratio = Ratio::new::<ratio>(2.0);
@@ -224,7 +224,7 @@ impl GnielinskiData {
     /// prandtl number
     #[inline]
     pub fn get_nusselt_for_developing_flow_bulk_fluid_prandtl(&self) 
-    -> Result<Ratio,ThermalHydraulicsLibError>{
+    -> Result<Ratio,TuasLibError>{
         let reynolds: Ratio =  self.reynolds;
         let prandtl_bulk: Ratio = self.prandtl_bulk;
         let prandtl_wall: Ratio = self.prandtl_wall;
@@ -254,7 +254,7 @@ impl GnielinskiData {
     /// prandtl_film: Ratio = (prandtl_wall + prandtl_bulk)/2.0;
     #[inline]
     pub fn get_nusselt_for_developing_flow(&self) 
-    -> Result<Ratio,ThermalHydraulicsLibError>{
+    -> Result<Ratio,TuasLibError>{
         let reynolds: Ratio =  self.reynolds;
         let prandtl_bulk: Ratio = self.prandtl_bulk;
         let prandtl_wall: Ratio = self.prandtl_wall;
@@ -292,7 +292,7 @@ impl GnielinskiData {
     pub fn get_nusselt_for_custom_developing_flow_prandtl_film(&self,
         correlation_coefficient_c: Ratio,
         reynolds_exponent_m: f64) 
-    -> Result<Ratio,ThermalHydraulicsLibError>{
+    -> Result<Ratio,TuasLibError>{
         let reynolds: Ratio =  self.reynolds;
         let prandtl_bulk: Ratio = self.prandtl_bulk;
         let prandtl_wall: Ratio = self.prandtl_wall;
@@ -344,7 +344,7 @@ impl GnielinskiData {
     pub fn get_nusselt_for_custom_developing_flow_prandtl_bulk(&self,
         correlation_coefficient_c: Ratio,
         reynolds_exponent_m: f64) 
-    -> Result<Ratio,ThermalHydraulicsLibError>{
+    -> Result<Ratio,TuasLibError>{
         let reynolds: Ratio =  self.reynolds;
         let prandtl_bulk: Ratio = self.prandtl_bulk;
         let prandtl_wall: Ratio = self.prandtl_wall;

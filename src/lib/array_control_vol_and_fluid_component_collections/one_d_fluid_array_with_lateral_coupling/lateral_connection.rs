@@ -1,7 +1,7 @@
 use ndarray::*;
 use ndarray_linalg::error::LinalgError;
 use uom::si::f64::*;
-use crate::thermal_hydraulics_error::ThermalHydraulicsLibError;
+use crate::tuas_lib_error::TuasLibError;
 
 use super::FluidArray;
 
@@ -20,7 +20,7 @@ impl FluidArray{
     pub fn lateral_link_new_temperature_vector_avg_conductance(&mut self,
     average_thermal_conductance: ThermalConductance,
     temperature_vec: Vec<ThermodynamicTemperature>) 
-        -> Result<(), ThermalHydraulicsLibError>{
+        -> Result<(), TuasLibError>{
 
         let number_of_temperature_nodes = self.len();
 
@@ -33,7 +33,7 @@ impl FluidArray{
 
             let linalg_error = LinalgError::Shape(shape_error);
 
-            return Err(ThermalHydraulicsLibError::LinalgError
+            return Err(TuasLibError::LinalgError
                 (linalg_error));
 
         }
@@ -71,7 +71,7 @@ impl FluidArray{
     pub fn lateral_link_new_power_vector(&mut self,
     power_source: Power,
     q_fraction_arr: Array1<f64>) 
-        -> Result<(), ThermalHydraulicsLibError>{
+        -> Result<(), TuasLibError>{
 
         // need to ensure that array parameters match 
         let number_of_temperature_nodes = self.len();
@@ -83,7 +83,7 @@ impl FluidArray{
 
             let linalg_error = LinalgError::Shape(shape_error);
 
-            return Err(ThermalHydraulicsLibError::LinalgError
+            return Err(TuasLibError::LinalgError
                 (linalg_error));
 
         }

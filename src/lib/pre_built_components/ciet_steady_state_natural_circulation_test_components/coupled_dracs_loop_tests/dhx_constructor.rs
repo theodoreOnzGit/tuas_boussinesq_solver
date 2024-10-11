@@ -11,7 +11,7 @@ use crate::array_control_vol_and_fluid_component_collections::one_d_fluid_array_
 use crate::heat_transfer_correlations::nusselt_number_correlations::enums::NusseltCorrelation;
 use crate::heat_transfer_correlations::nusselt_number_correlations::input_structs::GnielinskiData;
 use crate::pre_built_components::shell_and_tube_heat_exchanger::SimpleShellAndTubeHeatExchanger;
-use crate::prelude::beta_testing::{LiquidMaterial, SolidMaterial};
+use crate::boussinesq_thermophysical_properties::{LiquidMaterial, SolidMaterial};
 
 /// constructs a new instance of the shell and tube 
 /// heat exchanger for the DHX based on Zou's specifications

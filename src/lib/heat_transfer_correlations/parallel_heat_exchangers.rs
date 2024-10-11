@@ -1,5 +1,5 @@
 use uom::si::f64::*;
-use crate::thermal_hydraulics_error::ThermalHydraulicsLibError;
+use crate::tuas_lib_error::TuasLibError;
 use crate::heat_transfer_correlations::
 thermal_resistance::subtract_two_thermodynamic_temperatures;
 /// LMTD = (delta T in - delta T out) / (ln delta T in - ln delta T out)
@@ -69,7 +69,7 @@ pub fn log_mean_temperature_difference(
     temp_cold_fluid_b: ThermodynamicTemperature,
     temp_hot_fluid_a: ThermodynamicTemperature,
     temp_hot_fluid_b: ThermodynamicTemperature) -> 
-Result<TemperatureInterval,ThermalHydraulicsLibError> {
+Result<TemperatureInterval,TuasLibError> {
 
     if temp_hot_fluid_a.value < temp_cold_fluid_a.value {
         panic!("LMTD: hot fluid temperature input colder than \n
@@ -123,7 +123,7 @@ pub fn calculate_lmtd_heat_flux_based_on_ambient_temp(
     ambient_temperature : ThermodynamicTemperature,
     fluid_temperature_in : ThermodynamicTemperature,
     fluid_temperature_out: ThermodynamicTemperature,
-    surface_area : Area) -> Result<Power,ThermalHydraulicsLibError> {
+    surface_area : Area) -> Result<Power,TuasLibError> {
 
     if fluid_temperature_in.value == fluid_temperature_out.value {
         return Ok(overall_heat_transfer_coeff * surface_area * 

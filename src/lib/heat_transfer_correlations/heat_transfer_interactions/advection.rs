@@ -1,5 +1,5 @@
 use uom::{si::f64::*, ConstZero};
-use crate::thermal_hydraulics_error::ThermalHydraulicsLibError;
+use crate::tuas_lib_error::TuasLibError;
 
 use super::heat_transfer_interaction_enums::{DataAdvection, HeatTransferInteractionType};
 /// now, advection is quite tricky because for conduction, the 
@@ -33,7 +33,7 @@ use super::heat_transfer_interaction_enums::{DataAdvection, HeatTransferInteract
 #[inline]
 pub fn advection_heat_rate(mass_flow_from_a_to_b: MassRate,
     specific_enthalpy_of_a: AvailableEnergy,
-    specific_enthalpy_of_b: AvailableEnergy,) -> Result<Power, ThermalHydraulicsLibError> {
+    specific_enthalpy_of_b: AvailableEnergy,) -> Result<Power, TuasLibError> {
 
     // if mass flow from a to b is less than 0 
     // then mass flows from b to a

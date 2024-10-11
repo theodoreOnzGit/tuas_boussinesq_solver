@@ -7,7 +7,7 @@ use crate::single_control_vol::SingleCVNode;
 use crate::heat_transfer_correlations::nusselt_number_correlations::enums::NusseltCorrelation;
 use crate::boussinesq_thermophysical_properties::Material;
 
-use crate::thermal_hydraulics_error::ThermalHydraulicsLibError;
+use crate::tuas_lib_error::TuasLibError;
 
 
 /// for 1D Cartesian Conduction array,
@@ -92,7 +92,7 @@ impl CartesianConduction1DArray {
     initial_uniform_temperature: ThermodynamicTemperature,
     uniform_pressure: Pressure,
     inner_nodes: usize,
-    total_length: Length) -> Result<Self,ThermalHydraulicsLibError> {
+    total_length: Length) -> Result<Self,TuasLibError> {
         // we start building the 1Darray object by a default first
         let mut array_to_return = Self::default();
 
@@ -193,7 +193,7 @@ impl CartesianConduction1DArray {
     ///
     ///
     pub (in crate) fn construct_volume_fraction_array(&mut self) 
-    -> Result<Array1<f64>, ThermalHydraulicsLibError> {
+    -> Result<Array1<f64>, TuasLibError> {
 
         let number_of_temperature_nodes: usize = 
         self.inner_nodes + 2;
@@ -232,7 +232,7 @@ impl CartesianConduction1DArray {
     ///
     #[inline]
     pub fn get_bulk_temperature(&mut self) -> 
-    Result<ThermodynamicTemperature,ThermalHydraulicsLibError>{
+    Result<ThermodynamicTemperature,TuasLibError>{
 
         // for now, doing it quick and dirty, i'm going to obtain a volume 
         // averaged temperature 

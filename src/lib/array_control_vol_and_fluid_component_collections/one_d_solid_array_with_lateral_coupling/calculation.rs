@@ -10,7 +10,7 @@ use ndarray::*;
 use uom::si::power::watt;
 
 
-use crate::thermal_hydraulics_error::ThermalHydraulicsLibError;
+use crate::tuas_lib_error::TuasLibError;
 use ndarray_linalg::error::LinalgError;
 
 use super::SolidColumn;
@@ -24,7 +24,7 @@ impl SolidColumn {
     /// given a fixed timestep
     pub fn advance_timestep(&mut self,
         timestep: Time,) 
-        -> Result<(), ThermalHydraulicsLibError>{
+        -> Result<(), TuasLibError>{
 
         // there must always be at least 2 nodes
 
@@ -751,7 +751,7 @@ impl SolidColumn {
     /// clears all vectors for next timestep
     /// This is important for the advance timestep method
     pub fn clear_vectors(&mut self) 
-    -> Result<(), ThermalHydraulicsLibError>{
+    -> Result<(), TuasLibError>{
 
         self.lateral_adjacent_array_conductance_vector.clear();
         self.lateral_adjacent_array_temperature_vector.clear();

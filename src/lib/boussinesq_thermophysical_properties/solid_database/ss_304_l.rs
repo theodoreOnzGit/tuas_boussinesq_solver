@@ -4,7 +4,7 @@ use uom::si::mass_density::kilogram_per_cubic_meter;
 use uom::si::specific_heat_capacity::joule_per_kilogram_kelvin;
 use uom::si::thermal_conductivity::watt_per_meter_kelvin;
 use crate::boussinesq_thermophysical_properties::*;
-use crate::thermal_hydraulics_error::ThermalHydraulicsLibError;
+use crate::tuas_lib_error::TuasLibError;
 use uom::si::thermodynamic_temperature::kelvin;
 
 
@@ -17,7 +17,7 @@ use peroxide::prelude::*;
 /// Lab.(ANL), Argonne, IL (United States).
 #[inline]
 pub fn steel_304_l_spline_specific_heat_capacity_ciet_zweibaum(
-    temperature: ThermodynamicTemperature) -> Result<SpecificHeatCapacity,ThermalHydraulicsLibError> {
+    temperature: ThermodynamicTemperature) -> Result<SpecificHeatCapacity,TuasLibError> {
 
     range_check(
         &Material::Solid(SolidMaterial::SteelSS304L),
@@ -55,7 +55,7 @@ pub fn steel_304_l_spline_specific_heat_capacity_ciet_zweibaum(
 /// it, I used Libreoffice Calc to construct a spline manually instead
 #[inline]
 pub fn steel_304_l_libreoffice_spline_specific_heat_capacity_ciet_zweibaum(
-    temperature: ThermodynamicTemperature) -> Result<SpecificHeatCapacity,ThermalHydraulicsLibError> {
+    temperature: ThermodynamicTemperature) -> Result<SpecificHeatCapacity,TuasLibError> {
 
     range_check(
         &Material::Solid(SolidMaterial::SteelSS304L),
@@ -90,7 +90,7 @@ pub fn steel_304_l_libreoffice_spline_specific_heat_capacity_ciet_zweibaum(
 /// It's only good for range of 300K to 700K
 #[inline]
 pub fn steel_ss_304_l_ornl_specific_heat_capacity(
-    temperature: ThermodynamicTemperature) -> Result<SpecificHeatCapacity,ThermalHydraulicsLibError> {
+    temperature: ThermodynamicTemperature) -> Result<SpecificHeatCapacity,TuasLibError> {
 
     range_check(
         &Material::Solid(SolidMaterial::SteelSS304L),
@@ -165,7 +165,7 @@ pub fn specific_heat_capacity_test_steel(){
 /// It's only good for range of 300K to 700K
 #[inline]
 pub fn steel_ss_304_l_ornl_thermal_conductivity(
-    temperature: ThermodynamicTemperature) -> Result<ThermalConductivity,ThermalHydraulicsLibError> {
+    temperature: ThermodynamicTemperature) -> Result<ThermalConductivity,TuasLibError> {
 
     range_check(
         &Material::Solid(SolidMaterial::SteelSS304L),
@@ -191,7 +191,7 @@ pub fn steel_ss_304_l_ornl_thermal_conductivity(
 /// Lab.(ANL), Argonne, IL (United States).
 #[inline]
 pub fn steel_304_l_spline_thermal_conductivity(
-    temperature: ThermodynamicTemperature) -> Result<ThermalConductivity,ThermalHydraulicsLibError> {
+    temperature: ThermodynamicTemperature) -> Result<ThermalConductivity,TuasLibError> {
 
     range_check(
         &Material::Solid(SolidMaterial::SteelSS304L),
@@ -232,7 +232,7 @@ pub fn steel_304_l_spline_thermal_conductivity(
 /// inbuilt function, which is more computationally expensive
 #[inline]
 pub fn steel_304_l_libreoffice_spline_thermal_conductivity_zweibaum(
-    temperature: ThermodynamicTemperature) -> Result<ThermalConductivity,ThermalHydraulicsLibError> {
+    temperature: ThermodynamicTemperature) -> Result<ThermalConductivity,TuasLibError> {
 
     range_check(
         &Material::Solid(SolidMaterial::SteelSS304L),
@@ -321,7 +321,7 @@ pub fn verify_libreoffice_splines_work(){
 /// No. ANL/NSE-19/11. 
 /// Argonne National Lab.(ANL), Argonne, IL (United States), 2019.
 #[inline]
-pub fn steel_ss_304_l_density() -> Result<MassDensity,ThermalHydraulicsLibError> {
+pub fn steel_ss_304_l_density() -> Result<MassDensity,TuasLibError> {
     return Ok(MassDensity::new::<kilogram_per_cubic_meter>(8030.0));
 }
 

@@ -1,6 +1,6 @@
 use uom::si::{f64::*, ratio::ratio};
 
-use crate::thermal_hydraulics_error::ThermalHydraulicsLibError;
+use crate::tuas_lib_error::TuasLibError;
 
 use super::input_structs::{NusseltPrandtlReynoldsData, WakaoData, GnielinskiData};
 
@@ -217,7 +217,7 @@ impl NusseltCorrelation {
 
 
     /// gets the nusselt based on user choice of of correlation
-    pub fn try_get(&self) -> Result<Ratio, ThermalHydraulicsLibError> {
+    pub fn try_get(&self) -> Result<Ratio, TuasLibError> {
         let nusselt_number: Ratio = 
         match self {
             NusseltCorrelation::PipeGnielinskiGeneric(data) => {
@@ -282,7 +282,7 @@ impl NusseltCorrelation {
     pub fn estimate_based_on_prandtl_darcy_and_reynolds_no_wall_correction(&self,
         bulk_prandtl_number_input: Ratio,
         darcy_friction_factor: Ratio,
-        reynolds_number_input: Ratio,) -> Result<Ratio, ThermalHydraulicsLibError>{
+        reynolds_number_input: Ratio,) -> Result<Ratio, TuasLibError>{
 
         match self {
             NusseltCorrelation::PipeGnielinskiGeneric(data) => {
@@ -328,7 +328,7 @@ impl NusseltCorrelation {
     #[inline]
     pub fn estimate_based_on_prandtl_and_reynolds_no_wall_correction(&self,
     bulk_prandtl_number_input: Ratio,
-    reynolds_number_input: Ratio,) -> Result<Ratio, ThermalHydraulicsLibError>{
+    reynolds_number_input: Ratio,) -> Result<Ratio, TuasLibError>{
 
         let nusselt_number: Ratio = 
         match self {
@@ -432,7 +432,7 @@ impl NusseltCorrelation {
     pub fn estimate_based_on_prandtl_reynolds_and_wall_correction(&self,
     bulk_prandtl_number_input: Ratio,
     wall_prandtl_number_input: Ratio,
-    reynolds_number_input: Ratio,) -> Result<Ratio, ThermalHydraulicsLibError>{
+    reynolds_number_input: Ratio,) -> Result<Ratio, TuasLibError>{
 
         let nusselt_number: Ratio = 
         match self {
@@ -539,7 +539,7 @@ impl NusseltCorrelation {
         bulk_prandtl_number_input: Ratio,
         wall_prandtl_number_input: Ratio,
         darcy_friction_factor: Ratio,
-        reynolds_number_input: Ratio,) -> Result<Ratio, ThermalHydraulicsLibError>{
+        reynolds_number_input: Ratio,) -> Result<Ratio, TuasLibError>{
 
         match self {
             NusseltCorrelation::PipeGnielinskiGeneric(data) => {

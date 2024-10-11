@@ -5,7 +5,7 @@ use uom::si::f64::*;
 use uom::si::power::watt;
 
 use crate::boussinesq_thermophysical_properties::specific_enthalpy::try_get_h;
-use crate::thermal_hydraulics_error::ThermalHydraulicsLibError;
+use crate::tuas_lib_error::TuasLibError;
 
 use super::solve_conductance_matrix_power_vector;
 use crate::single_control_vol::SingleCVNode;
@@ -58,7 +58,7 @@ pub fn advance_timestep_fluid_shell_array_high_peclet_number(
     volume_fraction_array: &mut Array1<f64>,
     rho_cp: &mut Array1<VolumetricHeatCapacity>,
     q_fraction: &mut Array1<f64>)
--> Result<Array1<ThermodynamicTemperature>,ThermalHydraulicsLibError>{
+-> Result<Array1<ThermodynamicTemperature>,TuasLibError>{
 
     // First things first, we need to set up 
     // how the CV interacts with the internal array
@@ -112,7 +112,7 @@ pub fn advance_timestep_fluid_shell_array_high_peclet_number(
     // there will always be at least 2 nodes
 
     if number_of_nodes <= 1 {
-        return Err(ThermalHydraulicsLibError::LinalgError(LinalgError::Shape(
+        return Err(TuasLibError::LinalgError(LinalgError::Shape(
             ShapeError::from_kind(
                 ErrorKind::OutOfBounds
             ))));

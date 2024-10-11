@@ -47,7 +47,7 @@ pub fn regression_coupled_dracs_loop_version_3(
     pri_loop_hot_leg_insulation_thickness_cm: f64,
     dracs_loop_cold_leg_insulation_thickness_cm: f64,
     dracs_loop_hot_leg_insulation_thickness_cm: f64,) -> 
-Result<(),crate::thermal_hydraulics_error::ThermalHydraulicsLibError>{
+Result<(),crate::tuas_lib_error::TuasLibError>{
     use uom::si::length::centimeter;
     use uom::si::{f64::*, mass_rate::kilogram_per_second, power::watt};
 

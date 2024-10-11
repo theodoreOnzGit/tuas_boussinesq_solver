@@ -2,7 +2,7 @@
 extern crate peroxide;
 use peroxide::prelude::*;
 
-use crate::thermal_hydraulics_error::ThermalHydraulicsLibError;
+use crate::tuas_lib_error::TuasLibError;
 
 // This library was developed for use in my PhD thesis under supervision 
 // of Professor Per F. Peterson. It is part of a thermal hydraulics
@@ -102,7 +102,7 @@ fn churchill_inner_term(reynolds: f64, roughness_ratio: f64) -> f64 {
 
 // this particular implementation uses the churchill correlation
 #[inline]
-fn fanning(reynolds_number: f64, roughness_ratio: f64) -> Result<f64,ThermalHydraulicsLibError>{
+fn fanning(reynolds_number: f64, roughness_ratio: f64) -> Result<f64,TuasLibError>{
 
     if reynolds_number == 0.0 {
         panic!("Re = 0.0");
@@ -125,14 +125,14 @@ fn fanning(reynolds_number: f64, roughness_ratio: f64) -> Result<f64,ThermalHydr
 #[inline]
 /// calculates darcy friction factor using churchill correlation
 pub fn darcy(reynolds_number: f64, roughness_ratio: f64) -> 
-Result<f64,ThermalHydraulicsLibError> {
+Result<f64,TuasLibError> {
     return Ok(4.0*fanning(reynolds_number, roughness_ratio)?);
 }
 
 /// calculates moody friction factor using churchill correlation
 /// basically same as darcy
 pub fn moody(reynolds_number: f64, roughness_ratio: f64) -> 
-Result<f64,ThermalHydraulicsLibError> {
+Result<f64,TuasLibError> {
     return Ok(4.0*fanning(reynolds_number, roughness_ratio)?);
 }
 
@@ -143,7 +143,7 @@ Result<f64,ThermalHydraulicsLibError> {
 pub fn f_ldk(reynolds_number: f64,
     roughness_ratio: f64,
     length_to_diameter_ratio: f64,
-    k: f64) -> Result<f64,ThermalHydraulicsLibError>{
+    k: f64) -> Result<f64,TuasLibError>{
     if reynolds_number == 0.0 {
         panic!("Re = 0");
     }
@@ -177,7 +177,7 @@ pub fn get_bejan_number_d(
     mut reynolds_number: f64,
     roughness_ratio: f64,
     length_to_diameter_ratio: f64,
-    form_loss_k: f64) -> Result<f64,ThermalHydraulicsLibError>{
+    form_loss_k: f64) -> Result<f64,TuasLibError>{
 
     if reynolds_number == 0.0 {
         return Ok(0.0);
@@ -224,7 +224,7 @@ pub fn get_reynolds_from_bejan(
     mut bejan_number_d: f64,
     roughness_ratio: f64,
     length_to_diameter: f64,
-    form_loss_k: f64) -> Result<f64,ThermalHydraulicsLibError> {
+    form_loss_k: f64) -> Result<f64,TuasLibError> {
 
     if length_to_diameter <= 0.0 {
         panic!("lengthToDiameterRatio<=0.0");

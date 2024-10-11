@@ -6,7 +6,7 @@ use crate::boussinesq_thermophysical_properties::thermal_conductivity::try_get_k
 use crate::boussinesq_thermophysical_properties::volumetric_heat_capacity::try_get_rho_cp;
 use crate::boussinesq_thermophysical_properties::Material;
 use crate::control_volume_dimensions::UNIT_AREA_SQ_METER_FOR_ONE_DIMENSIONAL_CALCS;
-use crate::thermal_hydraulics_error::ThermalHydraulicsLibError;
+use crate::tuas_lib_error::TuasLibError;
 use crate::boussinesq_thermophysical_properties::thermal_diffusivity::try_get_alpha_thermal_diffusivity;
 
 
@@ -15,7 +15,7 @@ impl CartesianConduction1DArray {
     /// gets the maximum timestep from the one dimensional 
     /// control volume for cartesian conduction
     pub fn get_max_timestep(&mut self, 
-    max_temperature_change: TemperatureInterval) -> Result<Time,ThermalHydraulicsLibError>{
+    max_temperature_change: TemperatureInterval) -> Result<Time,TuasLibError>{
         
         // start with an empty timestep vector
         let mut max_timestep_vector: Vec<Time> = vec![];
@@ -140,7 +140,7 @@ impl CartesianConduction1DArray {
         temperature_array_current_timestep_reference: &Array1<ThermodynamicTemperature>,
         pressure: Pressure,
     ) -> 
-    Result<Array1<VolumetricHeatCapacity>,ThermalHydraulicsLibError>{
+    Result<Array1<VolumetricHeatCapacity>,TuasLibError>{
 
         let rho_cp_array:Array1<VolumetricHeatCapacity> 
         = temperature_array_current_timestep_reference.map(
@@ -235,7 +235,7 @@ impl CartesianConduction1DArray {
         pressure: Pressure,
         total_length: Length,
     ) -> 
-    Result<Array1<ThermalConductance>,ThermalHydraulicsLibError> {
+    Result<Array1<ThermalConductance>,TuasLibError> {
 
         // for 1D calcs, we use a basis area
         let basis_area: Area = Area::new::<square_meter>( 

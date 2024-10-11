@@ -1,3 +1,9 @@
+## v 0.0.2 
+
+Renamed thermal_hydraulics_error as tuas_lib_error. Added back in 
+basic conjugate heat transfer and semi infinite medium tests. Also 
+added CIET heater examples as tests.
+
 ## v 0.0.1
 
 This is the first update of the tuas_boussinesq_solver,

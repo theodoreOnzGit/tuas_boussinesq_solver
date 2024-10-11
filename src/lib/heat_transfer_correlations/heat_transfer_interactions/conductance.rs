@@ -5,7 +5,7 @@ thermal_conductivity::try_get_kappa_thermal_conductivity;
 use crate::control_volume_dimensions::*;
 use crate::boussinesq_thermophysical_properties::Material;
 use crate::heat_transfer_correlations::thermal_resistance::try_get_thermal_conductance_annular_cylinder;
-use crate::thermal_hydraulics_error::ThermalHydraulicsLibError;
+use crate::tuas_lib_error::TuasLibError;
 use uom::si::f64::*;
 use uom::si::thermal_conductance::watt_per_kelvin;
 use uom::si::thermodynamic_temperature::kelvin;
@@ -41,7 +41,7 @@ fn get_conductance_single_cartesian_one_dimension(
     material_pressure_1: Pressure,
     material_pressure_2: Pressure,
     thickness: XThicknessThermalConduction) -> 
-Result<ThermalConductance,ThermalHydraulicsLibError> 
+Result<ThermalConductance,TuasLibError> 
 {
 
     // note, the question mark here (?) at the end denotes 
@@ -107,7 +107,7 @@ pub fn get_conductance_dual_cartesian_three_dimensions(
     xs_area: CrossSectionalArea,
     thickness_1: XThicknessThermalConduction,
     thickness_2: XThicknessThermalConduction) -> Result<
-ThermalConductance,ThermalHydraulicsLibError> 
+ThermalConductance,TuasLibError> 
 {
 
     // note, the question mark here (?) at the end denotes 
@@ -204,7 +204,7 @@ pub fn get_conductance_cylindrical_radial_two_materials(
     id: InnerDiameterThermalConduction,
     inner_shell_thickness: RadialCylindricalThicknessThermalConduction,
     outer_shell_thickness: RadialCylindricalThicknessThermalConduction,
-    l: CylinderLengthThermalConduction) -> Result<ThermalConductance,ThermalHydraulicsLibError> 
+    l: CylinderLengthThermalConduction) -> Result<ThermalConductance,TuasLibError> 
 {
 
     // convert quantities to their standard uom Length types
@@ -323,7 +323,7 @@ pub fn get_conductance_single_cylindrical_radial_solid_liquid(
     od: OuterDiameterThermalConduction,
     l: CylinderLengthThermalConduction,
     solid_liquid_arrangement: CylindricalAndSphericalSolidFluidArrangement) 
--> Result<ThermalConductance,ThermalHydraulicsLibError> 
+-> Result<ThermalConductance,TuasLibError> 
 {
 
     // first thing first, let's do the uncomplicated part 

@@ -42,7 +42,7 @@ pub fn case_a_tchx_out_319_kelvin_46_celsius(){
     use uom::si::{f64::*, mass_rate::kilogram_per_second, power::watt};
 
     use std::thread;
-    use crate::thermal_hydraulics_error::ThermalHydraulicsLibError;
+    use crate::tuas_lib_error::TuasLibError;
     use uom::si::{frequency::hertz, ratio::ratio, time::millisecond};
     use uom::si::thermodynamic_temperature::kelvin;
 
@@ -87,7 +87,7 @@ pub fn case_a_tchx_out_319_kelvin_46_celsius(){
         sam_solution_mass_flowrate_kg_per_s: f64,
         tuas_boussinesq_solver_flowrate_kg_per_s_at_4000s_time: f64,
         max_error_tolerance_fraction: f64) -> 
-        Result<(),ThermalHydraulicsLibError>{
+        Result<(),TuasLibError>{
 
             let input_power = Power::new::<watt>(input_power_watts);
             let max_error_tolerance = max_error_tolerance_fraction;

@@ -4,7 +4,7 @@ use crate::boussinesq_thermophysical_properties::specific_enthalpy::try_get_h;
 use uom::si::f64::*;
 use ndarray::*;
 
-use crate::thermal_hydraulics_error::ThermalHydraulicsLibError;
+use crate::tuas_lib_error::TuasLibError;
 use ndarray_linalg::error::LinalgError;
 
 
@@ -121,7 +121,7 @@ impl SolidColumn {
     /// obtains a clone of the temperature array in Array1 ndarray 
     /// form 
     pub fn get_temperature_array(&self) -> Result< 
-    Array1<ThermodynamicTemperature>, ThermalHydraulicsLibError> {
+    Array1<ThermodynamicTemperature>, TuasLibError> {
 
         // converts the fixed sized temperature array (at compile time) 
         // into a dynamically sized ndarray type so we can use solve
@@ -142,7 +142,7 @@ impl SolidColumn {
 
     /// sets the temperature vector to a 
     pub fn set_temperature_vector(&mut self,
-    temperature_vec: Vec<ThermodynamicTemperature>) -> Result<(), ThermalHydraulicsLibError>{
+    temperature_vec: Vec<ThermodynamicTemperature>) -> Result<(), TuasLibError>{
 
         let number_of_temperature_nodes = self.len();
 
@@ -155,7 +155,7 @@ impl SolidColumn {
 
             let linalg_error = LinalgError::Shape(shape_error);
 
-            return Err(ThermalHydraulicsLibError::LinalgError
+            return Err(TuasLibError::LinalgError
                 (linalg_error));
 
         }
@@ -208,7 +208,7 @@ impl SolidColumn {
     /// form 
     pub fn set_temperature_array(&mut self,
     temperature_arr: Array1<ThermodynamicTemperature>) -> Result<(),
-    ThermalHydraulicsLibError> {
+    TuasLibError> {
 
         // we'll convert the temperature array into vector form 
         // and use the existing method 

@@ -14,7 +14,7 @@
 /// Also using mutex locks and Arc pointers to move it into the loop
 #[test]
 pub fn coriolis_flowmeter_empirical_custom_component_example_3() -> Result<(),
-crate::thermal_hydraulics_error::ThermalHydraulicsLibError>{
+crate::tuas_lib_error::TuasLibError>{
     // this tests the calc pressure loss for fluid component 
     use uom::si::f64::*;
     use uom::ConstZero;
