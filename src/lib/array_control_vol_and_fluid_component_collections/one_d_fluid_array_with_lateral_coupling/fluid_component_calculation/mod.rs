@@ -1,6 +1,6 @@
 use crate::boussinesq_thermophysical_properties::density::try_get_rho;
 use crate::boussinesq_thermophysical_properties::dynamic_viscosity::try_get_mu_viscosity;
-use crate::thermal_hydraulics_error::ThermalHydraulicsLibError;
+use crate::thermal_hydraulics_error::TuasLibError;
 use crate::fluid_mechanics_correlations::churchill_friction_factor;
 use roots::*;
 use uom::typenum::P2;
@@ -90,7 +90,7 @@ impl DimensionlessDarcyLossCorrelations {
     /// value
     #[inline]
     pub fn fldk_based_on_darcy_friction_factor(&self, reynolds_input: Ratio) -> 
-    Result<Ratio, ThermalHydraulicsLibError> {
+    Result<Ratio, TuasLibError> {
 
         // check for reverse flow
         let mut reverse_flow = false;
@@ -157,7 +157,7 @@ impl DimensionlessDarcyLossCorrelations {
     /// value
     #[inline]
     pub fn darcy_friction_factor(&self, reynolds_input: Ratio) -> 
-    Result<Ratio, ThermalHydraulicsLibError> {
+    Result<Ratio, TuasLibError> {
 
         // check for reverse flow
         let mut reverse_flow = false;
@@ -210,7 +210,7 @@ impl DimensionlessDarcyLossCorrelations {
     /// negative, pressure loss is also negative
     #[inline]
     pub fn get_bejan_number_from_reynolds(&self, reynolds_input: Ratio,)
-    -> Result<Ratio, ThermalHydraulicsLibError>{
+    -> Result<Ratio, TuasLibError>{
 
         // first the zero test, 
         // if reynolds is zero, then bejan is zero 
@@ -252,7 +252,7 @@ impl DimensionlessDarcyLossCorrelations {
     /// needs testing
     #[inline]
     pub fn get_reynolds_number_from_bejan(&self,
-        bejan_input: Ratio) -> Result<Ratio,ThermalHydraulicsLibError>{
+        bejan_input: Ratio) -> Result<Ratio,TuasLibError>{
 
         // we have to make a pressure drop root 
 
@@ -304,7 +304,7 @@ impl DimensionlessDarcyLossCorrelations {
         hydraulic_diameter: Length,
         fluid_density: MassDensity,
         fluid_viscosity:DynamicViscosity) -> 
-    Result<Pressure,ThermalHydraulicsLibError>{
+    Result<Pressure,TuasLibError>{
 
         if fluid_viscosity.value <= 0.0 {
             panic!("fluid Viscosity <= 0.0, nonphysical");
@@ -336,7 +336,7 @@ impl DimensionlessDarcyLossCorrelations {
         hydraulic_diameter: Length,
         fluid_density: MassDensity,
         fluid_viscosity:DynamicViscosity
-    ) -> Result<Ratio,ThermalHydraulicsLibError>{
+    ) -> Result<Ratio,TuasLibError>{
 
         if fluid_viscosity.value <= 0.0 {
             panic!("fluid Viscosity <= 0.0, nonphysical");

@@ -4,7 +4,7 @@ use uom::si::thermodynamic_temperature::kelvin;
 
 
 use crate::boussinesq_thermophysical_properties::prandtl::try_get_prandtl;
-use crate::thermal_hydraulics_error::ThermalHydraulicsLibError;
+use crate::thermal_hydraulics_error::TuasLibError;
 use crate::boussinesq_thermophysical_properties::Material;
 use crate::boussinesq_thermophysical_properties::thermal_diffusivity::try_get_alpha_thermal_diffusivity;
 
@@ -18,7 +18,7 @@ impl FluidArray {
 
     pub fn get_max_timestep(&mut self,
     max_temperature_change: TemperatureInterval,
-    mass_flowrate: MassRate) -> Result<Time, ThermalHydraulicsLibError>{
+    mass_flowrate: MassRate) -> Result<Time, TuasLibError>{
 
         // for a fluid node, there are two types of time intervals to be 
         // aware of 
@@ -196,7 +196,7 @@ impl FluidArray {
     ///
     #[inline]
     pub fn try_get_bulk_temperature(&mut self) -> 
-    Result<ThermodynamicTemperature,ThermalHydraulicsLibError>{
+    Result<ThermodynamicTemperature,TuasLibError>{
 
         // for now, doing it quick and dirty, i'm going to obtain a volume 
         // averaged temperature 
@@ -239,7 +239,7 @@ impl FluidArray {
     #[inline]
     pub fn get_reynolds(&mut self, 
     mass_flowrate: MassRate,) -> Result<Ratio,
-    ThermalHydraulicsLibError>{
+    TuasLibError>{
 
         let xs_area = self.xs_area;
         let hydraulic_diameter = self.get_hydraulic_diameter();
@@ -268,7 +268,7 @@ impl FluidArray {
     pub fn get_nusselt(&mut self,
         reynolds: Ratio, 
         prandtl_bulk: Ratio,
-        prandtl_wall: Ratio) -> Result<Ratio, ThermalHydraulicsLibError>{
+        prandtl_wall: Ratio) -> Result<Ratio, TuasLibError>{
 
         // first we need the darcy friction factor in case the Nusselt 
         // correlation is the Gnielinski type 

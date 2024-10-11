@@ -1,6 +1,6 @@
 use uom::si::f64::*;
 
-use crate::thermal_hydraulics_error::ThermalHydraulicsLibError;
+use crate::thermal_hydraulics_error::TuasLibError;
 
 use super::LiquidMaterial;
 use super::Material;
@@ -98,7 +98,7 @@ use temperature_from_specific_enthalpy::*;
 /// ``` 
 pub fn try_get_h(material: Material, 
     temperature: ThermodynamicTemperature,
-    _pressure: Pressure) -> Result<AvailableEnergy, ThermalHydraulicsLibError> {
+    _pressure: Pressure) -> Result<AvailableEnergy, TuasLibError> {
 
     let specific_enthalpy: AvailableEnergy = match material {
         Material::Solid(_) => solid_specific_enthalpy(material, temperature),
@@ -169,7 +169,7 @@ pub fn try_get_h(material: Material,
 /// ```
 pub fn try_get_temperature_from_h(material: Material, 
     material_enthalpy: AvailableEnergy,
-    _pressure: Pressure) -> Result<ThermodynamicTemperature, ThermalHydraulicsLibError> {
+    _pressure: Pressure) -> Result<ThermodynamicTemperature, TuasLibError> {
 
     let specific_enthalpy: ThermodynamicTemperature = match material {
         Material::Solid(_) => 

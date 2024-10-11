@@ -1,7 +1,7 @@
 use uom::num_traits::Zero;
 use uom::si::f64::*;
 
-use crate::thermal_hydraulics_error::ThermalHydraulicsLibError;
+use crate::thermal_hydraulics_error::TuasLibError;
 
 /// Contains all the types of Boundary Conditions (BCs) you can use 
 #[derive(Debug,Clone,Copy,PartialEq)]
@@ -43,7 +43,7 @@ impl BCType {
 
 
     pub(crate) fn get_temperature_vector(&self) -> 
-    Result<Vec<ThermodynamicTemperature>,ThermalHydraulicsLibError>{
+    Result<Vec<ThermodynamicTemperature>,TuasLibError>{
 
         match self {
             BCType::UserSpecifiedTemperature(temperature) => {

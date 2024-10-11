@@ -5,7 +5,7 @@ use uom::si::mass_density::kilogram_per_cubic_meter;
 use uom::si::specific_heat_capacity::joule_per_kilogram_kelvin;
 use uom::si::thermal_conductivity::watt_per_meter_kelvin;
 use crate::boussinesq_thermophysical_properties::*;
-use crate::thermal_hydraulics_error::ThermalHydraulicsLibError;
+use crate::thermal_hydraulics_error::TuasLibError;
 use uom::si::thermodynamic_temperature::kelvin;
 
 /// density ranges not quite given in original text 
@@ -14,7 +14,7 @@ use uom::si::thermodynamic_temperature::kelvin;
 /// No. ANL/NSE-19/11. 
 /// Argonne National Lab.(ANL), Argonne, IL (United States), 2019.
 #[inline]
-pub fn fiberglass_density() -> Result<MassDensity,ThermalHydraulicsLibError> {
+pub fn fiberglass_density() -> Result<MassDensity,TuasLibError> {
     return Ok(MassDensity::new::<kilogram_per_cubic_meter>(20.0));
 }
 
@@ -48,7 +48,7 @@ pub fn fiberglass_specific_heat_capacity(
 /// Lab.(ANL), Argonne, IL (United States).
 #[inline]
 pub fn fiberglass_thermal_conductivity_zou_zweibaum_spline(
-    temperature: ThermodynamicTemperature) -> Result<ThermalConductivity,ThermalHydraulicsLibError> {
+    temperature: ThermodynamicTemperature) -> Result<ThermalConductivity,TuasLibError> {
 
     range_check(
         &Material::Solid(SolidMaterial::Fiberglass),

@@ -4,7 +4,7 @@ use super::SimpleShellAndTubeHeatExchanger;
 use uom::si::f64::*;
 use uom::si::ratio::ratio;
 use uom::si::pressure::atmosphere;
-use crate::thermal_hydraulics_error::ThermalHydraulicsLibError;
+use crate::thermal_hydraulics_error::TuasLibError;
 use crate::heat_transfer_correlations::nusselt_number_correlations::enums::NusseltCorrelation;
 use crate::boussinesq_thermophysical_properties::SolidMaterial;
 use crate::boussinesq_thermophysical_properties::LiquidMaterial;
@@ -15,31 +15,31 @@ impl SimpleShellAndTubeHeatExchanger {
 
     /// gets the temperature of the inner pipe shell array
     pub fn inner_pipe_shell_temperature(&mut self) -> 
-        Result<Vec<ThermodynamicTemperature>, ThermalHydraulicsLibError>{
+        Result<Vec<ThermodynamicTemperature>, TuasLibError>{
             self.inner_pipe_shell_array_for_single_tube.get_temperature_vector()
     }
 
     /// gets the temperature of the tube side fluid array
     pub fn inner_tube_fluid_array_temperature(&mut self) ->
-        Result<Vec<ThermodynamicTemperature>,ThermalHydraulicsLibError>{
+        Result<Vec<ThermodynamicTemperature>,TuasLibError>{
             self.inner_pipe_shell_array_for_single_tube.get_temperature_vector()
     }
 
     /// gets the shell side fluid array temperature
     pub fn shell_side_fluid_array_temperature(&mut self,) ->
-        Result<Vec<ThermodynamicTemperature>,ThermalHydraulicsLibError>{
+        Result<Vec<ThermodynamicTemperature>,TuasLibError>{
             self.shell_side_fluid_array.get_temperature_vector()
     }
 
     /// gets the shell side outer tube temperature 
     pub fn shell_side_outer_tube_array_temperature(&mut self,) -> 
-        Result<Vec<ThermodynamicTemperature>,ThermalHydraulicsLibError>{
+        Result<Vec<ThermodynamicTemperature>,TuasLibError>{
             self.outer_shell.get_temperature_vector()
     }
 
     /// gets the temperature of the insulation 
     pub fn insulation_array_temperature(&mut self,) ->
-        Result<Vec<ThermodynamicTemperature>,ThermalHydraulicsLibError>{
+        Result<Vec<ThermodynamicTemperature>,TuasLibError>{
 
             if self.heat_exchanger_has_insulation {
                 self.insulation_array.get_temperature_vector()
@@ -122,7 +122,7 @@ impl SimpleShellAndTubeHeatExchanger {
     /// + 1/h_s
     pub fn overall_heat_transfer_coeff_u_shell_side(&self,
         correct_for_prandtl_wall_temperatures: bool) 
-        -> Result<HeatTransfer, ThermalHydraulicsLibError>{
+        -> Result<HeatTransfer, TuasLibError>{
 
             // the thermal conductance here should be based on the 
             // nusselt number correlation

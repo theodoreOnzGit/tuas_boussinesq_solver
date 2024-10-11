@@ -5,7 +5,7 @@ use uom::si::mass_rate::kilogram_per_second;
 use uom::ConstZero;
 
 use crate::array_control_vol_and_fluid_component_collections::one_d_fluid_array_with_lateral_coupling::fluid_component_calculation::DimensionlessDarcyLossCorrelations;
-use crate::thermal_hydraulics_error::ThermalHydraulicsLibError;
+use crate::thermal_hydraulics_error::TuasLibError;
 use crate::fluid_mechanics_correlations::dimensionalisation;
 use crate::fluid_mechanics_correlations::churchill_friction_factor;
 /// This is a generic fluid component trait,
@@ -389,7 +389,7 @@ pub trait FluidPipeCalcPressureLoss {
         fluid_density: MassDensity,
         pipe_length: Length,
         absolute_roughness: Length,
-        form_loss_k: f64) -> Result<Pressure,ThermalHydraulicsLibError> {
+        form_loss_k: f64) -> Result<Pressure,TuasLibError> {
         // first let's calculate roughness ratio
 
         let roughness_ratio_quantity = absolute_roughness/hydraulic_diameter;
@@ -455,7 +455,7 @@ pub trait FluidPipeCalcPressureLoss {
         fluid_density: MassDensity,
         pipe_length: Length,
         absolute_roughness: Length,
-        form_loss_k: f64) -> Result<MassRate,ThermalHydraulicsLibError> {
+        form_loss_k: f64) -> Result<MassRate,TuasLibError> {
 
         // first let's get our relevant ratios:
         let roughness_ratio_quantity = absolute_roughness/hydraulic_diameter;
@@ -517,7 +517,7 @@ FluidComponentTrait{
         absolute_roughness: Length,
         form_loss_k: f64,
         incline_angle: Angle,
-        source_pressure: Pressure) -> Result<Pressure,ThermalHydraulicsLibError> {
+        source_pressure: Pressure) -> Result<Pressure,TuasLibError> {
 
         // first we calculate the pressure loss
         // of the pipe
@@ -562,7 +562,7 @@ FluidComponentTrait{
         absolute_roughness: Length,
         form_loss_k: f64,
         incline_angle: Angle,
-        source_pressure: Pressure) -> Result<MassRate,ThermalHydraulicsLibError> {
+        source_pressure: Pressure) -> Result<MassRate,TuasLibError> {
 
         // now we need to calculate a pressure loss term
         // we use:
@@ -677,7 +677,7 @@ pub trait FluidCustomComponentCalcPressureLoss {
         fluid_viscosity: DynamicViscosity,
         fluid_density: MassDensity,
         loss_correlation: DimensionlessDarcyLossCorrelations,) -> 
-        Result<Pressure,ThermalHydraulicsLibError> {
+        Result<Pressure,TuasLibError> {
 
         // first we get our Reynolds number
 
@@ -719,7 +719,7 @@ pub trait FluidCustomComponentCalcPressureLoss {
         fluid_viscosity: DynamicViscosity,
         fluid_density: MassDensity,
         loss_correlation: DimensionlessDarcyLossCorrelations,) 
-        -> Result<MassRate,ThermalHydraulicsLibError> {
+        -> Result<MassRate,TuasLibError> {
 
             // need to first consider reverse flow and zero flow
             // if pressure loss is zero, then return a zero mass flowrate
@@ -792,7 +792,7 @@ FluidCustomComponentCalcPressureLoss+ FluidComponentTrait{
         incline_angle: Angle,
         source_pressure: Pressure,
         loss_correlation: DimensionlessDarcyLossCorrelations) -> 
-        Result<Pressure,ThermalHydraulicsLibError> {
+        Result<Pressure,TuasLibError> {
 
         // now we need to calculate a pressure loss term
         // we use:
@@ -844,7 +844,7 @@ FluidCustomComponentCalcPressureLoss+ FluidComponentTrait{
         incline_angle: Angle,
         source_pressure: Pressure,
         loss_correlation: DimensionlessDarcyLossCorrelations) -> 
-        Result<MassRate,ThermalHydraulicsLibError> {
+        Result<MassRate,TuasLibError> {
 
         // now we need to calculate a pressure loss term
         // we use:

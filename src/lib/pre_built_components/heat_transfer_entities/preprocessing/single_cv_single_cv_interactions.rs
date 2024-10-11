@@ -6,7 +6,7 @@ use uom::si::thermodynamic_temperature::kelvin;
 
 use crate::heat_transfer_correlations::heat_transfer_interactions::*;
 use crate::single_control_vol::SingleCVNode;
-use crate::thermal_hydraulics_error::ThermalHydraulicsLibError;
+use crate::thermal_hydraulics_error::TuasLibError;
 use crate::heat_transfer_correlations::heat_transfer_interactions::heat_transfer_interaction_enums::{DataAdvection, HeatTransferInteractionType};
 
 use uom::num_traits::Zero;
@@ -18,7 +18,7 @@ use super::try_get_thermal_conductance_based_on_interaction;
 pub fn calculate_between_two_singular_cv_nodes(
     single_cv_1: &mut SingleCVNode,
     single_cv_2: &mut SingleCVNode,
-    interaction: HeatTransferInteractionType)-> Result<(), ThermalHydraulicsLibError>{
+    interaction: HeatTransferInteractionType)-> Result<(), TuasLibError>{
 
 
     match interaction {
@@ -123,7 +123,7 @@ pub fn calculate_between_two_singular_cv_nodes(
 pub fn calculate_advection_interaction_between_two_singular_cv_nodes(
     single_cv_1: &mut SingleCVNode,
     single_cv_2: &mut SingleCVNode,
-    advection_data: DataAdvection)-> Result<(), ThermalHydraulicsLibError>{
+    advection_data: DataAdvection)-> Result<(), TuasLibError>{
 
     let mass_flow_from_cv_1_to_cv_2 = advection_data.mass_flowrate;
 
@@ -207,7 +207,7 @@ pub fn calculate_advection_interaction_between_two_singular_cv_nodes(
 pub fn calculate_conductance_interaction_between_two_singular_cv_nodes(
     single_cv_1: &mut SingleCVNode,
     single_cv_2: &mut SingleCVNode,
-    interaction: HeatTransferInteractionType)-> Result<(), ThermalHydraulicsLibError>{
+    interaction: HeatTransferInteractionType)-> Result<(), TuasLibError>{
 
     // let's get the two temperatures of the control volumes first
     // so let me get the enthalpies, and then their respective 

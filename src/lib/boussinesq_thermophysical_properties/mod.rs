@@ -1,7 +1,7 @@
 //! This module contains a library of liquid and solid 
 //! thermophysical properties
 
-use crate::thermal_hydraulics_error::ThermalHydraulicsLibError;
+use crate::thermal_hydraulics_error::TuasLibError;
 use uom::si::f64::*;
 use uom::si::thermodynamic_temperature::degree_celsius;
 
@@ -26,7 +26,7 @@ impl Default for Material{
 }
 
 impl TryInto<SolidMaterial> for Material {
-    type Error = ThermalHydraulicsLibError;
+    type Error = TuasLibError;
 
     fn try_into(self) -> Result<SolidMaterial, Self::Error> {
         match self {
@@ -34,19 +34,19 @@ impl TryInto<SolidMaterial> for Material {
                 Ok(material)
             },
             Material::Liquid(_) => {
-                Err(ThermalHydraulicsLibError::TypeConversionErrorMaterial)
+                Err(TuasLibError::TypeConversionErrorMaterial)
             },
         }
     }
 }
 
 impl TryInto<LiquidMaterial> for Material {
-    type Error = ThermalHydraulicsLibError;
+    type Error = TuasLibError;
 
     fn try_into(self) -> Result<LiquidMaterial, Self::Error> {
         match self {
             Material::Solid(_) => {
-                Err(ThermalHydraulicsLibError::TypeConversionErrorMaterial)
+                Err(TuasLibError::TypeConversionErrorMaterial)
             },
             Material::Liquid(material) => {
                 Ok(material)
@@ -176,7 +176,7 @@ pub fn range_check(material: &Material,
     material_temperature: ThermodynamicTemperature,
     upper_temperature_limit: ThermodynamicTemperature,
     lower_temperature_limit: ThermodynamicTemperature) 
-    -> Result<bool,ThermalHydraulicsLibError>{
+    -> Result<bool,TuasLibError>{
 
     // first i convert the fluidTemp object into a degree 
     // celsius
@@ -201,7 +201,7 @@ pub fn range_check(material: &Material,
                error_msg3,
                error_msg4);
         dbg!(&material);
-        return Err(ThermalHydraulicsLibError::ThermophysicalPropertyTemperatureRangeError);
+        return Err(TuasLibError::ThermophysicalPropertyTemperatureRangeError);
     }
 
 
@@ -218,7 +218,7 @@ pub fn range_check(material: &Material,
                error_msg3,
                error_msg4);
         dbg!(&material);
-        return Err(ThermalHydraulicsLibError::ThermophysicalPropertyTemperatureRangeError);
+        return Err(TuasLibError::ThermophysicalPropertyTemperatureRangeError);
     }
 
     return Ok(true);

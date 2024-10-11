@@ -1,4 +1,4 @@
-use crate::thermal_hydraulics_error::ThermalHydraulicsLibError;
+use crate::thermal_hydraulics_error::TuasLibError;
 
 use super::SingleCVNode;
 use uom::si::f64::*;
@@ -11,7 +11,7 @@ impl SingleCVNode {
     /// calculates the new enthalpy of the 
     /// and cleans out the all power vectors and time step vectors
     #[inline]
-    pub fn advance_timestep(&mut self, timestep: Time) -> Result<(), ThermalHydraulicsLibError>{
+    pub fn advance_timestep(&mut self, timestep: Time) -> Result<(), TuasLibError>{
 
 
         // first thing is to sum up all enthalpy changes
@@ -66,7 +66,7 @@ impl SingleCVNode {
     /// clears all vectors for next timestep
     /// This is important for the advance timestep method
     pub fn clear_vectors(&mut self) 
-    -> Result<(), ThermalHydraulicsLibError>{
+    -> Result<(), TuasLibError>{
 
 
         self.rate_enthalpy_change_vector.clear();

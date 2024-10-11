@@ -1,5 +1,5 @@
 use uom::si::f64::*;
-use crate::thermal_hydraulics_error::ThermalHydraulicsLibError;
+use crate::thermal_hydraulics_error::TuasLibError;
 
 use super::liquid_database;
 use super::liquid_database::flibe::get_flibe_thermal_conductivity;
@@ -56,7 +56,7 @@ use super::liquid_database::dowtherm_a::get_dowtherm_a_thermal_conductivity;
 #[inline]
 pub fn try_get_kappa_thermal_conductivity(material: Material, 
     temperature: ThermodynamicTemperature,
-    _pressure: Pressure) -> Result<ThermalConductivity,ThermalHydraulicsLibError> {
+    _pressure: Pressure) -> Result<ThermalConductivity,TuasLibError> {
 
     let thermal_conductivity: ThermalConductivity = match material {
         Material::Solid(_) => solid_thermal_conductivity(material, temperature)?,
@@ -70,7 +70,7 @@ pub fn try_get_kappa_thermal_conductivity(material: Material,
 
 // should the material happen to be a solid, use this function
 fn solid_thermal_conductivity(material: Material,
-    temperature: ThermodynamicTemperature) -> Result<ThermalConductivity,ThermalHydraulicsLibError>{
+    temperature: ThermodynamicTemperature) -> Result<ThermalConductivity,TuasLibError>{
     
     // first match the enum
 
@@ -97,7 +97,7 @@ impl LiquidMaterial {
     #[inline]
     pub fn try_get_thermal_conductivity(&self,
         fluid_temp: ThermodynamicTemperature,) 
-        -> Result<ThermalConductivity, ThermalHydraulicsLibError>{
+        -> Result<ThermalConductivity, TuasLibError>{
 
         let thermal_conductivity: ThermalConductivity = match self {
             DowthermA => get_dowtherm_a_thermal_conductivity(fluid_temp)?,
@@ -125,7 +125,7 @@ impl SolidMaterial {
     #[inline]
     pub fn try_get_thermal_conductivity(&self,
         solid_temp: ThermodynamicTemperature,) 
-        -> Result<ThermalConductivity, ThermalHydraulicsLibError>{
+        -> Result<ThermalConductivity, TuasLibError>{
 
             let thermal_conductivity: ThermalConductivity = match self {
                 Fiberglass => fiberglass_thermal_conductivity_zou_zweibaum_spline(solid_temp)?,
@@ -139,7 +139,7 @@ impl SolidMaterial {
                         Ok(conductivity) => {
                             return Ok(conductivity);
                         },
-                        Err(ThermalHydraulicsLibError::ThermophysicalPropertyTemperatureRangeError) => {
+                        Err(TuasLibError::ThermophysicalPropertyTemperatureRangeError) => {
                             return steel_304_l_spline_thermal_conductivity(solid_temp);
                         },
                         Err(_) => {
@@ -167,7 +167,7 @@ impl SolidMaterial {
 
 // should the material happen to be a liquid, use this function
 fn liquid_thermal_conductivity(material: Material, 
-    fluid_temp: ThermodynamicTemperature) -> Result<ThermalConductivity,ThermalHydraulicsLibError> {
+    fluid_temp: ThermodynamicTemperature) -> Result<ThermalConductivity,TuasLibError> {
 
     let liquid_material: LiquidMaterial = match material {
         Material::Liquid(DowthermA) => DowthermA,

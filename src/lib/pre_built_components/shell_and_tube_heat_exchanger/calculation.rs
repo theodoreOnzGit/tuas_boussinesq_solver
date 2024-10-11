@@ -1,5 +1,5 @@
 use super::SimpleShellAndTubeHeatExchanger;
-use crate::thermal_hydraulics_error::ThermalHydraulicsLibError;
+use crate::thermal_hydraulics_error::TuasLibError;
 use uom::si::f64::*;
 use uom::si::power::watt;
 use crate::array_control_vol_and_fluid_component_collections::one_d_fluid_array_with_lateral_coupling::FluidArray;
@@ -25,7 +25,7 @@ impl SimpleShellAndTubeHeatExchanger {
     ///
     #[inline]
     pub fn advance_timestep(&mut self, 
-    timestep: Time) -> Result<(),ThermalHydraulicsLibError> {
+    timestep: Time) -> Result<(),TuasLibError> {
         
         // first, we need to advance timestep for the parallel tube sides 
         // these should be modified by the number of tubes
@@ -50,7 +50,7 @@ impl SimpleShellAndTubeHeatExchanger {
 
     #[inline]
     fn advance_timestep_for_parallel_tube_side_fluid_array_bundle(&mut self,
-        timestep: Time,) -> Result<(), ThermalHydraulicsLibError>{
+        timestep: Time,) -> Result<(), TuasLibError>{
 
         // first, we need to perform timestep advancement 
         // like for: 
@@ -863,7 +863,7 @@ impl SimpleShellAndTubeHeatExchanger {
     #[inline]
     fn advance_timestep_for_parallel_tube_side_solid_column_bundle(
         &mut self,
-        timestep: Time,) -> Result<(), ThermalHydraulicsLibError>{
+        timestep: Time,) -> Result<(), TuasLibError>{
 
         // like for: 
         // self.pipe_fluid_array.advance_timestep_mut_self(timestep)?;

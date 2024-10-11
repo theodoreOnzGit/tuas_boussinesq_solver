@@ -1,6 +1,6 @@
 use uom::si::f64::*;
 
-use crate::thermal_hydraulics_error::ThermalHydraulicsLibError;
+use crate::thermal_hydraulics_error::TuasLibError;
 
 use super::{Material, density, specific_heat_capacity};
 
@@ -9,7 +9,7 @@ use super::{Material, density, specific_heat_capacity};
 #[inline]
 pub fn try_get_rho_cp(material: Material, 
     temperature: ThermodynamicTemperature,
-    pressure: Pressure) -> Result<VolumetricHeatCapacity,ThermalHydraulicsLibError> {
+    pressure: Pressure) -> Result<VolumetricHeatCapacity,TuasLibError> {
 
     
     let material_density: MassDensity = 

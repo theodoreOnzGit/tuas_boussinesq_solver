@@ -2,7 +2,7 @@ use crate::array_control_vol_and_fluid_component_collections::one_d_fluid_array_
 use crate::array_control_vol_and_fluid_component_collections::one_d_solid_array_with_lateral_coupling::SolidColumn;
 use crate::heat_transfer_correlations::heat_transfer_interactions::heat_transfer_interaction_enums::HeatTransferInteractionType;
 use crate::single_control_vol::SingleCVNode;
-use crate::thermal_hydraulics_error::ThermalHydraulicsLibError;
+use crate::thermal_hydraulics_error::TuasLibError;
 
 impl FluidArray {
 
@@ -13,7 +13,7 @@ impl FluidArray {
     pub fn link_fluid_array_to_the_front_of_this_fluid_array(
         &mut self,
         fluid_array_other: &mut FluidArray,
-        interaction: HeatTransferInteractionType,) -> Result<(), ThermalHydraulicsLibError>{
+        interaction: HeatTransferInteractionType,) -> Result<(), TuasLibError>{
 
         // basically we need to get the front of the self cv, 
         let single_cv_node_self: &mut SingleCVNode = 
@@ -37,7 +37,7 @@ impl FluidArray {
     pub fn link_fluid_array_to_the_back_of_this_fluid_array(
         &mut self,
         fluid_array_other: &mut FluidArray,
-        interaction: HeatTransferInteractionType,) -> Result<(), ThermalHydraulicsLibError>{
+        interaction: HeatTransferInteractionType,) -> Result<(), TuasLibError>{
 
         // basically we need to get the back of the self cv, 
         let single_cv_node_self: &mut SingleCVNode = 
@@ -60,11 +60,11 @@ impl FluidArray {
     pub fn link_solid_column_to_the_front_of_this_fluid_array(
         &mut self,
         solid_column_other: &mut SolidColumn,
-        interaction: HeatTransferInteractionType,) -> Result<(), ThermalHydraulicsLibError>{
+        interaction: HeatTransferInteractionType,) -> Result<(), TuasLibError>{
 
         if let HeatTransferInteractionType::Advection(_) = interaction {
             println!("You cannot have advection interactions for Solid Columns");
-            return Err(ThermalHydraulicsLibError::WrongHeatTransferInteractionType);
+            return Err(TuasLibError::WrongHeatTransferInteractionType);
         }
         // basically we need to get the front of the self cv, 
         let single_cv_node_self: &mut SingleCVNode = 
@@ -88,11 +88,11 @@ impl FluidArray {
     pub fn link_solid_column_to_the_back_of_this_fluid_array(
         &mut self,
         solid_column_other: &mut SolidColumn,
-        interaction: HeatTransferInteractionType,) -> Result<(), ThermalHydraulicsLibError>{
+        interaction: HeatTransferInteractionType,) -> Result<(), TuasLibError>{
 
         if let HeatTransferInteractionType::Advection(_) = interaction {
             println!("You cannot have advection interactions for Solid Columns");
-            return Err(ThermalHydraulicsLibError::WrongHeatTransferInteractionType);
+            return Err(TuasLibError::WrongHeatTransferInteractionType);
         }
         // basically we need to get the back of the self cv, 
         let single_cv_node_self: &mut SingleCVNode = 

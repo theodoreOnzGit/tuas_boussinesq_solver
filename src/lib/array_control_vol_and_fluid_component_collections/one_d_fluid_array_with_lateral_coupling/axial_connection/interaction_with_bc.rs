@@ -4,7 +4,7 @@ use crate::single_control_vol::boundary_condition_interactions::constant_heat_ad
 use crate::single_control_vol::boundary_condition_interactions::constant_heat_addition_to_bcs::calculate_constant_heat_addition_front_single_cv_back;
 use crate::single_control_vol::SingleCVNode;
 
-use crate::thermal_hydraulics_error::ThermalHydraulicsLibError;
+use crate::thermal_hydraulics_error::TuasLibError;
 
 use std::f64::consts::PI;
 
@@ -19,14 +19,14 @@ impl FluidArray {
     pub fn link_heat_flux_bc_to_front_of_this_cv(
         &mut self,
         heat_flux_into_control_vol: HeatFluxDensity,
-        interaction: HeatTransferInteractionType) -> Result<(),ThermalHydraulicsLibError>{
+        interaction: HeatTransferInteractionType) -> Result<(),TuasLibError>{
 
         // first, obtain a heat transfer area from the constant heat flux 
         // BC
         let heat_transfer_area: Area = match interaction{
             HeatTransferInteractionType::UserSpecifiedThermalConductance(_) => 
             {
-                return Err(ThermalHydraulicsLibError::NotImplementedForBoundaryConditions(
+                return Err(TuasLibError::NotImplementedForBoundaryConditions(
                         "please specify interaction type as \n 
                     UserSpecifiedHeatFluxCustomArea or Similar".to_string()
                 ));
@@ -34,7 +34,7 @@ impl FluidArray {
 
             HeatTransferInteractionType::SingleCartesianThermalConductanceOneDimension(_, _) => 
             {
-                return Err(ThermalHydraulicsLibError::NotImplementedForBoundaryConditions(
+                return Err(TuasLibError::NotImplementedForBoundaryConditions(
                         "please specify interaction type as \n 
                     UserSpecifiedHeatFluxCustomArea or Similar".to_string()
                 ));
@@ -42,7 +42,7 @@ impl FluidArray {
 
             HeatTransferInteractionType::DualCartesianThermalConductance(_, _) => 
             {
-                return Err(ThermalHydraulicsLibError::NotImplementedForBoundaryConditions(
+                return Err(TuasLibError::NotImplementedForBoundaryConditions(
                         "please specify interaction type as \n 
                     UserSpecifiedHeatFluxCustomArea or Similar".to_string()
                 ));
@@ -50,7 +50,7 @@ impl FluidArray {
 
             HeatTransferInteractionType::DualCylindricalThermalConductance(_, _, _) => 
             {
-                return Err(ThermalHydraulicsLibError::NotImplementedForBoundaryConditions(
+                return Err(TuasLibError::NotImplementedForBoundaryConditions(
                         "please specify interaction type as \n 
                     UserSpecifiedHeatFluxCustomArea or Similar".to_string()
                 ));
@@ -58,7 +58,7 @@ impl FluidArray {
 
             HeatTransferInteractionType::CylindricalConductionConvectionLiquidOutside(_, _) => 
             {
-                return Err(ThermalHydraulicsLibError::NotImplementedForBoundaryConditions(
+                return Err(TuasLibError::NotImplementedForBoundaryConditions(
                         "please specify interaction type as \n 
                     UserSpecifiedHeatFluxCustomArea or Similar".to_string()
                 ));
@@ -66,7 +66,7 @@ impl FluidArray {
 
             HeatTransferInteractionType::CylindricalConductionConvectionLiquidInside(_, _) => 
             {
-                return Err(ThermalHydraulicsLibError::NotImplementedForBoundaryConditions(
+                return Err(TuasLibError::NotImplementedForBoundaryConditions(
                         "please specify interaction type as \n 
                     UserSpecifiedHeatFluxCustomArea or Similar".to_string()
                 ));
@@ -74,7 +74,7 @@ impl FluidArray {
 
             HeatTransferInteractionType::UserSpecifiedHeatAddition => 
             {
-                return Err(ThermalHydraulicsLibError::NotImplementedForBoundaryConditions(
+                return Err(TuasLibError::NotImplementedForBoundaryConditions(
                         "please specify interaction type as \n 
                     UserSpecifiedHeatFluxCustomArea or Similar".to_string()
                 ));
@@ -82,7 +82,7 @@ impl FluidArray {
 
             HeatTransferInteractionType::DualCartesianThermalConductanceThreeDimension(_) => 
             {
-                return Err(ThermalHydraulicsLibError::NotImplementedForBoundaryConditions(
+                return Err(TuasLibError::NotImplementedForBoundaryConditions(
                         "please specify interaction type as \n 
                     UserSpecifiedHeatFluxCustomArea or Similar".to_string()
                 ));
@@ -111,21 +111,21 @@ impl FluidArray {
 
             HeatTransferInteractionType:: UserSpecifiedConvectionResistance(_) => 
             {
-                return Err(ThermalHydraulicsLibError::NotImplementedForBoundaryConditions(
+                return Err(TuasLibError::NotImplementedForBoundaryConditions(
                         "please specify interaction type as \n 
                     UserSpecifiedHeatFluxCustomArea or Similar".to_string()
                 ));
             },
             HeatTransferInteractionType:: Advection(_) => 
             {
-                return Err(ThermalHydraulicsLibError::NotImplementedForBoundaryConditions(
+                return Err(TuasLibError::NotImplementedForBoundaryConditions(
                         "please specify interaction type as \n 
                     UserSpecifiedHeatFluxCustomArea or Similar".to_string()
                 ));
             },
             HeatTransferInteractionType:: SimpleRadiation(_,_,_) => 
             {
-                return Err(ThermalHydraulicsLibError::NotImplementedForBoundaryConditions(
+                return Err(TuasLibError::NotImplementedForBoundaryConditions(
                         "please specify interaction type as \n 
                     UserSpecifiedHeatFluxCustomArea or Similar".to_string()
                 ));
@@ -167,14 +167,14 @@ impl FluidArray {
     pub fn link_heat_flux_bc_to_back_of_this_cv(
         &mut self,
         heat_flux_into_control_vol: HeatFluxDensity,
-        interaction: HeatTransferInteractionType) -> Result<(),ThermalHydraulicsLibError>{
+        interaction: HeatTransferInteractionType) -> Result<(),TuasLibError>{
 
         // first, obtain a heat transfer area from the constant heat flux 
         // BC
         let heat_transfer_area: Area = match interaction{
             HeatTransferInteractionType::UserSpecifiedThermalConductance(_) => 
             {
-                return Err(ThermalHydraulicsLibError::NotImplementedForBoundaryConditions(
+                return Err(TuasLibError::NotImplementedForBoundaryConditions(
                         "please specify interaction type as \n 
                     UserSpecifiedHeatFluxCustomArea or Similar".to_string()
                 ));
@@ -182,7 +182,7 @@ impl FluidArray {
 
             HeatTransferInteractionType::SingleCartesianThermalConductanceOneDimension(_, _) => 
             {
-                return Err(ThermalHydraulicsLibError::NotImplementedForBoundaryConditions(
+                return Err(TuasLibError::NotImplementedForBoundaryConditions(
                         "please specify interaction type as \n 
                     UserSpecifiedHeatFluxCustomArea or Similar".to_string()
                 ));
@@ -190,7 +190,7 @@ impl FluidArray {
 
             HeatTransferInteractionType::DualCartesianThermalConductance(_, _) => 
             {
-                return Err(ThermalHydraulicsLibError::NotImplementedForBoundaryConditions(
+                return Err(TuasLibError::NotImplementedForBoundaryConditions(
                         "please specify interaction type as \n 
                     UserSpecifiedHeatFluxCustomArea or Similar".to_string()
                 ));
@@ -198,7 +198,7 @@ impl FluidArray {
 
             HeatTransferInteractionType::DualCylindricalThermalConductance(_, _, _) => 
             {
-                return Err(ThermalHydraulicsLibError::NotImplementedForBoundaryConditions(
+                return Err(TuasLibError::NotImplementedForBoundaryConditions(
                         "please specify interaction type as \n 
                     UserSpecifiedHeatFluxCustomArea or Similar".to_string()
                 ));
@@ -206,7 +206,7 @@ impl FluidArray {
 
             HeatTransferInteractionType::CylindricalConductionConvectionLiquidOutside(_, _) => 
             {
-                return Err(ThermalHydraulicsLibError::NotImplementedForBoundaryConditions(
+                return Err(TuasLibError::NotImplementedForBoundaryConditions(
                         "please specify interaction type as \n 
                     UserSpecifiedHeatFluxCustomArea or Similar".to_string()
                 ));
@@ -214,7 +214,7 @@ impl FluidArray {
 
             HeatTransferInteractionType::CylindricalConductionConvectionLiquidInside(_, _) => 
             {
-                return Err(ThermalHydraulicsLibError::NotImplementedForBoundaryConditions(
+                return Err(TuasLibError::NotImplementedForBoundaryConditions(
                         "please specify interaction type as \n 
                     UserSpecifiedHeatFluxCustomArea or Similar".to_string()
                 ));
@@ -222,7 +222,7 @@ impl FluidArray {
 
             HeatTransferInteractionType::UserSpecifiedHeatAddition => 
             {
-                return Err(ThermalHydraulicsLibError::NotImplementedForBoundaryConditions(
+                return Err(TuasLibError::NotImplementedForBoundaryConditions(
                         "please specify interaction type as \n 
                     UserSpecifiedHeatFluxCustomArea or Similar".to_string()
                 ));
@@ -230,7 +230,7 @@ impl FluidArray {
 
             HeatTransferInteractionType::DualCartesianThermalConductanceThreeDimension(_) => 
             {
-                return Err(ThermalHydraulicsLibError::NotImplementedForBoundaryConditions(
+                return Err(TuasLibError::NotImplementedForBoundaryConditions(
                         "please specify interaction type as \n 
                     UserSpecifiedHeatFluxCustomArea or Similar".to_string()
                 ));
@@ -259,14 +259,14 @@ impl FluidArray {
 
             HeatTransferInteractionType:: UserSpecifiedConvectionResistance(_) => 
             {
-                return Err(ThermalHydraulicsLibError::NotImplementedForBoundaryConditions(
+                return Err(TuasLibError::NotImplementedForBoundaryConditions(
                         "please specify interaction type as \n 
                     UserSpecifiedHeatFluxCustomArea or Similar".to_string()
                 ));
             },
             HeatTransferInteractionType:: Advection(_) => 
             {
-                return Err(ThermalHydraulicsLibError::NotImplementedForBoundaryConditions(
+                return Err(TuasLibError::NotImplementedForBoundaryConditions(
                         "please specify interaction type as \n 
                     UserSpecifiedHeatFluxCustomArea or Similar".to_string()
                 ));
@@ -275,7 +275,7 @@ impl FluidArray {
                 SimpleRadiation
                 (_area_coeff, _hot_temperature, _cold_temperature) => 
                 {
-                    return Err(ThermalHydraulicsLibError::NotImplementedForBoundaryConditions(
+                    return Err(TuasLibError::NotImplementedForBoundaryConditions(
                             "please specify interaction type as \n 
                     UserSpecifiedHeatFluxCustomArea or Similar".to_string()
                     ));
@@ -318,7 +318,7 @@ impl FluidArray {
     pub fn link_heat_addition_to_front_of_this_cv(
         &mut self,
         heat_rate: Power,
-        interaction: HeatTransferInteractionType) -> Result<(),ThermalHydraulicsLibError> {
+        interaction: HeatTransferInteractionType) -> Result<(),TuasLibError> {
 
         // we need to obtain the single cv from the array cv first 
         // and this will be the front cv or outer cv 
@@ -343,7 +343,7 @@ impl FluidArray {
     pub fn link_heat_addition_to_back_of_this_cv(
         &mut self,
         heat_rate: Power,
-        interaction: HeatTransferInteractionType) -> Result<(),ThermalHydraulicsLibError> {
+        interaction: HeatTransferInteractionType) -> Result<(),TuasLibError> {
 
         // we need to obtain the single cv from the array cv first 
         // and this will be the back cv or inner cv 
@@ -365,7 +365,7 @@ impl FluidArray {
     pub fn link_constant_temperature_to_front_of_this_cv(
         &mut self,
         bc_temperature: ThermodynamicTemperature,
-        interaction: HeatTransferInteractionType) -> Result<(),ThermalHydraulicsLibError> {
+        interaction: HeatTransferInteractionType) -> Result<(),TuasLibError> {
         // we need to obtain the single cv from the array cv first 
         // and this will be the front cv or outer cv 
         //
@@ -387,7 +387,7 @@ impl FluidArray {
     pub fn link_constant_temperature_to_back_of_this_cv(
         &mut self,
         bc_temperature: ThermodynamicTemperature,
-        interaction: HeatTransferInteractionType) -> Result<(),ThermalHydraulicsLibError> {
+        interaction: HeatTransferInteractionType) -> Result<(),TuasLibError> {
 
         // we need to obtain the single cv from the array cv first 
         // and this will be the back cv or inner cv 

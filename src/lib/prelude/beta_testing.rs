@@ -1,5 +1,5 @@
 /// thermal hydraulics library error 
-pub use crate::thermal_hydraulics_error::ThermalHydraulicsLibError;
+pub use crate::thermal_hydraulics_error::TuasLibError;
 
 /// heat transfer entities 
 /// Fluid arrays and solid arrays

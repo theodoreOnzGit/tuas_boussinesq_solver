@@ -1,7 +1,7 @@
 use crate::array_control_vol_and_fluid_component_collections::one_d_fluid_array_with_lateral_coupling::FluidArray;
 use crate::single_control_vol::SingleCVNode;
 use crate::heat_transfer_correlations::heat_transfer_interactions::heat_transfer_interaction_enums::HeatTransferInteractionType;
-use crate::thermal_hydraulics_error::ThermalHydraulicsLibError;
+use crate::thermal_hydraulics_error::TuasLibError;
 
 use uom::si::f64::*;
 
@@ -26,7 +26,7 @@ impl FluidArray {
     /// axis
     pub fn link_single_cv_to_lower_side(&mut self,
         single_cv_node_other: &mut SingleCVNode,
-        interaction: HeatTransferInteractionType) -> Result<(), ThermalHydraulicsLibError>{
+        interaction: HeatTransferInteractionType) -> Result<(), TuasLibError>{
 
 
         // we need to obtain the single cv from the array cv first 
@@ -62,7 +62,7 @@ impl FluidArray {
     /// axis
     pub fn link_single_cv_to_higher_side(&mut self,
         single_cv_node_other: &mut SingleCVNode,
-        interaction: HeatTransferInteractionType) -> Result<(), ThermalHydraulicsLibError>{
+        interaction: HeatTransferInteractionType) -> Result<(), TuasLibError>{
 
         // we need to obtain the single cv from the array cv first 
         // and this will be the front cv or outer cv 
@@ -84,7 +84,7 @@ impl FluidArray {
     pub fn calculate_timestep_for_single_cv_to_front_of_array_cv(
         &mut self,
         single_cv_node_other: &mut SingleCVNode,
-        interaction: HeatTransferInteractionType) -> Result<Time,ThermalHydraulicsLibError> {
+        interaction: HeatTransferInteractionType) -> Result<Time,TuasLibError> {
 
         // we need to obtain the single cv from the array cv first 
         // and this will be the front cv or outer cv 
@@ -105,7 +105,7 @@ impl FluidArray {
     pub fn calculate_timestep_for_single_cv_to_back_of_array_cv(
         &mut self,
         single_cv_node_other: &mut SingleCVNode,
-        interaction: HeatTransferInteractionType) -> Result<Time,ThermalHydraulicsLibError> {
+        interaction: HeatTransferInteractionType) -> Result<Time,TuasLibError> {
 
         // we need to obtain the single cv from the array cv first 
         // and this will be the back cv or inner cv 

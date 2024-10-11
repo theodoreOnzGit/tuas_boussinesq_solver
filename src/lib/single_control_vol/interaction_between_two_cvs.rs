@@ -4,7 +4,7 @@ use crate::boussinesq_thermophysical_properties::thermal_conductivity::try_get_k
 use crate::boussinesq_thermophysical_properties::thermal_diffusivity::try_get_alpha_thermal_diffusivity;
 use crate::boussinesq_thermophysical_properties::Material;
 use crate::heat_transfer_correlations::heat_transfer_interactions::advection_heat_rate;
-use crate::thermal_hydraulics_error::ThermalHydraulicsLibError;
+use crate::thermal_hydraulics_error::TuasLibError;
 use crate::heat_transfer_correlations::
 heat_transfer_interactions::heat_transfer_interaction_enums::DataAdvection;
 use crate::heat_transfer_correlations::
@@ -29,7 +29,7 @@ impl SingleCVNode {
     pub fn calculate_conductance_interaction_to_front_singular_cv_node(
         &mut self,
         single_cv_2: &mut SingleCVNode,
-        interaction: HeatTransferInteractionType)-> Result<(), ThermalHydraulicsLibError>{
+        interaction: HeatTransferInteractionType)-> Result<(), TuasLibError>{
 
         // let's get the two temperatures of the control volumes first
         // so let me get the enthalpies, and then their respective 
@@ -202,7 +202,7 @@ impl SingleCVNode {
     pub fn calculate_advection_interaction_to_front_singular_cv_node(
         &mut self,
         single_cv_2: &mut SingleCVNode,
-        advection_data: DataAdvection)-> Result<(), ThermalHydraulicsLibError>{
+        advection_data: DataAdvection)-> Result<(), TuasLibError>{
 
         let mass_flow_from_cv_1_to_cv_2 = advection_data.mass_flowrate;
 
@@ -284,7 +284,7 @@ impl SingleCVNode {
         &mut self,
         single_cv_2: &mut SingleCVNode,
         interaction: HeatTransferInteractionType) 
-        -> Result<Time, ThermalHydraulicsLibError> 
+        -> Result<Time, TuasLibError> 
     {
 
         let temperature_1: ThermodynamicTemperature = 
@@ -623,11 +623,11 @@ impl SingleCVNode {
 
                 match (material_1, material_2) {
                     (Material::Solid(_), Material::Solid(_)) => {
-                        return Err(ThermalHydraulicsLibError::GenericStringError(
+                        return Err(TuasLibError::GenericStringError(
                                 "should have 1 fluid and 1 solid".to_string()));
                     },
                     (Material::Liquid(_), Material::Liquid(_)) => {
-                        return Err(ThermalHydraulicsLibError::GenericStringError(
+                        return Err(TuasLibError::GenericStringError(
                                 "should have 1 fluid and 1 solid".to_string()));
                     },
                     _ => (),
@@ -878,7 +878,7 @@ impl SingleCVNode {
                     error_str += &expected_outer_diameter.value.to_string();
 
 
-                    return Err(ThermalHydraulicsLibError::GenericStringError(error_str));
+                    return Err(TuasLibError::GenericStringError(error_str));
                 }
 
                 // for this, it should be quite straight forward, 
@@ -946,7 +946,7 @@ impl SingleCVNode {
                 // user specified heat addition does not make sense 
                 // for cv to cv interaction
                 println!("interaction type needs to be thermal conductance");
-                return Err(ThermalHydraulicsLibError::TypeConversionErrorHeatTransferEntity);
+                return Err(TuasLibError::TypeConversionErrorHeatTransferEntity);
             },
 
             HeatTransferInteractionType:: UserSpecifiedHeatFluxCustomArea(_) => 
@@ -956,7 +956,7 @@ impl SingleCVNode {
                 // for cv to cv interaction
                 println!("interaction type needs to be thermal conductance");
 
-                return Err(ThermalHydraulicsLibError::TypeConversionErrorHeatTransferEntity);
+                return Err(TuasLibError::TypeConversionErrorHeatTransferEntity);
 
             },
             HeatTransferInteractionType:: UserSpecifiedHeatFluxCylindricalOuterArea(_,_) => 
@@ -966,7 +966,7 @@ impl SingleCVNode {
                 // for cv to cv interaction
                 println!("interaction type needs to be thermal conductance");
 
-                return Err(ThermalHydraulicsLibError::TypeConversionErrorHeatTransferEntity);
+                return Err(TuasLibError::TypeConversionErrorHeatTransferEntity);
             },
             HeatTransferInteractionType:: UserSpecifiedHeatFluxCylindricalInnerArea(_,_) => 
             {
@@ -975,7 +975,7 @@ impl SingleCVNode {
                 // for cv to cv interaction
                 println!("interaction type needs to be thermal conductance");
 
-                return Err(ThermalHydraulicsLibError::TypeConversionErrorHeatTransferEntity);
+                return Err(TuasLibError::TypeConversionErrorHeatTransferEntity);
             },
             HeatTransferInteractionType:: DualCartesianThermalConductance(
                 (_material_1, thickness_1),

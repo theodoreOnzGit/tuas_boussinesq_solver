@@ -9,7 +9,7 @@ use crate::boussinesq_thermophysical_properties::thermal_diffusivity::try_get_al
 use crate::boussinesq_thermophysical_properties::Material;
 use crate::heat_transfer_correlations::heat_transfer_interactions::heat_transfer_interaction_enums::HeatTransferInteractionType;
 use crate::single_control_vol::SingleCVNode;
-use crate::thermal_hydraulics_error::ThermalHydraulicsLibError;
+use crate::thermal_hydraulics_error::TuasLibError;
 
 impl SingleCVNode {
     /// calculates a conductance interaction between the constant 
@@ -21,7 +21,7 @@ impl SingleCVNode {
     pub fn calculate_single_cv_node_constant_temperature_conductance(
         &mut self,
         boundary_condition_temperature: ThermodynamicTemperature,
-        interaction: HeatTransferInteractionType) -> Result<(), ThermalHydraulicsLibError> {
+        interaction: HeatTransferInteractionType) -> Result<(), TuasLibError> {
         // first let's get the control volume temperatures out
 
 
@@ -119,7 +119,7 @@ impl SingleCVNode {
     /// this function allows for calculation of this threshold times step
     pub fn calculate_mesh_stability_conduction_timestep_for_single_node_and_bc(
         &mut self,
-        interaction: HeatTransferInteractionType) -> Result<Time,ThermalHydraulicsLibError> {
+        interaction: HeatTransferInteractionType) -> Result<Time,TuasLibError> {
 
         // here we have timestep based on the generic lengthscale of the 
         // control volume 

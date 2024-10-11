@@ -1,5 +1,5 @@
 use super::CartesianConduction1DArray;
-use crate::thermal_hydraulics_error::ThermalHydraulicsLibError;
+use crate::thermal_hydraulics_error::TuasLibError;
 use uom::si::f64::*;
 
 impl CartesianConduction1DArray {
@@ -7,7 +7,7 @@ impl CartesianConduction1DArray {
     /// returns a clone of the temperature_array_current_timestep
     #[inline]
     pub fn get_temperature_vector(&mut self) -> 
-    Result<Vec<ThermodynamicTemperature>, ThermalHydraulicsLibError> {
+    Result<Vec<ThermodynamicTemperature>, TuasLibError> {
         let temp_array = self.temperature_array_current_timestep.clone();
 
         let mut temp_vector: Vec<ThermodynamicTemperature> = vec![];

@@ -10,7 +10,7 @@ use crate::heat_transfer_correlations::heat_transfer_interactions::heat_transfer
 use crate::heat_transfer_correlations::heat_transfer_interactions::*;
 use crate::single_control_vol::boundary_condition_interactions::constant_heat_addition_to_bcs::calculate_single_cv_front_constant_heat_addition_back;
 use crate::single_control_vol::SingleCVNode;
-use crate::thermal_hydraulics_error::ThermalHydraulicsLibError;
+use crate::thermal_hydraulics_error::TuasLibError;
 use crate::heat_transfer_correlations::heat_transfer_interactions::heat_transfer_interaction_enums::HeatTransferInteractionType;
 
 use self::single_cv_and_bc_interactions::calculate_bc_front_cv_back_advection_for_heat_flux_or_heat_addition;
@@ -44,7 +44,7 @@ impl HeatTransferEntity {
     #[inline]
     pub fn link_to_front(&mut self,
     other_hte: &mut HeatTransferEntity,
-    interaction: HeatTransferInteractionType) -> Result<(), ThermalHydraulicsLibError>{
+    interaction: HeatTransferInteractionType) -> Result<(), TuasLibError>{
 
         link_heat_transfer_entity(
             self,
@@ -56,7 +56,7 @@ impl HeatTransferEntity {
     #[inline]
     pub fn link_to_back(&mut self,
     other_hte: &mut HeatTransferEntity,
-    interaction: HeatTransferInteractionType) -> Result<(), ThermalHydraulicsLibError>{
+    interaction: HeatTransferInteractionType) -> Result<(), TuasLibError>{
 
         link_heat_transfer_entity(
             other_hte,
@@ -68,7 +68,7 @@ impl HeatTransferEntity {
     #[inline]
     pub fn link(entity: &mut HeatTransferEntity,
     other_hte: &mut HeatTransferEntity,
-    interaction: HeatTransferInteractionType) -> Result<(), ThermalHydraulicsLibError>{
+    interaction: HeatTransferInteractionType) -> Result<(), TuasLibError>{
 
         link_heat_transfer_entity(
             entity,
@@ -93,7 +93,7 @@ impl HeatTransferEntity {
 #[inline]
 pub fn link_heat_transfer_entity(entity_1: &mut HeatTransferEntity,
     entity_2: &mut HeatTransferEntity,
-    interaction: HeatTransferInteractionType)-> Result<(), ThermalHydraulicsLibError>{
+    interaction: HeatTransferInteractionType)-> Result<(), TuasLibError>{
 
     // first thing first, probably want to unpack the enums to obtain 
     // the underlying control volume and BCs
@@ -138,7 +138,7 @@ pub fn link_heat_transfer_entity(entity_1: &mut HeatTransferEntity,
         ) =>
         {
             return Err( 
-                ThermalHydraulicsLibError::NotImplementedForBoundaryConditions
+                TuasLibError::NotImplementedForBoundaryConditions
                 ( "interactions between two boundary conditions \n not implemented".to_string()));
         },
     };
@@ -155,7 +155,7 @@ pub fn link_heat_transfer_entity(entity_1: &mut HeatTransferEntity,
 pub (crate) fn calculate_control_volume_serial(
     control_vol_1: &mut CVType,
     control_vol_2: &mut CVType,
-    interaction: HeatTransferInteractionType) -> Result<(),ThermalHydraulicsLibError>{
+    interaction: HeatTransferInteractionType) -> Result<(),TuasLibError>{
 
     // let me first match my control volumes to their various types
     // at each matching arm, use those as inputs
@@ -255,7 +255,7 @@ pub (crate) fn calculate_control_volume_serial(
 pub fn calculate_timescales_for_heat_transfer_entity(
     entity_1: &mut HeatTransferEntity,
     entity_2: &mut HeatTransferEntity,
-    interaction: HeatTransferInteractionType)-> Result<Time, ThermalHydraulicsLibError>{
+    interaction: HeatTransferInteractionType)-> Result<Time, TuasLibError>{
 
     // first thing first, probably want to unpack the enums to obtain 
     // the underlying control volume and BCs
@@ -293,7 +293,7 @@ pub fn calculate_timescales_for_heat_transfer_entity(
          HeatTransferEntity::BoundaryConditions(_bc_type_2)) =>
         {
             return Err( 
-                ThermalHydraulicsLibError::NotImplementedForBoundaryConditions
+                TuasLibError::NotImplementedForBoundaryConditions
                 ( "interactions between two boundary conditions \n not implemented".to_string()));
         }
     };
@@ -312,7 +312,7 @@ pub fn calculate_timescales_for_heat_transfer_entity(
 pub (crate) fn calculate_timestep_control_volume_front_to_boundary_condition_serial(
     control_vol: &mut CVType,
     boundary_condition: &mut BCType,
-    interaction: HeatTransferInteractionType) -> Result<Time,ThermalHydraulicsLibError> {
+    interaction: HeatTransferInteractionType) -> Result<Time,TuasLibError> {
 
 
     let cv_bc_result = match (control_vol, boundary_condition) {
@@ -388,7 +388,7 @@ pub (crate) fn calculate_timestep_control_volume_front_to_boundary_condition_ser
 pub (crate) fn calculate_timestep_control_volume_serial(
     control_vol_1: &mut CVType,
     control_vol_2: &mut CVType,
-    interaction: HeatTransferInteractionType) -> Result<Time,ThermalHydraulicsLibError>{
+    interaction: HeatTransferInteractionType) -> Result<Time,TuasLibError>{
 
     // let me first match my control volumes to their various types
     // at each matching arm, use those as inputs
@@ -473,7 +473,7 @@ pub (crate) fn calculate_timestep_control_volume_serial(
 pub (crate) fn calculate_timestep_control_volume_back_to_boundary_condition_serial(
     boundary_condition: &mut BCType,
     control_vol: &mut CVType,
-    interaction: HeatTransferInteractionType) -> Result<Time,ThermalHydraulicsLibError> {
+    interaction: HeatTransferInteractionType) -> Result<Time,TuasLibError> {
 
 
     let cv_bc_result = match (control_vol, boundary_condition) {
@@ -556,7 +556,7 @@ fn try_get_thermal_conductance_based_on_interaction(
     pressure_1: Pressure,
     pressure_2: Pressure,
     interaction: HeatTransferInteractionType) 
--> Result<ThermalConductance, ThermalHydraulicsLibError> 
+-> Result<ThermalConductance, TuasLibError> 
 {
 
     let conductance: ThermalConductance = match 
@@ -669,7 +669,7 @@ fn try_get_thermal_conductance_based_on_interaction(
                         error_str += &expected_outer_diameter.value.to_string();
 
 
-                        return Err(ThermalHydraulicsLibError::GenericStringError(error_str));
+                        return Err(TuasLibError::GenericStringError(error_str));
                     }
 
                     get_conductance_cylindrical_radial_two_materials(
@@ -689,7 +689,7 @@ fn try_get_thermal_conductance_based_on_interaction(
                 => {
                     println!("interaction type needs to be \n 
                         thermal conductance");
-                    return Err(ThermalHydraulicsLibError::WrongHeatTransferInteractionType);
+                    return Err(TuasLibError::WrongHeatTransferInteractionType);
                 },
 
             HeatTransferInteractionType::
@@ -697,7 +697,7 @@ fn try_get_thermal_conductance_based_on_interaction(
 
                     println!("interaction type needs to be \n 
                         thermal conductance");
-                    return Err(ThermalHydraulicsLibError::WrongHeatTransferInteractionType);
+                    return Err(TuasLibError::WrongHeatTransferInteractionType);
 
                 },
             HeatTransferInteractionType::
@@ -705,7 +705,7 @@ fn try_get_thermal_conductance_based_on_interaction(
 
                     println!("interaction type needs to be \n 
                         thermal conductance");
-                    return Err(ThermalHydraulicsLibError::WrongHeatTransferInteractionType);
+                    return Err(TuasLibError::WrongHeatTransferInteractionType);
 
                 },
             HeatTransferInteractionType::
@@ -713,7 +713,7 @@ fn try_get_thermal_conductance_based_on_interaction(
 
                     println!("interaction type needs to be \n 
                         thermal conductance");
-                    return Err(ThermalHydraulicsLibError::WrongHeatTransferInteractionType);
+                    return Err(TuasLibError::WrongHeatTransferInteractionType);
 
                 },
             HeatTransferInteractionType::
@@ -795,7 +795,7 @@ fn try_get_thermal_conductance_based_on_interaction(
             HeatTransferInteractionType::Advection(_) => {
                 println!("advection interaction types \n 
                 do not correspond to conductance");
-                return Err(ThermalHydraulicsLibError::WrongHeatTransferInteractionType);
+                return Err(TuasLibError::WrongHeatTransferInteractionType);
             },
             HeatTransferInteractionType::SimpleRadiation
                 (area_coeff, hot_temperature, cold_temperature) => 
@@ -832,7 +832,7 @@ fn try_get_thermal_conductance_based_on_interaction(
 pub (crate) fn attach_boundary_condition_to_control_volume_front_serial(
     control_vol: &mut CVType,
     boundary_condition: &mut BCType,
-    interaction: HeatTransferInteractionType) -> Result<(),ThermalHydraulicsLibError> {
+    interaction: HeatTransferInteractionType) -> Result<(),TuasLibError> {
 
     let cv_bc_result = match (control_vol, boundary_condition) {
         (CVType::SingleCV(single_cv), BCType::UserSpecifiedHeatAddition(heat_rate)) 
@@ -898,7 +898,7 @@ pub (crate) fn attach_boundary_condition_to_control_volume_front_serial(
 pub (crate) fn attach_boundary_condition_to_control_volume_back_serial(
     boundary_condition: &mut BCType,
     control_vol: &mut CVType,
-    interaction: HeatTransferInteractionType) -> Result<(),ThermalHydraulicsLibError> {
+    interaction: HeatTransferInteractionType) -> Result<(),TuasLibError> {
 
     let cv_bc_result = match (control_vol, boundary_condition) {
         (CVType::SingleCV(single_cv), BCType::UserSpecifiedHeatAddition(heat_rate)) 
@@ -954,7 +954,7 @@ pub (crate) fn attach_boundary_condition_to_control_volume_back_serial(
 pub fn calculate_constant_temperature_front_single_cv_back(
     control_vol: &mut SingleCVNode,
     boundary_condition_temperature: ThermodynamicTemperature,
-    interaction: HeatTransferInteractionType) -> Result<(), ThermalHydraulicsLibError> {
+    interaction: HeatTransferInteractionType) -> Result<(), TuasLibError> {
 
     match interaction {
         HeatTransferInteractionType::Advection(
@@ -985,7 +985,7 @@ pub fn calculate_constant_temperature_front_single_cv_back(
 pub fn calculate_constant_heat_flux_front_single_cv_back(
     control_vol: &mut SingleCVNode,
     heat_flux_into_control_vol: HeatFluxDensity,
-    interaction: HeatTransferInteractionType) -> Result<(), ThermalHydraulicsLibError> {
+    interaction: HeatTransferInteractionType) -> Result<(), TuasLibError> {
 
     // first, obtain a heat transfer area from the constant heat flux 
     // BC
@@ -995,7 +995,7 @@ pub fn calculate_constant_heat_flux_front_single_cv_back(
             {
                 println!("please specify interaction type as \n 
                 UserSpecifiedHeatFluxCustomArea or Similar");
-                return Err(ThermalHydraulicsLibError::WrongHeatTransferInteractionType);
+                return Err(TuasLibError::WrongHeatTransferInteractionType);
             }
         ,
 
@@ -1004,7 +1004,7 @@ pub fn calculate_constant_heat_flux_front_single_cv_back(
             {
                 println!("please specify interaction type as \n 
                 UserSpecifiedHeatFluxCustomArea or Similar");
-                return Err(ThermalHydraulicsLibError::WrongHeatTransferInteractionType);
+                return Err(TuasLibError::WrongHeatTransferInteractionType);
             }
         ,
 
@@ -1013,7 +1013,7 @@ pub fn calculate_constant_heat_flux_front_single_cv_back(
             {
                 println!("please specify interaction type as \n 
                 UserSpecifiedHeatFluxCustomArea or Similar");
-                return Err(ThermalHydraulicsLibError::WrongHeatTransferInteractionType);
+                return Err(TuasLibError::WrongHeatTransferInteractionType);
             }
         ,
 
@@ -1022,7 +1022,7 @@ pub fn calculate_constant_heat_flux_front_single_cv_back(
             {
                 println!("please specify interaction type as \n 
                 UserSpecifiedHeatFluxCustomArea or Similar");
-                return Err(ThermalHydraulicsLibError::WrongHeatTransferInteractionType);
+                return Err(TuasLibError::WrongHeatTransferInteractionType);
             }
         ,
 
@@ -1031,7 +1031,7 @@ pub fn calculate_constant_heat_flux_front_single_cv_back(
             {
                 println!("please specify interaction type as \n 
                 UserSpecifiedHeatFluxCustomArea or Similar");
-                return Err(ThermalHydraulicsLibError::WrongHeatTransferInteractionType);
+                return Err(TuasLibError::WrongHeatTransferInteractionType);
             }
         ,
 
@@ -1040,7 +1040,7 @@ pub fn calculate_constant_heat_flux_front_single_cv_back(
             {
                 println!("please specify interaction type as \n 
                 UserSpecifiedHeatFluxCustomArea or Similar");
-                return Err(ThermalHydraulicsLibError::WrongHeatTransferInteractionType);
+                return Err(TuasLibError::WrongHeatTransferInteractionType);
             }
         ,
 
@@ -1049,7 +1049,7 @@ pub fn calculate_constant_heat_flux_front_single_cv_back(
             {
                 println!("please specify interaction type as \n 
                 UserSpecifiedHeatFluxCustomArea or Similar");
-                return Err(ThermalHydraulicsLibError::WrongHeatTransferInteractionType);
+                return Err(TuasLibError::WrongHeatTransferInteractionType);
             }
         ,
 
@@ -1058,7 +1058,7 @@ pub fn calculate_constant_heat_flux_front_single_cv_back(
             {
                 println!("please specify interaction type as \n 
                 UserSpecifiedHeatFluxCustomArea or Similar");
-                return Err(ThermalHydraulicsLibError::WrongHeatTransferInteractionType);
+                return Err(TuasLibError::WrongHeatTransferInteractionType);
             }
         ,
         // these interaction types are acceptable
@@ -1093,7 +1093,7 @@ pub fn calculate_constant_heat_flux_front_single_cv_back(
             {
                 println!("please specify interaction type as \n 
                 UserSpecifiedHeatFluxCustomArea or Similar");
-                return Err(ThermalHydraulicsLibError::WrongHeatTransferInteractionType);
+                return Err(TuasLibError::WrongHeatTransferInteractionType);
             }
         ,
         HeatTransferInteractionType::
@@ -1111,7 +1111,7 @@ pub fn calculate_constant_heat_flux_front_single_cv_back(
             {
                 println!("please specify interaction type as \n 
                 UserSpecifiedHeatFluxCustomArea or Similar");
-                return Err(ThermalHydraulicsLibError::WrongHeatTransferInteractionType);
+                return Err(TuasLibError::WrongHeatTransferInteractionType);
             }
         ,
     };

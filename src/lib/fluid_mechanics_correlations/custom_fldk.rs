@@ -2,7 +2,7 @@
 extern crate peroxide;
 use peroxide::prelude::*;
 
-use crate::thermal_hydraulics_error::ThermalHydraulicsLibError;
+use crate::thermal_hydraulics_error::TuasLibError;
 
 // This library was developed for use in my PhD thesis under supervision 
 // of Professor Per F. Peterson. It is part of a thermal hydraulics
@@ -64,12 +64,12 @@ use crate::thermal_hydraulics_error::ThermalHydraulicsLibError;
 /// this first function allows for custom fldk, 
 /// ie both friction factor and form loss k are user defined
 /// <https://stackoverflow.com/questions/36390665/how-do-you-pass-a-rust-function-as-a-parameter>
-pub fn custom_f_ldk(custom_darcy: &dyn Fn(f64, f64) -> Result<f64,ThermalHydraulicsLibError>,
+pub fn custom_f_ldk(custom_darcy: &dyn Fn(f64, f64) -> Result<f64,TuasLibError>,
         reynolds_number: f64,
         roughness_ratio: f64,
         length_to_diameter_ratio: f64,
-        custom_k: &dyn Fn(f64) -> Result<f64,ThermalHydraulicsLibError>) 
-    -> Result<f64,ThermalHydraulicsLibError>{
+        custom_k: &dyn Fn(f64) -> Result<f64,TuasLibError>) 
+    -> Result<f64,TuasLibError>{
 
     if roughness_ratio < 0.0 {
         panic!("roughnessRatio<0.0");
@@ -94,8 +94,8 @@ pub fn custom_f_ldk(custom_darcy: &dyn Fn(f64, f64) -> Result<f64,ThermalHydraul
 pub fn custom_kpipe(reynolds_number: f64,
     roughness_ratio: f64,
     length_to_diameter_ratio: f64,
-    custom_k: &dyn Fn(f64) -> Result<f64,ThermalHydraulicsLibError>) -> 
-Result<f64, ThermalHydraulicsLibError>{
+    custom_k: &dyn Fn(f64) -> Result<f64,TuasLibError>) -> 
+Result<f64, TuasLibError>{
 
     let darcy_fn = crate::fluid_mechanics_correlations::
         darcy;
@@ -119,8 +119,8 @@ Result<f64, ThermalHydraulicsLibError>{
 pub fn custom_kpipe_be_d(reynolds_number: f64,
                     roughness_ratio: f64,
                     length_to_diameter_ratio: f64,
-                    custom_k: &dyn Fn(f64) -> Result<f64,ThermalHydraulicsLibError>) 
-    -> Result<f64,ThermalHydraulicsLibError>{
+                    custom_k: &dyn Fn(f64) -> Result<f64,TuasLibError>) 
+    -> Result<f64,TuasLibError>{
 
     if reynolds_number == 0.0 {
         return Ok(0.0);
@@ -140,12 +140,12 @@ pub fn custom_kpipe_be_d(reynolds_number: f64,
 
 /// this functions calculates the bejan number using the
 /// custom fLDK formula
-pub fn custom_f_ldk_be_d(custom_darcy: &dyn Fn(f64, f64) -> Result<f64,ThermalHydraulicsLibError>, 
+pub fn custom_f_ldk_be_d(custom_darcy: &dyn Fn(f64, f64) -> Result<f64,TuasLibError>, 
                         reynolds_number: f64,
                         roughness_ratio: f64,
                         length_to_diameter_ratio: f64,
                         custom_k: &dyn Fn(f64) -> 
-                        Result<f64,ThermalHydraulicsLibError>) -> Result<f64,ThermalHydraulicsLibError>{
+                        Result<f64,TuasLibError>) -> Result<f64,TuasLibError>{
 
     if reynolds_number == 0.0 {
         return Ok(0.0);
@@ -172,11 +172,11 @@ pub fn custom_f_ldk_be_d(custom_darcy: &dyn Fn(f64, f64) -> Result<f64,ThermalHy
 /// that is up to the user to decide when 
 /// customDarcy and customK is put in
 pub fn get_reynolds(
-    custom_darcy: &'static dyn Fn(f64, f64) -> Result<f64,ThermalHydraulicsLibError>, 
+    custom_darcy: &'static dyn Fn(f64, f64) -> Result<f64,TuasLibError>, 
     bejan_d: f64,
     roughness_ratio: f64,
     length_to_diameter: f64,
-    custom_k: &'static dyn Fn(f64) -> Result<f64,ThermalHydraulicsLibError>) -> Result<f64,ThermalHydraulicsLibError> {
+    custom_k: &'static dyn Fn(f64) -> Result<f64,TuasLibError>) -> Result<f64,TuasLibError> {
 
     if length_to_diameter <= 0.0 {
         panic!("lengthToDiameterRatio<=0.0");
@@ -241,11 +241,11 @@ use anyhow::Result;
 struct ReynoldsFromBejanDCustom {
     pub max_reynolds: f64,
     pub min_reynolds: f64,
-    pub custom_darcy: &'static dyn Fn(f64, f64) -> Result<f64,ThermalHydraulicsLibError>,
+    pub custom_darcy: &'static dyn Fn(f64, f64) -> Result<f64,TuasLibError>,
     pub bejan_number_d: f64,
     pub roughness_ratio: f64,
     pub length_to_diameter: f64,
-    pub custom_k: &'static dyn Fn(f64) -> Result<f64,ThermalHydraulicsLibError>,
+    pub custom_k: &'static dyn Fn(f64) -> Result<f64,TuasLibError>,
 }
 
 impl ReynoldsFromBejanDCustom {

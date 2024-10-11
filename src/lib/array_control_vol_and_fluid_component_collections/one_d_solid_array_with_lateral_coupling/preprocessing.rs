@@ -4,7 +4,7 @@ use uom::si::f64::*;
 use ndarray::*;
 use uom::si::thermodynamic_temperature::kelvin;
 
-use crate::thermal_hydraulics_error::ThermalHydraulicsLibError;
+use crate::thermal_hydraulics_error::TuasLibError;
 
 use super::SolidColumn;
 
@@ -15,7 +15,7 @@ impl SolidColumn {
 
     pub fn get_max_timestep(&mut self,
     max_temperature_change: TemperatureInterval) 
-    -> Result<Time, ThermalHydraulicsLibError>{
+    -> Result<Time, TuasLibError>{
 
         // for a solid array, there are two types of time intervals to be 
         // aware of 
@@ -164,7 +164,7 @@ impl SolidColumn {
     ///
     #[inline]
     pub fn try_get_bulk_temperature(&mut self) -> 
-    Result<ThermodynamicTemperature,ThermalHydraulicsLibError>{
+    Result<ThermodynamicTemperature,TuasLibError>{
 
         // for now, doing it quick and dirty, i'm going to obtain a volume 
         // averaged temperature 

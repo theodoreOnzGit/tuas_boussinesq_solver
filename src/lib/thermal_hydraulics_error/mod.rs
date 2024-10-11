@@ -2,7 +2,7 @@ use thiserror::Error;
 
 /// Master Error type of this crate
 #[derive(Debug, Error)]
-pub enum ThermalHydraulicsLibError {
+pub enum TuasLibError {
     /// linear algebra error
     #[error("linear algebra error")]
     LinalgError(#[from] ndarray_linalg::error::LinalgError),
@@ -53,40 +53,40 @@ pub enum ThermalHydraulicsLibError {
 }
 
 ///  converts ThermalHydraulicsLibError from string error
-impl From<String> for ThermalHydraulicsLibError {
+impl From<String> for TuasLibError {
     fn from(value: String) -> Self {
         Self::GenericStringError(value)
     }
 }
 
-impl Into<String> for ThermalHydraulicsLibError {
+impl Into<String> for TuasLibError {
     fn into(self) -> String {
         match self {
-            ThermalHydraulicsLibError::LinalgError(_) => {
+            TuasLibError::LinalgError(_) => {
                 self.to_string()
             },
-            ThermalHydraulicsLibError::CourantMassFlowVectorEmpty => {
+            TuasLibError::CourantMassFlowVectorEmpty => {
                 self.to_string()
             },
-            ThermalHydraulicsLibError::GenericStringError(string) => {
+            TuasLibError::GenericStringError(string) => {
                 string
             },
-            ThermalHydraulicsLibError::NotImplementedForBoundaryConditions(string) => {
+            TuasLibError::NotImplementedForBoundaryConditions(string) => {
                 string
             },
-            ThermalHydraulicsLibError::TypeConversionErrorHeatTransferEntity => {
+            TuasLibError::TypeConversionErrorHeatTransferEntity => {
                 self.to_string()
             },
-            ThermalHydraulicsLibError::TypeConversionErrorMaterial => {
+            TuasLibError::TypeConversionErrorMaterial => {
                 self.to_string()
             },
-            ThermalHydraulicsLibError::ThermophysicalPropertyTemperatureRangeError => {
+            TuasLibError::ThermophysicalPropertyTemperatureRangeError => {
                 self.to_string()
             },
-            ThermalHydraulicsLibError::ThermophysicalPropertyError => {
+            TuasLibError::ThermophysicalPropertyError => {
                 self.to_string()
             },
-            ThermalHydraulicsLibError::WrongHeatTransferInteractionType => {
+            TuasLibError::WrongHeatTransferInteractionType => {
                 self.to_string()
             },
 

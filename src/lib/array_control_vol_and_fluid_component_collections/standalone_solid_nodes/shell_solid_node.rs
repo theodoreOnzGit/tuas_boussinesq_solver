@@ -5,7 +5,7 @@ use uom::si::f64::*;
 
 
 
-use crate::thermal_hydraulics_error::ThermalHydraulicsLibError;
+use crate::thermal_hydraulics_error::TuasLibError;
 
 
 use crate::array_control_vol_and_fluid_component_collections::standalone_fluid_nodes::solve_conductance_matrix_power_vector;
@@ -53,7 +53,7 @@ pub fn advance_timestep_solid_cylindrical_shell_node_no_axial_conduction(
     volume_fraction_array: &mut Array1<f64>,
     rho_cp: &mut Array1<VolumetricHeatCapacity>,
     q_fraction: &mut Array1<f64>)
--> Result<Array1<ThermodynamicTemperature>,ThermalHydraulicsLibError>{
+-> Result<Array1<ThermodynamicTemperature>,TuasLibError>{
 
 
     // this front and back nodes will be an extra term added to the 
@@ -77,7 +77,7 @@ pub fn advance_timestep_solid_cylindrical_shell_node_no_axial_conduction(
 
     if number_of_nodes <= 1 {
         return Err(
-            ThermalHydraulicsLibError::LinalgError(
+            TuasLibError::LinalgError(
             LinalgError::Shape(
             ShapeError::from_kind(
                 ErrorKind::OutOfBounds

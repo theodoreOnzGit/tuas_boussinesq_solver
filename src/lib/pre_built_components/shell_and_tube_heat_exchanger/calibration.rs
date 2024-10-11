@@ -2,7 +2,7 @@ use std::f64::consts::PI;
 
 use uom::si::{f64::*, ratio::ratio, thermal_resistance::kelvin_per_watt, thermodynamic_temperature::kelvin};
 
-use crate::{prelude::beta_testing::{FluidArray, LiquidMaterial, SolidColumn, SolidMaterial}, thermal_hydraulics_error::ThermalHydraulicsLibError};
+use crate::{prelude::beta_testing::{FluidArray, LiquidMaterial, SolidColumn, SolidMaterial}, thermal_hydraulics_error::TuasLibError};
 
 use super::SimpleShellAndTubeHeatExchanger;
 
@@ -13,7 +13,7 @@ impl SimpleShellAndTubeHeatExchanger {
     ///
     /// ln (d_o/d_i) * 1/(2 pi L lambda_insulation)
     pub fn try_get_insulation_cylindrical_thermal_resistance(&self) -> 
-        Result<ThermalResistance, ThermalHydraulicsLibError> {
+        Result<ThermalResistance, TuasLibError> {
 
         if !self.heat_exchanger_has_insulation {
 

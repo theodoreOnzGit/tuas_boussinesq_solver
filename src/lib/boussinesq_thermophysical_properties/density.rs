@@ -1,7 +1,7 @@
 use uom::si::f64::MassDensity;
 use uom::si::f64::Pressure;
 use uom::si::f64::ThermodynamicTemperature;
-use crate::thermal_hydraulics_error::ThermalHydraulicsLibError;
+use crate::thermal_hydraulics_error::TuasLibError;
 
 use super::liquid_database;
 use super::liquid_database::flibe::get_flibe_density;
@@ -47,7 +47,7 @@ use super::liquid_database::dowtherm_a::get_dowtherm_a_density;
 #[inline]
 pub fn try_get_rho(material: Material, 
     temperature: ThermodynamicTemperature,
-    _pressure: Pressure) -> Result<MassDensity, ThermalHydraulicsLibError> {
+    _pressure: Pressure) -> Result<MassDensity, TuasLibError> {
 
     let density: MassDensity = match material {
         Material::Solid(_) => solid_density(material, temperature)?,
@@ -61,7 +61,7 @@ impl Material {
     /// returns density of the material
     pub fn density(&self,
         temperature: ThermodynamicTemperature,
-        _pressure: Pressure) -> Result<MassDensity, ThermalHydraulicsLibError>{
+        _pressure: Pressure) -> Result<MassDensity, TuasLibError>{
 
     let density: MassDensity = match self {
         Material::Solid(_) => solid_density(self.clone(), temperature)?,
@@ -77,7 +77,7 @@ impl Material {
 
 // should the material happen to be a solid, use this function
 fn solid_density(material: Material,
-    solid_temp: ThermodynamicTemperature) -> Result<MassDensity,ThermalHydraulicsLibError>{
+    solid_temp: ThermodynamicTemperature) -> Result<MassDensity,TuasLibError>{
 
     // first match the enum
 
@@ -90,7 +90,7 @@ fn solid_density(material: Material,
         },
         Material::Liquid(_) => {
             println!("solid_density, use SolidMaterial enums only");
-            return Err(ThermalHydraulicsLibError::TypeConversionErrorMaterial);
+            return Err(TuasLibError::TypeConversionErrorMaterial);
         }
     };
 
@@ -117,7 +117,7 @@ fn solid_density(material: Material,
 
 // should the material happen to be a liquid, use this function
 fn liquid_density(material: Material, 
-    fluid_temp: ThermodynamicTemperature) -> Result<MassDensity,ThermalHydraulicsLibError> {
+    fluid_temp: ThermodynamicTemperature) -> Result<MassDensity,TuasLibError> {
 
     let liquid_material: LiquidMaterial = match material {
         Material::Liquid(DowthermA) => DowthermA,
@@ -157,7 +157,7 @@ impl LiquidMaterial {
     /// returns density of liquid material
     pub fn try_get_density(&self,
         fluid_temp: ThermodynamicTemperature,) -> 
-    Result<MassDensity,ThermalHydraulicsLibError> {
+    Result<MassDensity,TuasLibError> {
 
         let density: MassDensity = match &self.clone() {
             DowthermA => get_dowtherm_a_density(fluid_temp)?,

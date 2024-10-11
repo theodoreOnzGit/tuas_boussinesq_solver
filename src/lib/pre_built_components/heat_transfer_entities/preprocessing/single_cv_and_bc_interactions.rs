@@ -10,7 +10,7 @@ use crate::boussinesq_thermophysical_properties::thermal_diffusivity::try_get_al
 use crate::boussinesq_thermophysical_properties::Material;
 use crate::heat_transfer_correlations::heat_transfer_interactions::*;
 use crate::single_control_vol::SingleCVNode;
-use crate::thermal_hydraulics_error::ThermalHydraulicsLibError;
+use crate::thermal_hydraulics_error::TuasLibError;
 use crate::heat_transfer_correlations::heat_transfer_interactions::heat_transfer_interaction_enums::DataAdvection;
 
 use uom::num_traits::Zero;
@@ -22,7 +22,7 @@ use uom::num_traits::Zero;
 pub fn calculate_single_cv_node_front_constant_temperature_back(
     boundary_condition_temperature: ThermodynamicTemperature,
     control_vol: &mut SingleCVNode,
-    interaction: HeatTransferInteractionType) -> Result<(), ThermalHydraulicsLibError> {
+    interaction: HeatTransferInteractionType) -> Result<(), TuasLibError> {
     // this code is pretty crappy but I'll match advection first
 
     match interaction {
@@ -55,7 +55,7 @@ pub fn calculate_single_cv_node_front_constant_temperature_back(
 pub fn calculate_single_cv_front_heat_flux_back(
     heat_flux_into_control_vol: HeatFluxDensity,
     control_vol: &mut SingleCVNode,
-    interaction: HeatTransferInteractionType) -> Result<(), ThermalHydraulicsLibError> {
+    interaction: HeatTransferInteractionType) -> Result<(), TuasLibError> {
 
     // first, obtain a heat transfer area from the constant heat flux 
     // BC
@@ -65,7 +65,7 @@ pub fn calculate_single_cv_front_heat_flux_back(
             {
                 println!("please specify interaction type as \n 
                 UserSpecifiedHeatFluxCustomArea or Similar");
-                return Err(ThermalHydraulicsLibError::WrongHeatTransferInteractionType);
+                return Err(TuasLibError::WrongHeatTransferInteractionType);
             }
         ,
 
@@ -74,7 +74,7 @@ pub fn calculate_single_cv_front_heat_flux_back(
             {
                 println!("please specify interaction type as \n 
                 UserSpecifiedHeatFluxCustomArea or Similar");
-                return Err(ThermalHydraulicsLibError::WrongHeatTransferInteractionType);
+                return Err(TuasLibError::WrongHeatTransferInteractionType);
             }
         ,
 
@@ -83,7 +83,7 @@ pub fn calculate_single_cv_front_heat_flux_back(
             {
                 println!("please specify interaction type as \n 
                 UserSpecifiedHeatFluxCustomArea or Similar");
-                return Err(ThermalHydraulicsLibError::WrongHeatTransferInteractionType);
+                return Err(TuasLibError::WrongHeatTransferInteractionType);
             }
         ,
         HeatTransferInteractionType::SimpleRadiation
@@ -91,7 +91,7 @@ pub fn calculate_single_cv_front_heat_flux_back(
             {
                 println!("please specify interaction type as \n 
                 UserSpecifiedHeatFluxCustomArea or Similar");
-                return Err(ThermalHydraulicsLibError::WrongHeatTransferInteractionType);
+                return Err(TuasLibError::WrongHeatTransferInteractionType);
             }
         ,
 
@@ -100,7 +100,7 @@ pub fn calculate_single_cv_front_heat_flux_back(
             {
                 println!("please specify interaction type as \n 
                 UserSpecifiedHeatFluxCustomArea or Similar");
-                return Err(ThermalHydraulicsLibError::WrongHeatTransferInteractionType);
+                return Err(TuasLibError::WrongHeatTransferInteractionType);
             }
         ,
 
@@ -109,7 +109,7 @@ pub fn calculate_single_cv_front_heat_flux_back(
             {
                 println!("please specify interaction type as \n 
                 UserSpecifiedHeatFluxCustomArea or Similar");
-                return Err(ThermalHydraulicsLibError::WrongHeatTransferInteractionType);
+                return Err(TuasLibError::WrongHeatTransferInteractionType);
             }
         ,
 
@@ -118,7 +118,7 @@ pub fn calculate_single_cv_front_heat_flux_back(
             {
                 println!("please specify interaction type as \n 
                 UserSpecifiedHeatFluxCustomArea or Similar");
-                return Err(ThermalHydraulicsLibError::WrongHeatTransferInteractionType);
+                return Err(TuasLibError::WrongHeatTransferInteractionType);
             }
         ,
 
@@ -127,7 +127,7 @@ pub fn calculate_single_cv_front_heat_flux_back(
             {
                 println!("please specify interaction type as \n 
                 UserSpecifiedHeatFluxCustomArea or Similar");
-                return Err(ThermalHydraulicsLibError::WrongHeatTransferInteractionType);
+                return Err(TuasLibError::WrongHeatTransferInteractionType);
             }
         ,
 
@@ -136,7 +136,7 @@ pub fn calculate_single_cv_front_heat_flux_back(
             {
                 println!("please specify interaction type as \n 
                 UserSpecifiedHeatFluxCustomArea or Similar");
-                return Err(ThermalHydraulicsLibError::WrongHeatTransferInteractionType);
+                return Err(TuasLibError::WrongHeatTransferInteractionType);
             }
         ,
         // these interaction types are acceptable
@@ -169,7 +169,7 @@ pub fn calculate_single_cv_front_heat_flux_back(
             {
                 println!("please specify interaction type as \n 
                 UserSpecifiedHeatFluxCustomArea or Similar");
-                return Err(ThermalHydraulicsLibError::WrongHeatTransferInteractionType);
+                return Err(TuasLibError::WrongHeatTransferInteractionType);
             }
         HeatTransferInteractionType::
             Advection(advection_data) => 
@@ -234,7 +234,7 @@ pub fn calculate_constant_heat_addition_front_single_cv_back(
     control_vol: &mut SingleCVNode,
     heat_added_to_control_vol: Power,
     interaction: HeatTransferInteractionType
-    ) -> Result<(), ThermalHydraulicsLibError> {
+    ) -> Result<(), TuasLibError> {
 
     // ensure that the interaction is UserSpecifiedHeatAddition
     // or advection
@@ -262,7 +262,7 @@ pub fn calculate_constant_heat_addition_front_single_cv_back(
         _ => {
             println!("you need to specify that the interaction type \n 
             is UserSpecifiedHeatAddition");
-            return Err(ThermalHydraulicsLibError::WrongHeatTransferInteractionType);
+            return Err(TuasLibError::WrongHeatTransferInteractionType);
 
         },
     };
@@ -318,7 +318,7 @@ pub fn calculate_single_cv_front_constant_heat_addition_back(
     heat_added_to_control_vol: Power,
     control_vol: &mut SingleCVNode,
     interaction: HeatTransferInteractionType
-    ) -> Result<(), ThermalHydraulicsLibError> {
+    ) -> Result<(), TuasLibError> {
 
     // ensure that the interaction is UserSpecifiedHeatAddition
     // or advection
@@ -345,7 +345,7 @@ pub fn calculate_single_cv_front_constant_heat_addition_back(
         _ => {
             println!("you need to specify that the interaction type \n 
             is UserSpecifiedHeatAddition");
-            return Err(ThermalHydraulicsLibError::WrongHeatTransferInteractionType);
+            return Err(TuasLibError::WrongHeatTransferInteractionType);
 
         },
     };
@@ -395,7 +395,7 @@ pub fn calculate_single_cv_front_constant_heat_addition_back(
 #[inline]
 pub fn calculate_mesh_stability_conduction_timestep_for_single_node_and_bc(
     control_vol: &mut SingleCVNode,
-    interaction: HeatTransferInteractionType) -> Result<Time,ThermalHydraulicsLibError> {
+    interaction: HeatTransferInteractionType) -> Result<Time,TuasLibError> {
 
     // here we have timestep based on the generic lengthscale of the 
     // control volume 
@@ -855,7 +855,7 @@ pub fn calculate_mesh_stability_conduction_timestep_for_single_node_and_bc(
 pub (crate) fn calculate_cv_front_bc_back_advection_for_heat_flux_or_heat_addition(
     control_vol: &mut SingleCVNode,
     advection_data: DataAdvection
-) -> Result<(), ThermalHydraulicsLibError>{
+) -> Result<(), TuasLibError>{
 
     let mass_flow_from_bc_to_cv = advection_data.mass_flowrate;
 
@@ -940,7 +940,7 @@ pub (crate) fn calculate_cv_front_bc_back_advection_for_heat_flux_or_heat_additi
 pub (crate) fn calculate_bc_front_cv_back_advection_for_heat_flux_or_heat_addition(
     control_vol: &mut SingleCVNode,
     advection_data: DataAdvection
-) -> Result<(), ThermalHydraulicsLibError>{
+) -> Result<(), TuasLibError>{
 
     let mass_flow_from_cv_to_bc = advection_data.mass_flowrate;
 

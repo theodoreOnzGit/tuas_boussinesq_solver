@@ -68,7 +68,7 @@ use uom::si::available_energy::joule_per_kilogram;
 extern crate peroxide;
 use peroxide::fuga::*;
 
-use crate::thermal_hydraulics_error::ThermalHydraulicsLibError;
+use crate::thermal_hydraulics_error::TuasLibError;
 
 /// function to obtain custom fluid density
 /// given a temperature
@@ -78,7 +78,7 @@ pub fn get_custom_fluid_density(
     density_function: fn(ThermodynamicTemperature) -> MassDensity,
     upper_bound_temperature: ThermodynamicTemperature,
     lower_bound_temperature: ThermodynamicTemperature,
-    ) -> Result<MassDensity,ThermalHydraulicsLibError> {
+    ) -> Result<MassDensity,TuasLibError> {
 
     // first we check if fluid temp is between the specified 
     // upper and lower bound
@@ -96,7 +96,7 @@ pub fn get_custom_fluid_viscosity(
     viscosity_function: fn(ThermodynamicTemperature) -> DynamicViscosity,
     upper_bound_temperature: ThermodynamicTemperature,
     lower_bound_temperature: ThermodynamicTemperature) -> Result<DynamicViscosity,
-ThermalHydraulicsLibError>{
+TuasLibError>{
 
     // first we check if fluid temp is between the specified 
     // upper and lower bound
@@ -117,7 +117,7 @@ pub fn get_custom_fluid_constant_pressure_specific_heat_capacity(
     cp_function: fn(ThermodynamicTemperature) -> SpecificHeatCapacity,
     upper_bound_temperature: ThermodynamicTemperature,
     lower_bound_temperature: ThermodynamicTemperature) -> Result<SpecificHeatCapacity,
-ThermalHydraulicsLibError>{
+TuasLibError>{
 
     // first we check if fluid temp is between the specified 
     // upper and lower bound
@@ -135,7 +135,7 @@ pub fn get_custom_fluid_thermal_conductivity(
     conductivity_function: fn(ThermodynamicTemperature) -> ThermalConductivity,
     upper_bound_temperature: ThermodynamicTemperature,
     lower_bound_temperature: ThermodynamicTemperature
-    ) -> Result<ThermalConductivity,ThermalHydraulicsLibError> {
+    ) -> Result<ThermalConductivity,TuasLibError> {
 
 
     range_check_custom_fluid(fluid_temp,
@@ -167,7 +167,7 @@ pub fn get_custom_fluid_enthalpy(
     cp_function: fn(ThermodynamicTemperature) -> SpecificHeatCapacity,
     upper_bound_temperature: ThermodynamicTemperature,
     lower_bound_temperature: ThermodynamicTemperature) -> 
-Result<AvailableEnergy,ThermalHydraulicsLibError>{
+Result<AvailableEnergy,TuasLibError>{
 
     // first we check if fluid temp is between the specified 
     // upper and lower bound
@@ -295,7 +295,7 @@ pub fn get_custom_fluid_temperature_from_enthalpy(
     fluid_enthalpy: AvailableEnergy,
     cp_function: fn(ThermodynamicTemperature) -> SpecificHeatCapacity,
     upper_bound_temperature: ThermodynamicTemperature,
-    lower_bound_temperature: ThermodynamicTemperature) -> Result<ThermodynamicTemperature,ThermalHydraulicsLibError> {
+    lower_bound_temperature: ThermodynamicTemperature) -> Result<ThermodynamicTemperature,TuasLibError> {
 
     if fluid_enthalpy.value < 0_f64 {
         panic!("user supplied fluid: get_temperature_from_enthalpy \n
@@ -436,7 +436,7 @@ pub fn range_check_custom_fluid(fluid_temp: ThermodynamicTemperature,
     upper_bound_temperature: ThermodynamicTemperature,
     lower_bound_temperature: ThermodynamicTemperature,
     ) 
-    -> Result<bool,ThermalHydraulicsLibError>{
+    -> Result<bool,TuasLibError>{
 
         // first i convert the fluidTemp object into a degree 
         // celsius
@@ -460,7 +460,7 @@ pub fn range_check_custom_fluid(fluid_temp: ThermodynamicTemperature,
                 temp_value_celsius,
                 error_msg3,
                 error_msg4);
-            return Err(ThermalHydraulicsLibError::ThermophysicalPropertyTemperatureRangeError);
+            return Err(TuasLibError::ThermophysicalPropertyTemperatureRangeError);
         }
 
 
@@ -476,7 +476,7 @@ pub fn range_check_custom_fluid(fluid_temp: ThermodynamicTemperature,
                 temp_value_celsius,
                 error_msg3,
                 error_msg4);
-            return Err(ThermalHydraulicsLibError::ThermophysicalPropertyTemperatureRangeError);
+            return Err(TuasLibError::ThermophysicalPropertyTemperatureRangeError);
         }
 
         return Ok(true);

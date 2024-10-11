@@ -1,6 +1,6 @@
 use super::SolidStructure;
 use uom::si::f64::*;
-use crate::thermal_hydraulics_error::ThermalHydraulicsLibError;
+use crate::thermal_hydraulics_error::TuasLibError;
 use std::thread::JoinHandle;
 use std::thread;
 
@@ -9,7 +9,7 @@ impl SolidStructure {
     /// advances timestep for each HeatTransferEntity within the 
     #[inline]
     pub fn advance_timestep(&mut self, 
-    timestep: Time) -> Result<(),ThermalHydraulicsLibError> {
+    timestep: Time) -> Result<(),TuasLibError> {
 
         self.solid_array.advance_timestep_mut_self(timestep)?;
         Ok(())

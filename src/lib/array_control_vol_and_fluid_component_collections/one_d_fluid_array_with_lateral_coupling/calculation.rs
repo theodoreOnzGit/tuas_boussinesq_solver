@@ -9,7 +9,7 @@ use crate::boussinesq_thermophysical_properties::prandtl::try_get_prandtl;
 use crate::boussinesq_thermophysical_properties::specific_enthalpy::try_get_h;
 use crate::boussinesq_thermophysical_properties::thermal_conductivity::try_get_kappa_thermal_conductivity;
 use crate::boussinesq_thermophysical_properties::volumetric_heat_capacity::try_get_rho_cp;
-use crate::thermal_hydraulics_error::ThermalHydraulicsLibError;
+use crate::thermal_hydraulics_error::TuasLibError;
 
 use super::FluidArray;
 
@@ -23,7 +23,7 @@ impl FluidArray{
     /// within the fluid array
     pub fn advance_timestep(&mut self,
         timestep: Time,) 
-        -> Result<(), ThermalHydraulicsLibError>{
+        -> Result<(), TuasLibError>{
 
 
         self.advance_timestep_with_mass_flowrate(
@@ -37,7 +37,7 @@ impl FluidArray{
     pub fn advance_timestep_with_mass_flowrate(&mut self,
         timestep: Time,
         mass_flowrate: MassRate) 
-        -> Result<(), ThermalHydraulicsLibError>{
+        -> Result<(), TuasLibError>{
         // here's the function I copied from initially and modified
         //advance_timestep_fluid_node_array_pipe_high_peclet_number(
         //    back_cv_ptr_in_loop.deref_mut(),
@@ -824,7 +824,7 @@ impl FluidArray{
     /// clears all vectors for next timestep
     /// This is important for the advance timestep method
     pub fn clear_vectors(&mut self) 
-    -> Result<(), ThermalHydraulicsLibError>{
+    -> Result<(), TuasLibError>{
 
         self.lateral_adjacent_array_conductance_vector.clear();
         self.lateral_adjacent_array_temperature_vector.clear();

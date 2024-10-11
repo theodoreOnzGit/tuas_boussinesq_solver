@@ -12,7 +12,7 @@ use crate::pre_built_components::heat_transfer_entities::HeatTransferEntity;
 use crate::heat_transfer_correlations::heat_transfer_interactions::heat_transfer_interaction_enums::{DataUserSpecifiedConvectionResistance, HeatTransferInteractionType};
 use crate::array_control_vol_and_fluid_component_collections::one_d_solid_array_with_lateral_coupling::SolidColumn;
 
-use crate::thermal_hydraulics_error::ThermalHydraulicsLibError;
+use crate::thermal_hydraulics_error::TuasLibError;
 
 impl SolidStructure {
 
@@ -38,7 +38,7 @@ impl SolidStructure {
         solid_array_to_ambient_nodal_conductance: ThermalConductance,
         ambient_temp: ThermodynamicTemperature,
         total_power_input_into_column: Power,
-        ) -> Result<(), ThermalHydraulicsLibError>{
+        ) -> Result<(), TuasLibError>{
 
         //
         // 1. we need to consider discretisation, ie how much 
@@ -116,7 +116,7 @@ impl SolidStructure {
     pub fn link_ambient_temperature_boundary_condition_laterally(&mut self,
         solid_array_to_ambient_nodal_conductance: ThermalConductance,
         ambient_temp: ThermodynamicTemperature,
-        ) -> Result<(), ThermalHydraulicsLibError>{
+        ) -> Result<(), TuasLibError>{
 
         //
         // 1. we need to consider discretisation, ie how much 
@@ -191,7 +191,7 @@ impl SolidStructure {
     /// use the link to front or back methods within the 
     /// FluidArray or SolidColumn
     #[inline]
-    fn zero_power_bc_connection(&mut self) -> Result<(),ThermalHydraulicsLibError>{
+    fn zero_power_bc_connection(&mut self) -> Result<(),TuasLibError>{
 
         let zero_power: Power = Power::ZERO;
 
@@ -233,7 +233,7 @@ impl SolidStructure {
     h_air_to_pipe_surf: HeatTransfer,
     cylinder_diameter: Length,
     ambient_temp: ThermodynamicTemperature) 
-        -> Result<ThermalConductance,ThermalHydraulicsLibError> {
+        -> Result<ThermalConductance,TuasLibError> {
         // first, let's get a clone of the pipe_shell shell surface
         let mut structure_clone: SolidColumn = 
         self.solid_array.clone().try_into()?;
@@ -283,7 +283,7 @@ impl SolidStructure {
     cylinder_id: Length,
     cylinder_od: Length,
     ambient_temp: ThermodynamicTemperature) 
-        -> Result<ThermalConductance,ThermalHydraulicsLibError> {
+        -> Result<ThermalConductance,TuasLibError> {
         // first, let's get a clone of the pipe_shell shell surface
         let mut structure_clone: SolidColumn = 
         self.solid_array.clone().try_into()?;

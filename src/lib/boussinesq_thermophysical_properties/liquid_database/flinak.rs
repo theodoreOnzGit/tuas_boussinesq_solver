@@ -67,7 +67,7 @@ extern crate peroxide;
 use peroxide::prelude::*;
 
 use crate::boussinesq_thermophysical_properties::{range_check, LiquidMaterial, Material};
-use crate::thermal_hydraulics_error::ThermalHydraulicsLibError;
+use crate::thermal_hydraulics_error::TuasLibError;
 
 /// Romatoski, R. R., & Hu, L. W. (2017). Fluoride salt coolant properties 
 /// for nuclear reactor applications: A review. Annals 
@@ -83,7 +83,7 @@ use crate::thermal_hydraulics_error::ThermalHydraulicsLibError;
 /// correlations for FLiNaK as a whole
 ///
 pub fn get_flinak_density(
-    fluid_temp: ThermodynamicTemperature) -> Result<MassDensity,ThermalHydraulicsLibError> {
+    fluid_temp: ThermodynamicTemperature) -> Result<MassDensity,TuasLibError> {
 
     range_check_flinak_salt(fluid_temp)?;
 
@@ -112,7 +112,7 @@ pub fn get_flinak_density(
 /// mu = 0.04 exp(4170/T[K])
 pub fn get_flinak_dynamic_viscosity(
     fluid_temp: ThermodynamicTemperature) -> Result<DynamicViscosity,
-ThermalHydraulicsLibError>{
+TuasLibError>{
     range_check_flinak_salt(fluid_temp)?;
 
 
@@ -135,7 +135,7 @@ ThermalHydraulicsLibError>{
 /// uncertainty (error bars) are 10%
 pub fn get_flinak_constant_pressure_specific_heat_capacity(
     fluid_temp: ThermodynamicTemperature) -> Result<SpecificHeatCapacity,
-ThermalHydraulicsLibError>{
+TuasLibError>{
     range_check_flinak_salt(fluid_temp)?;
 
     let cp_value_joule_per_kg = 1884.0;
@@ -150,7 +150,7 @@ ThermalHydraulicsLibError>{
 ///
 /// we are using Smirnov correlation as recommended by Romatoski
 pub fn get_flinak_thermal_conductivity(
-    fluid_temp: ThermodynamicTemperature) -> Result<ThermalConductivity,ThermalHydraulicsLibError> {
+    fluid_temp: ThermodynamicTemperature) -> Result<ThermalConductivity,TuasLibError> {
 
     // first check if correlation is in range of validity
     range_check_flinak_salt(fluid_temp)?;
@@ -202,7 +202,7 @@ pub fn test_flinak_thermal_conductivity_correlation_unit_in_kelvin(){
 ///
 pub fn get_flinak_specific_enthalpy(
     fluid_temp: ThermodynamicTemperature) -> 
-Result<AvailableEnergy,ThermalHydraulicsLibError>{
+Result<AvailableEnergy,TuasLibError>{
     range_check_flinak_salt(fluid_temp)?;
 
     // find cp at this temperature first
@@ -236,7 +236,7 @@ Result<AvailableEnergy,ThermalHydraulicsLibError>{
 ///
 ///
 pub fn get_temperature_from_enthalpy(
-    fluid_enthalpy: AvailableEnergy) -> Result<ThermodynamicTemperature,ThermalHydraulicsLibError> {
+    fluid_enthalpy: AvailableEnergy) -> Result<ThermodynamicTemperature,TuasLibError> {
 
     // if enthalpy value below zero,
     // based on me setting zero enthalpy at the lower end of the 
@@ -323,7 +323,7 @@ pub fn get_temperature_from_enthalpy(
 ///
 /// 
 pub fn range_check_flinak_salt(fluid_temp: ThermodynamicTemperature) 
-    -> Result<bool,ThermalHydraulicsLibError>{
+    -> Result<bool,TuasLibError>{
 
         // first i convert the fluidTemp object into a degree 
         // celsius

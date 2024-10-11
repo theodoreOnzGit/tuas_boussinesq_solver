@@ -5,7 +5,7 @@ use uom::si::f64::*;
 use super::heat_transfer_geometry::*;
 
 use crate::heat_transfer_correlations::heat_transfer_interactions::*;
-use crate::thermal_hydraulics_error::ThermalHydraulicsLibError;
+use crate::thermal_hydraulics_error::TuasLibError;
 
 
 
@@ -439,7 +439,7 @@ impl HeatTransferInteractionType {
         temperature_2: ThermodynamicTemperature,
         pressure_1: Pressure,
         pressure_2: Pressure) 
-        -> Result<ThermalConductance, ThermalHydraulicsLibError> 
+        -> Result<ThermalConductance, TuasLibError> 
     {
         let interaction = *self;
 
@@ -561,7 +561,7 @@ impl HeatTransferInteractionType {
                         error_str += &expected_outer_diameter.value.to_string();
 
 
-                        return Err(ThermalHydraulicsLibError::
+                        return Err(TuasLibError::
                             GenericStringError(error_str));
                     }
 
@@ -580,7 +580,7 @@ impl HeatTransferInteractionType {
                 },
                 HeatTransferInteractionType::UserSpecifiedHeatAddition  
                     => {
-                        return Err(ThermalHydraulicsLibError::
+                        return Err(TuasLibError::
                             GenericStringError("interaction type needs to be \n 
                         thermal conductance".to_string()));
                     }
@@ -589,7 +589,7 @@ impl HeatTransferInteractionType {
                 HeatTransferInteractionType::
                     UserSpecifiedHeatFluxCustomArea(_) => {
 
-                        return Err(ThermalHydraulicsLibError::
+                        return Err(TuasLibError::
                             GenericStringError("interaction type needs to be \n 
                         thermal conductance".to_string()));
 
@@ -598,7 +598,7 @@ impl HeatTransferInteractionType {
                 HeatTransferInteractionType::
                     UserSpecifiedHeatFluxCylindricalOuterArea(_,_) => {
 
-                        return Err(ThermalHydraulicsLibError::
+                        return Err(TuasLibError::
                             GenericStringError("interaction type needs to be \n 
                         thermal conductance".to_string()));
 
@@ -607,7 +607,7 @@ impl HeatTransferInteractionType {
                 HeatTransferInteractionType::
                     UserSpecifiedHeatFluxCylindricalInnerArea(_,_) => {
 
-                        return Err(ThermalHydraulicsLibError::
+                        return Err(TuasLibError::
                             GenericStringError("interaction type needs to be \n 
                         thermal conductance".to_string()));
 
@@ -693,7 +693,7 @@ impl HeatTransferInteractionType {
                 ,
 
                 HeatTransferInteractionType::Advection(_) => {
-                    return Err(ThermalHydraulicsLibError::GenericStringError(
+                    return Err(TuasLibError::GenericStringError(
                             "advection interaction types \n 
                 do not correspond to conductance".to_string()));
                 }

@@ -8,7 +8,7 @@ use crate::boussinesq_thermophysical_properties::prandtl::try_get_prandtl;
 use crate::boussinesq_thermophysical_properties::specific_enthalpy::try_get_h;
 use crate::boussinesq_thermophysical_properties::thermal_conductivity::try_get_kappa_thermal_conductivity;
 use crate::boussinesq_thermophysical_properties::volumetric_heat_capacity::try_get_rho_cp;
-use crate::thermal_hydraulics_error::ThermalHydraulicsLibError;
+use crate::thermal_hydraulics_error::TuasLibError;
 use std::thread::JoinHandle;
 use std::thread;
 use ndarray::*;
@@ -22,7 +22,7 @@ impl NonInsulatedParallelFluidComponent {
     /// treats the pipe as a single tube
     #[inline]
     fn _advance_timestep_single_tube(&mut self, 
-    timestep: Time) -> Result<(),ThermalHydraulicsLibError> {
+    timestep: Time) -> Result<(),TuasLibError> {
 
         self.pipe_fluid_array.advance_timestep_mut_self(timestep)?;
         self.pipe_shell.advance_timestep_mut_self(timestep)?;
@@ -36,7 +36,7 @@ impl NonInsulatedParallelFluidComponent {
     /// gives each pipe the parallel tube treatment
     #[inline]
     pub fn advance_timestep(&mut self, 
-    timestep: Time) -> Result<(),ThermalHydraulicsLibError> {
+    timestep: Time) -> Result<(),TuasLibError> {
         self.advance_timestep_for_parallel_fluid_array_bundle(timestep)?;
         self.advance_timestep_for_parallel_solid_column_bundle(timestep)?;
         Ok(())
@@ -45,7 +45,7 @@ impl NonInsulatedParallelFluidComponent {
 
     #[inline]
     fn advance_timestep_for_parallel_fluid_array_bundle(&mut self,
-        timestep: Time,) -> Result<(), ThermalHydraulicsLibError>{
+        timestep: Time,) -> Result<(), TuasLibError>{
 
         // first, we need to perform timestep advancement 
         // like for: 
@@ -857,7 +857,7 @@ impl NonInsulatedParallelFluidComponent {
     #[inline]
     fn advance_timestep_for_parallel_solid_column_bundle(
         &mut self,
-        timestep: Time,) -> Result<(), ThermalHydraulicsLibError>{
+        timestep: Time,) -> Result<(), TuasLibError>{
 
         // like for: 
         // self.pipe_fluid_array.advance_timestep_mut_self(timestep)?;

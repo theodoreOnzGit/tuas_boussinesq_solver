@@ -56,7 +56,7 @@
 pub fn parasitic_heat_loss_regression_tchx_out_319_kelvin_46_celsius() {
     use uom::si::{f64::*, power::watt};
 
-    use crate::thermal_hydraulics_error::ThermalHydraulicsLibError;
+    use crate::thermal_hydraulics_error::TuasLibError;
     use std::thread;
     use uom::si::thermodynamic_temperature::kelvin;
     use uom::si::{frequency::hertz, ratio::ratio, time::millisecond};
@@ -89,7 +89,7 @@ pub fn parasitic_heat_loss_regression_tchx_out_319_kelvin_46_celsius() {
         turn_on_non_insulated_fluid_components_wall_correction: bool,
         turn_on_insulated_fluid_components_wall_correction: bool,
         test_name: &str
-    ) -> Result<(), ThermalHydraulicsLibError> {
+    ) -> Result<(), TuasLibError> {
         let input_power = Power::new::<watt>(input_power_watts);
 
         // setup

@@ -46,7 +46,7 @@ pub fn case_c_tchx_out_313_kelvin_40_celsius(){
     use uom::si::mass_rate::kilogram_per_second;
     use std::thread;
 
-    use crate::thermal_hydraulics_error::ThermalHydraulicsLibError;
+    use crate::thermal_hydraulics_error::TuasLibError;
 
     use crate::pre_built_components::
         ciet_steady_state_natural_circulation_test_components::dracs_loop_components::*;
@@ -90,7 +90,7 @@ pub fn case_c_tchx_out_313_kelvin_40_celsius(){
         sam_solution_mass_flowrate_kg_per_sm: f64,
         tuas_boussinesq_solver_flowrate_kg_per_s_at_4000s_time: f64,
         max_error_tolerance_fraction: f64) -> 
-        Result<(),ThermalHydraulicsLibError>{
+        Result<(),TuasLibError>{
 
             let input_power = Power::new::<watt>(input_power_watts);
             let max_error_tolerance = max_error_tolerance_fraction;

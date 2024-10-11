@@ -1,7 +1,7 @@
 use uom::si::f64::*;
 
 use super::{churchill_friction_factor, dimensionalisation};
-use crate::thermal_hydraulics_error::ThermalHydraulicsLibError;
+use crate::thermal_hydraulics_error::TuasLibError;
 
 /// a function calculates pressure
 /// loss given a mass flowrate and pipe properties
@@ -13,7 +13,7 @@ pub fn pipe_calc_pressure_loss(
     fluid_density: MassDensity,
     pipe_length: Length,
     absolute_roughness: Length,
-    form_loss_k: f64) -> Result<Pressure,ThermalHydraulicsLibError> {
+    form_loss_k: f64) -> Result<Pressure,TuasLibError> {
     // first let's calculate roughness ratio
 
     let roughness_ratio_quantity = absolute_roughness/hydraulic_diameter;
@@ -80,7 +80,7 @@ pub fn pipe_calc_mass_flowrate(
     fluid_density: MassDensity,
     pipe_length: Length,
     absolute_roughness: Length,
-    form_loss_k: f64) -> Result<MassRate,ThermalHydraulicsLibError> {
+    form_loss_k: f64) -> Result<MassRate,TuasLibError> {
 
     // first let's get our relevant ratios:
     let roughness_ratio_quantity = absolute_roughness/hydraulic_diameter;

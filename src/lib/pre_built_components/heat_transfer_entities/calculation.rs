@@ -1,4 +1,4 @@
-use crate::thermal_hydraulics_error::ThermalHydraulicsLibError;
+use crate::thermal_hydraulics_error::TuasLibError;
 
 use super::HeatTransferEntity;
 use super::cv_types::CVType;
@@ -17,7 +17,7 @@ impl HeatTransferEntity {
     ///
     /// you are required to explicitly provide a timestep for this 
     pub fn advance_timestep(entity: &mut HeatTransferEntity,
-    timestep: Time) -> Result<(), ThermalHydraulicsLibError> {
+    timestep: Time) -> Result<(), TuasLibError> {
 
         // first match CV or BC, 
         // Boundary conditions don't need to advance timestep
@@ -49,7 +49,7 @@ impl HeatTransferEntity {
     ///
     /// you are required to explicitly provide a timestep for this 
     pub fn advance_timestep_mut_self(&mut self,
-    timestep: Time) -> Result<(), ThermalHydraulicsLibError> {
+    timestep: Time) -> Result<(), TuasLibError> {
 
         // first match CV or BC, 
         // Boundary conditions don't need to advance timestep

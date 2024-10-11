@@ -1,4 +1,4 @@
-use crate::thermal_hydraulics_error::ThermalHydraulicsLibError;
+use crate::thermal_hydraulics_error::TuasLibError;
 use crate::boussinesq_thermophysical_properties::
 density::try_get_rho;
 use crate::boussinesq_thermophysical_properties::
@@ -26,7 +26,7 @@ impl SingleCVNode {
     /// for an uneven volume, it will just take the shortest of 
     /// these lengthscales to determine a proper time scale
     #[inline]
-    pub fn calculate_conduction_timestep(&self) -> Result<Time,ThermalHydraulicsLibError>{
+    pub fn calculate_conduction_timestep(&self) -> Result<Time,TuasLibError>{
 
         // first let us get relevant length scales 
         // for shortest time step, we will get the shortest length 
@@ -79,7 +79,7 @@ impl SingleCVNode {
     #[inline]
     pub fn calculate_courant_number_timestep(&mut self,
         max_courant_number: Ratio) 
-        -> Result<Time, ThermalHydraulicsLibError>{
+        -> Result<Time, TuasLibError>{
 
 
         // then let's calculate the dot product
@@ -93,7 +93,7 @@ impl SingleCVNode {
         // some obscenely high time value
 
         if volume_flowrate_vector.is_empty() {
-            return Err(ThermalHydraulicsLibError::CourantMassFlowVectorEmpty);
+            return Err(TuasLibError::CourantMassFlowVectorEmpty);
         }
 
 
@@ -139,7 +139,7 @@ impl SingleCVNode {
     /// appends timestep constrained to fourier number stability
     #[inline]
     pub fn append_conduction_mesh_stability_timestep(&mut self, 
-        lengthscale: Length) -> Result<Time, ThermalHydraulicsLibError> {
+        lengthscale: Length) -> Result<Time, TuasLibError> {
 
         // now we can determine the conduction time scale regardless 
         // of whether it's solid or liquid (no gas implementations yet, 
@@ -179,7 +179,7 @@ impl SingleCVNode {
     fn get_max_timestep_based_on_max_temperature_change(
         &self,
         max_temperature_change: TemperatureInterval) 
-    -> Result<Time,ThermalHydraulicsLibError> {
+    -> Result<Time,TuasLibError> {
 
         // let's get the net power change first 
 
@@ -235,7 +235,7 @@ impl SingleCVNode {
     ///
     #[inline]
     pub fn get_max_timestep(&mut self, 
-        max_temperature_change: TemperatureInterval) -> Result<Time, ThermalHydraulicsLibError> {
+        max_temperature_change: TemperatureInterval) -> Result<Time, TuasLibError> {
 
         // let's calculate conduction time step first, based on 
         // thermal diffusivity and fourier number
@@ -273,7 +273,7 @@ impl SingleCVNode {
             Ok(timescale) => timescale,
             Err(error) => {
                 match error {
-                    ThermalHydraulicsLibError::CourantMassFlowVectorEmpty => {
+                    TuasLibError::CourantMassFlowVectorEmpty => {
 
                         // just return a large timestep for an empty
                         // vector

@@ -1,4 +1,4 @@
-use crate::{array_control_vol_and_fluid_component_collections::fluid_component_collection::fluid_component::FluidComponent, prelude::beta_testing::ThermalHydraulicsLibError};
+use crate::{array_control_vol_and_fluid_component_collections::fluid_component_collection::fluid_component::FluidComponent, prelude::beta_testing::TuasLibError};
 
 use super::FluidArray;
 
@@ -10,7 +10,7 @@ impl Into<FluidComponent> for FluidArray {
 }
 
 impl TryFrom<FluidComponent> for FluidArray {
-    type Error = ThermalHydraulicsLibError;
+    type Error = TuasLibError;
 
     fn try_from(value: FluidComponent) -> Result<Self, Self::Error> {
         match value {
@@ -21,7 +21,7 @@ impl TryFrom<FluidComponent> for FluidArray {
                 
                 // probably want to change the error type to a generic 
                 // type conversion error
-                Err(ThermalHydraulicsLibError::TypeConversionErrorHeatTransferEntity)
+                Err(TuasLibError::TypeConversionErrorHeatTransferEntity)
             },
         }
     }

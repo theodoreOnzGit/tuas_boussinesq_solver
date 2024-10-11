@@ -7,7 +7,7 @@ use uom::si::thermodynamic_temperature::kelvin;
 
 use crate::boussinesq_thermophysical_properties::specific_enthalpy::try_get_h;
 use crate::single_control_vol::SingleCVNode;
-use crate::thermal_hydraulics_error::ThermalHydraulicsLibError;
+use crate::thermal_hydraulics_error::TuasLibError;
 
 use super::standalone_fluid_nodes::solve_conductance_matrix_power_vector;
 
@@ -51,7 +51,7 @@ pub (crate) fn _advance_timestep_for_externally_cooled_array_cv_no_insulation(
     rho_cp: &mut Array1<VolumetricHeatCapacity>,
     power_distribution_array: &mut Array1<f64>,
 ) 
--> Result<Array1<ThermodynamicTemperature>,ThermalHydraulicsLibError>{
+-> Result<Array1<ThermodynamicTemperature>,TuasLibError>{
 
     // First things first, we need to set up 
     // how the CV interacts with the internal array
@@ -239,7 +239,7 @@ pub (crate) fn advance_timestep_for_specified_conductance_array_cv(
     vol_fraction: &Array1<f64>,
     rho_cp: &Array1<VolumetricHeatCapacity>,
 ) 
--> Result<Array1<ThermodynamicTemperature>,ThermalHydraulicsLibError>{
+-> Result<Array1<ThermodynamicTemperature>,TuasLibError>{
 
     // the user specifies how many inner nodes there are 
     // nodesNumber is the total number of temperature nodes, 

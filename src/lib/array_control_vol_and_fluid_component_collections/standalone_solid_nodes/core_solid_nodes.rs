@@ -5,7 +5,7 @@ use uom::si::f64::*;
 
 
 
-use crate::thermal_hydraulics_error::ThermalHydraulicsLibError;
+use crate::thermal_hydraulics_error::TuasLibError;
 
 
 
@@ -27,7 +27,7 @@ pub fn advance_timestep_solid_cylindrical_core_node_no_axial_conduction(
     volume_fraction_array: &mut Array1<f64>,
     rho_cp: &mut Array1<VolumetricHeatCapacity>,
     q_fraction: &mut Array1<f64>)
--> Result<Array1<ThermodynamicTemperature>,ThermalHydraulicsLibError>{
+-> Result<Array1<ThermodynamicTemperature>,TuasLibError>{
 
     // I'm just re-calling the 
     // advance_timestep_solid_cylindrical_shell_node_no_axial_conduction

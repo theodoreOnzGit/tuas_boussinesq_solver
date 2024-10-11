@@ -1,4 +1,4 @@
-use crate::thermal_hydraulics_error::ThermalHydraulicsLibError;
+use crate::thermal_hydraulics_error::TuasLibError;
 use uom::si::f64::*;
 
 use super::{solid_database::{copper::copper_surf_roughness, fiberglass::fiberglass_surf_roughness}, Material};
@@ -8,7 +8,7 @@ use super::solid_database::ss_304_l::steel_surf_roughness;
 impl SolidMaterial {
 
     /// returns surface roughness for various materials
-    pub fn surface_roughness(&self) -> Result<Length,ThermalHydraulicsLibError> {
+    pub fn surface_roughness(&self) -> Result<Length,TuasLibError> {
         let roughness: Length = match self {
             // Value from: Perry's chemical Engineering handbook 
             // 8th edition Table 6-1 
@@ -50,13 +50,13 @@ impl SolidMaterial {
 
 impl Material {
     /// wrapper to help return surface roughness
-    pub fn surface_roughness(&self) -> Result<Length,ThermalHydraulicsLibError>{
+    pub fn surface_roughness(&self) -> Result<Length,TuasLibError>{
         match self {
             Material::Solid(solid_material) => {
                 return solid_material.surface_roughness();
             },
             Material::Liquid(_) => {
-                Err(ThermalHydraulicsLibError::TypeConversionErrorMaterial)
+                Err(TuasLibError::TypeConversionErrorMaterial)
             },
         }
     }

@@ -9,7 +9,7 @@
 ///
 #[test]
 pub fn coriolis_flowmeter_empirical_custom_component_example_3() -> Result<(),
-crate::thermal_hydraulics_error::ThermalHydraulicsLibError>{
+crate::thermal_hydraulics_error::TuasLibError>{
     // this tests the calc pressure loss for fluid component 
     use uom::si::f64::*;
     use uom::ConstZero;

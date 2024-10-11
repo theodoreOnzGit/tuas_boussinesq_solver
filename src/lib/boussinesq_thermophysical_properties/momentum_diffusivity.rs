@@ -1,13 +1,13 @@
 use uom::si::f64::*;
 
 use super::{density, dynamic_viscosity, LiquidMaterial, Material};
-use crate::thermal_hydraulics_error::ThermalHydraulicsLibError;
+use crate::thermal_hydraulics_error::TuasLibError;
 
 /// gets kinematic viscosity
 #[inline]
 pub fn try_get_nu_momentum_diffusivity(material: Material, 
     temperature: ThermodynamicTemperature,
-    pressure: Pressure) -> Result<DiffusionCoefficient,ThermalHydraulicsLibError> {
+    pressure: Pressure) -> Result<DiffusionCoefficient,TuasLibError> {
 
     let material_density: MassDensity = 
     density::try_get_rho(
@@ -36,7 +36,7 @@ impl LiquidMaterial {
     pub fn try_get_nu_momentum_diffusivity(&self,
         fluid_temp: ThermodynamicTemperature,
         pressure: Pressure) 
-        -> Result<DiffusionCoefficient, ThermalHydraulicsLibError>{
+        -> Result<DiffusionCoefficient, TuasLibError>{
 
             try_get_nu_momentum_diffusivity(
                 self.clone().into(),

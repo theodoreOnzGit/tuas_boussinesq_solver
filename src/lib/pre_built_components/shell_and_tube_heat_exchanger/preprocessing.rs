@@ -20,7 +20,7 @@ use crate::array_control_vol_and_fluid_component_collections::one_d_solid_array_
 use crate::array_control_vol_and_fluid_component_collections::one_d_fluid_array_with_lateral_coupling::FluidArray;
 use crate::array_control_vol_and_fluid_component_collections::fluid_component_collection::fluid_component_traits::FluidComponentTrait;
 
-use crate::thermal_hydraulics_error::ThermalHydraulicsLibError;
+use crate::thermal_hydraulics_error::TuasLibError;
 
 // preprocessing is where heat transfer entities 
 // are connected to each other whether axially or laterally
@@ -69,7 +69,7 @@ impl SimpleShellAndTubeHeatExchanger {
         prandtl_wall_correction_setting: bool,
         tube_side_total_mass_flowrate: MassRate,
         shell_side_total_mass_flowrate: MassRate,
-    ) -> Result<(), ThermalHydraulicsLibError>
+    ) -> Result<(), TuasLibError>
     {
         // set the mass flowrates first on shell and tube side
         self.set_tube_side_total_mass_flowrate(tube_side_total_mass_flowrate);
@@ -334,7 +334,7 @@ impl SimpleShellAndTubeHeatExchanger {
     /// the parallel treatment is given in the advance timestep 
     /// portion of the code
     #[inline]
-    fn zero_power_bc_axial_connection(&mut self) -> Result<(),ThermalHydraulicsLibError>{
+    fn zero_power_bc_axial_connection(&mut self) -> Result<(),TuasLibError>{
 
         let zero_power: Power = Power::ZERO;
 
@@ -404,7 +404,7 @@ impl SimpleShellAndTubeHeatExchanger {
     #[inline]
     pub fn get_air_to_outer_sthe_layer_nodal_conductance(&mut self,
         h_air_to_pipe_surf: HeatTransfer) 
-        -> Result<ThermalConductance,ThermalHydraulicsLibError> 
+        -> Result<ThermalConductance,TuasLibError> 
     {
 
         // for conductance calculations (no radiation), 
@@ -518,7 +518,7 @@ impl SimpleShellAndTubeHeatExchanger {
     pub fn get_single_tube_side_fluid_array_node_to_inner_pipe_shell_nodal_conductance(
         &mut self,
         correct_prandtl_for_wall_temperatures: bool) 
-        -> Result<ThermalConductance,ThermalHydraulicsLibError> 
+        -> Result<ThermalConductance,TuasLibError> 
     {
 
         // the thermal conductance here should be based on the 
@@ -779,7 +779,7 @@ impl SimpleShellAndTubeHeatExchanger {
     pub fn get_shell_side_fluid_to_single_inner_pipe_shell_nodal_conductance(
         &mut self,
         correct_prandtl_for_wall_temperatures: bool) 
-        -> Result<ThermalConductance,ThermalHydraulicsLibError> 
+        -> Result<ThermalConductance,TuasLibError> 
     {
 
         // the thermal conductance here should be based on the 
@@ -1035,7 +1035,7 @@ impl SimpleShellAndTubeHeatExchanger {
     pub fn get_shell_side_fluid_to_outer_pipe_shell_nodal_conductance(
         &mut self,
         correct_prandtl_for_wall_temperatures: bool) 
-        -> Result<ThermalConductance,ThermalHydraulicsLibError> 
+        -> Result<ThermalConductance,TuasLibError> 
     {
         // the thermal conductance here should be based on the 
         // nusselt number correlation
@@ -1251,7 +1251,7 @@ impl SimpleShellAndTubeHeatExchanger {
     /// obtains outer pipe shell to insulation conductance
     #[inline]
     pub fn get_outer_pipe_shell_to_insulation_conductance(
-    &self) -> Result<ThermalConductance,ThermalHydraulicsLibError> {
+    &self) -> Result<ThermalConductance,TuasLibError> {
         // first, make a clone of outer pipe shell and insulation
 
         let mut insulation_array_clone: SolidColumn = 

@@ -3,7 +3,7 @@ use crate::array_control_vol_and_fluid_component_collections::one_d_solid_array_
 use crate::boussinesq_thermophysical_properties::Material;
 use crate::single_control_vol::SingleCVNode;
 use crate::array_control_vol_and_fluid_component_collections::one_d_fluid_array_with_lateral_coupling::FluidArray;
-use crate::thermal_hydraulics_error::ThermalHydraulicsLibError;
+use crate::thermal_hydraulics_error::TuasLibError;
 use uom::si::f64::*;
 
 
@@ -51,7 +51,7 @@ impl From<SolidColumn> for CVType {
 
 
 impl TryFrom<CVType> for SingleCVNode {
-    type Error = ThermalHydraulicsLibError;
+    type Error = TuasLibError;
 
     fn try_from(value: CVType) -> Result<Self, Self::Error> {
         if let CVType::SingleCV(single_cv) = value {
@@ -59,12 +59,12 @@ impl TryFrom<CVType> for SingleCVNode {
         }
 
         // todo, update error
-        return Err(ThermalHydraulicsLibError::TypeConversionErrorHeatTransferEntity);
+        return Err(TuasLibError::TypeConversionErrorHeatTransferEntity);
     }
 }
 
 impl TryFrom<CVType> for FluidArray {
-    type Error = ThermalHydraulicsLibError;
+    type Error = TuasLibError;
 
     fn try_from(value: CVType) -> Result<Self, Self::Error> {
         if let CVType::FluidArrayCV(fluid_array) = value {
@@ -72,13 +72,13 @@ impl TryFrom<CVType> for FluidArray {
         }
 
         // todo, update error
-        return Err(ThermalHydraulicsLibError::TypeConversionErrorHeatTransferEntity);
+        return Err(TuasLibError::TypeConversionErrorHeatTransferEntity);
     }
 }
 
 
 impl TryFrom<CVType> for SolidColumn {
-    type Error = ThermalHydraulicsLibError;
+    type Error = TuasLibError;
 
     fn try_from(value: CVType) -> Result<Self, Self::Error> {
         if let CVType::SolidArrayCV(solid_column) = value {
@@ -86,14 +86,14 @@ impl TryFrom<CVType> for SolidColumn {
         }
 
         // todo, update error
-        return Err(ThermalHydraulicsLibError::TypeConversionErrorHeatTransferEntity);
+        return Err(TuasLibError::TypeConversionErrorHeatTransferEntity);
     }
 }
 
 impl CVType {
     #[inline]
     /// gets the material 
-    pub fn get_material(&mut self) -> Result<Material,ThermalHydraulicsLibError>{
+    pub fn get_material(&mut self) -> Result<Material,TuasLibError>{
 
 
         match self {
@@ -112,7 +112,7 @@ impl CVType {
     /// obtains the temperature vector for all CVTypes
     #[inline]
     pub fn get_temperature_vector(&mut self) -> 
-    Result<Vec<ThermodynamicTemperature>,ThermalHydraulicsLibError>{
+    Result<Vec<ThermodynamicTemperature>,TuasLibError>{
         match self {
             CVType::SingleCV(single_cv) => {
                 let temperature = single_cv.get_temperature_from_enthalpy_and_set()?;
