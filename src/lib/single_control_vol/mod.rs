@@ -664,4 +664,6 @@ pub mod boundary_condition_interactions;
 pub mod wrappers_for_heat_transfer_interaction;
 
 /// tests for single control volume 
+/// for conjugate heat transfer and lumped heat capacitance
+/// also has semi-infinite medium tests
 pub mod tests;
