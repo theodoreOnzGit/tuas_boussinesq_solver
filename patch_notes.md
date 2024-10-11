@@ -1,6 +1,7 @@
 ## v 0.0.2 
 
-Renamed thermal_hydraulics_error as tuas_lib_error.
+Renamed thermal_hydraulics_error as tuas_lib_error. Added back in 
+basic conjugate heat transfer and semi infinite medium tests.
 
 ## v 0.0.1
 
