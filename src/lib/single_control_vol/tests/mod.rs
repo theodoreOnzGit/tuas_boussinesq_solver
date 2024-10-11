@@ -3,6 +3,12 @@
 mod lumped_heat_capacitance;
 
 #[cfg(test)]
+/// Contains tests 
+/// for automatic time step adjustment
+/// using simple lumped heat capacitance as an example
+mod automatic_timestep_using_lumped_capacitance;
+
+#[cfg(test)]
 /// Contains tests for conjugate heat transfer 
 mod conjugate_heat_transfer_tests;
 
