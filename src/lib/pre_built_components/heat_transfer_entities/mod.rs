@@ -81,3 +81,8 @@ pub mod type_conversion;
 /// that is to say, you can construct a DataAdvection struct from 
 /// a HeatTransferEntity
 pub mod conversion_to_data_advection;
+
+
+/// tests 
+#[cfg(test)]
+pub mod tests;
