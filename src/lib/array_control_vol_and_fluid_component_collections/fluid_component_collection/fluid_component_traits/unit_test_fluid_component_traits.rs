@@ -2,7 +2,7 @@
 
 #[test]
 pub fn test_custom_fluid_component_pressure_loss() -> Result<(),
-crate::thermal_hydraulics_error::TuasLibError>{
+crate::tuas_lib_error::TuasLibError>{
     // this tests the calc pressure loss for fluid component 
     use uom::si::f64::*;
     use uom::ConstZero;
@@ -111,7 +111,7 @@ crate::thermal_hydraulics_error::TuasLibError>{
 
 #[test]
 pub fn test_custom_fluid_component_mass_flow_from_pressure_loss() -> Result<(),
-crate::thermal_hydraulics_error::TuasLibError>{
+crate::tuas_lib_error::TuasLibError>{
     // this tests the calc pressure loss for fluid component 
     use uom::si::f64::*;
     use uom::ConstZero;
@@ -221,7 +221,7 @@ crate::thermal_hydraulics_error::TuasLibError>{
 
 #[test]
 pub fn test_custom_fluid_component_pressure_change() -> Result<(),
-crate::thermal_hydraulics_error::TuasLibError>{
+crate::tuas_lib_error::TuasLibError>{
     // this tests the calc pressure loss for fluid component 
     use uom::si::f64::*;
     use uom::ConstZero;
@@ -504,7 +504,7 @@ crate::thermal_hydraulics_error::TuasLibError>{
 
 #[test]
 pub fn test_custom_fluid_component_mass_flowrate_from_pressure_change() -> Result<(),
-crate::thermal_hydraulics_error::TuasLibError>{
+crate::tuas_lib_error::TuasLibError>{
     // this tests the calc pressure loss for fluid component 
     use uom::si::f64::*;
     use uom::ConstZero;

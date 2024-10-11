@@ -46,7 +46,7 @@ pub fn case_c_tchx_out_313_kelvin_40_celsius(){
     use uom::si::mass_rate::kilogram_per_second;
     use std::thread;
 
-    use crate::thermal_hydraulics_error::TuasLibError;
+    use crate::tuas_lib_error::TuasLibError;
 
     use crate::pre_built_components::
         ciet_steady_state_natural_circulation_test_components::dracs_loop_components::*;

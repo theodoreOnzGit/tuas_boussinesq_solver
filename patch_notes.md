@@ -1,3 +1,7 @@
+## v 0.0.2 
+
+Renamed thermal_hydraulics_error as tuas_lib_error.
+
 ## v 0.0.1
 
 This is the first update of the tuas_boussinesq_solver,

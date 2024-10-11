@@ -47,7 +47,7 @@ pub fn dimensionless_darcy_loss_correlation_get_be() -> Result<(),
 /// number
 #[test]
 pub fn dimensionless_darcy_loss_correlation_get_re_from_be() -> Result<(), 
-    crate::thermal_hydraulics_error::TuasLibError>
+    crate::tuas_lib_error::TuasLibError>
 {
     use uom::si::f64::*; 
     use uom::si::ratio::ratio;

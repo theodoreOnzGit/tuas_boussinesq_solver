@@ -42,7 +42,7 @@ pub fn case_a_tchx_out_319_kelvin_46_celsius(){
     use uom::si::{f64::*, mass_rate::kilogram_per_second, power::watt};
 
     use std::thread;
-    use crate::thermal_hydraulics_error::TuasLibError;
+    use crate::tuas_lib_error::TuasLibError;
     use uom::si::{frequency::hertz, ratio::ratio, time::millisecond};
     use uom::si::thermodynamic_temperature::kelvin;
 

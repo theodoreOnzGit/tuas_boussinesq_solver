@@ -12,7 +12,7 @@ pub fn validate_coupled_dracs_loop_version_1(
     experimental_primary_mass_flowrate_kg_per_s: f64,
     pri_loop_relative_tolerance: f64,
     dracs_loop_relative_tolerance: f64) -> 
-Result<(),crate::thermal_hydraulics_error::TuasLibError>{
+Result<(),crate::tuas_lib_error::TuasLibError>{
     use uom::si::{f64::*, mass_rate::kilogram_per_second, power::watt};
 
     use uom::si::{frequency::hertz, ratio::ratio, time::millisecond};

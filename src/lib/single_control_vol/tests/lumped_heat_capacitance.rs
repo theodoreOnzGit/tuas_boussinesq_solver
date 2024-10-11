@@ -11,7 +11,7 @@ use crate::pre_built_components::heat_transfer_entities::cv_types::CVType;
 use crate::pre_built_components::heat_transfer_entities::preprocessing::link_heat_transfer_entity;
 use crate::pre_built_components::heat_transfer_entities::HeatTransferEntity;
 use crate::single_control_vol::SingleCVNode;
-use crate::thermal_hydraulics_error::TuasLibError;
+use crate::tuas_lib_error::TuasLibError;
 
 
 
