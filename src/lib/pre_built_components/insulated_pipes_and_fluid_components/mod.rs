@@ -313,3 +313,8 @@ pub mod postprocessing;
 
 /// type conversions such as TryInto<FluidComponent> 
 pub mod type_conversion;
+
+
+/// calibration functions for heat transfer coefficients to ambient 
+/// nusselt number and insulation thickness 
+pub mod calibration;

@@ -716,30 +716,6 @@ impl InsulatedFluidComponent {
 
     }
 
-    /// calibrates the insulation thickness of this pipe or component, 
-    /// to increase or decrease parasitic heat loss
-    /// however, will not change thermal inertia
-    /// 
-    pub fn calibrate_insulation_thickness(&mut self, 
-        insulation_thickness: Length){
-
-        let id = self.insulation_id;
-        let od = id + 2.0*insulation_thickness.abs();
-        self.insulation_od = od;
-
-    }
-
-    /// gets the insulation thickness based on 
-    /// (insulation_od - insulation_id)/2
-    pub fn get_insulation_thickness(&self) -> Length {
-        let id = self.insulation_id;
-        let od = self.insulation_od;
-
-        let insulation_thickness = 0.5 * (od - id);
-
-        return insulation_thickness;
-
-    }
 
 
 
