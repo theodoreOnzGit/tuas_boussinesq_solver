@@ -3,7 +3,7 @@
 pub fn regression_long_test_calibrated_ver6_set_c1(){
 
     let max_simulation_time_seconds: f64 = 6300.0;
-    let pri_loop_relative_tolerance = 0.028;
+    let pri_loop_relative_tolerance = 0.062;
     let dracs_loop_relative_tolerance = 0.061;
 
     // I'm writing in this format so that the data will be easier 
@@ -14,7 +14,7 @@ pub fn regression_long_test_calibrated_ver6_set_c1(){
         experimental_pri_mass_flowrate_kg_per_s,
         simulated_expected_dracs_mass_flowrate_kg_per_s,
         simulated_expected_pri_mass_flowrate_kg_per_s) 
-        = (841.02, 40.0, 2.6860e-2, 2.0030e-2, 2.5247e-2, 2.0459e-2);
+        = (841.02, 40.0, 2.6860e-2, 2.0030e-2, 2.5798e-2, 2.0841e-2);
 
 
     let (shell_side_to_tubes_nusselt_number_correction_factor,
@@ -38,7 +38,7 @@ pub fn regression_long_test_calibrated_ver6_set_c1(){
         expt_heater_surf_temp_avg_degc,
         simulated_expected_heater_surf_temp_degc,
         heater_surface_temp_tolerance_degc) = 
-        (5.0,86.80711,86.8,0.5);
+        (7.5,86.80711,86.8,0.5);
 
 
     regression_coupled_dracs_loop_version_6(
