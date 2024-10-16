@@ -1,3 +1,10 @@
+## v 0.0.3 
+
+for coupled dracs loop, added parasitic heat loss 
+tests to ver 6, where 
+heater nusselt numbers were also calibrated properly
+
+
 ## v 0.0.2 
 
 Renamed thermal_hydraulics_error as tuas_lib_error. Added back in 

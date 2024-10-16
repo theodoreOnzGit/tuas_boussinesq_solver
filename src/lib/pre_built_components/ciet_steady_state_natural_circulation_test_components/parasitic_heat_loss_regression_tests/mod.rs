@@ -37,6 +37,20 @@ pub mod coupled_dracs_loop_ver_2_calibrated;
 /// The rest of the TCHX, the horizontal TCHX and 35b1, will be insulated.
 pub mod coupled_dracs_loop_ver_3_calibrated;
 
+/// in this module, I want to calibrate the heater nusselt 
+/// number to a suitable value
+/// dataset number,pri loop mass flowrate (kg/s),Heater (heat addition),Heater inlet (DegC),Average Surface T
+/// C-1,0.02003,841.01916,50.5,86.80711,
+/// C-2,0.02367,1158.68584,53.8,96.92176,
+/// C-3,0.02635,1409.2231,56.7,105.23976,
+/// C-4,0.02949,1736.10797,60.8,114.57434,
+/// C-5,0.0319,2026.28588,64.1,122.82384,
+/// C-6,0.03412,2288.8349,67.2,130.37845,
+/// C-7,0.03562,2508.71169,70.6,138.12225,
+/// C-8,0.03593,2685.83341,73.6,145.79877,
+/// C-9,0.03547,2764.52664,76.5,153.29145,
+pub mod coupled_dracs_loop_ver_6_calibrated;
+
 /// for the coupled dracs loop, we need to calibrate heat loss 
 /// through the primary loop 
 /// hot leg (from heater outlet to dhx shell inlet)
@@ -118,3 +132,4 @@ pub mod dracs_loop_parasitic_heat_loss_calibration;
 /// this is a best effort estimate, I couldn't have one set of parameters to fit 
 /// everything, so each test set in dataset c has its own parameters
 pub mod dhx_sthe_calibration;
+
