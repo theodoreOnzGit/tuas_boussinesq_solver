@@ -38,7 +38,7 @@ pub fn regression_long_test_calibrated_ver6_set_c1(){
         expt_heater_surf_temp_avg_degc,
         simulated_expected_heater_surf_temp_degc,
         heater_surface_temp_tolerance_degc) = 
-        (6.7,86.80711,86.8,0.5);
+        (6.5,86.80711,86.8,0.5);
 
 
     regression_coupled_dracs_loop_version_6(
