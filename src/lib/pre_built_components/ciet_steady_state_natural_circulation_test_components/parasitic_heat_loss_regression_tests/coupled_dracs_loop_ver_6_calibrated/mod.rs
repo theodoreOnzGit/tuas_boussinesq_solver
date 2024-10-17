@@ -67,8 +67,215 @@ pub fn regression_long_test_calibrated_ver6_set_c1(){
 
 
 }
+/// test series took about 230 s
+#[test] 
+pub fn regression_long_test_calibrated_ver6_set_c2(){
+
+    let max_simulation_time_seconds: f64 = 6300.0;
+    let pri_loop_relative_tolerance = 0.062;
+    let dracs_loop_relative_tolerance = 0.061;
+
+    // I'm writing in this format so that the data will be easier 
+    // to copy over to csv
+    let (heater_power_watts,
+        tchx_outlet_temp_degc,
+        experimental_dracs_mass_flowrate_kg_per_s,
+        experimental_pri_mass_flowrate_kg_per_s,
+        simulated_expected_dracs_mass_flowrate_kg_per_s,
+        simulated_expected_pri_mass_flowrate_kg_per_s) 
+        = (1158.69, 40.0, 3.0550e-2, 2.3670e-2, 3.0766e-2, 2.4531e-2);
 
 
+    let (shell_side_to_tubes_nusselt_number_correction_factor,
+        insulation_thickness_regression_cm,
+        shell_side_to_ambient_nusselt_correction_factor,
+        dhx_heat_loss_to_ambient_watts_per_m2_kelvin) 
+        = (4.7,0.161,10.3,33.9);
+
+    let ( pri_loop_cold_leg_insulation_thickness_cm,
+        pri_loop_hot_leg_insulation_thickness_cm,
+        dracs_loop_cold_leg_insulation_thickness_cm,
+        dracs_loop_hot_leg_insulation_thickness_cm,) 
+        = (0.15, 0.24, 3.00, 0.75);
+
+    dbg!(max_simulation_time_seconds,
+        pri_loop_relative_tolerance,
+        dracs_loop_relative_tolerance);
+
+    // heater calibration for appropriate surface temp
+    let (heater_calibrated_nusselt_factor_float,
+        expt_heater_surf_temp_avg_degc,
+        simulated_expected_heater_surf_temp_degc,
+        heater_surface_temp_tolerance_degc) = 
+        (7.7,96.92,96.9,0.5);
+
+
+    regression_coupled_dracs_loop_version_6(
+        heater_power_watts, 
+        max_simulation_time_seconds,
+        tchx_outlet_temp_degc,
+        experimental_dracs_mass_flowrate_kg_per_s,
+        experimental_pri_mass_flowrate_kg_per_s,
+        simulated_expected_dracs_mass_flowrate_kg_per_s,
+        simulated_expected_pri_mass_flowrate_kg_per_s,
+        pri_loop_relative_tolerance,
+        dracs_loop_relative_tolerance,
+        shell_side_to_tubes_nusselt_number_correction_factor,
+        insulation_thickness_regression_cm,
+        shell_side_to_ambient_nusselt_correction_factor,
+        dhx_heat_loss_to_ambient_watts_per_m2_kelvin,
+        pri_loop_cold_leg_insulation_thickness_cm,
+        pri_loop_hot_leg_insulation_thickness_cm,
+        dracs_loop_cold_leg_insulation_thickness_cm,
+        dracs_loop_hot_leg_insulation_thickness_cm,
+        heater_calibrated_nusselt_factor_float,
+        expt_heater_surf_temp_avg_degc,
+        simulated_expected_heater_surf_temp_degc,
+        heater_surface_temp_tolerance_degc,
+    ).unwrap();
+
+
+}
+
+/// test series took about 230 s
+#[test] 
+pub fn regression_long_test_calibrated_ver6_set_c3(){
+
+    let max_simulation_time_seconds: f64 = 6300.0;
+    let pri_loop_relative_tolerance = 0.062;
+    let dracs_loop_relative_tolerance = 0.061;
+
+    // I'm writing in this format so that the data will be easier 
+    // to copy over to csv
+    let (heater_power_watts,
+        tchx_outlet_temp_degc,
+        experimental_dracs_mass_flowrate_kg_per_s,
+        experimental_pri_mass_flowrate_kg_per_s,
+        simulated_expected_dracs_mass_flowrate_kg_per_s,
+        simulated_expected_pri_mass_flowrate_kg_per_s) 
+        = (1409.22, 40.0, 3.3450e-2, 2.6350e-2, 3.3990e-2, 2.7056e-2);
+
+
+    let (shell_side_to_tubes_nusselt_number_correction_factor,
+        insulation_thickness_regression_cm,
+        shell_side_to_ambient_nusselt_correction_factor,
+        dhx_heat_loss_to_ambient_watts_per_m2_kelvin) 
+        = (4.7,0.161,10.3,33.9);
+
+    let ( pri_loop_cold_leg_insulation_thickness_cm,
+        pri_loop_hot_leg_insulation_thickness_cm,
+        dracs_loop_cold_leg_insulation_thickness_cm,
+        dracs_loop_hot_leg_insulation_thickness_cm,) 
+        = (0.15, 0.24, 3.00, 0.75);
+
+    dbg!(max_simulation_time_seconds,
+        pri_loop_relative_tolerance,
+        dracs_loop_relative_tolerance);
+
+    // heater calibration for appropriate surface temp
+    let (heater_calibrated_nusselt_factor_float,
+        expt_heater_surf_temp_avg_degc,
+        simulated_expected_heater_surf_temp_degc,
+        heater_surface_temp_tolerance_degc) = 
+        (8.0,105.23,105.2,0.5);
+
+
+    regression_coupled_dracs_loop_version_6(
+        heater_power_watts, 
+        max_simulation_time_seconds,
+        tchx_outlet_temp_degc,
+        experimental_dracs_mass_flowrate_kg_per_s,
+        experimental_pri_mass_flowrate_kg_per_s,
+        simulated_expected_dracs_mass_flowrate_kg_per_s,
+        simulated_expected_pri_mass_flowrate_kg_per_s,
+        pri_loop_relative_tolerance,
+        dracs_loop_relative_tolerance,
+        shell_side_to_tubes_nusselt_number_correction_factor,
+        insulation_thickness_regression_cm,
+        shell_side_to_ambient_nusselt_correction_factor,
+        dhx_heat_loss_to_ambient_watts_per_m2_kelvin,
+        pri_loop_cold_leg_insulation_thickness_cm,
+        pri_loop_hot_leg_insulation_thickness_cm,
+        dracs_loop_cold_leg_insulation_thickness_cm,
+        dracs_loop_hot_leg_insulation_thickness_cm,
+        heater_calibrated_nusselt_factor_float,
+        expt_heater_surf_temp_avg_degc,
+        simulated_expected_heater_surf_temp_degc,
+        heater_surface_temp_tolerance_degc,
+    ).unwrap();
+
+
+}
+
+/// test series took about 230 s
+#[test] 
+pub fn regression_long_test_calibrated_ver6_set_c4(){
+
+    let max_simulation_time_seconds: f64 = 6300.0;
+    let pri_loop_relative_tolerance = 0.062;
+    let dracs_loop_relative_tolerance = 0.061;
+
+    // I'm writing in this format so that the data will be easier 
+    // to copy over to csv
+    let (heater_power_watts,
+        tchx_outlet_temp_degc,
+        experimental_dracs_mass_flowrate_kg_per_s,
+        experimental_pri_mass_flowrate_kg_per_s,
+        simulated_expected_dracs_mass_flowrate_kg_per_s,
+        simulated_expected_pri_mass_flowrate_kg_per_s) 
+        = (1736.11, 40.0, 3.6490e-2, 2.9490e-2, 3.7633e-2, 2.9951e-2);
+
+
+    let (shell_side_to_tubes_nusselt_number_correction_factor,
+        insulation_thickness_regression_cm,
+        shell_side_to_ambient_nusselt_correction_factor,
+        dhx_heat_loss_to_ambient_watts_per_m2_kelvin) 
+        = (4.7,0.161,10.3,33.9);
+
+    let ( pri_loop_cold_leg_insulation_thickness_cm,
+        pri_loop_hot_leg_insulation_thickness_cm,
+        dracs_loop_cold_leg_insulation_thickness_cm,
+        dracs_loop_hot_leg_insulation_thickness_cm,) 
+        = (0.15, 0.24, 3.00, 0.75);
+
+    dbg!(max_simulation_time_seconds,
+        pri_loop_relative_tolerance,
+        dracs_loop_relative_tolerance);
+
+    // heater calibration for appropriate surface temp
+    let (heater_calibrated_nusselt_factor_float,
+        expt_heater_surf_temp_avg_degc,
+        simulated_expected_heater_surf_temp_degc,
+        heater_surface_temp_tolerance_degc) = 
+        (9.5,114.57,114.6,0.5);
+
+
+    regression_coupled_dracs_loop_version_6(
+        heater_power_watts, 
+        max_simulation_time_seconds,
+        tchx_outlet_temp_degc,
+        experimental_dracs_mass_flowrate_kg_per_s,
+        experimental_pri_mass_flowrate_kg_per_s,
+        simulated_expected_dracs_mass_flowrate_kg_per_s,
+        simulated_expected_pri_mass_flowrate_kg_per_s,
+        pri_loop_relative_tolerance,
+        dracs_loop_relative_tolerance,
+        shell_side_to_tubes_nusselt_number_correction_factor,
+        insulation_thickness_regression_cm,
+        shell_side_to_ambient_nusselt_correction_factor,
+        dhx_heat_loss_to_ambient_watts_per_m2_kelvin,
+        pri_loop_cold_leg_insulation_thickness_cm,
+        pri_loop_hot_leg_insulation_thickness_cm,
+        dracs_loop_cold_leg_insulation_thickness_cm,
+        dracs_loop_hot_leg_insulation_thickness_cm,
+        heater_calibrated_nusselt_factor_float,
+        expt_heater_surf_temp_avg_degc,
+        simulated_expected_heater_surf_temp_degc,
+        heater_surface_temp_tolerance_degc,
+    ).unwrap();
+
+
+}
 #[cfg(test)]
 pub fn regression_coupled_dracs_loop_version_6(
     input_power_watts: f64,
