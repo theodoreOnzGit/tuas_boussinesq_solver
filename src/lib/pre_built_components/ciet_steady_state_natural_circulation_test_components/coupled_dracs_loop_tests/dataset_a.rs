@@ -33,7 +33,14 @@ pub fn ciet_coupled_nat_circ_set_a1(){
         pri_loop_relative_tolerance,
         dracs_loop_relative_tolerance);
 
-    regression_coupled_dracs_loop_version_4(
+    // heater calibration for appropriate surface temp
+    let (heater_calibrated_nusselt_factor_float,
+        expt_heater_surf_temp_avg_degc,
+        simulated_expected_heater_surf_temp_degc,
+        heater_surface_temp_tolerance_degc) = 
+        (10.0,109.47,0.0,2.0);
+
+    regression_coupled_dracs_loop_version_7(
         heater_power_watts, 
         max_simulation_time_seconds,
         tchx_outlet_temp_degc,
@@ -51,6 +58,10 @@ pub fn ciet_coupled_nat_circ_set_a1(){
         pri_loop_hot_leg_insulation_thickness_cm,
         dracs_loop_cold_leg_insulation_thickness_cm,
         dracs_loop_hot_leg_insulation_thickness_cm,
+        heater_calibrated_nusselt_factor_float,
+        expt_heater_surf_temp_avg_degc,
+        simulated_expected_heater_surf_temp_degc,
+        heater_surface_temp_tolerance_degc,
     ).unwrap();
 
 
@@ -89,7 +100,14 @@ pub fn ciet_coupled_nat_circ_set_a2(){
         pri_loop_relative_tolerance,
         dracs_loop_relative_tolerance);
 
-    regression_coupled_dracs_loop_version_4(
+    // heater calibration for appropriate surface temp
+    let (heater_calibrated_nusselt_factor_float,
+        expt_heater_surf_temp_avg_degc,
+        simulated_expected_heater_surf_temp_degc,
+        heater_surface_temp_tolerance_degc) = 
+        (10.0,117.03,0.0,2.0);
+
+    regression_coupled_dracs_loop_version_7(
         heater_power_watts, 
         max_simulation_time_seconds,
         tchx_outlet_temp_degc,
@@ -107,6 +125,10 @@ pub fn ciet_coupled_nat_circ_set_a2(){
         pri_loop_hot_leg_insulation_thickness_cm,
         dracs_loop_cold_leg_insulation_thickness_cm,
         dracs_loop_hot_leg_insulation_thickness_cm,
+        heater_calibrated_nusselt_factor_float,
+        expt_heater_surf_temp_avg_degc,
+        simulated_expected_heater_surf_temp_degc,
+        heater_surface_temp_tolerance_degc,
     ).unwrap();
 
 
@@ -145,7 +167,14 @@ pub fn ciet_coupled_nat_circ_set_a3(){
         pri_loop_relative_tolerance,
         dracs_loop_relative_tolerance);
 
-    regression_coupled_dracs_loop_version_4(
+    // heater calibration for appropriate surface temp
+    let (heater_calibrated_nusselt_factor_float,
+        expt_heater_surf_temp_avg_degc,
+        simulated_expected_heater_surf_temp_degc,
+        heater_surface_temp_tolerance_degc) = 
+        (10.0,126.84,0.0,2.0);
+
+    regression_coupled_dracs_loop_version_7(
         heater_power_watts, 
         max_simulation_time_seconds,
         tchx_outlet_temp_degc,
@@ -163,6 +192,10 @@ pub fn ciet_coupled_nat_circ_set_a3(){
         pri_loop_hot_leg_insulation_thickness_cm,
         dracs_loop_cold_leg_insulation_thickness_cm,
         dracs_loop_hot_leg_insulation_thickness_cm,
+        heater_calibrated_nusselt_factor_float,
+        expt_heater_surf_temp_avg_degc,
+        simulated_expected_heater_surf_temp_degc,
+        heater_surface_temp_tolerance_degc,
     ).unwrap();
 
 
@@ -201,7 +234,14 @@ pub fn ciet_coupled_nat_circ_set_a4(){
         pri_loop_relative_tolerance,
         dracs_loop_relative_tolerance);
 
-    regression_coupled_dracs_loop_version_4(
+    // heater calibration for appropriate surface temp
+    let (heater_calibrated_nusselt_factor_float,
+        expt_heater_surf_temp_avg_degc,
+        simulated_expected_heater_surf_temp_degc,
+        heater_surface_temp_tolerance_degc) = 
+        (10.0,133.34,0.0,2.0);
+
+    regression_coupled_dracs_loop_version_7(
         heater_power_watts, 
         max_simulation_time_seconds,
         tchx_outlet_temp_degc,
@@ -219,6 +259,10 @@ pub fn ciet_coupled_nat_circ_set_a4(){
         pri_loop_hot_leg_insulation_thickness_cm,
         dracs_loop_cold_leg_insulation_thickness_cm,
         dracs_loop_hot_leg_insulation_thickness_cm,
+        heater_calibrated_nusselt_factor_float,
+        expt_heater_surf_temp_avg_degc,
+        simulated_expected_heater_surf_temp_degc,
+        heater_surface_temp_tolerance_degc,
     ).unwrap();
 
 
@@ -258,7 +302,14 @@ pub fn ciet_coupled_nat_circ_set_a5(){
         pri_loop_relative_tolerance,
         dracs_loop_relative_tolerance);
 
-    regression_coupled_dracs_loop_version_4(
+    // heater calibration for appropriate surface temp
+    let (heater_calibrated_nusselt_factor_float,
+        expt_heater_surf_temp_avg_degc,
+        simulated_expected_heater_surf_temp_degc,
+        heater_surface_temp_tolerance_degc) = 
+        (10.0,141.85,0.0,2.0);
+
+    regression_coupled_dracs_loop_version_7(
         heater_power_watts, 
         max_simulation_time_seconds,
         tchx_outlet_temp_degc,
@@ -276,6 +327,10 @@ pub fn ciet_coupled_nat_circ_set_a5(){
         pri_loop_hot_leg_insulation_thickness_cm,
         dracs_loop_cold_leg_insulation_thickness_cm,
         dracs_loop_hot_leg_insulation_thickness_cm,
+        heater_calibrated_nusselt_factor_float,
+        expt_heater_surf_temp_avg_degc,
+        simulated_expected_heater_surf_temp_degc,
+        heater_surface_temp_tolerance_degc,
     ).unwrap();
 
 
@@ -315,7 +370,14 @@ pub fn ciet_coupled_nat_circ_set_a6(){
         pri_loop_relative_tolerance,
         dracs_loop_relative_tolerance);
 
-    regression_coupled_dracs_loop_version_4(
+    // heater calibration for appropriate surface temp
+    let (heater_calibrated_nusselt_factor_float,
+        expt_heater_surf_temp_avg_degc,
+        simulated_expected_heater_surf_temp_degc,
+        heater_surface_temp_tolerance_degc) = 
+        (10.0,148.96,0.0,2.0);
+
+    regression_coupled_dracs_loop_version_7(
         heater_power_watts, 
         max_simulation_time_seconds,
         tchx_outlet_temp_degc,
@@ -333,6 +395,10 @@ pub fn ciet_coupled_nat_circ_set_a6(){
         pri_loop_hot_leg_insulation_thickness_cm,
         dracs_loop_cold_leg_insulation_thickness_cm,
         dracs_loop_hot_leg_insulation_thickness_cm,
+        heater_calibrated_nusselt_factor_float,
+        expt_heater_surf_temp_avg_degc,
+        simulated_expected_heater_surf_temp_degc,
+        heater_surface_temp_tolerance_degc,
     ).unwrap();
 
 
@@ -372,7 +438,14 @@ pub fn ciet_coupled_nat_circ_set_a7(){
         pri_loop_relative_tolerance,
         dracs_loop_relative_tolerance);
 
-    regression_coupled_dracs_loop_version_4(
+    // heater calibration for appropriate surface temp
+    let (heater_calibrated_nusselt_factor_float,
+        expt_heater_surf_temp_avg_degc,
+        simulated_expected_heater_surf_temp_degc,
+        heater_surface_temp_tolerance_degc) = 
+        (10.0,156.80,0.0,2.0);
+
+    regression_coupled_dracs_loop_version_7(
         heater_power_watts, 
         max_simulation_time_seconds,
         tchx_outlet_temp_degc,
@@ -390,10 +463,15 @@ pub fn ciet_coupled_nat_circ_set_a7(){
         pri_loop_hot_leg_insulation_thickness_cm,
         dracs_loop_cold_leg_insulation_thickness_cm,
         dracs_loop_hot_leg_insulation_thickness_cm,
+        heater_calibrated_nusselt_factor_float,
+        expt_heater_surf_temp_avg_degc,
+        simulated_expected_heater_surf_temp_degc,
+        heater_surface_temp_tolerance_degc,
     ).unwrap();
 
 
 }
+
 
 /// function to test calibrated 
 /// coupled dracs loop and compare with experimental data 
@@ -430,8 +508,41 @@ pub fn ciet_coupled_nat_circ_set_a7(){
 /// in addition to these adjustments, the pipe 22 form loss was adjusted to 
 /// 45.95 as per the SAM model 
 /// because the flow in the primary loop was overpredicted
+///
+/// version 5 is specially for set b9, because we were experiencing numerical 
+/// instability with this dataset, 
+///
+/// hence, possibly smaller timestep was required, but adjusting timestep 
+/// to 0.01s didn't make a difference, instability still happened (07 oct 2024)
+///
+/// my second suspicion was that there was a problem with controller tuning.
+///
+/// Originally, controllers were tuned to have the heat transfer coeff 
+/// over the whole TCHX prior to the SAM calibration where almost 2/3 of 
+/// the TCHX was adiabatic. I did not adjust controller parameters.
+///
+/// Now, however, where the power is so high, more cooling is required.
+/// I suspect the jump in temperature and high cooling loads required 
+/// messed with the controller. So after adjusting the controllers, i found 
+/// that wasn't the issue, it was the heater surface temperature being 
+/// too high. Hence i increased nusselt number for heater by 5 times 
+/// arbitrarily
+///
+/// for version 6
+/// I started to calibrate the heater Nusselt number 
+/// more precisely to try and match the heater surface temperature given 
+/// by Zweibaum. Moreover, the boundary conditions for heater were set 
+/// to adiabatic. From these sets of tests, I concluded that a calibration 
+/// factor of 10 would be suitable for heater nusselt number
+///
+///
+/// for dracs calibration version 7, in comparison to version 6,
+/// pipe 3's K values were adjusted from 3.15 in the RELAP model to 
+/// 17.15 used in the SAM model. 
+///
+/// the heater nusselt number was calibrated by 10 times as well
 #[cfg(test)]
-pub fn regression_coupled_dracs_loop_version_4(
+pub fn regression_coupled_dracs_loop_version_7(
     input_power_watts: f64,
     max_time_seconds: f64,
     tchx_outlet_temperature_set_point_degc: f64,
@@ -448,7 +559,11 @@ pub fn regression_coupled_dracs_loop_version_4(
     pri_loop_cold_leg_insulation_thickness_cm: f64,
     pri_loop_hot_leg_insulation_thickness_cm: f64,
     dracs_loop_cold_leg_insulation_thickness_cm: f64,
-    dracs_loop_hot_leg_insulation_thickness_cm: f64,) -> 
+    dracs_loop_hot_leg_insulation_thickness_cm: f64,
+    heater_calibrated_nusselt_factor_float: f64,
+    expt_heater_surf_temp_avg_degc: f64,
+    simulated_expected_heater_surf_temp_degc: f64,
+    heater_surface_temp_tolerance_degc: f64) -> 
 Result<(),crate::tuas_lib_error::TuasLibError>{
     use uom::si::length::centimeter;
     use uom::si::{f64::*, mass_rate::kilogram_per_second, power::watt};
@@ -487,6 +602,30 @@ Result<(),crate::tuas_lib_error::TuasLibError>{
 
     // max error is 0.5% according to SAM 
     // is okay, because typical flowmeter measurement error is 2% anyway
+    // set timestep to lower values for set b9
+    // as compared to the rest
+    //
+    // setting to 0.01s didn't work, so my second candidate for change is 
+    // to change the controller, but set timestep at 0.5s
+    //
+    // This is because this dataset b9, has the highest heater power 
+    // but lowest TCHX outlet temperature of all datasets. And therefore, 
+    // the highest cooling loads are placed on the TCHX 
+    //
+    // It is understandable at this extreme then, for the controller 
+    // to be unstable if we don't change settings
+    //
+    // let timestep = Time::new::<second>(0.1);
+    // for this timestep, the simulation fails around 181s of simulated time
+    //
+    //
+    // let timestep = Time::new::<second>(0.01);
+    // for this timestep, the simulation fails around 181s of simulated time
+    //
+    // let timestep = Time::new::<second>(0.5);
+    // for this timestep, the simulation fails around 185s of simulated time
+    //
+    // the conclusion is that this instability is almost independent of timestep
     let timestep = Time::new::<second>(0.5);
     let heat_rate_through_heater = input_power;
     let mut tchx_heat_transfer_coeff: HeatTransfer;
@@ -495,14 +634,15 @@ Result<(),crate::tuas_lib_error::TuasLibError>{
         HeatTransfer::new::<watt_per_square_meter_kelvin>(40.0);
     let average_temperature_for_density_calcs = 
         ThermodynamicTemperature::new::<degree_celsius>(80.0);
-    // let's calculate 400 seconds of simulated time 
-    // it takes about that long for the temperature to settle down
-    // this is compared to value at 4000s
 
     let mut current_simulation_time = Time::ZERO;
     let max_simulation_time = Time::new::<second>(max_time_seconds);
 
     // PID controller settings
+    // for version 5, controller settings are 
+    // altered from version 4, to introduce more stability for set b9
+    //
+    // setting controller gain to 1.55 and 1.0 didn't work, still unstable
     let controller_gain = Ratio::new::<ratio>(1.75);
     let integral_time: Time = controller_gain / Frequency::new::<hertz>(1.0);
     let derivative_time: Time = Time::new::<second>(1.0);
@@ -568,7 +708,7 @@ Result<(),crate::tuas_lib_error::TuasLibError>{
 
     // heater branch top to bottom 4 to 18
     let mut pipe_4 = new_pipe_4(initial_temperature);
-    let mut pipe_3 = new_pipe_3_relap_model(initial_temperature);
+    let mut pipe_3 = new_pipe_3_sam_model(initial_temperature);
     let mut pipe_2a = new_pipe_2a(initial_temperature);
     let mut static_mixer_10_label_2 = new_static_mixer_10_label_2(initial_temperature);
     let mut heater_top_head_1a = new_heater_top_head_1a(initial_temperature);
@@ -641,6 +781,22 @@ Result<(),crate::tuas_lib_error::TuasLibError>{
         &mut dhx_sthe.shell_side_nusselt_correlation_parasitic, 
         calibrated_parasitic_heat_loss_nusselt_factor);
 
+    // for the heater, i also calibrate the Nusselt correlation by 5 times,
+    // to prevent the steel from overheating due to high power 
+    //
+    // nusselt number change and calibration should be easier though, 
+    // may want some quality of life improvements for user interface in future
+    let heater_calibrated_nusselt_factor = Ratio::new::<ratio>(
+        heater_calibrated_nusselt_factor_float);
+    let mut heater_fluid_array_clone: FluidArray 
+        = heater_ver_1.pipe_fluid_array.clone().try_into().unwrap();
+
+    calibrate_nusselt_correlation_of_heat_transfer_entity(
+        &mut heater_fluid_array_clone.nusselt_correlation, 
+        heater_calibrated_nusselt_factor);
+
+    heater_ver_1.pipe_fluid_array = heater_fluid_array_clone.into();
+
     // now calibrate the insulation thickness for all 
 
     dhx_sthe.calibrate_insulation_thickness(dhx_calibrated_insulation_thickness);
@@ -711,6 +867,7 @@ Result<(),crate::tuas_lib_error::TuasLibError>{
         dracs_loop_hot_leg_insulation_thickness);
     pipe_34.calibrate_insulation_thickness(
         dracs_loop_hot_leg_insulation_thickness);
+
 
 
     let mut final_mass_flowrate_pri_loop: MassRate 
@@ -936,6 +1093,10 @@ Result<(),crate::tuas_lib_error::TuasLibError>{
             HeatTransfer::new::<watt_per_square_meter_kelvin>(
                 dhx_heat_loss_to_ambient_watts_per_m2_kelvin);
 
+        // calibrate heater to ambient htc as zero 
+        heater_ver_1.calibrate_heat_transfer_to_ambient(
+            HeatTransfer::ZERO);
+
         // advance timestep
         dracs_loop_advance_timestep_except_dhx_sam_tchx_calibration(
             timestep, &mut pipe_34, &mut pipe_33, &mut pipe_32, 
@@ -984,35 +1145,34 @@ Result<(),crate::tuas_lib_error::TuasLibError>{
         // debugging 
         let debug_settings = false;
 
-        // temperatures before and after heater
-        let ((_bt_11,_wt_10),(_bt_12,_wt_13)) = 
-            pri_loop_heater_temperature_diagnostics(
-            &mut heater_bottom_head_1b, 
-            &mut static_mixer_10_label_2, 
-            debug_settings);
-        // temperatures before and after dhx shell
-        let ((_bt_21,_wt_20),(_bt_27,_wt_26)) = 
-            pri_loop_dhx_shell_temperature_diagnostics(
-            &mut pipe_25a, 
-            &mut static_mixer_20_label_23, 
-            debug_settings);
-        // temperatures before and after dhx tube
-        let ((_bt_21,_wt_20),(_bt_27,_wt_26)) = 
-            dracs_loop_dhx_tube_temperature_diagnostics(
-            &mut dhx_tube_side_30a, 
-            &mut dhx_tube_side_30b, 
-            debug_settings);
+        if debug_settings == true {
+            dbg!(&current_simulation_time);
+            // temperatures before and after heater
+            let ((_bt_11,_wt_10),(_bt_12,_wt_13)) = 
+                pri_loop_heater_temperature_diagnostics(
+                    &mut heater_bottom_head_1b, 
+                    &mut static_mixer_10_label_2, 
+                    debug_settings);
+            // temperatures before and after dhx shell
+            let ((_bt_21,_wt_20),(_bt_27,_wt_26)) = 
+                pri_loop_dhx_shell_temperature_diagnostics(
+                    &mut pipe_25a, 
+                    &mut static_mixer_20_label_23, 
+                    debug_settings);
+            // temperatures before and after dhx tube
+            let ((_bt_21,_wt_20),(_bt_27,_wt_26)) = 
+                dracs_loop_dhx_tube_temperature_diagnostics(
+                    &mut dhx_tube_side_30a, 
+                    &mut dhx_tube_side_30b, 
+                    debug_settings);
+        }
+
         
 
         current_simulation_time += timestep;
 
     }
 
-    dbg!(&(
-            input_power,
-            final_mass_flowrate_pri_loop,
-            final_mass_flowrate_dracs_loop
-            ));
     let display_temperatures = true;
     // temperatures before and after heater
     let ((_bt_11,_wt_10),(_bt_12,_wt_13)) = 
@@ -1033,6 +1193,26 @@ Result<(),crate::tuas_lib_error::TuasLibError>{
             &mut dhx_tube_side_30b, 
             display_temperatures);
 
+    // heater average surface temp 
+    let heater_avg_surf_temp: ThermodynamicTemperature = 
+        heater_ver_1.pipe_shell.try_get_bulk_temperature().unwrap();
+
+    let simulated_heater_avg_surf_temp_degc: f64 = 
+        heater_avg_surf_temp.get::<degree_celsius>();
+
+    dbg!(&(
+            input_power,
+            final_mass_flowrate_pri_loop,
+            final_mass_flowrate_dracs_loop,
+            simulated_heater_avg_surf_temp_degc
+            ));
+
+    approx::assert_abs_diff_eq!(
+        expt_heater_surf_temp_avg_degc,
+        simulated_heater_avg_surf_temp_degc,
+        epsilon=heater_surface_temp_tolerance_degc);
+
+
     // this asserts the final mass flowrate against experimental flowrate
     approx::assert_relative_eq!(
         experimental_primary_mass_flowrate.get::<kilogram_per_second>(),
@@ -1043,6 +1223,9 @@ Result<(),crate::tuas_lib_error::TuasLibError>{
         experimental_dracs_mass_flowrate.get::<kilogram_per_second>(),
         final_mass_flowrate_dracs_loop.get::<kilogram_per_second>(),
         max_relative=dracs_loop_relative_tolerance);
+
+    // check heater surface temp to within tolerance 
+
 
     // this asserts the final mass flowrate against experimental flowrate 
     // for regression to within 0.1%
@@ -1055,6 +1238,13 @@ Result<(),crate::tuas_lib_error::TuasLibError>{
         simulated_expected_dracs_mass_flowrate_kg_per_s,
         final_mass_flowrate_dracs_loop.get::<kilogram_per_second>(),
         max_relative=0.001);
+
+    // also assert heater surface temp to within 0.1%
+    approx::assert_relative_eq!(
+        simulated_expected_heater_surf_temp_degc,
+        simulated_heater_avg_surf_temp_degc,
+        max_relative=0.001);
+    
 
 
     Ok(())
