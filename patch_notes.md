@@ -1,8 +1,12 @@
 ## v 0.0.3 
 
 for coupled dracs loop, added parasitic heat loss 
-tests to ver 6, where 
-heater nusselt numbers were also calibrated properly
+tests to ver 6 and ver 7, where 
+heater nusselt numbers were also calibrated properly, and boundary 
+conditions for heater set to adiabatic.
+
+Also note that pipe 3 was adjusted to use sam parameters. 
+That is, it has a K value of 17.15 as opposed to the relap value of 3.15.
 
 
 ## v 0.0.2 
