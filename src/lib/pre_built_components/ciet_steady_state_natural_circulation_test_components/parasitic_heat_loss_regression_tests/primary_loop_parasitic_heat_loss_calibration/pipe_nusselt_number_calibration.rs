@@ -185,7 +185,7 @@ pub fn hot_leg_nusselt_calibration_regression_test_v2_failed(
     let mut heater_top_head_1a = new_heater_top_head_1a(initial_temperature);
     let mut static_mixer_10_label_2 = new_static_mixer_10_label_2(initial_temperature);
     let mut pipe_2a = new_pipe_2a(initial_temperature);
-    let mut pipe_3 = new_pipe_3(initial_temperature);
+    let mut pipe_3 = new_pipe_3_relap_model(initial_temperature);
     let mut pipe_4 = new_pipe_4(initial_temperature);
     let mut pipe_5a = new_branch_5a(initial_temperature);
     let mut pipe_26 = new_pipe_26(initial_temperature);
@@ -594,7 +594,7 @@ pub fn hot_leg_nusselt_calibration_regression_test_v1_failed(
     let mut heater_top_head_1a = new_heater_top_head_1a(initial_temperature);
     let mut static_mixer_10_label_2 = new_static_mixer_10_label_2(initial_temperature);
     let mut pipe_2a = new_pipe_2a(initial_temperature);
-    let mut pipe_3 = new_pipe_3(initial_temperature);
+    let mut pipe_3 = new_pipe_3_relap_model(initial_temperature);
     let mut pipe_4 = new_pipe_4(initial_temperature);
     let mut pipe_5a = new_branch_5a(initial_temperature);
     let mut pipe_26 = new_pipe_26(initial_temperature);
