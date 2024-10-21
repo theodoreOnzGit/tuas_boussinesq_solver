@@ -49,6 +49,32 @@ pub mod coupled_dracs_loop_ver_3_calibrated;
 /// C-7,0.03562,2508.71169,70.6,138.12225,
 /// C-8,0.03593,2685.83341,73.6,145.79877,
 /// C-9,0.03547,2764.52664,76.5,153.29145,
+///
+/// This version attempts to calibrate the nusselt number of the heater 
+/// such that the surface temperature of the heater matches that of the 
+/// experimental data. Moreover, the heat transfer to ambient is now 
+/// set to zero
+///
+/// in SAM, the heat was added directly to the fluid. This is because 
+/// the heat addition values were back calculated from thermocouple data 
+/// so that the heat addition was a net to the fluid. Therefore, heater 
+/// surface temperatures were not even considered. If the surface temperatures 
+/// were simulated, then they would be lower than that of the fluid.
+///
+/// Here, I wanted to add a little realism. While there is zero heat loss 
+/// to the environment, the heat is added to the metal rather than to 
+/// the fluid. Hence, the metallic heater surface temperatures are elevated 
+/// to somewhat be closer to experimental data. This would be higher than 
+/// that of adding heat directly to the fluid. In this case, even a heater 
+/// surface temperature 10 K lower than that of experimental data would be 
+/// an improvement over the SAM model. Therefore, low temperature bounds 
+/// are still acceptable.
+///
+/// Since the increasing the Nusselt number between shell and fluid 
+/// decreases heater surface temperature, I'll just use a high bound
+/// Nusselt number from this set because it is already a correction to 
+/// a non-existent or relatively low heater surface temperature from SAM.
+///
 pub mod coupled_dracs_loop_ver_6_calibrated;
 
 /// for the coupled dracs loop, we need to calibrate heat loss 
