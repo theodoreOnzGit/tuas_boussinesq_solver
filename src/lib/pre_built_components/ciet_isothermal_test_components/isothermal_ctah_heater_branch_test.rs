@@ -23,7 +23,7 @@ pub fn heater_branch_with_heater_v2_test(){
         fluid_component_collection::fluid_component_collection::FluidComponentCollectionMethods;
 
     use uom::si::pressure::pascal;
-    use super::new_pipe_3;
+    use super::new_pipe_3_relap_model;
     use super::new_pipe_4;
     use super::new_branch_5;
     // first let's construct the heater branch
@@ -32,7 +32,7 @@ pub fn heater_branch_with_heater_v2_test(){
     
     let branch_5 = new_branch_5(initial_temperature);
     let pipe_4 = new_pipe_4(initial_temperature);
-    let pipe_3 = new_pipe_3(initial_temperature);
+    let pipe_3 = new_pipe_3_relap_model(initial_temperature);
 
     let static_mixer_2 = new_static_mixer_10_label_2(initial_temperature);
     let static_mixer_pipe_2a = new_pipe_2a(initial_temperature);
