@@ -18,7 +18,7 @@ pub fn ciet_coupled_nat_circ_set_b1(){
         experimental_pri_mass_flowrate_kg_per_s,
         simulated_expected_dracs_mass_flowrate_kg_per_s,
         simulated_expected_pri_mass_flowrate_kg_per_s) 
-        = (655.16, 35.0, 2.3290e-2, 1.7310e-2, 2.1958e-2, 1.7641e-2);
+        = (655.16, 35.0, 2.3290e-2, 1.7310e-2, 2.2421e-2, 1.7826e-2);
 
 
     let (shell_side_to_tubes_nusselt_number_correction_factor,
@@ -42,7 +42,7 @@ pub fn ciet_coupled_nat_circ_set_b1(){
         expt_heater_surf_temp_avg_degc,
         simulated_expected_heater_surf_temp_degc,
         heater_surface_temp_tolerance_degc) = 
-        (10.0,75.10,0.0,2.0);
+        (10.0,75.10,63.87,13.0);
 
     regression_coupled_dracs_loop_version_7(
         heater_power_watts, 
@@ -87,7 +87,7 @@ pub fn ciet_coupled_nat_circ_set_b2(){
         experimental_pri_mass_flowrate_kg_per_s,
         simulated_expected_dracs_mass_flowrate_kg_per_s,
         simulated_expected_pri_mass_flowrate_kg_per_s) 
-        = ( 1054.32, 35.0, 2.9520e-2, 2.1980e-2, 2.8592e-2, 2.2747e-2);
+        = ( 1054.32, 35.0, 2.9520e-2, 2.1980e-2, 2.9118e-2, 2.2927e-2);
 
 
     let (shell_side_to_tubes_nusselt_number_correction_factor,
@@ -111,7 +111,7 @@ pub fn ciet_coupled_nat_circ_set_b2(){
         expt_heater_surf_temp_avg_degc,
         simulated_expected_heater_surf_temp_degc,
         heater_surface_temp_tolerance_degc) = 
-        (10.0,91.40,0.0,2.0);
+        (10.0,91.40,81.21,12.0);
 
     regression_coupled_dracs_loop_version_7(
         heater_power_watts, 
@@ -156,7 +156,7 @@ pub fn ciet_coupled_nat_circ_set_b3(){
         experimental_pri_mass_flowrate_kg_per_s,
         simulated_expected_dracs_mass_flowrate_kg_per_s,
         simulated_expected_pri_mass_flowrate_kg_per_s) 
-        = ( 1394.70, 35.0, 3.3240e-2, 2.5700e-2, 3.2955e-2, 2.6287e-2);
+        = ( 1394.70, 35.0, 3.3240e-2, 2.5700e-2, 3.3551e-2, 2.6445e-2);
 
 
     let (shell_side_to_tubes_nusselt_number_correction_factor,
@@ -180,7 +180,7 @@ pub fn ciet_coupled_nat_circ_set_b3(){
         expt_heater_surf_temp_avg_degc,
         simulated_expected_heater_surf_temp_degc,
         heater_surface_temp_tolerance_degc) = 
-        (10.0,102.53,0.0,2.0);
+        (10.0,102.53,95.61,7.0);
 
     regression_coupled_dracs_loop_version_7(
         heater_power_watts, 
@@ -225,7 +225,7 @@ pub fn ciet_coupled_nat_circ_set_b4(){
         experimental_pri_mass_flowrate_kg_per_s,
         simulated_expected_dracs_mass_flowrate_kg_per_s,
         simulated_expected_pri_mass_flowrate_kg_per_s) 
-        = ( 1685.62, 35.0, 3.6110e-2, 2.8460e-2, 3.6170e-2, 2.8900e-2);
+        = ( 1685.62, 35.0, 3.6110e-2, 2.8460e-2, 3.6823e-2, 2.9033e-2);
 
 
     let (shell_side_to_tubes_nusselt_number_correction_factor,
@@ -249,7 +249,7 @@ pub fn ciet_coupled_nat_circ_set_b4(){
         expt_heater_surf_temp_avg_degc,
         simulated_expected_heater_surf_temp_degc,
         heater_surface_temp_tolerance_degc) = 
-        (10.0,110.96,0.0,2.0);
+        (10.0,110.96,107.62,5.0);
 
     regression_coupled_dracs_loop_version_7(
         heater_power_watts, 
@@ -295,7 +295,7 @@ pub fn ciet_coupled_nat_circ_set_b5(){
         experimental_pri_mass_flowrate_kg_per_s,
         simulated_expected_dracs_mass_flowrate_kg_per_s,
         simulated_expected_pri_mass_flowrate_kg_per_s) 
-        = ( 1987.75, 35.0, 3.8410e-2, 3.1180e-2, 3.9157e-2, 3.1301e-2);
+        = ( 1987.75, 35.0, 3.8410e-2, 3.1180e-2, 3.9866e-2, 3.1405e-2);
 
 
     let (shell_side_to_tubes_nusselt_number_correction_factor,
@@ -319,7 +319,7 @@ pub fn ciet_coupled_nat_circ_set_b5(){
         expt_heater_surf_temp_avg_degc,
         simulated_expected_heater_surf_temp_degc,
         heater_surface_temp_tolerance_degc) = 
-        (10.0,119.45,0.0,2.0);
+        (10.0,119.45,119.85,0.5);
 
     regression_coupled_dracs_loop_version_7(
         heater_power_watts, 
@@ -365,7 +365,7 @@ pub fn ciet_coupled_nat_circ_set_b6(){
         experimental_pri_mass_flowrate_kg_per_s,
         simulated_expected_dracs_mass_flowrate_kg_per_s,
         simulated_expected_pri_mass_flowrate_kg_per_s) 
-        = (2282.01, 35.0, 4.0630e-2, 3.3740e-2, 4.1799e-2, 3.3392e-2);
+        = (2282.01, 35.0, 4.0630e-2, 3.3740e-2, 4.2563e-2, 3.3467e-2);
 
 
     let (shell_side_to_tubes_nusselt_number_correction_factor,
@@ -389,7 +389,7 @@ pub fn ciet_coupled_nat_circ_set_b6(){
         expt_heater_surf_temp_avg_degc,
         simulated_expected_heater_surf_temp_degc,
         heater_surface_temp_tolerance_degc) = 
-        (10.0,127.48,0.0,2.0);
+        (10.0,127.48,131.56,5.0);
 
     regression_coupled_dracs_loop_version_7(
         heater_power_watts, 
@@ -435,7 +435,7 @@ pub fn ciet_coupled_nat_circ_set_b7(){
         experimental_pri_mass_flowrate_kg_per_s,
         simulated_expected_dracs_mass_flowrate_kg_per_s,
         simulated_expected_pri_mass_flowrate_kg_per_s) 
-        = ( 2546.60, 35.0, 4.2700e-2, 3.5770e-2, 4.3994e-2, 3.5099e-2);
+        = ( 2546.60, 35.0, 4.2700e-2, 3.5770e-2, 4.4805e-2, 3.5149e-2);
 
 
     let (shell_side_to_tubes_nusselt_number_correction_factor,
@@ -459,7 +459,7 @@ pub fn ciet_coupled_nat_circ_set_b7(){
         expt_heater_surf_temp_avg_degc,
         simulated_expected_heater_surf_temp_degc,
         heater_surface_temp_tolerance_degc) = 
-        (10.0,135.13,0.0,2.0);
+        (10.0,135.13,141.93,12.0);
 
     regression_coupled_dracs_loop_version_7(
         heater_power_watts, 
@@ -506,7 +506,7 @@ pub fn ciet_coupled_nat_circ_set_b8(){
         experimental_pri_mass_flowrate_kg_per_s,
         simulated_expected_dracs_mass_flowrate_kg_per_s,
         simulated_expected_pri_mass_flowrate_kg_per_s) 
-        = ( 2874.03, 35.0, 4.4560e-2, 3.7960e-2, 4.6514e-2, 3.7020e-2);
+        = ( 2874.03, 35.0, 4.4560e-2, 3.7960e-2, 4.7381e-2, 3.7040e-2);
 
 
     let (shell_side_to_tubes_nusselt_number_correction_factor,
@@ -530,7 +530,7 @@ pub fn ciet_coupled_nat_circ_set_b8(){
         expt_heater_surf_temp_avg_degc,
         simulated_expected_heater_surf_temp_degc,
         heater_surface_temp_tolerance_degc) = 
-        (10.0,142.43,0.0,2.0);
+        (10.0,142.43,154.59,13.0);
 
     regression_coupled_dracs_loop_version_7(
         heater_power_watts, 
@@ -578,7 +578,7 @@ pub fn ciet_coupled_nat_circ_set_b9(){
         experimental_pri_mass_flowrate_kg_per_s,
         simulated_expected_dracs_mass_flowrate_kg_per_s,
         simulated_expected_pri_mass_flowrate_kg_per_s) 
-        = (3031.16, 35.0, 4.6360e-2, 3.8490e-2, 4.8482e-2, 3.8490e-2);
+        = (3031.16, 35.0, 4.6360e-2, 3.8490e-2, 4.8551e-2, 3.7884e-2);
 
 
     let (shell_side_to_tubes_nusselt_number_correction_factor,
@@ -602,7 +602,7 @@ pub fn ciet_coupled_nat_circ_set_b9(){
         expt_heater_surf_temp_avg_degc,
         simulated_expected_heater_surf_temp_degc,
         heater_surface_temp_tolerance_degc) = 
-        (10.0,150.24,0.0,2.0);
+        (10.0,150.24,160.61,12.0);
 
     regression_coupled_dracs_loop_version_7(
         heater_power_watts, 
