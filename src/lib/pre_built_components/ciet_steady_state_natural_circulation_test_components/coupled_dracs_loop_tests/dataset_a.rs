@@ -496,7 +496,7 @@ pub fn ciet_coupled_nat_circ_set_a7(){
 ///
 /// for the DHX STHE,
 ///
-/// shell side to tubes nusselt correction factor is 4.08
+/// shell side to tubes nusselt correction factor is 4.7
 /// insulation thickness is 0.161 cm 
 /// shell side to ambient correction factor is 10.3 
 /// heat loss to ambient is 33.9 W/(m^2 K)
