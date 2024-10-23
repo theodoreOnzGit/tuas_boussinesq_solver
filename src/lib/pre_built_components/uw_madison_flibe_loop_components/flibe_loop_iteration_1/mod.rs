@@ -59,7 +59,8 @@ pub fn new_uw_flibe_pipe_1(initial_temperature: ThermodynamicTemperature) -> Ins
     let pipe_shell_material = SolidMaterial::SteelSS304L;
     let insulation_material = SolidMaterial::Fiberglass;
     let pipe_fluid = LiquidMaterial::FLiBe;
-    let htc_to_ambient = HeatTransfer::new::<watt_per_square_meter_kelvin>(20.0);
+    // for first iteration, just get it adiabatic first 
+    let htc_to_ambient = HeatTransfer::new::<watt_per_square_meter_kelvin>(0.0);
     // from SAM nodalisation, we have 5 nodes only, 
     // now because there are two outer nodes, the 
     // number of inner nodes is 5-2
