@@ -105,3 +105,13 @@ pub mod ciet_isothermal_test_components;
 /// data (No. ANL/NSE-19/11). Argonne National 
 /// Lab.(ANL), Argonne, IL (United States).
 pub mod ciet_steady_state_natural_circulation_test_components;
+
+
+/// From UW Madison FLiBe loop:
+///
+///
+/// Britsch, K., Anderson, M., Brooks, P., & 
+/// Sridharan, K. (2019). Natural circulation 
+/// FLiBe loop overview. International Journal of 
+/// Heat and Mass Transfer, 134, 970-983.
+pub mod uw_madison_flibe_loop_components;
