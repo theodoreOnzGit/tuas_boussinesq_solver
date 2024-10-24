@@ -26,7 +26,7 @@ impl InsulatedFluidComponent {
         timestep: Time,) -> JoinHandle<Self> {
 
         // make a clone
-        let mut heater_clone = self.clone();
+        let mut fluid_component_clone = self.clone();
 
         // move ptr into a new thread 
 
@@ -35,9 +35,9 @@ impl InsulatedFluidComponent {
 
 
                 // carry out the connection calculations
-                heater_clone.advance_timestep(timestep).unwrap();
+                fluid_component_clone.advance_timestep(timestep).unwrap();
                 
-                heater_clone
+                fluid_component_clone
 
             }
         );
