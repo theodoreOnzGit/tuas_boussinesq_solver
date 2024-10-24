@@ -45,7 +45,7 @@ pub fn pryogel_hps_specific_heat_capacity(
 /// cited from:
 /// https://www.distributioninternational.com/ASSETS/DOCUMENTS/ITEMS/EN/PYBT10HA_SS.pdf
 ///
-/// This is from aspen
+/// This is from aspen, tested with ASTM C177 at 2 psi compressive load
 #[inline]
 pub fn fiberglass_thermal_conductivity_commercial_factsheet_spline(
     temperature: ThermodynamicTemperature) -> Result<ThermalConductivity,TuasLibError> {
