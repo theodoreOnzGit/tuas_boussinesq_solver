@@ -35,6 +35,19 @@ use crate::pre_built_components::non_insulated_parallel_fluid_components::NonIns
 ///
 /// OD of 2.54 cm (1 in) and 3mm thick wall 
 /// means ID is 2.54cm - 2*3mm
+///
+///
+/// for heat losses, and insulation, the paper used pyrogel. 
+/// However, thicknesses and heat loss aren't really calibrated well yet. 
+///
+/// Pyrogel data seems to be limited. But potentially useful to add to 
+/// the library. The actual one is Pyrogel HPS, but what I found online is 
+/// Pyrogel XT and Pyrogel HT. There are several kinds of pyrogel.
+///
+/// for Pyrogel XT/HT 
+/// https://www.osti.gov/servlets/purl/1027124
+///
+///
 pub fn new_uw_flibe_pipe_1(initial_temperature: ThermodynamicTemperature) -> InsulatedFluidComponent {
 
 
