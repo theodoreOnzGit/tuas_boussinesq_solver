@@ -52,6 +52,19 @@ pub fn pyrogel_hps_surf_roughness() -> Length {
 /// Thermal Science and Engineering Progress, 42, 101906.
 ///
 /// work in progress though. still need to decipher the paper
+///
+/// Cassel, R. B. (2001). How Tzero™ Technology Improves DSC 
+/// Performance Part III: The Measurement of Specific Heat Capacity. 
+/// TA Instruments: New Castle, DE, USA.
+///
+/// for DSC:
+///
+/// dQ/dt (watts) = cp * beta * sample_mass
+/// dQ/dt (watts) * 1/sample_mass = cp * beta 
+///
+/// beta is heating rate (kelvin or degC per minute)
+///
+///
 #[inline]
 pub fn pryogel_hps_specific_heat_capacity(
     _temperature: ThermodynamicTemperature) -> SpecificHeatCapacity {
