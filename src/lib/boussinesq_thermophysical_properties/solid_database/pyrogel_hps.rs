@@ -1,6 +1,6 @@
 use peroxide::fuga::{CubicSpline, Spline};
 use uom::si::f64::*;
-use uom::si::length::millimeter;
+use uom::si::length::{millimeter, nanometer};
 use uom::si::mass_density::gram_per_cubic_centimeter;
 use uom::si::specific_heat_capacity::joule_per_kilogram_kelvin;
 use uom::si::temperature_interval::degree_celsius as degc_interval;
@@ -10,6 +10,7 @@ use crate::boussinesq_thermophysical_properties::*;
 use crate::tuas_lib_error::TuasLibError;
 use uom::si::thermodynamic_temperature::kelvin;
 
+/// Based on:
 /// https://www.distributioninternational.com/ASSETS/DOCUMENTS/ITEMS/EN/PYBT10HA_SS.pdf
 ///
 ///
@@ -21,9 +22,26 @@ pub fn pyrogel_hps_density() -> Result<MassDensity,TuasLibError> {
 }
 
 
-/// To be implemented. not sure what this is
+/// For Pyrogel HPS specficially, I don't see any surface roughness 
+/// data in literature.
+///
+///
+/// But since Pyrogel HPS is a silica aerogel, I'll use the silica 
+/// aerogel surface roughness as a ballpark estimate 
+///
+/// Based on:
+/// Mahadik, D. B., Venkateswara Rao, A., Parale, V. G., Kavale, M. S., 
+/// Wagh, P. B., Ingale, S. V., & Gupta, S. C. (2011). Effect of surface 
+/// composition and roughness on the apparent surface free energy of 
+/// silica aerogel materials. Applied Physics Letters, 99(10).
+///
+/// Paper mentioned 1150–1450 nm
+///
+/// I'll just use 1500 nm as an estimate
+///
+///
 pub fn pyrogel_hps_surf_roughness() -> Length {
-    todo!()
+    return Length::new::<nanometer>(1500.0);
 }
 
 /// Most information comes from:
