@@ -1,3 +1,10 @@
+## v 0.0.4 
+
+Added pyrogel material for FLiBe loop UW madison,
+also tidied up the temperature from enthalpy functions and 
+enthalpy functions. Moved the enthalpy functions to their own 
+respective materials.
+
 ## v 0.0.3 
 
 for coupled dracs loop, added parasitic heat loss 
