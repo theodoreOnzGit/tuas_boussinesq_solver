@@ -67,6 +67,12 @@ pub fn pyrogel_hps_surf_roughness() -> Length {
 ///
 /// Now, based on the dsc measurements, cp of around 1500 - 2200 J/(kg K) 
 /// can be expected after crystallisation. This is just a ballpark estimate
+///
+/// I'll just use 1700 J/(kg K) as a placeholder because thermal inertia 
+/// may not be superbly important to model now 
+/// But, 1698 was the value of cp both at 326 C, and 50C - 190C 
+///
+/// So it seems to be a reasonable estimate for temperature beyond.
 #[inline]
 pub fn pryogel_hps_specific_heat_capacity(
     temperature: ThermodynamicTemperature) -> SpecificHeatCapacity {
@@ -81,7 +87,17 @@ pub fn pryogel_hps_specific_heat_capacity(
     // probably want to not use splines all the time as well, can 
     // be quite computationally expensive
 
+    // for now, I'll just give a placeholder value based on the average 
+    // cp outside the crystallisation and such. Note that more annealing 
+    // means higher cp
+    //
+    // is just 1700 J/(kg K)
+
     todo!("change material type to pyrogel");
+
+
+    return SpecificHeatCapacity::new::<joule_per_kilogram_kelvin>(
+        1700.0);
 }
 
 /// Most information comes from:
