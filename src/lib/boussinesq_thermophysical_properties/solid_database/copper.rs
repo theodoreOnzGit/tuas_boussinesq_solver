@@ -271,7 +271,7 @@ pub fn copper_temperature_from_enthalpy_test_spline_2(){
     // we should get an enthalpy from the spline 
     // for zweibaum's paper 
 
-    let copper = Material::Solid(Copper);
+    let copper = Material::Solid(SolidMaterial::Copper);
     let copper_temp = ThermodynamicTemperature::new::<kelvin>(375.0);
     let pressure = Pressure::new::<atmosphere>(1.0);
 

@@ -672,7 +672,7 @@ pub fn steel_temperature_from_enthalpy_test_spline_3(){
     // we should get an enthalpy from the spline 
     // for zweibaum's paper 
 
-    let steel = Material::Solid(SteelSS304L);
+    let steel = Material::Solid(SolidMaterial::SteelSS304L);
     let steel_temp = ThermodynamicTemperature::new::<kelvin>(375.0);
     let atmospheric_pressure = Pressure::new::<atmosphere>(1.0);
 
