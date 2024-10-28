@@ -80,20 +80,68 @@ pub fn pryogel_hps_specific_heat_capacity(
 /// aerogel insulation materials at elevated temperature.
 /// Thermal Science and Engineering Progress, 42, 101906.
 ///
+/// work in progress though. still need to decipher the paper
+///
+/// Cassel, R. B. (2001). How Tzero™ Technology Improves DSC 
+/// Performance Part III: The Measurement of Specific Heat Capacity. 
+/// TA Instruments: New Castle, DE, USA.
 ///
 /// for DSC:
 ///
+/// dQ/dt (watts) = cp * beta * sample_mass
+/// dQ/dt * 1/sample_mass (watts/gram) = cp * beta 
+///
+/// beta is heating rate (kelvin or degC per minute)
+///
 ///
 #[inline]
-pub fn pyrogel_hps_dsc_spline(temperature: ThermodynamicTemperature,) 
+pub fn pryogel_hps_specific_heat_capacity_spline_low_temp(
+    temperature: ThermodynamicTemperature) -> 
+Result<SpecificHeatCapacity,TuasLibError> {
+
+    range_check(
+        &Material::Solid(SolidMaterial::Fiberglass),
+        temperature, 
+        ThermodynamicTemperature::new::<degree_celsius>(39.819), 
+        ThermodynamicTemperature::new::<degree_celsius>(9.88))?;
+    let pyrogel_cp_temperature_values_degc = c!(
+        9.883, 24.019, 39.819);
+    let pyrogel_cp_values_joule_per_kg_kelvin = c!(
+        883.261, 898.311, 983.814);
+    let s = CubicSpline::from_nodes(&pyrogel_cp_temperature_values_degc, 
+        &pyrogel_cp_values_joule_per_kg_kelvin);
+
+    let temperature_value_degc: f64 = temperature.get::<degree_celsius>();
+    let pyrogel_generic_cp_joule_per_kg_kelvin = 
+        s.unwrap().eval(temperature_value_degc);
+    todo!("change material type to Pyrogel");
+
+    return Ok(SpecificHeatCapacity::new::<joule_per_kilogram_kelvin>(
+        pyrogel_generic_cp_joule_per_kg_kelvin));
+}
+
+/// Most information comes from:
+///
+/// Kovács, Z., Csík, A., & Lakatos, Á. (2023). 
+/// Thermal stability investigations of different 
+/// aerogel insulation materials at elevated temperature.
+/// Thermal Science and Engineering Progress, 42, 101906.
+///
+/// Note that this pyrogel information is for ground pyrogel,
+/// which then destroys the structure of the pyrogel and may change its 
+/// thermal conductivity. Moreover, crystallisation occurs, which changes 
+/// its heat capacity too.
+///
+#[inline]
+pub fn ground_pyrogel_hps_dsc_spline_data(temperature: ThermodynamicTemperature,) 
     -> Result<SpecificPower, TuasLibError> {
 
     range_check(
         &Material::Solid(SolidMaterial::Fiberglass),
         temperature, 
-        ThermodynamicTemperature::new::<degree_celsius>(650.0), 
-        ThermodynamicTemperature::new::<degree_celsius>(0.0))?;
-    let specific_energy_temperature_values_degc = c!(35.426,
+        ThermodynamicTemperature::new::<degree_celsius>(327.0), 
+        ThermodynamicTemperature::new::<degree_celsius>(35.0))?;
+    let specific_power_temperature_values_degc = c!(35.426,
         42.085,
         50.609,
         59.132,
@@ -125,7 +173,7 @@ pub fn pyrogel_hps_dsc_spline(temperature: ThermodynamicTemperature,)
         304.186,
         326.294
         );
-    let specific_energy_values_milliwatts_per_milligram = c!(
+    let specific_power_values_milliwatts_per_milligram = c!(
         0.261,
         0.274,
         0.285,
@@ -159,8 +207,8 @@ pub fn pyrogel_hps_dsc_spline(temperature: ThermodynamicTemperature,)
         0.283
             );
 
-    let s = CubicSpline::from_nodes(&specific_energy_temperature_values_degc, 
-        &specific_energy_values_milliwatts_per_milligram);
+    let s = CubicSpline::from_nodes(&specific_power_temperature_values_degc, 
+        &specific_power_values_milliwatts_per_milligram);
 
     let temperature_value_degc: f64 = temperature.get::<degree_celsius>();
     let pyrogel_generic_dsc_milliwatt_per_milligram = 
