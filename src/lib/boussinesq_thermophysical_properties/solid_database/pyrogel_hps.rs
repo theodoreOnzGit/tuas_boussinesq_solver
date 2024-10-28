@@ -163,11 +163,12 @@ pub fn pyrogel_hps_dsc_spline(temperature: ThermodynamicTemperature,)
         &specific_energy_values_milliwatts_per_milligram);
 
     let temperature_value_degc: f64 = temperature.get::<degree_celsius>();
-    let pyrogel_dsc_milliwatt_per_milligram = 
+    let pyrogel_generic_dsc_milliwatt_per_milligram = 
         s.unwrap().eval(temperature_value_degc);
+    todo!("change material type to Pyrogel");
 
     return Ok(SpecificPower::new::<kilowatt_per_kilogram>(
-        pyrogel_dsc_milliwatt_per_milligram));
+        pyrogel_generic_dsc_milliwatt_per_milligram));
 }
 
 /// returns thermal conductivity of pyrogel hps
@@ -198,11 +199,12 @@ pub fn pyrogel_thermal_conductivity_commercial_factsheet_spline(
     let s = CubicSpline::from_nodes(&thermal_cond_temperature_values_degc, 
         &thermal_conductivity_values_milliwatt_per_meter_kelvin);
 
-    let fiberglass_thermal_conductivity_value_milliwatt_per_meter_kelvin = s.unwrap().eval(
+    let pyrogel_hps_thermal_conductivity_value_milliwatt_per_meter_kelvin = s.unwrap().eval(
         temperature_value_degc);
+    todo!("change material type to Pyrogel");
 
     return Ok(ThermalConductivity::new::<milliwatt_per_meter_kelvin>(
-        fiberglass_thermal_conductivity_value_milliwatt_per_meter_kelvin));
+        pyrogel_hps_thermal_conductivity_value_milliwatt_per_meter_kelvin));
 }
 
 
