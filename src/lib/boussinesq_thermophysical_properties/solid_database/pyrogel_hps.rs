@@ -65,12 +65,23 @@ pub fn pyrogel_hps_surf_roughness() -> Length {
 ///
 /// beta is heating rate (kelvin or degC per minute)
 ///
-///
+/// Now, based on the dsc measurements, cp of around 1500 - 2200 J/(kg K) 
+/// can be expected after crystallisation. This is just a ballpark estimate
 #[inline]
 pub fn pryogel_hps_specific_heat_capacity(
-    _temperature: ThermodynamicTemperature) -> SpecificHeatCapacity {
+    temperature: ThermodynamicTemperature) -> SpecificHeatCapacity {
 
-    todo!()
+    range_check(
+        &Material::Solid(SolidMaterial::Fiberglass),
+        temperature, 
+        ThermodynamicTemperature::new::<degree_celsius>(10.0), 
+        ThermodynamicTemperature::new::<degree_celsius>(650.0)).unwrap();
+
+
+    // probably want to not use splines all the time as well, can 
+    // be quite computationally expensive
+
+    todo!("change material type to pyrogel");
 }
 
 /// Most information comes from:
