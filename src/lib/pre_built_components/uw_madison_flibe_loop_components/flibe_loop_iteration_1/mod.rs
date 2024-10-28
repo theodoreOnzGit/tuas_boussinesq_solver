@@ -1,7 +1,6 @@
 use std::f64::consts::PI;
 
 use uom::si::angle::degree;
-use uom::si::area::square_meter;
 use uom::si::f64::*;
 use uom::si::heat_transfer::watt_per_square_meter_kelvin;
 use uom::si::length::{inch, meter, millimeter};
@@ -9,13 +8,9 @@ use uom::si::ratio::ratio;
 use uom::si::thermodynamic_temperature::degree_celsius;
 use uom::si::pressure::atmosphere;
 
-use crate::array_control_vol_and_fluid_component_collections::one_d_fluid_array_with_lateral_coupling::FluidArray;
 use crate::boussinesq_thermophysical_properties::SolidMaterial;
 use crate::boussinesq_thermophysical_properties::LiquidMaterial;
-use crate::heat_transfer_correlations::nusselt_number_correlations::enums::NusseltCorrelation;
 use crate::pre_built_components::insulated_pipes_and_fluid_components::InsulatedFluidComponent;
-use crate::pre_built_components::non_insulated_fluid_components::NonInsulatedFluidComponent;
-use crate::pre_built_components::non_insulated_parallel_fluid_components::NonInsulatedParallelFluidComponent;
 // [Component no.],[description],[length (m)],[angle],[Delta x],[Delta y],
 // [1],[hot leg insulated heater vertical],[1.47],[90],[9.00115397373305E-17],[1.47],
 // [2],[opening to tank],[0.12],[0],[0.12],[0],
@@ -65,7 +60,7 @@ pub fn new_uw_flibe_pipe_1(initial_temperature: ThermodynamicTemperature) -> Ins
     let surface_roughness = Length::new::<millimeter>(0.015);
     let insulation_thickness = Length::new::<meter>(0.0508);
     let pipe_shell_material = SolidMaterial::SteelSS304L;
-    let insulation_material = SolidMaterial::Fiberglass;
+    let insulation_material = SolidMaterial::PyrogelHPS;
     let pipe_fluid = LiquidMaterial::FLiBe;
     // for first iteration, just get it adiabatic first 
     let htc_to_ambient = HeatTransfer::new::<watt_per_square_meter_kelvin>(0.0);
