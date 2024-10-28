@@ -60,7 +60,7 @@ pub fn pyrogel_hps_surf_roughness() -> Length {
 /// for DSC:
 ///
 /// dQ/dt (watts) = cp * beta * sample_mass
-/// dQ/dt (watts) * 1/sample_mass = cp * beta 
+/// dQ/dt * 1/sample_mass (watts/gram) = cp * beta 
 ///
 /// beta is heating rate (kelvin or degC per minute)
 ///
@@ -78,7 +78,7 @@ pub fn pryogel_hps_specific_heat_capacity(
 ///
 /// This is from aspen, tested with ASTM C177 at 2 psi compressive load
 #[inline]
-pub fn fiberglass_thermal_conductivity_commercial_factsheet_spline(
+pub fn pyrogel_thermal_conductivity_commercial_factsheet_spline(
     temperature: ThermodynamicTemperature) -> Result<ThermalConductivity,TuasLibError> {
 
     range_check(
@@ -90,12 +90,69 @@ pub fn fiberglass_thermal_conductivity_commercial_factsheet_spline(
     let temperature_value_degc: f64 = temperature.get::<degree_celsius>();
     // here we use a cubic spline to interpolate the values
     // it's a little calculation heavy, but don't really care now
-    let thermal_cond_temperature_values_degc = c!(
-        0.0, 100.0, 200.0, 300.0, 400.0, 500.0, 600.0, 650.0
-        );
+    let thermal_cond_temperature_values_degc = c!(35.426,
+        42.085,
+        50.609,
+        59.132,
+        74.581,
+        88.432,
+        99.619,
+        123.592,
+        136.91,
+        151.294,
+        166.21,
+        178.463,
+        190.183,
+        200.837,
+        215.221,
+        225.875,
+        234.399,
+        239.726,
+        243.455,
+        248.25,
+        251.446,
+        253.577,
+        257.839,
+        259.97,
+        262.633,
+        265.83,
+        267.428,
+        271.157,
+        279.148,
+        304.186,
+        326.294);
     let thermal_conductivity_values_milliwatt_per_meter_kelvin = c!(
-        20.0, 24.0, 28.0, 33.0, 40.0, 49.0, 62.0, 69.0
-        );
+        0.261,
+        0.274,
+        0.285,
+        0.292,
+        0.293,
+        0.291,
+        0.287,
+        0.28,
+        0.278,
+        0.277,
+        0.282,
+        0.285,
+        0.285,
+        0.285,
+        0.291,
+        0.302,
+        0.32,
+        0.338,
+        0.351,
+        0.365,
+        0.373,
+        0.374,
+        0.369,
+        0.361,
+        0.345,
+        0.322,
+        0.303,
+        0.296,
+        0.29,
+        0.286,
+        0.283);
 
     let s = CubicSpline::from_nodes(&thermal_cond_temperature_values_degc, 
         &thermal_conductivity_values_milliwatt_per_meter_kelvin);
