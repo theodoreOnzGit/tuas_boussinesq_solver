@@ -11,6 +11,7 @@ use super::liquid_database::yd_325_heat_transfer_oil::get_yd325_density;
 use super::solid_database::copper::copper_density;
 use super::solid_database::custom_solid_material;
 use super::solid_database::fiberglass::fiberglass_density;
+use super::solid_database::pyrogel_hps::pyrogel_hps_density;
 use super::solid_database::ss_304_l::steel_ss_304_l_density;
 use super::LiquidMaterial;
 use super::Material;
@@ -84,6 +85,7 @@ fn solid_density(material: Material,
     let solid_material: SolidMaterial = match material {
         Material::Solid(SteelSS304L) => SteelSS304L,
         Material::Solid(Fiberglass) => Fiberglass,
+        Material::Solid(PyrogelHPS) => PyrogelHPS,
         Material::Solid(Copper) => Copper,
         Material::Solid(CustomSolid((low_bound_temp,high_bound_temp),cp,k,rho,roughness)) => {
             CustomSolid((low_bound_temp,high_bound_temp), cp, k, rho,roughness)
@@ -97,6 +99,7 @@ fn solid_density(material: Material,
     let density: MassDensity = match solid_material {
         Fiberglass => fiberglass_density()?,
         SteelSS304L => steel_ss_304_l_density()?,
+        PyrogelHPS => pyrogel_hps_density()?,
         Copper => copper_density()?,
         CustomSolid((low_bound_temp,high_bound_temp),_cp,_k,rho_fn,_roughness) => {
             custom_solid_material::get_custom_solid_density(

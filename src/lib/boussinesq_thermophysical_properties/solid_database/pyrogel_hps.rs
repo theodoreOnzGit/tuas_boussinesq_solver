@@ -1,7 +1,11 @@
 use peroxide::fuga::{CubicSpline, Spline};
+use roots::{find_root_brent, SimpleConvergency};
+use specific_enthalpy::try_get_h;
+use uom::si::available_energy::joule_per_kilogram;
 use uom::si::f64::*;
 use uom::si::length::{millimeter, nanometer};
 use uom::si::mass_density::gram_per_cubic_centimeter;
+use uom::si::pressure::atmosphere;
 use uom::si::specific_heat_capacity::joule_per_kilogram_kelvin;
 use uom::si::specific_power::kilowatt_per_kilogram;
 use uom::si::temperature_interval::degree_celsius as degc_interval;
@@ -78,7 +82,7 @@ pub fn pryogel_hps_specific_heat_capacity_rough_estimate(
     temperature: ThermodynamicTemperature) -> SpecificHeatCapacity {
 
     range_check(
-        &Material::Solid(SolidMaterial::Fiberglass),
+        &Material::Solid(SolidMaterial::PyrogelHPS),
         temperature, 
         ThermodynamicTemperature::new::<degree_celsius>(10.0), 
         ThermodynamicTemperature::new::<degree_celsius>(650.0)).unwrap();
@@ -93,11 +97,24 @@ pub fn pryogel_hps_specific_heat_capacity_rough_estimate(
     //
     // is just 1700 J/(kg K)
 
-    todo!("change material type to pyrogel");
-
 
     return SpecificHeatCapacity::new::<joule_per_kilogram_kelvin>(
         1700.0);
+}
+
+
+/// based on best estimate cp data, where cp = 1700 J/(kg K),
+/// I programmed this such that
+/// h = 1700 * T - 1700 * (273.15)
+#[inline]
+pub fn pyrogel_hps_specific_enthalpy(
+    temperature: ThermodynamicTemperature) -> AvailableEnergy {
+
+    let specific_enthalpy_value_j_per_kg = 
+    1700.0 * temperature.get::<degree_celsius>() ;
+
+    return AvailableEnergy::new::<joule_per_kilogram>(
+        specific_enthalpy_value_j_per_kg);
 }
 
 /// Most information comes from:
@@ -127,7 +144,7 @@ pub fn pryogel_hps_specific_heat_capacity_spline_low_temp(
 Result<SpecificHeatCapacity,TuasLibError> {
 
     range_check(
-        &Material::Solid(SolidMaterial::Fiberglass),
+        &Material::Solid(SolidMaterial::PyrogelHPS),
         temperature, 
         ThermodynamicTemperature::new::<degree_celsius>(39.819), 
         ThermodynamicTemperature::new::<degree_celsius>(9.88))?;
@@ -141,8 +158,6 @@ Result<SpecificHeatCapacity,TuasLibError> {
     let temperature_value_degc: f64 = temperature.get::<degree_celsius>();
     let pyrogel_generic_cp_joule_per_kg_kelvin = 
         s.unwrap().eval(temperature_value_degc);
-    todo!("change material type to Pyrogel");
-
     return Ok(SpecificHeatCapacity::new::<joule_per_kilogram_kelvin>(
         pyrogel_generic_cp_joule_per_kg_kelvin));
 }
@@ -164,7 +179,7 @@ pub fn ground_pyrogel_hps_dsc_spline_data(temperature: ThermodynamicTemperature,
     -> Result<SpecificPower, TuasLibError> {
 
     range_check(
-        &Material::Solid(SolidMaterial::Fiberglass),
+        &Material::Solid(SolidMaterial::PyrogelHPS),
         temperature, 
         ThermodynamicTemperature::new::<degree_celsius>(327.0), 
         ThermodynamicTemperature::new::<degree_celsius>(35.0))?;
@@ -240,7 +255,6 @@ pub fn ground_pyrogel_hps_dsc_spline_data(temperature: ThermodynamicTemperature,
     let temperature_value_degc: f64 = temperature.get::<degree_celsius>();
     let pyrogel_generic_dsc_milliwatt_per_milligram = 
         s.unwrap().eval(temperature_value_degc);
-    todo!("change material type to Pyrogel");
 
     return Ok(SpecificPower::new::<kilowatt_per_kilogram>(
         pyrogel_generic_dsc_milliwatt_per_milligram));
@@ -256,7 +270,7 @@ pub fn pyrogel_thermal_conductivity_commercial_factsheet_spline(
     temperature: ThermodynamicTemperature) -> Result<ThermalConductivity,TuasLibError> {
 
     range_check(
-        &Material::Solid(SolidMaterial::Fiberglass),
+        &Material::Solid(SolidMaterial::PyrogelHPS),
         temperature, 
         ThermodynamicTemperature::new::<degree_celsius>(650.0), 
         ThermodynamicTemperature::new::<degree_celsius>(0.0))?;
@@ -276,10 +290,138 @@ pub fn pyrogel_thermal_conductivity_commercial_factsheet_spline(
 
     let pyrogel_hps_thermal_conductivity_value_milliwatt_per_meter_kelvin = s.unwrap().eval(
         temperature_value_degc);
-    todo!("change material type to Pyrogel");
 
     return Ok(ThermalConductivity::new::<milliwatt_per_meter_kelvin>(
         pyrogel_hps_thermal_conductivity_value_milliwatt_per_meter_kelvin));
 }
 
+#[inline]
+pub (crate) fn pyrogel_hps_spline_temp_attempt_1_from_specific_enthalpy(
+    h_fiberglass: AvailableEnergy) -> ThermodynamicTemperature {
 
+    // the idea is basically to evaluate enthalpy at the 
+    // following temperatures
+    let temperature_values_kelvin: Vec<f64>
+    = c!(200.0 ,250.0, 300.0, 350.0, 
+        400.0, 500.0, 1000.0);
+
+    // and then use that to formulate a spline,
+    // with the spline, i'll evaluate enthalpy from temperature
+    // within pretty much one iteration. However, it is spline 
+    // construction which may take a little long. 
+    //
+    // However, the number of iterations per calculation is fixed
+    //
+    // I won't optimise it now just yet
+
+    let temperature_vec_len = 
+    temperature_values_kelvin.len();
+
+    let mut enthalpy_vector = vec![0.0; temperature_vec_len];
+
+    for index_i in 0..temperature_vec_len {
+
+        // first, evaluate the enthalpy at temperature values 
+        let temperature_value = temperature_values_kelvin[index_i];
+
+        //next let's evaluate the specific enthalpy of fiberglass 
+        let pyrogel_hps = Material::Solid(SolidMaterial::PyrogelHPS);
+        let pyrogel_hps_temp = ThermodynamicTemperature::new::<kelvin>(
+            temperature_value);
+        let pressure = Pressure::new::<atmosphere>(1.0);
+
+        let pyrogel_enthalpy_result = try_get_h(pyrogel_hps, 
+            pyrogel_hps_temp, pressure);
+
+        let pyrogel_enthalpy_value = match pyrogel_enthalpy_result {
+            Ok(fiberglass_enthalpy) => fiberglass_enthalpy.value,
+            // i can of course unwrap the result,
+            // but i want to leave it more explicit in case 
+            // i wish to manually handle the error
+            Err(error_msg) => panic!("{}",error_msg),
+        };
+
+        // once i evalute the enthalpy value, pass it on to the vector
+
+        enthalpy_vector[index_i] = pyrogel_enthalpy_value;
+
+    }
+
+
+    // now I have my enthalpy vector, i can do an inverted spline 
+    // to have enthalpy given in as an input, and temperature received
+    // as an output
+
+    let enthalpy_to_temperature_spline = 
+    CubicSpline::from_nodes(&enthalpy_vector,
+    &temperature_values_kelvin);
+
+    // now let's get our enthalpy in joules_per_kg
+    let h_pyrogel_joules_per_kg = h_fiberglass.get::<joule_per_kilogram>();
+
+    let temperature_from_enthalpy_kelvin = 
+    enthalpy_to_temperature_spline.unwrap().eval(h_pyrogel_joules_per_kg);
+
+    // now, the pyrogel enthalpy will not be quite near 
+    // enough, but it is very close. We can bracket 
+    // the root 
+
+
+    let enthalpy_root = |temp_degrees_c_value : f64| -> f64 {
+        let lhs_value = h_fiberglass.get::<joule_per_kilogram>();
+
+
+        let fiberglass = Material::Solid(SolidMaterial::PyrogelHPS);
+        let fiberglass_temp = ThermodynamicTemperature::new::
+            <kelvin>(temp_degrees_c_value) ;
+        let pressure = Pressure::new::<atmosphere>(1.0);
+
+        let rhs = try_get_h(fiberglass, 
+            fiberglass_temp, pressure);
+
+        let rhs_value = match rhs {
+            Ok(enthalpy_val) => enthalpy_val.get::<joule_per_kilogram>(),
+                // fall back to guess value, 
+            Err(error_msg) => panic!("{}",error_msg),
+        };
+
+        return lhs_value-rhs_value;
+    };
+
+    let brent_error_bound: f64 = 30.0;
+
+    let upper_limit: f64 = temperature_from_enthalpy_kelvin +
+        brent_error_bound;
+
+    let lower_limit : f64 = temperature_from_enthalpy_kelvin -
+        brent_error_bound;
+
+
+    let mut convergency = SimpleConvergency { eps:1e-8f64, max_iter:30 };
+    let fluid_temperature_degrees_c_result
+    = find_root_brent(upper_limit,
+        lower_limit,
+        enthalpy_root,
+        &mut convergency
+    );
+
+    let temperature_from_enthalpy_kelvin = 
+    fluid_temperature_degrees_c_result.unwrap();
+
+    // return temperature
+    ThermodynamicTemperature::new::<kelvin>(
+        temperature_from_enthalpy_kelvin)
+
+}
+
+#[inline]
+/// pyrogel_hps max temp 
+pub fn max_temp_pyrogel_hps() -> ThermodynamicTemperature {
+    ThermodynamicTemperature::new::<degree_celsius>(650.0)
+
+}
+#[inline]
+/// pyrogel_hps min temp 
+pub fn min_temp_pyrogel_hps() -> ThermodynamicTemperature {
+    ThermodynamicTemperature::new::<degree_celsius>(10.0)
+}
