@@ -74,7 +74,7 @@ pub fn pyrogel_hps_surf_roughness() -> Length {
 ///
 /// So it seems to be a reasonable estimate for temperature beyond.
 #[inline]
-pub fn pryogel_hps_specific_heat_capacity(
+pub fn pryogel_hps_specific_heat_capacity_rough_estimate(
     temperature: ThermodynamicTemperature) -> SpecificHeatCapacity {
 
     range_check(
