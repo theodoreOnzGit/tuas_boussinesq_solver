@@ -11,8 +11,9 @@ use uom::si::pressure::atmosphere;
 use crate::boussinesq_thermophysical_properties::SolidMaterial;
 use crate::boussinesq_thermophysical_properties::LiquidMaterial;
 use crate::pre_built_components::insulated_pipes_and_fluid_components::InsulatedFluidComponent;
+use crate::pre_built_components::non_insulated_fluid_components::NonInsulatedFluidComponent;
 
-/// new university of wisconsin madison flibe pipe 1
+/// university of wisconsin madison flibe pipe 1
 pub fn new_uw_flibe_pipe_1(initial_temperature: ThermodynamicTemperature) -> InsulatedFluidComponent {
 
 
@@ -236,7 +237,9 @@ pub fn new_uw_flibe_pipe_4(initial_temperature: ThermodynamicTemperature) -> Ins
 
 
 /// cold leg horizontal-ish in iteration 1 (see fig A.16)
-pub fn new_uw_flibe_pipe_5(initial_temperature: ThermodynamicTemperature) -> InsulatedFluidComponent {
+pub fn new_uw_flibe_pipe_5(
+    initial_temperature: ThermodynamicTemperature
+) -> NonInsulatedFluidComponent {
 
 
     let shell_od = Length::new::<inch>(1.0);
@@ -256,9 +259,7 @@ pub fn new_uw_flibe_pipe_5(initial_temperature: ThermodynamicTemperature) -> Ins
     //estimated component wall roughness (doesn't matter here,
     //but i need to fill in)
     let surface_roughness = Length::new::<millimeter>(0.015);
-    let insulation_thickness = Length::new::<meter>(0.0508);
     let pipe_shell_material = SolidMaterial::SteelSS304L;
-    let insulation_material = SolidMaterial::PyrogelHPS;
     let pipe_fluid = LiquidMaterial::FLiBe;
     // for first iteration, just get it adiabatic first 
     let htc_to_ambient = HeatTransfer::new::<watt_per_square_meter_kelvin>(0.0);
@@ -267,7 +268,7 @@ pub fn new_uw_flibe_pipe_5(initial_temperature: ThermodynamicTemperature) -> Ins
     // number of inner nodes is 5-2
     let user_specified_inner_nodes = 5-2; 
 
-    let insulated_component = InsulatedFluidComponent::new_insulated_pipe(
+    let non_insulated_component = NonInsulatedFluidComponent::new_bare_pipe(
         initial_temperature, 
         ambient_temperature, 
         fluid_pressure, 
@@ -277,17 +278,16 @@ pub fn new_uw_flibe_pipe_5(initial_temperature: ThermodynamicTemperature) -> Ins
         form_loss, 
         shell_id, 
         shell_od, 
-        insulation_thickness, 
         pipe_length, 
         hydraulic_diameter, 
+        surface_roughness,
         pipe_shell_material, 
-        insulation_material, 
         pipe_fluid, 
         htc_to_ambient, 
         user_specified_inner_nodes, 
-        surface_roughness);
+    );
 
-    insulated_component
+    non_insulated_component
 }
 
 
@@ -349,7 +349,9 @@ pub fn new_uw_flibe_pipe_6(initial_temperature: ThermodynamicTemperature) -> Ins
 
 
 /// cold leg vertical in iteration 1 (see fig A.16)
-pub fn new_uw_flibe_pipe_7(initial_temperature: ThermodynamicTemperature) -> InsulatedFluidComponent {
+pub fn new_uw_flibe_pipe_7(
+    initial_temperature: ThermodynamicTemperature) 
+    -> NonInsulatedFluidComponent {
 
 
     let shell_od = Length::new::<inch>(1.0);
@@ -369,9 +371,7 @@ pub fn new_uw_flibe_pipe_7(initial_temperature: ThermodynamicTemperature) -> Ins
     //estimated component wall roughness (doesn't matter here,
     //but i need to fill in)
     let surface_roughness = Length::new::<millimeter>(0.015);
-    let insulation_thickness = Length::new::<meter>(0.0508);
     let pipe_shell_material = SolidMaterial::SteelSS304L;
-    let insulation_material = SolidMaterial::PyrogelHPS;
     let pipe_fluid = LiquidMaterial::FLiBe;
     // for first iteration, just get it adiabatic first 
     let htc_to_ambient = HeatTransfer::new::<watt_per_square_meter_kelvin>(0.0);
@@ -380,7 +380,7 @@ pub fn new_uw_flibe_pipe_7(initial_temperature: ThermodynamicTemperature) -> Ins
     // number of inner nodes is 5-2
     let user_specified_inner_nodes = 5-2; 
 
-    let insulated_component = InsulatedFluidComponent::new_insulated_pipe(
+    let non_insulated_component = NonInsulatedFluidComponent::new_bare_pipe(
         initial_temperature, 
         ambient_temperature, 
         fluid_pressure, 
@@ -390,17 +390,16 @@ pub fn new_uw_flibe_pipe_7(initial_temperature: ThermodynamicTemperature) -> Ins
         form_loss, 
         shell_id, 
         shell_od, 
-        insulation_thickness, 
         pipe_length, 
         hydraulic_diameter, 
+        surface_roughness,
         pipe_shell_material, 
-        insulation_material, 
         pipe_fluid, 
         htc_to_ambient, 
         user_specified_inner_nodes, 
-        surface_roughness);
+    );
 
-    insulated_component
+    non_insulated_component
 }
 
 

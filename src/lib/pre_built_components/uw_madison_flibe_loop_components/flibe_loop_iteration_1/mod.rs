@@ -31,3 +31,7 @@
 /// Pyrogel XT and Pyrogel HT. There are several kinds of pyrogel.
 pub mod components;
 
+/// does fluid mechanics calculations through each branch
+pub mod hydraulics_calculations;
+
+
