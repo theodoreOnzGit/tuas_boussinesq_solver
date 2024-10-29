@@ -62,23 +62,6 @@ MassRate {
 /// obtains mass flowrate across the FLiBe loop 
 /// gets the absolute flowrate across the hot branch
 pub fn uw_madison_flibe_fluid_mechanics_calc_abs_mass_rate(
-    pipe_34: &InsulatedFluidComponent,
-    pipe_33: &InsulatedFluidComponent,
-    pipe_32: &InsulatedFluidComponent,
-    pipe_31a: &InsulatedFluidComponent,
-    static_mixer_61_label_31: &InsulatedFluidComponent,
-    dhx_tube_side_30b: &NonInsulatedFluidComponent,
-    dhx_tube_side_heat_exchanger_30: &FluidComponent,
-    dhx_tube_side_30a: &NonInsulatedFluidComponent,
-    tchx_35a: &NonInsulatedFluidComponent,
-    tchx_35b_1: &NonInsulatedFluidComponent,
-    tchx_35b_2: &NonInsulatedFluidComponent,
-    static_mixer_60_label_36: &InsulatedFluidComponent,
-    pipe_36a: &InsulatedFluidComponent,
-    pipe_37: &InsulatedFluidComponent,
-    flowmeter_60_37a: &NonInsulatedFluidComponent,
-    pipe_38: &InsulatedFluidComponent,
-    pipe_39: &InsulatedFluidComponent,
     pipe_1: &InsulatedFluidComponent,
     pipe_2: &InsulatedFluidComponent,
     pipe_3: &InsulatedFluidComponent,
@@ -149,36 +132,34 @@ pub fn uw_madison_flibe_fluid_mechanics_calc_abs_mass_rate(
 ///
 /// the mass_flowrate_counter_clockwise you provide will be converted
 /// into a mass_flowrate_clockwise and used for calculation
-pub fn coupled_dracs_loop_link_up_components_sam_tchx_calibration(
-    mass_flowrate_counter_clockwise: MassRate,
-    tchx_heat_transfer_coeff: HeatTransfer,
+pub fn flibe_loop_link_up_components(
+    mass_flowrate_clockwise: MassRate,
+    hot_leg_diagonal_heater_power: Power,
+    hot_leg_vertical_heater_power: Power,
+    cold_leg_diagonal_heat_transfer_coeff: HeatTransfer,
+    cold_leg_vertical_heat_transfer_coeff: HeatTransfer,
     average_temperature_for_density_calcs: ThermodynamicTemperature,
     ambient_htc: HeatTransfer,
-    pipe_34: &mut InsulatedFluidComponent,
-    pipe_33: &mut InsulatedFluidComponent,
-    pipe_32: &mut InsulatedFluidComponent,
-    pipe_31a: &mut InsulatedFluidComponent,
-    static_mixer_61_label_31: &mut InsulatedFluidComponent,
-    dhx_tube_side_30b: &mut NonInsulatedFluidComponent,
-    dhx_sthe: &mut SimpleShellAndTubeHeatExchanger,
-    dhx_tube_side_30a: &mut NonInsulatedFluidComponent,
-    tchx_35a: &mut NonInsulatedFluidComponent,
-    tchx_35b_1: &mut NonInsulatedFluidComponent,
-    tchx_35b_2: &mut NonInsulatedFluidComponent,
-    static_mixer_60_label_36: &mut InsulatedFluidComponent,
-    pipe_36a: &mut InsulatedFluidComponent,
-    pipe_37: &mut InsulatedFluidComponent,
-    flowmeter_60_37a: &mut NonInsulatedFluidComponent,
-    pipe_38: &mut InsulatedFluidComponent,
-    pipe_39: &mut InsulatedFluidComponent,
+    pipe_1: &mut InsulatedFluidComponent,
+    pipe_2: &mut InsulatedFluidComponent,
+    pipe_3: &mut InsulatedFluidComponent,
+    pipe_4: &mut InsulatedFluidComponent,
+    pipe_5: &mut NonInsulatedFluidComponent,
+    pipe_6: &mut InsulatedFluidComponent,
+    pipe_7: &mut NonInsulatedFluidComponent,
+    pipe_8: &mut InsulatedFluidComponent,
+    pipe_9: &mut InsulatedFluidComponent,
+    pipe_10: &mut InsulatedFluidComponent,
+    pipe_11: &mut InsulatedFluidComponent,
+    pipe_12: &mut InsulatedFluidComponent,
+    pipe_13: &mut InsulatedFluidComponent,
     ){
 
         // for this function, we consider mass flowrate in clockwise 
-        // fashion rather than counter clockwise
-        let mass_flowrate_clockwise = -mass_flowrate_counter_clockwise;
+        // fashion 
 
         // create the heat transfer interaction 
-        let advection_heat_transfer_interaction: HeatTransferInteractionType;
+        let advection_clockwise_heat_transfer_interaction: HeatTransferInteractionType;
 
         // I'm going to create the advection interaction
         //
@@ -188,159 +169,130 @@ pub fn coupled_dracs_loop_link_up_components_sam_tchx_calibration(
         // doesn't make much diff tho based on Boussinesq approximation
         //
 
-        let average_therminol_density = 
-            LiquidMaterial::TherminolVP1.try_get_density(
+        let average_flibe_density = 
+            LiquidMaterial::FLiBe.try_get_density(
                 average_temperature_for_density_calcs).unwrap();
 
-        advection_heat_transfer_interaction = 
+        advection_clockwise_heat_transfer_interaction = 
             HeatTransferInteractionType::
             new_advection_interaction(mass_flowrate_clockwise, 
-                average_therminol_density, 
-                average_therminol_density);
+                average_flibe_density, 
+                average_flibe_density);
 
         // now, let's link the fluid arrays using advection 
         // (no conduction here axially between arrays)
+        // in a clockwise fashion
         //
-        // for dhx, the flow convention in both shell and tube is 
-        // from top to bottom of the branch
-        // so there needs to be some inversion here
-        // if counter clockwise is positive direction, then flow is 
-        // flowing upward through the DHX,
-        //
-        // for the DHX, we should consider clockwise direction flow
-        // and we take the clockwise mass flowrate through the DRACS 
-        // loop as the mass flowrate through the tubes
         {
-            // link the tube side arrays as per normal, the parallel tube 
-            // treatment is accounted for in the advance timestep portion
-            //
-
-            dhx_tube_side_30a.pipe_fluid_array.link_to_back(
-                &mut dhx_sthe.tube_side_fluid_array_for_single_tube, 
-                advection_heat_transfer_interaction)
+            // link the tube side arrays as per normal, 
+            pipe_1.pipe_fluid_array.link_to_front(
+                &mut pipe_2.pipe_fluid_array, 
+                advection_clockwise_heat_transfer_interaction)
                 .unwrap();
 
-
-            dhx_sthe.tube_side_fluid_array_for_single_tube.link_to_back(
-                &mut dhx_tube_side_30b.pipe_fluid_array, 
-                advection_heat_transfer_interaction)
+            pipe_2.pipe_fluid_array.link_to_front(
+                &mut pipe_3.pipe_fluid_array, 
+                advection_clockwise_heat_transfer_interaction)
                 .unwrap();
 
-            dhx_tube_side_30b.pipe_fluid_array.link_to_back(
-                &mut static_mixer_61_label_31.pipe_fluid_array, 
-                advection_heat_transfer_interaction)
+            pipe_3.pipe_fluid_array.link_to_front(
+                &mut pipe_4.pipe_fluid_array, 
+                advection_clockwise_heat_transfer_interaction)
                 .unwrap();
 
-            static_mixer_61_label_31.pipe_fluid_array.link_to_back(
-                &mut pipe_31a.pipe_fluid_array, 
-                advection_heat_transfer_interaction)
+            pipe_4.pipe_fluid_array.link_to_front(
+                &mut pipe_5.pipe_fluid_array, 
+                advection_clockwise_heat_transfer_interaction)
+                .unwrap();
+            pipe_5.pipe_fluid_array.link_to_front(
+                &mut pipe_6.pipe_fluid_array, 
+                advection_clockwise_heat_transfer_interaction)
+                .unwrap();
+            pipe_6.pipe_fluid_array.link_to_front(
+                &mut pipe_7.pipe_fluid_array, 
+                advection_clockwise_heat_transfer_interaction)
+                .unwrap();
+            pipe_7.pipe_fluid_array.link_to_front(
+                &mut pipe_8.pipe_fluid_array, 
+                advection_clockwise_heat_transfer_interaction)
+                .unwrap();
+            pipe_8.pipe_fluid_array.link_to_front(
+                &mut pipe_9.pipe_fluid_array, 
+                advection_clockwise_heat_transfer_interaction)
+                .unwrap();
+            pipe_9.pipe_fluid_array.link_to_front(
+                &mut pipe_10.pipe_fluid_array, 
+                advection_clockwise_heat_transfer_interaction)
+                .unwrap();
+            pipe_10.pipe_fluid_array.link_to_front(
+                &mut pipe_11.pipe_fluid_array, 
+                advection_clockwise_heat_transfer_interaction)
+                .unwrap();
+            pipe_11.pipe_fluid_array.link_to_front(
+                &mut pipe_12.pipe_fluid_array, 
+                advection_clockwise_heat_transfer_interaction)
+                .unwrap();
+            pipe_12.pipe_fluid_array.link_to_front(
+                &mut pipe_13.pipe_fluid_array, 
+                advection_clockwise_heat_transfer_interaction)
+                .unwrap();
+            pipe_13.pipe_fluid_array.link_to_front(
+                &mut pipe_1.pipe_fluid_array, 
+                advection_clockwise_heat_transfer_interaction)
                 .unwrap();
 
-            pipe_31a.pipe_fluid_array.link_to_back(
-                &mut pipe_32.pipe_fluid_array, 
-                advection_heat_transfer_interaction)
-                .unwrap();
-
-            pipe_32.pipe_fluid_array.link_to_back(
-                &mut pipe_33.pipe_fluid_array, 
-                advection_heat_transfer_interaction)
-                .unwrap();
-
-            pipe_33.pipe_fluid_array.link_to_back(
-                &mut pipe_34.pipe_fluid_array, 
-                advection_heat_transfer_interaction)
-                .unwrap();
-
-            pipe_34.pipe_fluid_array.link_to_back(
-                &mut tchx_35a.pipe_fluid_array, 
-                advection_heat_transfer_interaction)
-                .unwrap();
-
-            tchx_35a.pipe_fluid_array.link_to_back(
-                &mut tchx_35b_1.pipe_fluid_array, 
-                advection_heat_transfer_interaction)
-                .unwrap();
-
-            tchx_35b_1.pipe_fluid_array.link_to_back(
-                &mut tchx_35b_2.pipe_fluid_array, 
-                advection_heat_transfer_interaction)
-                .unwrap();
-
-            tchx_35b_2.pipe_fluid_array.link_to_back(
-                &mut static_mixer_60_label_36.pipe_fluid_array, 
-                advection_heat_transfer_interaction)
-                .unwrap();
-
-            static_mixer_60_label_36.pipe_fluid_array.link_to_back(
-                &mut pipe_36a.pipe_fluid_array, 
-                advection_heat_transfer_interaction)
-                .unwrap();
-
-            pipe_36a.pipe_fluid_array.link_to_back(
-                &mut pipe_37.pipe_fluid_array, 
-                advection_heat_transfer_interaction)
-                .unwrap();
-
-            pipe_37.pipe_fluid_array.link_to_back(
-                &mut flowmeter_60_37a.pipe_fluid_array, 
-                advection_heat_transfer_interaction)
-                .unwrap();
-
-            flowmeter_60_37a.pipe_fluid_array.link_to_back(
-                &mut pipe_38.pipe_fluid_array, 
-                advection_heat_transfer_interaction)
-                .unwrap();
-
-            pipe_38.pipe_fluid_array.link_to_back(
-                &mut pipe_39.pipe_fluid_array, 
-                advection_heat_transfer_interaction)
-                .unwrap();
-
-            pipe_39.pipe_fluid_array.link_to_back(
-                &mut dhx_tube_side_30a.pipe_fluid_array, 
-                advection_heat_transfer_interaction)
-                .unwrap();
-
-            }
-        // set the relevant heat transfer coefficients 
+        }
+        // set the relevant heat transfer coefficients
+        // pipe 5 and 7 have specific heat transfer coefficients
+        // set by the controller
         {
-            // hot branch
-            dhx_tube_side_30a.heat_transfer_to_ambient = 
-                ambient_htc;
-            dhx_tube_side_30b.heat_transfer_to_ambient = 
+            // hot leg heater vertical side
+            pipe_1.heat_transfer_to_ambient = 
                 ambient_htc;
 
-            static_mixer_61_label_31.heat_transfer_to_ambient = 
+            // hot leg to cold leg opening to tank (top left)
+            pipe_2.heat_transfer_to_ambient = 
                 ambient_htc;
-            pipe_31a.heat_transfer_to_ambient = 
+            // hot leg to cold leg bend segment 
+            // approximated as two pipes (top left)
+            pipe_3.heat_transfer_to_ambient = 
                 ambient_htc;
-
-            pipe_32.heat_transfer_to_ambient = 
-                ambient_htc;
-            pipe_33.heat_transfer_to_ambient = 
-                ambient_htc;
-            pipe_34.heat_transfer_to_ambient = 
+            pipe_4.heat_transfer_to_ambient = 
                 ambient_htc;
 
-            // cold branch 
-            tchx_35a.heat_transfer_to_ambient = 
-                HeatTransfer::ZERO;
-            tchx_35b_1.heat_transfer_to_ambient = 
-                HeatTransfer::ZERO;
-            tchx_35b_2.heat_transfer_to_ambient = 
-                tchx_heat_transfer_coeff;
+            // cold leg horizontal-ish (diagnoal) part
+            pipe_5.heat_transfer_to_ambient = 
+                cold_leg_diagonal_heat_transfer_coeff;
+            // cold leg bend (y joint) top right
+            pipe_6.heat_transfer_to_ambient = 
+                ambient_htc;
+            // cold leg vertical part
+            pipe_7.heat_transfer_to_ambient = 
+                cold_leg_vertical_heat_transfer_coeff;
 
-            static_mixer_60_label_36.heat_transfer_to_ambient = 
+
+            // cold leg bend circular segment
+            // approximated as three pipes
+            // (bottom right)
+            pipe_8.heat_transfer_to_ambient = 
                 ambient_htc;
-            pipe_36a.heat_transfer_to_ambient = 
+            pipe_9.heat_transfer_to_ambient = 
+                ambient_htc;
+            pipe_10.heat_transfer_to_ambient = 
                 ambient_htc;
 
-            pipe_37.heat_transfer_to_ambient = 
+            // hot leg horizontal-ish (diagonal) side 
+            pipe_11.heat_transfer_to_ambient = 
                 ambient_htc;
-            pipe_38.heat_transfer_to_ambient = 
+
+            // hot leg bend 
+            // approximated as two pipes
+            // (bottom left)
+            pipe_12.heat_transfer_to_ambient = 
                 ambient_htc;
-            pipe_39.heat_transfer_to_ambient = 
+            pipe_13.heat_transfer_to_ambient = 
                 ambient_htc;
+
 
         }
         // add lateral heat losses, lateral connections for dhx not done here
@@ -351,97 +303,82 @@ pub fn coupled_dracs_loop_link_up_components_sam_tchx_calibration(
             //
             // everywhere else is zero heater power
             //
-            dhx_tube_side_30a
+            pipe_1
                 .lateral_and_miscellaneous_connections_no_wall_correction(
                     mass_flowrate_clockwise, 
-                    zero_power)
+                    hot_leg_vertical_heater_power)
                 .unwrap();
-            dhx_tube_side_30b
-                .lateral_and_miscellaneous_connections_no_wall_correction(
-                    mass_flowrate_clockwise, 
-                    zero_power)
-                .unwrap();
-
-            static_mixer_61_label_31
-                .lateral_and_miscellaneous_connections_no_wall_correction(
-                    mass_flowrate_clockwise, 
-                    zero_power)
-                .unwrap();
-            pipe_31a
-                .lateral_and_miscellaneous_connections_no_wall_correction(
-                    mass_flowrate_clockwise, 
-                    zero_power)
-                .unwrap();
-            pipe_32
-                .lateral_and_miscellaneous_connections_no_wall_correction(
-                    mass_flowrate_clockwise, 
-                    zero_power)
-                .unwrap();
-            pipe_33
-                .lateral_and_miscellaneous_connections_no_wall_correction(
-                    mass_flowrate_clockwise, 
-                    zero_power)
-                .unwrap();
-            pipe_34
+            pipe_2
                 .lateral_and_miscellaneous_connections_no_wall_correction(
                     mass_flowrate_clockwise, 
                     zero_power)
                 .unwrap();
 
-            // cold branch 
+            pipe_3
+                .lateral_and_miscellaneous_connections_no_wall_correction(
+                    mass_flowrate_clockwise, 
+                    zero_power)
+                .unwrap();
+            pipe_4
+                .lateral_and_miscellaneous_connections_no_wall_correction(
+                    mass_flowrate_clockwise, 
+                    zero_power)
+                .unwrap();
+
+            // cold branch air cooled segments
             // ambient temperature of tchx is 20C  
-            tchx_35a.ambient_temperature = 
+            pipe_5.ambient_temperature = 
                 ThermodynamicTemperature::new::<degree_celsius>(20.0);
-            tchx_35b_1.ambient_temperature = 
-                ThermodynamicTemperature::new::<degree_celsius>(20.0);
-            tchx_35b_2.ambient_temperature = 
+            pipe_7.ambient_temperature = 
                 ThermodynamicTemperature::new::<degree_celsius>(20.0);
 
-            tchx_35a
+            pipe_5
                 .lateral_and_miscellaneous_connections_no_wall_correction(
                     mass_flowrate_clockwise, 
                     zero_power)
                 .unwrap();
-            tchx_35b_1
+            pipe_6
                 .lateral_and_miscellaneous_connections_no_wall_correction(
                     mass_flowrate_clockwise, 
                     zero_power)
                 .unwrap();
-            tchx_35b_2
-                .lateral_and_miscellaneous_connections_no_wall_correction(
-                    mass_flowrate_clockwise, 
-                    zero_power)
-                .unwrap();
-
-
-            static_mixer_60_label_36
-                .lateral_and_miscellaneous_connections_no_wall_correction(
-                    mass_flowrate_clockwise, 
-                    zero_power)
-                .unwrap();
-            pipe_36a
+            pipe_7
                 .lateral_and_miscellaneous_connections_no_wall_correction(
                     mass_flowrate_clockwise, 
                     zero_power)
                 .unwrap();
 
-            pipe_37
+            // bottom right bend from cold to hot leg 
+            pipe_8
+                .lateral_and_miscellaneous_connections_no_wall_correction(
+                    mass_flowrate_clockwise, 
+                    zero_power)
+                .unwrap();
+            pipe_9
+                .lateral_and_miscellaneous_connections_no_wall_correction(
+                    mass_flowrate_clockwise, 
+                    zero_power)
+                .unwrap();
+            pipe_10
                 .lateral_and_miscellaneous_connections_no_wall_correction(
                     mass_flowrate_clockwise, 
                     zero_power)
                 .unwrap();
 
-            flowmeter_60_37a
+            // horizontal-ish (diagonal) heater 
+            pipe_11
+                .lateral_and_miscellaneous_connections_no_wall_correction(
+                    mass_flowrate_clockwise, 
+                    hot_leg_diagonal_heater_power)
+                .unwrap();
+
+            // hot leg bottom left bend
+            pipe_12
                 .lateral_and_miscellaneous_connections_no_wall_correction(
                     mass_flowrate_clockwise, 
                     zero_power)
                 .unwrap();
-            pipe_38
-                .lateral_and_miscellaneous_connections_no_wall_correction(
-                    mass_flowrate_clockwise, 
-                    zero_power)
-                .unwrap();
-            pipe_39
+            pipe_13
                 .lateral_and_miscellaneous_connections_no_wall_correction(
                     mass_flowrate_clockwise, 
                     zero_power)
@@ -450,7 +387,6 @@ pub fn coupled_dracs_loop_link_up_components_sam_tchx_calibration(
             }
 
         // now we should be ready to advance timestep
-        // for all except the dhx itself
 
 }
 
