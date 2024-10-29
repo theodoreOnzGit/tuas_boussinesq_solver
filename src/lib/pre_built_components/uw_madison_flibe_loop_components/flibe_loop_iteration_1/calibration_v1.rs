@@ -50,6 +50,13 @@ pub fn regression_uw_flibe_loop_v1(
     //
     // The other way is to back calculate the heat input into the 
     // FLiBe, and compare that with the heater power.
+    //
+    // Based on some back calculation in LibreOffice Calc,
+    //
+    // I deduced that heater power is based on a per-heater basis 
+    // rather than the combined power of four heaters.
+    //
+    // Probably want to add tests confirming this
     let input_power = Power::new::<watt>(input_power_watts);
 
     // experimental data for tc 24 and 35 are used as set points
