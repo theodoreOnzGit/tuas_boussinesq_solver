@@ -30,6 +30,26 @@ pub fn regression_uw_flibe_loop_v1(
     use chem_eng_real_time_process_control_simulator::alpha_nightly::controllers::AnalogController;
 
 
+    // now, there are four separate segments of heater for the 
+    // UW madison FLiBe loop
+    //
+    // under README.txt in the FLiBe loop data:
+    //
+    // Britsch, K. R., Doniger, W., Anderson, M., & 
+    // Sridharan, K. (2018). Operation Data from the UW 
+    // Natural Circulation FLiBe Flow Loop. 
+    // University of Wisconsin-Madison.
+    //
+    // The heater signals are from 0-10V, multiply by 10 to obtain 
+    // percent power. 
+    //
+    // Now, that only gives percent power. Not the wattage of each 
+    // heater.
+    //
+    // So it's kinda hard to see 
+    //
+    // The other way is to back calculate the heat input into the 
+    // FLiBe, and compare that with the heater power.
     let input_power = Power::new::<watt>(input_power_watts);
 
     // experimental data for tc 24 and 35 are used as set points
