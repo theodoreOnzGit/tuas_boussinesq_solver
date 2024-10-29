@@ -479,37 +479,92 @@ pub fn dracs_loop_advance_timestep_except_dhx_sam_tchx_calibration(
 /// diagonal and vertical heater. I did not yet account for that
 /// 
 pub fn flibe_loop_iteration_1_temperature_diagnostics(
-    dhx_tube_side_30a: &mut NonInsulatedFluidComponent,
-    dhx_tube_side_30b: &mut NonInsulatedFluidComponent,
+    pipe_1: &mut InsulatedFluidComponent,
+    pipe_2: &mut InsulatedFluidComponent,
+    _pipe_3: &mut InsulatedFluidComponent,
+    pipe_4: &mut InsulatedFluidComponent,
+    _pipe_5: &mut NonInsulatedFluidComponent,
+    pipe_6: &mut InsulatedFluidComponent,
+    pipe_7: &mut NonInsulatedFluidComponent,
+    _pipe_8: &mut InsulatedFluidComponent,
+    _pipe_9: &mut InsulatedFluidComponent,
+    pipe_10: &mut InsulatedFluidComponent,
+    _pipe_11: &mut InsulatedFluidComponent,
+    _pipe_12: &mut InsulatedFluidComponent,
+    pipe_13: &mut InsulatedFluidComponent,
     print_debug_results: bool)
 -> ((ThermodynamicTemperature,ThermodynamicTemperature),
 (ThermodynamicTemperature,ThermodynamicTemperature)){
 
-    // bulk and wall temperatures before entering dhx_tube
-    let bt_60 = dhx_tube_side_30a.
-        pipe_fluid_array.try_get_bulk_temperature().unwrap();
-    let wt_61 = dhx_tube_side_30a.
-        pipe_shell.try_get_bulk_temperature().unwrap();
 
-    // bulk and wall temperatures after entering dhx_tube
-    let bt_23 = dhx_tube_side_30b.
+    // TC21 is just before horizontal-ish cooling part
+    // around pipe 4 should be reasonable 
+    //
+    // TC24 is after the horizontal-ish cooling part, the Y joint
+
+    let tc_21 = pipe_4.
         pipe_fluid_array.try_get_bulk_temperature().unwrap();
-    let wt_22 = dhx_tube_side_30b 
-        .pipe_shell.try_get_bulk_temperature().unwrap();
+    let tc_24 = pipe_6.
+        pipe_fluid_array.try_get_bulk_temperature().unwrap();
+
+    // TC32 is somewhere in the middle of the vertical cooling part,
+    // I'll just use the bulk temperature as a proxy for that 
+    let tc_32_estimate = pipe_7.
+        pipe_fluid_array.try_get_bulk_temperature().unwrap();
+
+    // TC35 is just before entering bottom heater section 
+    let tc_35 = pipe_10.
+        pipe_fluid_array.try_get_bulk_temperature().unwrap();
+
+    // TC11 is just before heater 3 
+    let tc_11 = pipe_13.
+        pipe_fluid_array.try_get_bulk_temperature().unwrap();
+
+    // TC12 is in the middle of the vertical heater section
+    let tc_12_estimate = pipe_1.
+        pipe_fluid_array.try_get_bulk_temperature().unwrap();
+
+    // TC 14 is the temperature just after exiting pipe 1
+    // TC 18 is the temperature of the opening to tank (pipe 2)
+
+    let tc_18 = pipe_2.
+        pipe_fluid_array.try_get_bulk_temperature().unwrap();
+
+    let tc_14_estimate = tc_18;
+
+
 
     // debug 
     if print_debug_results {
         dbg!(&(
-                "bulk and wall temp degC, before and after dhx_tube respectively",
-                bt_60.get::<degree_celsius>(),
-                wt_61.get::<degree_celsius>(),
-                bt_23.get::<degree_celsius>(),
-                wt_22.get::<degree_celsius>(),
+                "before and after horizontal-ish part of cooler deg C",
+                tc_21.get::<degree_celsius>(),
+                tc_24.get::<degree_celsius>(),
+                ));
+        dbg!(&(
+                "mid temperature estimate of vertical part of cooler deg C",
+                tc_32_estimate.get::<degree_celsius>(),
+                ));
+        dbg!(&(
+                "before horizontal-ish part of heater and before vertical part of heater degC",
+                tc_35.get::<degree_celsius>(),
+                tc_11.get::<degree_celsius>(),
+                ));
+        dbg!(&(
+                "mid section of vertical heater estimate degC",
+                tc_12_estimate.get::<degree_celsius>(),
+                ));
+        dbg!(&(
+                "heater exit temp estimate",
+                tc_14_estimate.get::<degree_celsius>(),
+                ));
+        dbg!(&(
+                "temperature of FLiBe to open tank",
+                tc_18.get::<degree_celsius>(),
                 ));
     }
 
 
-    todo!();
-    return ((bt_60,wt_61),(bt_23,wt_22));
+    return ((tc_21,tc_35),(tc_11,tc_14_estimate));
 
 }
