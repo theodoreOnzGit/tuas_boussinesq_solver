@@ -32,6 +32,6 @@
 pub mod components;
 
 /// does fluid mechanics calculations through each branch
-pub mod hydraulics_calculations;
+pub mod thermal_hydraulics_calculations;
 
 

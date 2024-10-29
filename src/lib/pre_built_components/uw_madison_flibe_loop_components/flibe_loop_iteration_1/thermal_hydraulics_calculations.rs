@@ -59,9 +59,9 @@ MassRate {
 /// fluid mechanics calcs, 
 /// specific to the flibe loop
 /// note that this only works if the components are correct
-/// obtains mass flowrate across the DRACS loop 
+/// obtains mass flowrate across the FLiBe loop 
 /// gets the absolute flowrate across the hot branch
-pub fn coupled_dracs_fluid_mechanics_calc_abs_mass_rate_sam_tchx_calibration(
+pub fn uw_madison_flibe_fluid_mechanics_calc_abs_mass_rate(
     pipe_34: &InsulatedFluidComponent,
     pipe_33: &InsulatedFluidComponent,
     pipe_32: &InsulatedFluidComponent,
@@ -79,42 +79,56 @@ pub fn coupled_dracs_fluid_mechanics_calc_abs_mass_rate_sam_tchx_calibration(
     flowmeter_60_37a: &NonInsulatedFluidComponent,
     pipe_38: &InsulatedFluidComponent,
     pipe_39: &InsulatedFluidComponent,
+    pipe_1: &InsulatedFluidComponent,
+    pipe_2: &InsulatedFluidComponent,
+    pipe_3: &InsulatedFluidComponent,
+    pipe_4: &InsulatedFluidComponent,
+    pipe_5: &NonInsulatedFluidComponent,
+    pipe_6: &InsulatedFluidComponent,
+    pipe_7: &NonInsulatedFluidComponent,
+    pipe_8: &InsulatedFluidComponent,
+    pipe_9: &InsulatedFluidComponent,
+    pipe_10: &InsulatedFluidComponent,
+    pipe_11: &InsulatedFluidComponent,
+    pipe_12: &InsulatedFluidComponent,
+    pipe_13: &InsulatedFluidComponent,
 )-> MassRate {
 
-    let mut dracs_hot_branch = 
+
+    let mut flibe_hot_branch = 
         FluidComponentCollection::new_series_component_collection();
 
-    dracs_hot_branch.clone_and_add_component(pipe_34);
-    dracs_hot_branch.clone_and_add_component(pipe_33);
-    dracs_hot_branch.clone_and_add_component(pipe_32);
-    dracs_hot_branch.clone_and_add_component(pipe_31a);
-    dracs_hot_branch.clone_and_add_component(static_mixer_61_label_31);
-    dracs_hot_branch.clone_and_add_component(dhx_tube_side_30b);
-    dracs_hot_branch.clone_and_add_component(dhx_tube_side_heat_exchanger_30);
-    dracs_hot_branch.clone_and_add_component(dhx_tube_side_30a);
+    flibe_hot_branch.clone_and_add_component(pipe_8);
+    flibe_hot_branch.clone_and_add_component(pipe_9);
+    flibe_hot_branch.clone_and_add_component(pipe_10);
+    flibe_hot_branch.clone_and_add_component(pipe_11);
+    flibe_hot_branch.clone_and_add_component(pipe_12);
+    flibe_hot_branch.clone_and_add_component(pipe_13);
+    flibe_hot_branch.clone_and_add_component(pipe_1);
 
 
-    let mut dracs_cold_branch = 
+
+    let mut flibe_cold_branch = 
         FluidComponentCollection::new_series_component_collection();
 
-    dracs_cold_branch.clone_and_add_component(tchx_35a);
-    dracs_cold_branch.clone_and_add_component(tchx_35b_1);
-    dracs_cold_branch.clone_and_add_component(tchx_35b_2);
-    dracs_cold_branch.clone_and_add_component(static_mixer_60_label_36);
-    dracs_cold_branch.clone_and_add_component(pipe_36a);
-    dracs_cold_branch.clone_and_add_component(pipe_37);
-    dracs_cold_branch.clone_and_add_component(flowmeter_60_37a);
-    dracs_cold_branch.clone_and_add_component(pipe_38);
-    dracs_cold_branch.clone_and_add_component(pipe_39);
+    flibe_cold_branch.clone_and_add_component(pipe_2);
+    flibe_cold_branch.clone_and_add_component(pipe_3);
+    flibe_cold_branch.clone_and_add_component(pipe_4);
+    flibe_cold_branch.clone_and_add_component(pipe_5);
+    flibe_cold_branch.clone_and_add_component(pipe_6);
+    flibe_cold_branch.clone_and_add_component(pipe_7);
 
-    let mut dracs_branches = 
+
+
+    let mut flibe_branches = 
         FluidComponentSuperCollection::default();
 
-    dracs_branches.set_orientation_to_parallel();
-    dracs_branches.fluid_component_super_vector.push(dracs_hot_branch);
-    dracs_branches.fluid_component_super_vector.push(dracs_cold_branch);
+    flibe_branches.set_orientation_to_parallel();
+    flibe_branches.fluid_component_super_vector.push(flibe_hot_branch);
+    flibe_branches.fluid_component_super_vector.push(flibe_cold_branch);
 
-    let abs_mass_rate = get_abs_mass_flowrate_across_two_branches(&dracs_branches);
+    let abs_mass_rate = get_abs_mass_flowrate_across_two_branches(
+        &flibe_branches);
 
     abs_mass_rate
 
