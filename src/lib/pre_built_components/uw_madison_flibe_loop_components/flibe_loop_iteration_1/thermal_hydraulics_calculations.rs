@@ -493,7 +493,7 @@ pub fn flibe_loop_iteration_1_temperature_diagnostics(
     _pipe_12: &mut InsulatedFluidComponent,
     pipe_13: &mut InsulatedFluidComponent,
     print_debug_results: bool)
--> ((ThermodynamicTemperature,ThermodynamicTemperature),
+-> ((ThermodynamicTemperature,ThermodynamicTemperature, ThermodynamicTemperature),
 (ThermodynamicTemperature,ThermodynamicTemperature)){
 
 
@@ -565,6 +565,6 @@ pub fn flibe_loop_iteration_1_temperature_diagnostics(
     }
 
 
-    return ((tc_21,tc_35),(tc_11,tc_14_estimate));
+    return ((tc_21,tc_24,tc_35),(tc_11,tc_14_estimate));
 
 }
