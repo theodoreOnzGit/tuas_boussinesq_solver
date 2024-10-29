@@ -1,6 +1,5 @@
 use uom::si::f64::*;
 
-use crate::array_control_vol_and_fluid_component_collections::fluid_component_collection::fluid_component::FluidComponent;
 use crate::
 array_control_vol_and_fluid_component_collections::
 fluid_component_collection::
@@ -10,7 +9,6 @@ use crate::
 array_control_vol_and_fluid_component_collections::
 fluid_component_collection::
 fluid_component_collection::FluidComponentCollectionMethods;
-use crate::pre_built_components::shell_and_tube_heat_exchanger::SimpleShellAndTubeHeatExchanger;
 use uom::ConstZero;
 
 use uom::si::thermodynamic_temperature::degree_celsius;
@@ -475,14 +473,12 @@ pub fn dracs_loop_advance_timestep_except_dhx_sam_tchx_calibration(
 
 /// these are temperature diagnostic 
 /// functions to check bulk and wall temperature before 
-/// and after the DHX tube side
+/// and after heater and cooler
 ///
-/// before dhx tube: BT-60, WT-61 (not exactly sure where)
-/// use pipe_30a
-/// after dhx tube: BT-23, WT-22 
-/// use pipe_30b
+/// the heater segments are purposely broken in two for 
+/// diagonal and vertical heater. I did not yet account for that
 /// 
-pub fn dracs_loop_dhx_tube_temperature_diagnostics(
+pub fn flibe_loop_iteration_1_temperature_diagnostics(
     dhx_tube_side_30a: &mut NonInsulatedFluidComponent,
     dhx_tube_side_30b: &mut NonInsulatedFluidComponent,
     print_debug_results: bool)
@@ -513,6 +509,7 @@ pub fn dracs_loop_dhx_tube_temperature_diagnostics(
     }
 
 
+    todo!();
     return ((bt_60,wt_61),(bt_23,wt_22));
 
 }
