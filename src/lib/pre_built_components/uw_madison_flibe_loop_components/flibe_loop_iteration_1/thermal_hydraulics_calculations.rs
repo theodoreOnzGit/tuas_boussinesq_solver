@@ -399,77 +399,74 @@ pub fn flibe_loop_link_up_components(
 /// which is assumed to be the same throughout the loop
 pub fn dracs_loop_advance_timestep_except_dhx_sam_tchx_calibration(
     timestep: Time,
-    pipe_34: &mut InsulatedFluidComponent,
-    pipe_33: &mut InsulatedFluidComponent,
-    pipe_32: &mut InsulatedFluidComponent,
-    pipe_31a: &mut InsulatedFluidComponent,
-    static_mixer_61_label_31: &mut InsulatedFluidComponent,
-    dhx_tube_side_30b: &mut NonInsulatedFluidComponent,
-    dhx_tube_side_30a: &mut NonInsulatedFluidComponent,
-    tchx_35a: &mut NonInsulatedFluidComponent,
-    tchx_35b_1: &mut NonInsulatedFluidComponent,
-    tchx_35b_2: &mut NonInsulatedFluidComponent,
-    static_mixer_60_label_36: &mut InsulatedFluidComponent,
-    pipe_36a: &mut InsulatedFluidComponent,
-    pipe_37: &mut InsulatedFluidComponent,
-    flowmeter_60_37a: &mut NonInsulatedFluidComponent,
-    pipe_38: &mut InsulatedFluidComponent,
-    pipe_39: &mut InsulatedFluidComponent,
+    pipe_1: &mut InsulatedFluidComponent,
+    pipe_2: &mut InsulatedFluidComponent,
+    pipe_3: &mut InsulatedFluidComponent,
+    pipe_4: &mut InsulatedFluidComponent,
+    pipe_5: &mut NonInsulatedFluidComponent,
+    pipe_6: &mut InsulatedFluidComponent,
+    pipe_7: &mut NonInsulatedFluidComponent,
+    pipe_8: &mut InsulatedFluidComponent,
+    pipe_9: &mut InsulatedFluidComponent,
+    pipe_10: &mut InsulatedFluidComponent,
+    pipe_11: &mut InsulatedFluidComponent,
+    pipe_12: &mut InsulatedFluidComponent,
+    pipe_13: &mut InsulatedFluidComponent,
     ){
 
 
-        dhx_tube_side_30a
+        pipe_1
             .advance_timestep(timestep)
             .unwrap();
-        dhx_tube_side_30b
-            .advance_timestep(timestep)
-            .unwrap();
-
-        static_mixer_61_label_31
-            .advance_timestep(timestep)
-            .unwrap();
-        pipe_31a
+        // cold branch
+        pipe_2
             .advance_timestep(timestep)
             .unwrap();
 
-        pipe_32
+        pipe_3
             .advance_timestep(timestep)
             .unwrap();
-        pipe_33
-            .advance_timestep(timestep)
-            .unwrap();
-        pipe_34
+        pipe_4
             .advance_timestep(timestep)
             .unwrap();
 
-        // cold branch 
-        tchx_35a
+        pipe_5
             .advance_timestep(timestep)
             .unwrap();
-        tchx_35b_1
+        pipe_6
             .advance_timestep(timestep)
             .unwrap();
-        tchx_35b_2
-            .advance_timestep(timestep)
-            .unwrap();
-
-        static_mixer_60_label_36
-            .advance_timestep(timestep)
-            .unwrap();
-        pipe_36a
-            .advance_timestep(timestep)
-            .unwrap();
-        flowmeter_60_37a
+        pipe_7
             .advance_timestep(timestep)
             .unwrap();
 
-        pipe_37
+        pipe_8
             .advance_timestep(timestep)
             .unwrap();
-        pipe_38
+        pipe_9
             .advance_timestep(timestep)
             .unwrap();
-        pipe_39
+        pipe_10
+            .advance_timestep(timestep)
+            .unwrap();
+
+        // hot branch 
+
+        // horizontal-ish (diagonal) heater)
+        pipe_11
+            .advance_timestep(timestep)
+            .unwrap();
+
+        // bottom left heater bend
+        pipe_12
+            .advance_timestep(timestep)
+            .unwrap();
+        pipe_13
+            .advance_timestep(timestep)
+            .unwrap();
+
+        // vertical heater
+        pipe_1
             .advance_timestep(timestep)
             .unwrap();
 
