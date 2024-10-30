@@ -349,8 +349,8 @@ pub fn calibrate_uw_madison_parasitic_heat_loss_fixed_flowrate(
     let (mass_flowrate_clockwise, 
         hot_leg_diagonal_heater_power, 
         hot_leg_vertical_heater_power, 
-        cold_leg_diagonal_heat_transfer_coeff, 
-        cold_leg_vertical_heat_transfer_coeff) =
+        mut cold_leg_diagonal_heat_transfer_coeff, 
+        mut cold_leg_vertical_heat_transfer_coeff) =
         (
             MassRate::new::<kilogram_per_second>(flibe_mass_flowrate_kg_per_s),
             input_power_per_heater,
@@ -361,7 +361,7 @@ pub fn calibrate_uw_madison_parasitic_heat_loss_fixed_flowrate(
 
     let mut tchx_heat_transfer_coeff: HeatTransfer;
 
-    let reference_tchx_htc = 
+    let reference_cooler_htc = 
         HeatTransfer::new::<watt_per_square_meter_kelvin>(40.0);
     let average_temperature_for_density_calcs = 
         ThermodynamicTemperature::new::<degree_celsius>(
@@ -421,6 +421,8 @@ pub fn calibrate_uw_madison_parasitic_heat_loss_fixed_flowrate(
     let ambient_htc = HeatTransfer::new::<watt_per_square_meter_kelvin>(20.0);
 
     // for postprocessing 
+    let mut downcomer_heat_transfer_coeff: HeatTransfer;
+    let mut top_cross_heat_transfer_coeff: HeatTransfer;
         
     let ((mut tc_21_estimate,mut tc_24_estimate,mut tc_35_estimate),
     (mut tc_11_estimate,mut tc_14_estimate)) = 
@@ -432,9 +434,88 @@ pub fn calibrate_uw_madison_parasitic_heat_loss_fixed_flowrate(
 
         // placeholder for heat transfer coeff, need to deal with 
         // controller tho
-        let cold_leg_diagonal_heat_transfer_coeff = ambient_htc;
-        let cold_leg_vertical_heat_transfer_coeff = ambient_htc;
+        let cold_leg_diagonal_heat_transfer_coeff = 
+        {
+            // first, calculate the set point error 
+
+            let reference_temperature_interval_deg_celsius = 80.0;
+
+            // error = y_sp - y_measured
+            let set_point_abs_error_deg_celsius = 
+                - downcomer_exit_temp_set_point.get::<kelvin>()
+                + tc_24_estimate.get::<kelvin>();
+
+            let nondimensional_error: Ratio = 
+                (set_point_abs_error_deg_celsius/
+                 reference_temperature_interval_deg_celsius).into();
+            // let's get the output 
+
+            let dimensionless_heat_trf_input: Ratio
+                = pid_controller.set_user_input_and_calc(
+                    nondimensional_error, 
+                    current_simulation_time).unwrap();
+            let mut top_cross_heat_trf_output = 
+                dimensionless_heat_trf_input * reference_cooler_htc
+                + reference_cooler_htc;
+
+            // make sure it cannot be less than a certain amount 
+            let top_cross_minimum_heat_transfer = 
+                HeatTransfer::new::<watt_per_square_meter_kelvin>(
+                    5.0);
+
+            // this makes it physically realistic
+            if top_cross_heat_trf_output < top_cross_minimum_heat_transfer {
+                top_cross_heat_trf_output = top_cross_minimum_heat_transfer;
+            }
+
+            top_cross_heat_trf_output
+        };
+
+        let cold_leg_vertical_heat_transfer_coeff = 
+        { 
+            // first, calculate the set point error 
+
+            let reference_temperature_interval_deg_celsius = 80.0;
+
+            // error = y_sp - y_measured
+            let set_point_abs_error_deg_celsius = 
+                - downcomer_exit_temp_set_point.get::<kelvin>()
+                + tc_35_estimate.get::<kelvin>();
+
+            let nondimensional_error: Ratio = 
+                (set_point_abs_error_deg_celsius/
+                 reference_temperature_interval_deg_celsius).into();
+            // let's get the output 
+
+            let dimensionless_heat_trf_input: Ratio
+                = pid_controller.set_user_input_and_calc(
+                    nondimensional_error, 
+                    current_simulation_time).unwrap();
+            let mut downcomer_heat_trf_output = 
+                dimensionless_heat_trf_input * reference_cooler_htc
+                + reference_cooler_htc;
+
+            // make sure it cannot be less than a certain amount 
+            let downcomer_minimum_heat_transfer = 
+                HeatTransfer::new::<watt_per_square_meter_kelvin>(
+                    5.0);
+
+            // this makes it physically realistic
+            if downcomer_heat_trf_output < downcomer_minimum_heat_transfer {
+                downcomer_heat_trf_output = downcomer_minimum_heat_transfer;
+            }
+
+            downcomer_heat_trf_output
+
+        };
+        top_cross_heat_transfer_coeff = cold_leg_diagonal_heat_transfer_coeff;
+        downcomer_heat_transfer_coeff = cold_leg_vertical_heat_transfer_coeff;
+
+
+
         // link up the heat transfer entities 
+
+        
 
         uw_madison_flibe_loop_link_up_components(
             mass_flowrate_clockwise, 
