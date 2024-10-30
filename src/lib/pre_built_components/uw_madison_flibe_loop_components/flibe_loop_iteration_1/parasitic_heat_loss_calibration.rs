@@ -234,32 +234,79 @@ pub fn heater_check_if_four_heater_test10(){
 }
 
 
-// calibrates parasitic heat losses for the heater given a fixed flowrate 
-//
-// the data is as follows
-//
-// test no.,TC 11(degC),TC 12(degC),TC 14(degC),TC 21(degC),TC 24(degC),TC 32(degC),TC 35(degC)
-// 1,(514.1,520.8,535.9,542.3,490.4,487.9,483.4)
-// 2,(576.3,580.4,592,600.9,553.1,550.4,546.7)
-// 3,(638.5,645.9,669.1,667.6,620.9,619,617.4)
-// 4,(538.6,543.8,569.9,571.4,502.1,496.8,497.4)
-// 5,(692.2,699.8,722,720.5,672.7,675.7,665.7)
-// 6,(590.7,597.6,623,626.8,562.3,560.8,560.2)
-// 7,(548.8,553.8,572.7,583.4,510.2,509.5,508.2)
-// 8,(603.9,611.5,638.7,641.4,572.6,567.2,571.3)
-// 9,(572.5,578.9,600.2,612,536.2,529.3,535.6)
-// 10,(549.9,556,587,589.8,499.2,500,504.6)
-//
-// Test	Heater Power (W)	flibe velocity cm/s	flibe mass flowrate (kg/s)	flibe density est (kg/m3)	flibe mass flowrate (kg/s)	specific heat capacity (J/ (kg K))	Total heat added to fluid (watts)
-// 1,(952,2.75,0.0162575849026945,2000,0.0162575849026945,2386,2288.64525709192)
-// 2,(1125,3.48,0.020573234713228,2000,0.020573234713228,2386,2650.73785339114)
-// 3,(1298,5.76,0.0340522505598256,2000,0.0340522505598256,2386,4062.43349178719)
-// 4,(1298,3.59,0.0212235381093357,2000,0.0212235381093357,2386,3747.31278273675)
-// 5,(1471,6.72,0.0397276256531298,2000,0.0397276256531298,2386,5213.45631446023)
-// 6,(1471,5.49,0.0324560513148338,2000,0.0324560513148338,2386,5188.48927529195)
-// 7,(1471,5.07,0.0299730747115131,2000,0.0299730747115131,2386,5363.68171962528)
-// 8,(1644,5.43,0.0321013403715022,2000,0.0321013403715022,2386,5361.5658688483)
-// 9,(1644,4.31,0.0254800694293139,2000,0.0254800694293139,2386,4620.45387003407)
-// 10,(1644,4.75,0.028081283013745,2000,0.028081283013745,2386,5695.16500801763)
+/// calibrates parasitic heat losses for the heater given a fixed flowrate 
+///
+///
+///
+/// the data is as follows
+///
+/// test no.,TC 11(degC),TC 12(degC),TC 14(degC),TC 21(degC),TC 24(degC),TC 32(degC),TC 35(degC)
+/// 1,(514.1,520.8,535.9,542.3,490.4,487.9,483.4)
+/// 2,(576.3,580.4,592,600.9,553.1,550.4,546.7)
+/// 3,(638.5,645.9,669.1,667.6,620.9,619,617.4)
+/// 4,(538.6,543.8,569.9,571.4,502.1,496.8,497.4)
+/// 5,(692.2,699.8,722,720.5,672.7,675.7,665.7)
+/// 6,(590.7,597.6,623,626.8,562.3,560.8,560.2)
+/// 7,(548.8,553.8,572.7,583.4,510.2,509.5,508.2)
+/// 8,(603.9,611.5,638.7,641.4,572.6,567.2,571.3)
+/// 9,(572.5,578.9,600.2,612,536.2,529.3,535.6)
+/// 10,(549.9,556,587,589.8,499.2,500,504.6)
+///
+/// Individual	Heater Power (W)	flibe velocity cm/s	flibe mass flowrate (kg/s)	flibe density est (kg/m3)	flibe mass flowrate (kg/s)	specific heat capacity (J/ (kg K))	Total heat added to fluid (watts)
+/// 1,(952,2.75,0.0162575849026945,2000,0.0162575849026945,2386,2288.64525709192)
+/// 2,(1125,3.48,0.020573234713228,2000,0.020573234713228,2386,2650.73785339114)
+/// 3,(1298,5.76,0.0340522505598256,2000,0.0340522505598256,2386,4062.43349178719)
+/// 4,(1298,3.59,0.0212235381093357,2000,0.0212235381093357,2386,3747.31278273675)
+/// 5,(1471,6.72,0.0397276256531298,2000,0.0397276256531298,2386,5213.45631446023)
+/// 6,(1471,5.49,0.0324560513148338,2000,0.0324560513148338,2386,5188.48927529195)
+/// 7,(1471,5.07,0.0299730747115131,2000,0.0299730747115131,2386,5363.68171962528)
+/// 8,(1644,5.43,0.0321013403715022,2000,0.0321013403715022,2386,5361.5658688483)
+/// 9,(1644,4.31,0.0254800694293139,2000,0.0254800694293139,2386,4620.45387003407)
+/// 10,(1644,4.75,0.028081283013745,2000,0.028081283013745,2386,5695.16500801763)
+///
+/// This is from:
+///
+/// Britsch, K. R., Doniger, W., Anderson, M., & 
+/// Sridharan, K. (2018). Operation Data from the UW 
+/// Natural Circulation FLiBe Flow Loop. 
+/// University of Wisconsin-Madison.
+///
+///
+/// this data is used in individual tests 
+/// note that the natural circulation flowrate is fixed in the parasitic 
+/// heat loss calibration
+/// so this is treated as if it were forced circulation
+#[cfg(test)]
+pub fn calibrate_uw_madison_parasitic_heat_loss_fixed_flowrate(
+    tc_11_degc: f64,
+    tc_12_degc: f64,
+    tc_14_degc: f64,
+    tc_21_degc: f64,
+    tc_24_degc: f64,
+    tc_32_degc: f64,
+    tc_35_degc: f64,
+    individual_heater_power_watts: f64,
+    flibe_mass_flowrate_kg_per_s: f64,){
+
+    use uom::si::length::centimeter;
+    use uom::si::{f64::*, mass_rate::kilogram_per_second, power::watt};
+
+    use uom::si::{frequency::hertz, ratio::ratio, time::millisecond};
+
+    use crate::heat_transfer_correlations::nusselt_number_correlations::enums::NusseltCorrelation;
+    use crate::prelude::beta_testing::FluidArray;
+    use uom::ConstZero;
+
+    use uom::si::thermodynamic_temperature::{degree_celsius, kelvin};
+    use uom::si::heat_transfer::watt_per_square_meter_kelvin;
+    use uom::si::time::second;
+    use chem_eng_real_time_process_control_simulator::alpha_nightly::transfer_fn_wrapper_and_enums::TransferFnTraits;
+    use chem_eng_real_time_process_control_simulator::alpha_nightly::controllers::ProportionalController;
+    use chem_eng_real_time_process_control_simulator::alpha_nightly::controllers::AnalogController;
+
+    let timestep = Time::new::<second>(0.5);
+    let input_power_per_heater = Power::new::<watt>(individual_heater_power_watts);
+
+}
 
 
