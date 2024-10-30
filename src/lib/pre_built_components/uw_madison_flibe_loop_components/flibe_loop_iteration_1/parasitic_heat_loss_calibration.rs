@@ -422,7 +422,7 @@ pub fn calibrate_uw_madison_parasitic_heat_loss_fixed_flowrate(
 
     // for postprocessing 
         
-    let ((mut tc_21_estimate,mut tc_24_estimate,mut tc_35),
+    let ((mut tc_21_estimate,mut tc_24_estimate,mut tc_35_estimate),
     (mut tc_11_estimate,mut tc_14_estimate));
 
     // calculation loop
@@ -473,7 +473,7 @@ pub fn calibrate_uw_madison_parasitic_heat_loss_fixed_flowrate(
             &mut pipe_13);
 
         let print_debug_results_settings = true;
-        ((tc_21_estimate,tc_24_estimate,tc_35),(tc_11_estimate,tc_14_estimate))
+        ((tc_21_estimate,tc_24_estimate,tc_35_estimate),(tc_11_estimate,tc_14_estimate))
             = uw_madison_flibe_loop_iteration_1_temperature_diagnostics(
                 &mut pipe_1, 
                 &mut pipe_2, 
@@ -491,7 +491,25 @@ pub fn calibrate_uw_madison_parasitic_heat_loss_fixed_flowrate(
                 print_debug_results_settings);
 
         current_simulation_time += timestep;
+
+        if print_debug_results_settings == true {
+            dbg!(&current_simulation_time);
+        }
     }
+
+    let top_cross_entrance_tc_21_simulated_degc = tc_21_estimate.get::<degree_celsius>();
+    let top_cross_exit_tc_24_simulated_degc = tc_24_estimate.get::<degree_celsius>();
+    let bottom_cross_entrance_tc_35_simulated_degc = tc_35_estimate.get::<degree_celsius>();
+    let riser_entrance_tc_11_simulated_degc = tc_11_estimate.get::<degree_celsius>();
+    let riser_exit_tc_14_simulated_degc = tc_14_estimate.get::<degree_celsius>();
+
+    dbg!(&(
+            top_cross_entrance_tc_21_simulated_degc,
+            top_cross_exit_tc_24_simulated_degc,
+            bottom_cross_entrance_tc_35_simulated_degc,
+            riser_entrance_tc_11_simulated_degc,
+            riser_exit_tc_14_simulated_degc
+    ));
 
     todo!();
 }
