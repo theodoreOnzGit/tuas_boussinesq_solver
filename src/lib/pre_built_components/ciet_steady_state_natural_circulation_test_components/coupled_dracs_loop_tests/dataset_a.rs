@@ -1031,7 +1031,8 @@ Result<(),crate::tuas_lib_error::TuasLibError>{
 
         let counter_clockwise_pri_loop_flowrate = absolute_mass_flowrate_pri_loop;
 
-        // next, link up the heat transfer entities 
+        // next, 
+        // link up the heat transfer entities 
         // all lateral linking is done except for DHX
         //
         // note, the ambient heat transfer coefficient is not set for 

@@ -296,6 +296,7 @@ pub fn calibrate_uw_madison_parasitic_heat_loss_fixed_flowrate(
 
     use crate::heat_transfer_correlations::nusselt_number_correlations::enums::NusseltCorrelation;
     use crate::pre_built_components::uw_madison_flibe_loop_components::flibe_loop_iteration_1::components::*;
+    use crate::pre_built_components::uw_madison_flibe_loop_components::flibe_loop_iteration_1::thermal_hydraulics_calculations::{uw_madison_flibe_loop_advance_timestep, uw_madison_flibe_loop_iteration_1_temperature_diagnostics, uw_madison_flibe_loop_link_up_components};
     use crate::prelude::beta_testing::FluidArray;
     use uom::ConstZero;
 
@@ -343,6 +344,20 @@ pub fn calibrate_uw_madison_parasitic_heat_loss_fixed_flowrate(
     let top_cross_entrance_temp_expt = 
         ThermodynamicTemperature::new::<degree_celsius>(
             tc_21_degc);
+
+    // other settings
+    let (mass_flowrate_clockwise, 
+        hot_leg_diagonal_heater_power, 
+        hot_leg_vertical_heater_power, 
+        cold_leg_diagonal_heat_transfer_coeff, 
+        cold_leg_vertical_heat_transfer_coeff) =
+        (
+            MassRate::new::<kilogram_per_second>(flibe_mass_flowrate_kg_per_s),
+            input_power_per_heater,
+            input_power_per_heater,
+            input_power_per_heater,
+            input_power_per_heater,
+        );
 
     let mut tchx_heat_transfer_coeff: HeatTransfer;
 
@@ -408,8 +423,72 @@ pub fn calibrate_uw_madison_parasitic_heat_loss_fixed_flowrate(
     // calculation loop
     while current_simulation_time < max_simulation_time {
 
+        // placeholder for heat transfer coeff, need to deal with 
+        // controller tho
+        let cold_leg_diagonal_heat_transfer_coeff = ambient_htc;
+        let cold_leg_vertical_heat_transfer_coeff = ambient_htc;
+        // link up the heat transfer entities 
+
+        uw_madison_flibe_loop_link_up_components(
+            mass_flowrate_clockwise, 
+            hot_leg_diagonal_heater_power, 
+            hot_leg_vertical_heater_power, 
+            cold_leg_diagonal_heat_transfer_coeff, 
+            cold_leg_vertical_heat_transfer_coeff, 
+            average_temperature_for_density_calcs, 
+            ambient_htc, 
+            &mut pipe_1, 
+            &mut pipe_2, 
+            &mut pipe_3, 
+            &mut pipe_4, 
+            &mut pipe_5, 
+            &mut pipe_6, 
+            &mut pipe_7, 
+            &mut pipe_8, 
+            &mut pipe_9, 
+            &mut pipe_10, 
+            &mut pipe_11, 
+            &mut pipe_12, 
+            &mut pipe_13);
+
+        uw_madison_flibe_loop_advance_timestep(
+            timestep, 
+            &mut pipe_1, 
+            &mut pipe_2, 
+            &mut pipe_3, 
+            &mut pipe_4, 
+            &mut pipe_5, 
+            &mut pipe_6, 
+            &mut pipe_7, 
+            &mut pipe_8, 
+            &mut pipe_9, 
+            &mut pipe_10, 
+            &mut pipe_11, 
+            &mut pipe_12, 
+            &mut pipe_13);
+
+        let print_debug_results_settings = true;
+        let ((tc_21_estimate,tc_24_estimate,tc_35),(tc_11_estimate,tc_14_estimate))
+            = uw_madison_flibe_loop_iteration_1_temperature_diagnostics(
+                &mut pipe_1, 
+                &mut pipe_2, 
+                &mut pipe_3, 
+                &mut pipe_4, 
+                &mut pipe_5, 
+                &mut pipe_6, 
+                &mut pipe_7, 
+                &mut pipe_8, 
+                &mut pipe_9, 
+                &mut pipe_10, 
+                &mut pipe_11, 
+                &mut pipe_12, 
+                &mut pipe_13,
+                print_debug_results_settings);
+
         current_simulation_time += timestep;
     }
+
+    todo!();
 }
 
 

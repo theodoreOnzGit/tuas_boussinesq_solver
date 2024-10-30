@@ -130,7 +130,7 @@ pub fn uw_madison_flibe_fluid_mechanics_calc_abs_mass_rate(
 ///
 /// the mass_flowrate_counter_clockwise you provide will be converted
 /// into a mass_flowrate_clockwise and used for calculation
-pub fn flibe_loop_link_up_components(
+pub fn uw_madison_flibe_loop_link_up_components(
     mass_flowrate_clockwise: MassRate,
     hot_leg_diagonal_heater_power: Power,
     hot_leg_vertical_heater_power: Power,
@@ -391,11 +391,11 @@ pub fn flibe_loop_link_up_components(
 
 /// now the heat transfer for the DRACS loop 
 /// for a single timestep, given mass flowrate in a counter clockwise 
-/// fashion in the DRACS
+/// fashion in the uw madison flibe loop
 ///
 /// you also must specify the heat transfer coefficient to ambient 
 /// which is assumed to be the same throughout the loop
-pub fn dracs_loop_advance_timestep_except_dhx_sam_tchx_calibration(
+pub fn uw_madison_flibe_loop_advance_timestep(
     timestep: Time,
     pipe_1: &mut InsulatedFluidComponent,
     pipe_2: &mut InsulatedFluidComponent,
@@ -478,7 +478,7 @@ pub fn dracs_loop_advance_timestep_except_dhx_sam_tchx_calibration(
 /// the heater segments are purposely broken in two for 
 /// diagonal and vertical heater. I did not yet account for that
 /// 
-pub fn flibe_loop_iteration_1_temperature_diagnostics(
+pub fn uw_madison_flibe_loop_iteration_1_temperature_diagnostics(
     pipe_1: &mut InsulatedFluidComponent,
     pipe_2: &mut InsulatedFluidComponent,
     _pipe_3: &mut InsulatedFluidComponent,
