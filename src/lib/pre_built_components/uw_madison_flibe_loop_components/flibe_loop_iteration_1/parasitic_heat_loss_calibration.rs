@@ -233,6 +233,35 @@ pub fn heater_check_if_four_heater_test10(){
 
 }
 
+#[cfg(test)]
+#[test]
+pub fn parasitic_heat_loss_calibration_dry_run_1(){
+    let (tc_11_degc, tc_12_degc, tc_14_degc, tc_21_degc,
+        tc_24_degc, tc_32_degc, tc_35_degc) = 
+        (514.1,520.8,535.9,542.3,490.4,487.9,483.4);
+
+    let (individual_heater_power_watts,
+        _flibe_velocity_cm_per_s,
+        flibe_mass_flowrate_kg_per_s,
+        _flibe_density_est_kg_per_m3,
+        _specific_heat_capacity_j_per_kg_k,
+        _heat_added_to_fluid_watts_regression) =
+        (952.0,2.75,0.0162575849026945,2000.0,2386.0,2288.64525709192);
+
+    let max_time_seconds = 4000.0;
+
+    calibrate_uw_madison_parasitic_heat_loss_fixed_flowrate(
+        tc_11_degc, 
+        tc_12_degc, 
+        tc_14_degc, 
+        tc_21_degc, 
+        tc_24_degc, 
+        tc_32_degc, 
+        tc_35_degc, 
+        individual_heater_power_watts, 
+        flibe_mass_flowrate_kg_per_s, 
+        max_time_seconds);
+}
 
 /// calibrates parasitic heat losses for the heater given a fixed flowrate 
 ///
@@ -252,17 +281,17 @@ pub fn heater_check_if_four_heater_test10(){
 /// 9,(572.5,578.9,600.2,612,536.2,529.3,535.6)
 /// 10,(549.9,556,587,589.8,499.2,500,504.6)
 ///
-/// Individual	Heater Power (W)	flibe velocity cm/s	flibe mass flowrate (kg/s)	flibe density est (kg/m3)	flibe mass flowrate (kg/s)	specific heat capacity (J/ (kg K))	Total heat added to fluid (watts)
-/// 1,(952,2.75,0.0162575849026945,2000,0.0162575849026945,2386,2288.64525709192)
-/// 2,(1125,3.48,0.020573234713228,2000,0.020573234713228,2386,2650.73785339114)
-/// 3,(1298,5.76,0.0340522505598256,2000,0.0340522505598256,2386,4062.43349178719)
-/// 4,(1298,3.59,0.0212235381093357,2000,0.0212235381093357,2386,3747.31278273675)
-/// 5,(1471,6.72,0.0397276256531298,2000,0.0397276256531298,2386,5213.45631446023)
-/// 6,(1471,5.49,0.0324560513148338,2000,0.0324560513148338,2386,5188.48927529195)
-/// 7,(1471,5.07,0.0299730747115131,2000,0.0299730747115131,2386,5363.68171962528)
-/// 8,(1644,5.43,0.0321013403715022,2000,0.0321013403715022,2386,5361.5658688483)
-/// 9,(1644,4.31,0.0254800694293139,2000,0.0254800694293139,2386,4620.45387003407)
-/// 10,(1644,4.75,0.028081283013745,2000,0.028081283013745,2386,5695.16500801763)
+/// Individual	Heater Power (W)	flibe velocity cm/s	flibe mass flowrate (kg/s)	flibe density est (kg/m3)	specific heat capacity (J/ (kg K))	Total heat added to fluid (watts)
+/// 1,(952.0,2.75,0.0162575849026945,2000.0,2386.0,2288.64525709192)
+/// 2,(1125.0,3.48,0.020573234713228,2000.0,2386.0,2650.73785339114)
+/// 3,(1298.0,5.76,0.0340522505598256,2000.0,2386.0,4062.43349178719)
+/// 4,(1298.0,3.59,0.0212235381093357,2000.0,2386.0,3747.31278273675)
+/// 5,(1471.0,6.72,0.0397276256531298,2000.0,2386.0,5213.45631446023)
+/// 6,(1471.0,5.49,0.0324560513148338,2000.0,2386.0,5188.48927529195)
+/// 7,(1471.0,5.07,0.0299730747115131,2000.0,2386.0,5363.68171962528)
+/// 8,(1644.0,5.43,0.0321013403715022,2000.0,2386.0,5361.5658688483)
+/// 9,(1644.0,4.31,0.0254800694293139,2000.0,2386.0,4620.45387003407)
+/// 10,(1644.0,4.75,0.028081283013745,2000.0,2386.0,5695.16500801763)
 ///
 /// This is from:
 ///
@@ -309,6 +338,7 @@ pub fn calibrate_uw_madison_parasitic_heat_loss_fixed_flowrate(
 
     let timestep = Time::new::<second>(0.5);
     let input_power_per_heater = Power::new::<watt>(individual_heater_power_watts);
+    let input_power_per_two_heaters = input_power_per_heater * 2.0;
     let mut current_simulation_time = Time::ZERO;
     let max_simulation_time = Time::new::<second>(max_time_seconds);
     
@@ -351,8 +381,8 @@ pub fn calibrate_uw_madison_parasitic_heat_loss_fixed_flowrate(
         hot_leg_vertical_heater_power) =
         (
             MassRate::new::<kilogram_per_second>(flibe_mass_flowrate_kg_per_s),
-            input_power_per_heater,
-            input_power_per_heater,
+            input_power_per_two_heaters,
+            input_power_per_two_heaters,
         );
 
 
