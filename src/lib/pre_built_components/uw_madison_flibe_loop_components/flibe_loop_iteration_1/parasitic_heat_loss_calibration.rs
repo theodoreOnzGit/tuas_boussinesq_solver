@@ -286,7 +286,8 @@ pub fn calibrate_uw_madison_parasitic_heat_loss_fixed_flowrate(
     tc_32_degc: f64,
     tc_35_degc: f64,
     individual_heater_power_watts: f64,
-    flibe_mass_flowrate_kg_per_s: f64,){
+    flibe_mass_flowrate_kg_per_s: f64,
+    max_time_seconds: f64){
 
     use uom::si::length::centimeter;
     use uom::si::{f64::*, mass_rate::kilogram_per_second, power::watt};
@@ -294,6 +295,7 @@ pub fn calibrate_uw_madison_parasitic_heat_loss_fixed_flowrate(
     use uom::si::{frequency::hertz, ratio::ratio, time::millisecond};
 
     use crate::heat_transfer_correlations::nusselt_number_correlations::enums::NusseltCorrelation;
+    use crate::pre_built_components::uw_madison_flibe_loop_components::flibe_loop_iteration_1::components::*;
     use crate::prelude::beta_testing::FluidArray;
     use uom::ConstZero;
 
@@ -306,6 +308,8 @@ pub fn calibrate_uw_madison_parasitic_heat_loss_fixed_flowrate(
 
     let timestep = Time::new::<second>(0.5);
     let input_power_per_heater = Power::new::<watt>(individual_heater_power_watts);
+    let mut current_simulation_time = Time::ZERO;
+    let max_simulation_time = Time::new::<second>(max_time_seconds);
     
     // horizontal-ish cooler (top cross) exit temp
     let top_cross_exit_temp_set_point = 
@@ -340,8 +344,72 @@ pub fn calibrate_uw_madison_parasitic_heat_loss_fixed_flowrate(
         ThermodynamicTemperature::new::<degree_celsius>(
             tc_21_degc);
 
+    let mut tchx_heat_transfer_coeff: HeatTransfer;
+
+    let reference_tchx_htc = 
+        HeatTransfer::new::<watt_per_square_meter_kelvin>(40.0);
+    let average_temperature_for_density_calcs = 
+        ThermodynamicTemperature::new::<degree_celsius>(
+            0.5*(tc_21_degc+tc_35_degc));
 
 
+    // PID controller settings
+    // for version 5, controller settings are 
+    // altered from version 4, to introduce more stability for set b9
+    //
+    // setting controller gain to 1.55 and 1.0 didn't work, still unstable
+    let controller_gain = Ratio::new::<ratio>(1.75);
+    let integral_time: Time = controller_gain / Frequency::new::<hertz>(1.0);
+    let derivative_time: Time = Time::new::<second>(1.0);
+    // derivative time ratio
+    let alpha: Ratio = Ratio::new::<ratio>(1.0);
+
+    let mut pid_controller: AnalogController = 
+        AnalogController::new_filtered_pid_controller(controller_gain,
+            integral_time,
+            derivative_time,
+            alpha).unwrap();
+
+    // we also have a measurement delay of 0.0001 s 
+    // or 0.1 ms
+    let measurement_delay = Time::new::<millisecond>(0.1);
+
+    let mut measurement_delay_block: AnalogController = 
+        ProportionalController::new(Ratio::new::<ratio>(1.0)).unwrap().into();
+
+    measurement_delay_block.set_dead_time(measurement_delay);
+
+
+
+    let initial_temperature = downcomer_exit_temp_set_point;
+
+
+    // cold leg 
+    let mut pipe_2 = new_uw_flibe_pipe_2(initial_temperature);
+    let mut pipe_3 = new_uw_flibe_pipe_3(initial_temperature);
+    let mut pipe_4 = new_uw_flibe_pipe_4(initial_temperature);
+    let mut pipe_5 = new_uw_flibe_pipe_5(initial_temperature);
+    let mut pipe_6 = new_uw_flibe_pipe_6(initial_temperature);
+    let mut pipe_7 = new_uw_flibe_pipe_7(initial_temperature);
+
+    // cold leg to hot leg bend 
+    let mut pipe_8 = new_uw_flibe_pipe_8(initial_temperature);
+    let mut pipe_9 = new_uw_flibe_pipe_9(initial_temperature);
+    let mut pipe_10 = new_uw_flibe_pipe_10(initial_temperature);
+
+    // hot leg 
+    let mut pipe_11 = new_uw_flibe_pipe_11(initial_temperature);
+    let mut pipe_12 = new_uw_flibe_pipe_12(initial_temperature);
+    let mut pipe_13 = new_uw_flibe_pipe_13(initial_temperature);
+    let mut pipe_1 = new_uw_flibe_pipe_1(initial_temperature);
+
+    let ambient_htc = HeatTransfer::new::<watt_per_square_meter_kelvin>(20.0);
+
+    // calculation loop
+    while current_simulation_time < max_simulation_time {
+
+        current_simulation_time += timestep;
+    }
 }
 
 

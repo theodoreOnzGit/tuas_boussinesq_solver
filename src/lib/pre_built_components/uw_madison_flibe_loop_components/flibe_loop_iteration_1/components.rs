@@ -14,6 +14,7 @@ use crate::pre_built_components::insulated_pipes_and_fluid_components::Insulated
 use crate::pre_built_components::non_insulated_fluid_components::NonInsulatedFluidComponent;
 
 /// university of wisconsin madison flibe pipe 1
+/// this is the riser or vertical heater
 pub fn new_uw_flibe_pipe_1(initial_temperature: ThermodynamicTemperature) -> InsulatedFluidComponent {
 
 
