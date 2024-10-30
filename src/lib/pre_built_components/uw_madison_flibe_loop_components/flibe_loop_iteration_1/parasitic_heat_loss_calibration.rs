@@ -306,6 +306,41 @@ pub fn calibrate_uw_madison_parasitic_heat_loss_fixed_flowrate(
 
     let timestep = Time::new::<second>(0.5);
     let input_power_per_heater = Power::new::<watt>(individual_heater_power_watts);
+    
+    // horizontal-ish cooler (top cross) exit temp
+    let top_cross_exit_temp_set_point = 
+        ThermodynamicTemperature::new::<degree_celsius>(
+            tc_24_degc);
+
+    // vertical cooler (downcomer) exit temp
+    let downcomer_exit_temp_set_point = 
+        ThermodynamicTemperature::new::<degree_celsius>(
+            tc_35_degc);
+
+    let downcomer_rough_midpoint_temp_expt = 
+        ThermodynamicTemperature::new::<degree_celsius>(
+            tc_32_degc);
+
+    // horizontal-ish heater (bottom cross) exit temp 
+    let bottom_cross_exit_temp_expt = 
+        ThermodynamicTemperature::new::<degree_celsius>(
+            tc_11_degc);
+
+    // vertical heater (riser) exit temp
+    let riser_exit_temp_expt = 
+        ThermodynamicTemperature::new::<degree_celsius>(
+            tc_14_degc);
+
+    let riser_midpoint_temp_expt = 
+        ThermodynamicTemperature::new::<degree_celsius>(
+            tc_12_degc);
+
+    // horizontal-ish cooler (top cross) entrance temp
+    let top_cross_entrance_temp_expt = 
+        ThermodynamicTemperature::new::<degree_celsius>(
+            tc_21_degc);
+
+
 
 }
 
