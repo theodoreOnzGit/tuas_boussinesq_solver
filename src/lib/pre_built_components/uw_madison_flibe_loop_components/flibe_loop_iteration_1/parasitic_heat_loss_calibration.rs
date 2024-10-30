@@ -348,18 +348,13 @@ pub fn calibrate_uw_madison_parasitic_heat_loss_fixed_flowrate(
     // other settings
     let (mass_flowrate_clockwise, 
         hot_leg_diagonal_heater_power, 
-        hot_leg_vertical_heater_power, 
-        mut cold_leg_diagonal_heat_transfer_coeff, 
-        mut cold_leg_vertical_heat_transfer_coeff) =
+        hot_leg_vertical_heater_power) =
         (
             MassRate::new::<kilogram_per_second>(flibe_mass_flowrate_kg_per_s),
             input_power_per_heater,
             input_power_per_heater,
-            input_power_per_heater,
-            input_power_per_heater,
         );
 
-    let mut tchx_heat_transfer_coeff: HeatTransfer;
 
     let reference_cooler_htc = 
         HeatTransfer::new::<watt_per_square_meter_kelvin>(40.0);
@@ -421,8 +416,8 @@ pub fn calibrate_uw_madison_parasitic_heat_loss_fixed_flowrate(
     let ambient_htc = HeatTransfer::new::<watt_per_square_meter_kelvin>(20.0);
 
     // for postprocessing 
-    let mut downcomer_heat_transfer_coeff: HeatTransfer;
-    let mut top_cross_heat_transfer_coeff: HeatTransfer;
+    let mut downcomer_heat_transfer_coeff: HeatTransfer = HeatTransfer::ZERO;
+    let mut top_cross_heat_transfer_coeff: HeatTransfer = HeatTransfer::ZERO;
         
     let ((mut tc_21_estimate,mut tc_24_estimate,mut tc_35_estimate),
     (mut tc_11_estimate,mut tc_14_estimate)) = 
@@ -593,6 +588,9 @@ pub fn calibrate_uw_madison_parasitic_heat_loss_fixed_flowrate(
             riser_entrance_tc_11_simulated_degc,
             riser_exit_tc_14_simulated_degc
     ));
+
+    dbg!(&(top_cross_heat_transfer_coeff,
+            downcomer_heat_transfer_coeff));
 
     todo!();
 }
