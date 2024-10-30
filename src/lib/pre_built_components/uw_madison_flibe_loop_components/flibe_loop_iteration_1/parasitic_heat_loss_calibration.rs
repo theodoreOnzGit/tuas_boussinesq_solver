@@ -420,6 +420,11 @@ pub fn calibrate_uw_madison_parasitic_heat_loss_fixed_flowrate(
 
     let ambient_htc = HeatTransfer::new::<watt_per_square_meter_kelvin>(20.0);
 
+    // for postprocessing 
+        
+    let ((mut tc_21_estimate,mut tc_24_estimate,mut tc_35),
+    (mut tc_11_estimate,mut tc_14_estimate));
+
     // calculation loop
     while current_simulation_time < max_simulation_time {
 
@@ -468,7 +473,7 @@ pub fn calibrate_uw_madison_parasitic_heat_loss_fixed_flowrate(
             &mut pipe_13);
 
         let print_debug_results_settings = true;
-        let ((tc_21_estimate,tc_24_estimate,tc_35),(tc_11_estimate,tc_14_estimate))
+        ((tc_21_estimate,tc_24_estimate,tc_35),(tc_11_estimate,tc_14_estimate))
             = uw_madison_flibe_loop_iteration_1_temperature_diagnostics(
                 &mut pipe_1, 
                 &mut pipe_2, 
