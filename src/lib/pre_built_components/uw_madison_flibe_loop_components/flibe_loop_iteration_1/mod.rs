@@ -34,7 +34,10 @@ pub mod components;
 /// does fluid mechanics calculations through each branch
 pub mod thermal_hydraulics_calculations;
 
+/// parasitic heat loss calibrations
+pub mod parasitic_heat_loss_calibration;
 
 /// contains code for first round of calibration testing
 pub mod calibration_v1;
+
 
