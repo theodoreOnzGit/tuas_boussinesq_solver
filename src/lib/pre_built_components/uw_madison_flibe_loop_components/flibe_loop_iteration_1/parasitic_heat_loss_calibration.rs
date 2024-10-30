@@ -423,7 +423,9 @@ pub fn calibrate_uw_madison_parasitic_heat_loss_fixed_flowrate(
     // for postprocessing 
         
     let ((mut tc_21_estimate,mut tc_24_estimate,mut tc_35_estimate),
-    (mut tc_11_estimate,mut tc_14_estimate));
+    (mut tc_11_estimate,mut tc_14_estimate)) = 
+        ((initial_temperature,initial_temperature,initial_temperature),
+        (initial_temperature,initial_temperature));
 
     // calculation loop
     while current_simulation_time < max_simulation_time {
