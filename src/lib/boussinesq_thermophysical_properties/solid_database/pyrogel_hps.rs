@@ -83,8 +83,8 @@ pub fn pryogel_hps_specific_heat_capacity_rough_estimate(
     range_check(
         &Material::Solid(SolidMaterial::PyrogelHPS),
         temperature, 
-        ThermodynamicTemperature::new::<degree_celsius>(10.0), 
-        ThermodynamicTemperature::new::<degree_celsius>(650.0)).unwrap();
+        ThermodynamicTemperature::new::<degree_celsius>(650.0), 
+        ThermodynamicTemperature::new::<degree_celsius>(10.0)).unwrap();
 
 
     // probably want to not use splines all the time as well, can 
