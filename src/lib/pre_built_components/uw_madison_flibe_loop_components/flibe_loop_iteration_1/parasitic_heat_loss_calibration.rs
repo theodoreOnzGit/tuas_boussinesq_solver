@@ -335,7 +335,15 @@ pub fn parasitic_heat_loss_calibration_dry_run_1(){
 /// - temperature interval changed from 80C to 50C, this is based on table A9 rather than CIET
 /// temperature differences (318s has low temperature)
 /// - reduced controller gain from 1.75 to 0.75 (low temp around 321 s)
+/// - increased timestep from 0.1 to 0.5, the timestep didn't seem to 
+/// affect the simulation time wherein there was a low temperature 
+/// much (low temp at around 321s simulation time)
+/// - Integral, reset time, or frequency changed to a lower time, from 1s to 5s
+/// (low temp at 456s)
 ///
+/// It seems controller tuning is the answer to stabilise this simulation 
+/// as the simulation time wherein the low temp was gotten was at 456s now.
+/// 
 ///
 #[cfg(test)]
 pub fn calibrate_uw_madison_parasitic_heat_loss_fixed_flowrate(
@@ -427,7 +435,7 @@ pub fn calibrate_uw_madison_parasitic_heat_loss_fixed_flowrate(
 
     // PID controller settings
     let controller_gain = Ratio::new::<ratio>(0.75);
-    let integral_time: Time = controller_gain / Frequency::new::<hertz>(1.0);
+    let integral_time: Time = Time::new::<second>(15.0);
     let derivative_time: Time = Time::new::<second>(1.0);
     // derivative time ratio
     let alpha: Ratio = Ratio::new::<ratio>(1.0);
