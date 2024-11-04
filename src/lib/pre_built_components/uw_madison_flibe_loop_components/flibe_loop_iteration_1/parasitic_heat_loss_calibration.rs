@@ -454,11 +454,14 @@ pub fn calibrate_uw_madison_parasitic_heat_loss_fixed_flowrate(
     // derivative time ratio
     let alpha: Ratio = Ratio::new::<ratio>(1.0);
 
-    let mut pid_controller: AnalogController = 
+    let mut pid_controller_top_cross: AnalogController = 
         AnalogController::new_filtered_pid_controller(controller_gain,
             integral_time,
             derivative_time,
             alpha).unwrap();
+
+    let mut pid_controller_downcomer: AnalogController = 
+        pid_controller_top_cross.clone();
 
     // we also have a measurement delay of 0.0001 s 
     // or 0.1 ms
@@ -526,7 +529,7 @@ pub fn calibrate_uw_madison_parasitic_heat_loss_fixed_flowrate(
             // let's get the output 
 
             let dimensionless_heat_trf_input: Ratio
-                = pid_controller.set_user_input_and_calc(
+                = pid_controller_top_cross.set_user_input_and_calc(
                     nondimensional_error, 
                     current_simulation_time).unwrap();
             let mut top_cross_heat_trf_output = 
@@ -546,6 +549,7 @@ pub fn calibrate_uw_madison_parasitic_heat_loss_fixed_flowrate(
             top_cross_heat_trf_output
         };
 
+        // downcomer bit
         let cold_leg_vertical_heat_transfer_coeff = 
         { 
             // first, calculate the set point error 
@@ -563,7 +567,7 @@ pub fn calibrate_uw_madison_parasitic_heat_loss_fixed_flowrate(
             // let's get the output 
 
             let dimensionless_heat_trf_input: Ratio
-                = pid_controller.set_user_input_and_calc(
+                = pid_controller_downcomer.set_user_input_and_calc(
                     nondimensional_error, 
                     current_simulation_time).unwrap();
             let mut downcomer_heat_trf_output = 
