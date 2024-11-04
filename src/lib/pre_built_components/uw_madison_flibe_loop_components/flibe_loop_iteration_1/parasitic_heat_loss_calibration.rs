@@ -336,7 +336,8 @@ pub fn parasitic_heat_loss_calibration_dry_run_1(){
 /// temperature differences (318s has low temperature)
 /// - reduced controller gain from 1.75 to 0.75 (low temp around 321 s)
 /// - increased timestep from 0.1 to 0.5, the timestep didn't seem to 
-/// affect the simulation time wherein there was a low temperature 
+/// affect the simulation time wherein there was a low temperature,
+/// but i also changed it back to 0.1s after
 /// much (low temp at around 321s simulation time)
 /// - Integral, reset time, or frequency changed to a lower time, from 1s to 5s
 /// (low temp at 456s)
@@ -344,6 +345,11 @@ pub fn parasitic_heat_loss_calibration_dry_run_1(){
 /// It seems controller tuning is the answer to stabilise this simulation 
 /// as the simulation time wherein the low temp was gotten was at 456s now.
 /// 
+/// Last changes:
+/// - Integral, reset time, or frequency changed to a lower time, from 5s to 15s
+/// (low temp at 456s), all 4000s of simulations now completed
+/// - increased timestep from 0.1 to 0.5, the timestep didn't seem to 
+/// affect the simulation time wherein there was a low temperature,
 ///
 #[cfg(test)]
 pub fn calibrate_uw_madison_parasitic_heat_loss_fixed_flowrate(
@@ -376,7 +382,7 @@ pub fn calibrate_uw_madison_parasitic_heat_loss_fixed_flowrate(
     use chem_eng_real_time_process_control_simulator::alpha_nightly::controllers::ProportionalController;
     use chem_eng_real_time_process_control_simulator::alpha_nightly::controllers::AnalogController;
 
-    let timestep = Time::new::<second>(0.1);
+    let timestep = Time::new::<second>(0.5);
     let input_power_per_heater = Power::new::<watt>(individual_heater_power_watts);
     let input_power_per_two_heaters = input_power_per_heater * 2.0;
     let mut current_simulation_time = Time::ZERO;
