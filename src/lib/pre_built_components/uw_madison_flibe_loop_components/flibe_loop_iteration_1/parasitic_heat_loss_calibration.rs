@@ -305,6 +305,38 @@ pub fn parasitic_heat_loss_calibration_dry_run_1(){
 /// note that the natural circulation flowrate is fixed in the parasitic 
 /// heat loss calibration
 /// so this is treated as if it were forced circulation
+///
+///
+/// Debug log:
+///
+/// 04 nov 2024 singapore time 11:41
+///
+/// FLiBe temperatures reaching too low (below 459C)
+///
+/// Possible reasons are that the heat transfer coefficient to surroundings 
+/// is too low, that the heat transfer coefficient as stipulated by the 
+/// controller is too high. This can cause two problems. Firstly, the time 
+/// step could be too large for a heat transfer coefficient too high. 
+/// This may cause numerical instabilities which cause the fluid 
+/// temperature to be too low. Or perhaps if the timestep was not the 
+/// issue, the controller signal oscillations may cause such a high 
+/// heat transfer coefficient during the oscillations that causes this 
+/// issue.
+///
+/// If controller oscillations were the issue, I'm going to reduce controller 
+/// gain. Or reduce the heat transfer coefficient scaling from 40 W/(m^2 K) 
+/// to something lower. Maybe 10 W/(m^2 K). This is because less heat transfer 
+/// coefficient is required in the FLiBe loop case, as the temperature differential 
+/// is much greater here than in Dowtherm A.
+///
+/// Changelog:
+/// - reduced heat trf coeff scaling from 40 to 10 (low temp at 351 s)
+/// - reduced timestep from 0.5 to 0.1 (low temp at around 320s simulation time)
+/// - temperature interval changed from 80C to 50C, this is based on table A9 rather than CIET
+/// temperature differences (318s has low temperature)
+/// - reduced controller gain from 1.75 to 0.75 (low temp around 321 s)
+///
+///
 #[cfg(test)]
 pub fn calibrate_uw_madison_parasitic_heat_loss_fixed_flowrate(
     tc_11_degc: f64,
@@ -336,7 +368,7 @@ pub fn calibrate_uw_madison_parasitic_heat_loss_fixed_flowrate(
     use chem_eng_real_time_process_control_simulator::alpha_nightly::controllers::ProportionalController;
     use chem_eng_real_time_process_control_simulator::alpha_nightly::controllers::AnalogController;
 
-    let timestep = Time::new::<second>(0.5);
+    let timestep = Time::new::<second>(0.1);
     let input_power_per_heater = Power::new::<watt>(individual_heater_power_watts);
     let input_power_per_two_heaters = input_power_per_heater * 2.0;
     let mut current_simulation_time = Time::ZERO;
@@ -387,18 +419,14 @@ pub fn calibrate_uw_madison_parasitic_heat_loss_fixed_flowrate(
 
 
     let reference_cooler_htc = 
-        HeatTransfer::new::<watt_per_square_meter_kelvin>(40.0);
+        HeatTransfer::new::<watt_per_square_meter_kelvin>(10.0);
     let average_temperature_for_density_calcs = 
         ThermodynamicTemperature::new::<degree_celsius>(
             0.5*(tc_21_degc+tc_35_degc));
 
 
     // PID controller settings
-    // for version 5, controller settings are 
-    // altered from version 4, to introduce more stability for set b9
-    //
-    // setting controller gain to 1.55 and 1.0 didn't work, still unstable
-    let controller_gain = Ratio::new::<ratio>(1.75);
+    let controller_gain = Ratio::new::<ratio>(0.75);
     let integral_time: Time = controller_gain / Frequency::new::<hertz>(1.0);
     let derivative_time: Time = Time::new::<second>(1.0);
     // derivative time ratio
@@ -463,7 +491,7 @@ pub fn calibrate_uw_madison_parasitic_heat_loss_fixed_flowrate(
         {
             // first, calculate the set point error 
 
-            let reference_temperature_interval_deg_celsius = 80.0;
+            let reference_temperature_interval_deg_celsius = 50.0;
 
             // error = y_sp - y_measured
             let set_point_abs_error_deg_celsius = 
