@@ -250,6 +250,8 @@ pub fn parasitic_heat_loss_calibration_dry_run_1(){
 
     let max_time_seconds = 2000.0;
     let regression_temperature_tolerance_kelvin = 0.4;
+    let (bottom_cross_insulation_thickness_cm, 
+        riser_insulation_thickness_cm) = (0.17,0.05);
 
     calibrate_uw_madison_parasitic_heat_loss_fixed_flowrate(
         tc_11_degc, 
@@ -262,7 +264,9 @@ pub fn parasitic_heat_loss_calibration_dry_run_1(){
         individual_heater_power_watts, 
         flibe_mass_flowrate_kg_per_s, 
         max_time_seconds,
-        regression_temperature_tolerance_kelvin);
+        regression_temperature_tolerance_kelvin,
+        bottom_cross_insulation_thickness_cm,
+        riser_insulation_thickness_cm);
 }
 
 /// calibrates parasitic heat losses for the heater given a fixed flowrate 
@@ -376,7 +380,7 @@ pub fn parasitic_heat_loss_calibration_dry_run_1(){
 ///
 #[cfg(test)]
 pub fn calibrate_uw_madison_parasitic_heat_loss_fixed_flowrate(
-    tc_11_degc: f64,
+    tc_11_degc_expt: f64,
     tc_12_degc: f64,
     tc_14_degc_expt: f64,
     tc_21_degc_expt: f64,
@@ -386,8 +390,11 @@ pub fn calibrate_uw_madison_parasitic_heat_loss_fixed_flowrate(
     individual_heater_power_watts: f64,
     flibe_mass_flowrate_kg_per_s: f64,
     max_time_seconds: f64,
-    regression_temperature_tolerance_kelvin: f64,){
+    regression_temperature_tolerance_kelvin: f64,
+    bottom_cross_insulation_thickness_cm: f64,
+    riser_insulation_thickness_cm: f64){
 
+    use uom::si::length::centimeter;
     use uom::si::{f64::*, mass_rate::kilogram_per_second, power::watt};
 
     use uom::si::{ratio::ratio, time::millisecond};
@@ -428,7 +435,7 @@ pub fn calibrate_uw_madison_parasitic_heat_loss_fixed_flowrate(
     // horizontal-ish heater (bottom cross) exit temp 
     let _bottom_cross_exit_temp_expt = 
         ThermodynamicTemperature::new::<degree_celsius>(
-            tc_11_degc);
+            tc_11_degc_expt);
 
     // vertical heater (riser) exit temp
     let _riser_exit_temp_expt = 
@@ -443,6 +450,12 @@ pub fn calibrate_uw_madison_parasitic_heat_loss_fixed_flowrate(
     let _top_cross_entrance_temp_expt = 
         ThermodynamicTemperature::new::<degree_celsius>(
             tc_21_degc_expt);
+
+    // heater insulation thickness 
+    let bottom_cross_insulation_thickness = 
+        Length::new::<centimeter>(bottom_cross_insulation_thickness_cm);
+    let riser_insulation_thickness = 
+        Length::new::<centimeter>(riser_insulation_thickness_cm);
 
     // other settings
     let (mass_flowrate_clockwise, 
@@ -506,10 +519,10 @@ pub fn calibrate_uw_madison_parasitic_heat_loss_fixed_flowrate(
     let mut pipe_10 = new_uw_flibe_pipe_10(initial_temperature);
 
     // hot leg 
-    let mut pipe_11 = new_uw_flibe_pipe_11(initial_temperature);
+    let mut pipe_11_bottom_cross_heater = new_uw_flibe_pipe_11_bottom_cross_heater(initial_temperature);
     let mut pipe_12 = new_uw_flibe_pipe_12(initial_temperature);
     let mut pipe_13 = new_uw_flibe_pipe_13(initial_temperature);
-    let mut pipe_1 = new_uw_flibe_pipe_1(initial_temperature);
+    let mut pipe_1_riser_heater = new_uw_flibe_pipe_1_riser_heater(initial_temperature);
 
     let ambient_htc = HeatTransfer::new::<watt_per_square_meter_kelvin>(20.0);
 
@@ -602,14 +615,20 @@ pub fn calibrate_uw_madison_parasitic_heat_loss_fixed_flowrate(
             downcomer_heat_trf_output
 
         };
+
+        // adjust cooler heat transfer coeff
+
         top_cross_heat_transfer_coeff = cold_leg_diagonal_heat_transfer_coeff;
         downcomer_heat_transfer_coeff = cold_leg_vertical_heat_transfer_coeff;
 
+        // adjust parasitic heat losses 
 
+        pipe_1_riser_heater.calibrate_insulation_thickness(
+            riser_insulation_thickness);
+        pipe_11_bottom_cross_heater.calibrate_insulation_thickness(
+            bottom_cross_insulation_thickness);
 
         // link up the heat transfer entities 
-
-        
 
         uw_madison_flibe_loop_link_up_components(
             mass_flowrate_clockwise, 
@@ -619,7 +638,7 @@ pub fn calibrate_uw_madison_parasitic_heat_loss_fixed_flowrate(
             cold_leg_vertical_heat_transfer_coeff, 
             average_temperature_for_density_calcs, 
             ambient_htc, 
-            &mut pipe_1, 
+            &mut pipe_1_riser_heater, 
             &mut pipe_2, 
             &mut pipe_3, 
             &mut pipe_4, 
@@ -629,13 +648,13 @@ pub fn calibrate_uw_madison_parasitic_heat_loss_fixed_flowrate(
             &mut pipe_8, 
             &mut pipe_9, 
             &mut pipe_10, 
-            &mut pipe_11, 
+            &mut pipe_11_bottom_cross_heater, 
             &mut pipe_12, 
             &mut pipe_13);
 
         uw_madison_flibe_loop_advance_timestep(
             timestep, 
-            &mut pipe_1, 
+            &mut pipe_1_riser_heater, 
             &mut pipe_2, 
             &mut pipe_3, 
             &mut pipe_4, 
@@ -645,14 +664,14 @@ pub fn calibrate_uw_madison_parasitic_heat_loss_fixed_flowrate(
             &mut pipe_8, 
             &mut pipe_9, 
             &mut pipe_10, 
-            &mut pipe_11, 
+            &mut pipe_11_bottom_cross_heater, 
             &mut pipe_12, 
             &mut pipe_13);
 
         let print_debug_results_settings = true;
         ((tc_21_estimate,tc_24_estimate,tc_35_estimate),(tc_11_estimate,tc_14_estimate))
             = uw_madison_flibe_loop_iteration_1_temperature_diagnostics(
-                &mut pipe_1, 
+                &mut pipe_1_riser_heater, 
                 &mut pipe_2, 
                 &mut pipe_3, 
                 &mut pipe_4, 
@@ -662,7 +681,7 @@ pub fn calibrate_uw_madison_parasitic_heat_loss_fixed_flowrate(
                 &mut pipe_8, 
                 &mut pipe_9, 
                 &mut pipe_10, 
-                &mut pipe_11, 
+                &mut pipe_11_bottom_cross_heater, 
                 &mut pipe_12, 
                 &mut pipe_13,
                 print_debug_results_settings);
@@ -702,6 +721,18 @@ pub fn calibrate_uw_madison_parasitic_heat_loss_fixed_flowrate(
         tc_35_degc_expt,
         epsilon=regression_temperature_tolerance_kelvin);
 
+    // assert heater exit temperatures
+    //
+    approx::assert_abs_diff_eq!(
+        riser_entrance_tc_11_simulated_degc,
+        tc_11_degc_expt,
+        epsilon=regression_temperature_tolerance_kelvin);
+
+    approx::assert_abs_diff_eq!(
+        riser_exit_tc_14_simulated_degc,
+        tc_14_degc_expt,
+        epsilon=regression_temperature_tolerance_kelvin);
+
     // assert other temperatures around the loop
 
     approx::assert_abs_diff_eq!(
@@ -709,15 +740,7 @@ pub fn calibrate_uw_madison_parasitic_heat_loss_fixed_flowrate(
         tc_21_degc_expt,
         epsilon=regression_temperature_tolerance_kelvin);
 
-    approx::assert_abs_diff_eq!(
-        bottom_cross_entrance_tc_35_simulated_degc,
-        tc_35_degc_expt,
-        epsilon=regression_temperature_tolerance_kelvin);
 
-    approx::assert_abs_diff_eq!(
-        riser_exit_tc_14_simulated_degc,
-        tc_14_degc_expt,
-        epsilon=regression_temperature_tolerance_kelvin);
 
 }
 

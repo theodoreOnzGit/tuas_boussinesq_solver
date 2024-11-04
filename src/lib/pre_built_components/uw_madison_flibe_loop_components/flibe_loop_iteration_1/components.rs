@@ -15,7 +15,7 @@ use crate::pre_built_components::non_insulated_fluid_components::NonInsulatedFlu
 
 /// university of wisconsin madison flibe pipe 1
 /// this is the riser or vertical heater
-pub fn new_uw_flibe_pipe_1(initial_temperature: ThermodynamicTemperature) -> InsulatedFluidComponent {
+pub fn new_uw_flibe_pipe_1_riser_heater(initial_temperature: ThermodynamicTemperature) -> InsulatedFluidComponent {
 
 
     let shell_od = Length::new::<inch>(1.0);
@@ -571,7 +571,7 @@ pub fn new_uw_flibe_pipe_10(initial_temperature: ThermodynamicTemperature) -> In
 
 
 /// hot leg horizontal ish (diagonal) in iteration 1 (see fig A.16)
-pub fn new_uw_flibe_pipe_11(initial_temperature: ThermodynamicTemperature) -> InsulatedFluidComponent {
+pub fn new_uw_flibe_pipe_11_bottom_cross_heater(initial_temperature: ThermodynamicTemperature) -> InsulatedFluidComponent {
 
 
     let shell_od = Length::new::<inch>(1.0);
