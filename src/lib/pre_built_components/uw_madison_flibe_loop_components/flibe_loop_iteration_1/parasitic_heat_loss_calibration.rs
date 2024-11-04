@@ -249,6 +249,7 @@ pub fn parasitic_heat_loss_calibration_dry_run_1(){
         (952.0,2.75,0.0162575849026945,2000.0,2386.0,2288.64525709192);
 
     let max_time_seconds = 4000.0;
+    let regression_temperature_tolerance_kelvin = 0.05;
 
     calibrate_uw_madison_parasitic_heat_loss_fixed_flowrate(
         tc_11_degc, 
@@ -260,7 +261,8 @@ pub fn parasitic_heat_loss_calibration_dry_run_1(){
         tc_35_degc, 
         individual_heater_power_watts, 
         flibe_mass_flowrate_kg_per_s, 
-        max_time_seconds);
+        max_time_seconds,
+        regression_temperature_tolerance_kelvin);
 }
 
 /// calibrates parasitic heat losses for the heater given a fixed flowrate 
@@ -345,29 +347,35 @@ pub fn parasitic_heat_loss_calibration_dry_run_1(){
 /// It seems controller tuning is the answer to stabilise this simulation 
 /// as the simulation time wherein the low temp was gotten was at 456s now.
 /// 
-/// Last changes:
+/// Last changes for stability:
 /// - Integral, reset time, or frequency changed to a lower time, from 5s to 15s
 /// (low temp at 456s), all 4000s of simulations now completed
 /// - increased timestep from 0.1 to 0.5, the timestep didn't seem to 
 /// affect the simulation time wherein there was a low temperature,
 ///
+/// Changes for simulation speedup, and others:
+/// - increase controller gain from 0.75 to 1.75
+/// - needed to change the controller to use the correct set point
+///
+///
+///
 #[cfg(test)]
 pub fn calibrate_uw_madison_parasitic_heat_loss_fixed_flowrate(
     tc_11_degc: f64,
     tc_12_degc: f64,
-    tc_14_degc: f64,
-    tc_21_degc: f64,
-    tc_24_degc: f64,
+    tc_14_degc_expt: f64,
+    tc_21_degc_expt: f64,
+    tc_24_degc_expt: f64,
     tc_32_degc: f64,
-    tc_35_degc: f64,
+    tc_35_degc_expt: f64,
     individual_heater_power_watts: f64,
     flibe_mass_flowrate_kg_per_s: f64,
-    max_time_seconds: f64){
+    max_time_seconds: f64,
+    regression_temperature_tolerance_kelvin: f64,){
 
-    use uom::si::length::centimeter;
     use uom::si::{f64::*, mass_rate::kilogram_per_second, power::watt};
 
-    use uom::si::{frequency::hertz, ratio::ratio, time::millisecond};
+    use uom::si::{ratio::ratio, time::millisecond};
 
     use crate::heat_transfer_correlations::nusselt_number_correlations::enums::NusseltCorrelation;
     use crate::pre_built_components::uw_madison_flibe_loop_components::flibe_loop_iteration_1::components::*;
@@ -391,35 +399,35 @@ pub fn calibrate_uw_madison_parasitic_heat_loss_fixed_flowrate(
     // horizontal-ish cooler (top cross) exit temp
     let top_cross_exit_temp_set_point = 
         ThermodynamicTemperature::new::<degree_celsius>(
-            tc_24_degc);
+            tc_24_degc_expt);
 
     // vertical cooler (downcomer) exit temp
     let downcomer_exit_temp_set_point = 
         ThermodynamicTemperature::new::<degree_celsius>(
-            tc_35_degc);
+            tc_35_degc_expt);
 
-    let downcomer_rough_midpoint_temp_expt = 
+    let _downcomer_rough_midpoint_temp_expt = 
         ThermodynamicTemperature::new::<degree_celsius>(
             tc_32_degc);
 
     // horizontal-ish heater (bottom cross) exit temp 
-    let bottom_cross_exit_temp_expt = 
+    let _bottom_cross_exit_temp_expt = 
         ThermodynamicTemperature::new::<degree_celsius>(
             tc_11_degc);
 
     // vertical heater (riser) exit temp
-    let riser_exit_temp_expt = 
+    let _riser_exit_temp_expt = 
         ThermodynamicTemperature::new::<degree_celsius>(
-            tc_14_degc);
+            tc_14_degc_expt);
 
-    let riser_midpoint_temp_expt = 
+    let _riser_midpoint_temp_expt = 
         ThermodynamicTemperature::new::<degree_celsius>(
             tc_12_degc);
 
     // horizontal-ish cooler (top cross) entrance temp
-    let top_cross_entrance_temp_expt = 
+    let _top_cross_entrance_temp_expt = 
         ThermodynamicTemperature::new::<degree_celsius>(
-            tc_21_degc);
+            tc_21_degc_expt);
 
     // other settings
     let (mass_flowrate_clockwise, 
@@ -436,11 +444,11 @@ pub fn calibrate_uw_madison_parasitic_heat_loss_fixed_flowrate(
         HeatTransfer::new::<watt_per_square_meter_kelvin>(10.0);
     let average_temperature_for_density_calcs = 
         ThermodynamicTemperature::new::<degree_celsius>(
-            0.5*(tc_21_degc+tc_35_degc));
+            0.5*(tc_21_degc_expt+tc_35_degc_expt));
 
 
     // PID controller settings
-    let controller_gain = Ratio::new::<ratio>(0.75);
+    let controller_gain = Ratio::new::<ratio>(1.75);
     let integral_time: Time = Time::new::<second>(15.0);
     let derivative_time: Time = Time::new::<second>(1.0);
     // derivative time ratio
@@ -509,7 +517,7 @@ pub fn calibrate_uw_madison_parasitic_heat_loss_fixed_flowrate(
 
             // error = y_sp - y_measured
             let set_point_abs_error_deg_celsius = 
-                - downcomer_exit_temp_set_point.get::<kelvin>()
+                - top_cross_exit_temp_set_point.get::<kelvin>()
                 + tc_24_estimate.get::<kelvin>();
 
             let nondimensional_error: Ratio = 
@@ -664,7 +672,34 @@ pub fn calibrate_uw_madison_parasitic_heat_loss_fixed_flowrate(
     dbg!(&(top_cross_heat_transfer_coeff,
             downcomer_heat_transfer_coeff));
 
-    todo!();
+    // assert set points equal to experimental data to within some tolerance
+    approx::assert_abs_diff_eq!(
+        top_cross_exit_tc_24_simulated_degc,
+        tc_24_degc_expt,
+        epsilon=regression_temperature_tolerance_kelvin);
+
+    approx::assert_abs_diff_eq!(
+        bottom_cross_entrance_tc_35_simulated_degc,
+        tc_35_degc_expt,
+        epsilon=regression_temperature_tolerance_kelvin);
+
+    // assert other temperatures around the loop
+
+    approx::assert_abs_diff_eq!(
+        top_cross_entrance_tc_21_simulated_degc,
+        tc_21_degc_expt,
+        epsilon=regression_temperature_tolerance_kelvin);
+
+    approx::assert_abs_diff_eq!(
+        bottom_cross_entrance_tc_35_simulated_degc,
+        tc_35_degc_expt,
+        epsilon=regression_temperature_tolerance_kelvin);
+
+    approx::assert_abs_diff_eq!(
+        riser_exit_tc_14_simulated_degc,
+        tc_14_degc_expt,
+        epsilon=regression_temperature_tolerance_kelvin);
+
 }
 
 
