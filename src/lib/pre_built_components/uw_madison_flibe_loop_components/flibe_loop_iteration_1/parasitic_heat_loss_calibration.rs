@@ -362,6 +362,15 @@ pub fn parasitic_heat_loss_calibration_dry_run_1(){
 /// - temperature tolerance now set to 0.4 K, 
 /// - so at 4000s, the top cross and downcomer set points agree to within 0.4 K
 /// - max time now 2000s, the top cross and downcomer set points agree to within 0.4 K
+/// - attempted changing timestep to 1.5s and 1.0s, resulting temperatures too low, not 
+/// changing timestep
+///
+///
+/// I saw that the downcomer heat transfer coeff was 5 W/(m^2 K) so I was quite 
+/// concerned that since this is the lowest allowed heat transfer coeffcient,
+/// something was not functioning correctly
+/// - changing back to 4000s does not appreciably change heat transfer coeff,
+/// coeffs on top cross or downcomer sections, so 2000s is sufficient.
 ///
 ///
 ///
