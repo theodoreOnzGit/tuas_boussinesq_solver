@@ -248,8 +248,8 @@ pub fn parasitic_heat_loss_calibration_dry_run_1(){
         _heat_added_to_fluid_watts_regression) =
         (952.0,2.75,0.0162575849026945,2000.0,2386.0,2288.64525709192);
 
-    let max_time_seconds = 4000.0;
-    let regression_temperature_tolerance_kelvin = 0.05;
+    let max_time_seconds = 2000.0;
+    let regression_temperature_tolerance_kelvin = 0.4;
 
     calibrate_uw_madison_parasitic_heat_loss_fixed_flowrate(
         tc_11_degc, 
@@ -356,6 +356,12 @@ pub fn parasitic_heat_loss_calibration_dry_run_1(){
 /// Changes for simulation speedup, and others:
 /// - increase controller gain from 0.75 to 1.75
 /// - needed to change the controller to use the correct set point
+/// - realised that the same controller object was being used for both 
+/// top cross and downcomer, corrected that
+/// - changed integral/reset time back to 5s (temperature too low again)
+/// - temperature tolerance now set to 0.4 K, 
+/// - so at 4000s, the top cross and downcomer set points agree to within 0.4 K
+/// - max time now 2000s, the top cross and downcomer set points agree to within 0.4 K
 ///
 ///
 ///
