@@ -406,6 +406,24 @@ pub fn parasitic_heat_loss_calibration_dry_run_1(){
 /// resistance models may be good for this aspect of modelling radiative 
 /// heat transfer.
 ///
+///
+/// For radiation heat transfer, it is likely that view factors are 
+/// important. Now, I can do some view factor calculations or even 
+/// empirically calibrate things.
+///
+/// Basically, model 
+/// RHT as 
+/// heating element to the pipe surface, via thermal resistor and view factor
+/// heating element to surroundigns via thermal resistor and view factor
+/// heating element to other surface, ie (between TC14 and 21) via thermal resistor and view factor 
+///
+/// Dimensions may be complex and hard to replicate. So perhaps model 
+/// calibration is important here.
+///
+/// By view factor algebra, the area times sum of all view factors adds up to one.
+/// Basically, the radiative heater should be modelled as a component
+/// 
+///
 #[cfg(test)]
 pub fn calibrate_uw_madison_parasitic_heat_loss_fixed_flowrate(
     tc_11_degc_expt: f64,
