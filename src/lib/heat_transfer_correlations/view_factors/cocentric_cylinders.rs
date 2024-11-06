@@ -133,3 +133,45 @@ pub fn outer_cylinder_to_inner_cylinder_view_factor(
 
 
 }
+
+
+/// outer cylinder to annular end ring (enclosing space between 
+/// coaxial cylinders)
+///
+///
+/// terms:
+/// r_1 = inner_radius
+/// r_2 = outer_radius
+///
+/// H = cylinder_height/r_2 
+/// R = r_1/r_2
+///
+/// X = sqrt(1-R^2)
+/// Y = (R(1 - R^2 - H^2))/(1 - R^2 + H^2)
+pub fn outer_cylinder_to_annular_end_ring(
+    inner_diameter: Length,
+    outer_diameter: Length,
+    cylinder_height: Length) -> Ratio {
+
+    // R = r_1/r_2
+    let ratio_r: Ratio = inner_diameter/outer_diameter;
+    let r_2: Length = 0.5 * outer_diameter;
+    // H = cylinder_height/r_2 
+    let ratio_h: Ratio = cylinder_height/r_2;
+
+    let r_value: f64 = ratio_r.into();
+    let h_value: f64 = ratio_h.into();
+
+    let r_sq = r_value.powf(2.0);
+    let h_sq = h_value.powf(2.0);
+    let one_over_r = r_value.recip();
+    let one_over_h = h_value.recip();
+
+    let x_value = (1.0 - r_sq).sqrt();
+    let y_value = r_value * (1.0 - r_sq - h_sq)/(1.0 - r_sq + h_sq);
+
+
+    todo!();
+
+
+}
