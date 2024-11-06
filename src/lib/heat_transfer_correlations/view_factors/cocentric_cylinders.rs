@@ -148,7 +148,26 @@ pub fn outer_cylinder_to_inner_cylinder_view_factor(
 ///
 /// X = sqrt(1-R^2)
 /// Y = (R(1 - R^2 - H^2))/(1 - R^2 + H^2)
-pub fn outer_cylinder_to_annular_end_ring(
+///
+/// F_(1-2) = 1/PI * (A + B + C - D + E)
+///
+///
+/// A =  R (atan(X/H) -  atan(2X/H))
+///
+/// B = H/4 * ( asin(2R^2 - 1) - asin (R))
+///
+/// C = X^2/(4 H) * (PI/2 + asin(R))
+///
+/// D = d1 * d2 
+///
+/// d1 = sqrt( (1 + R^2 + H^2)^2 -  4 R^2) / (4H)
+/// d2 = PI/2 + asin(Y)
+///
+/// E = e1 * e2 
+///
+/// e1 = sqrt (4 + H^2)/4 
+/// e2 = PI/2 + asin(1 -  2 R^2 H^2 / (4 X^2 + H^2))
+pub fn outer_cylinder_to_annular_end_ring_view_factor(
     inner_diameter: Length,
     outer_diameter: Length,
     cylinder_height: Length) -> Ratio {
@@ -162,16 +181,95 @@ pub fn outer_cylinder_to_annular_end_ring(
     let r_value: f64 = ratio_r.into();
     let h_value: f64 = ratio_h.into();
 
+    // square and inverse values
     let r_sq = r_value.powf(2.0);
     let h_sq = h_value.powf(2.0);
-    let one_over_r = r_value.recip();
     let one_over_h = h_value.recip();
 
+    // x and y
     let x_value = (1.0 - r_sq).sqrt();
     let y_value = r_value * (1.0 - r_sq - h_sq)/(1.0 - r_sq + h_sq);
 
+    // common ratios 
+    let x_by_h = x_value/h_value;
+    let x_sq = x_value.powf(2.0);
 
-    todo!();
 
+    // factors
+    // A =  R (atan(X/H) -  atan(2X/H))
+
+    let a = r_value * (x_by_h.atan() - (2.0 * x_by_h).atan());
+
+    // B = H/4 * ( asin(2R^2 - 1) - asin (R))
+    
+    let b = h_value * 0.25 * ((2.0 * r_sq - 1.0).asin() - r_value.asin());
+
+    // C = X^2/(4 H) * (PI/2 + asin(R))
+
+    let c = x_sq * 0.25 * one_over_h * (0.5 * PI + r_value.asin());
+
+    // D = d1 * d2 
+    //
+    // d1 = sqrt (1 + R^2 + H^2)^2 -  4 R^2) / (4H)
+    // d2 = PI/2 + asin(Y)
+    let d1 = ((1.0 + r_sq + h_sq).powf(2.0) - 4.0 * r_sq).sqrt() * 
+        0.25 * one_over_h;
+
+    let d2 = 0.5 * PI + y_value.asin();
+
+    let d = d1 * d2;
+
+    //
+    // E = e1 * e2 
+    //
+    // e1 = sqrt (4 + H^2)/4 
+    // e2 = PI/2 + asin(1 -  2 R^2 H^2 / (4 X^2 + H^2))
+
+    let e1 = (4.0 + h_sq).sqrt() * 0.25;
+
+    let e2 = 0.5 * PI + (1.0 - 2.0 * r_sq * h_sq /(4.0 * x_sq + h_sq)).asin();
+    let e_value = e1 * e2 ;
+
+
+    // F_(1-2) = 1/PI * (A + B + C - D + E)
+    let view_factor_value = PI.recip() * (a + b + c - d + e_value);
+
+    return Ratio::new::<ratio>(view_factor_value);
+
+}
+
+
+#[cfg(test)]
+#[test]
+pub fn cocentric_cylinders_view_factor_shld_equal_one_for_outer_cyl(){
+    use uom::si::length::meter;
+
+
+    let inner_diameter = Length::new::<meter>(1.0);
+    let outer_diameter = Length::new::<meter>(2.0);
+
+    let cylinder_height = Length::new::<meter>(5.0);
+
+    let self_view_factor = outer_cylinder_self_view_factor(
+        inner_diameter, outer_diameter, cylinder_height);
+
+    let outer_to_inner_cyl_view_factor = 
+        outer_cylinder_to_inner_cylinder_view_factor(
+            inner_diameter, outer_diameter, cylinder_height);
+
+    let outer_cyl_to_annular_end_ring_view_factor = 
+        outer_cylinder_to_annular_end_ring_view_factor(
+            inner_diameter, outer_diameter, cylinder_height);
+
+    let total_view_factor = 
+        self_view_factor + 
+        outer_to_inner_cyl_view_factor + 
+        outer_cyl_to_annular_end_ring_view_factor;
+
+    approx::assert_relative_eq!(
+        total_view_factor.get::<ratio>(),
+        1.0,
+        max_relative = 0.0
+        );
 
 }

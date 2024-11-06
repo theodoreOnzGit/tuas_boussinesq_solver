@@ -1,4 +1,4 @@
-
+#[cfg(test)]
 /// First iteration of UW madison flibe loop given the following 
 /// best estimate parameters.
 ///
@@ -17,3 +17,35 @@
 /// [12],[hot leg bend 1],[0.0897],[130],[-0.0576580485888826],[0.0687141865477723],
 /// [13],[hot leg bend 2],[0.0697],[158],[-0.0646247146633051],[0.0261100795610891],
 pub mod flibe_loop_iteration_one;
+
+#[cfg(test)]
+/// Second iteration of UW madison flibe loop 
+///
+///
+/// compared to the first iteration, iteration number two includes 
+/// the use and simulation of radiative heat transfer heaters 
+///
+/// in component 2, the temperature of the fluid exiting pipe 2 
+/// tends to be increased comapred to the entrance temperature.
+///
+/// This implies that there is heat added in this component.
+/// Why?
+///
+/// One possible explanation is of radiative heat transfer as the 
+/// heaters of the flibe loop are clamshell radiative heat transfer 
+/// heaters. Therefore, it is inevitable that some of the heat escapes 
+/// into the surrounding. 
+///
+/// Britsch, K., Anderson, M., Brooks, P., & Sridharan, K. (2019). 
+/// Natural circulation FLiBe loop overview. International Journal 
+/// of Heat and Mass Transfer, 134, 970-983.
+///
+/// Watlow Cera- mic Fiber Semi-Cylindrical heaters has a hot face length of 61 cm
+/// (24 in.) and an internal diameter of 5 cm (2 in.). The embedded ele-
+/// ments provide proportionally-controlled power up-to 1.7 kW, on a
+/// 208 V circuit. A 2.54 cm long vestibule caps each heater to center it
+/// on the tube and limit convection losses. The heater exterior is
+/// wrapped in three layers of Pyrogel HPS insulation, which reduces
+/// surface temperatures to fairly constant 300 °C
+/// 
+pub mod flibe_loop_iteration_two;
