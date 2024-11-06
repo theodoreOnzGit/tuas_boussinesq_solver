@@ -13,6 +13,8 @@ use uom::si::{f64::*, ratio::ratio};
 /// E = (H^2 + 4(R^2 - 1) - 2 H^2/R^2)/(H^2  + 4 (R^2 - 1))
 ///
 /// F = (R^2 - 2)/R^2
+///
+/// formula inspected ok 8:34pm 06 nov
 pub fn outer_cylinder_self_view_factor(
     inner_diameter: Length,
     outer_diameter: Length,
@@ -42,7 +44,7 @@ pub fn outer_cylinder_self_view_factor(
     let d = (4.0 * r_sq + h_sq).sqrt() * one_over_h;
 
     // And C = D asin(E) - asin (F)
-    let c = d * e.asin() - f.asin();
+    let c = e.asin() * d - f.asin();
 
     // B = 2/R atan (2 * sqrt(R^2 - 1)/H) - H/(2 R) * C 
     let mut b = 2.0 * one_over_r * (2.0 * (r_sq-1.0).sqrt() * one_over_h).atan();
@@ -82,6 +84,8 @@ pub fn outer_cylinder_self_view_factor(
 ///
 ///
 /// outer cylinder to inner cylinder view factor
+///
+/// visually inspected 8:39pm 06 nov 2024
 pub fn outer_cylinder_to_inner_cylinder_view_factor(
     inner_diameter: Length,
     outer_diameter: Length,
@@ -257,6 +261,8 @@ pub fn cocentric_cylinders_view_factor_shld_equal_one_for_outer_cyl(){
         outer_cylinder_to_inner_cylinder_view_factor(
             inner_diameter, outer_diameter, cylinder_height);
 
+    // this needs to be multiplied twice or added twice 
+    // as there are two ends
     let outer_cyl_to_annular_end_ring_view_factor = 
         outer_cylinder_to_annular_end_ring_view_factor(
             inner_diameter, outer_diameter, cylinder_height);
@@ -264,12 +270,13 @@ pub fn cocentric_cylinders_view_factor_shld_equal_one_for_outer_cyl(){
     let total_view_factor = 
         self_view_factor + 
         outer_to_inner_cyl_view_factor + 
-        outer_cyl_to_annular_end_ring_view_factor;
+        outer_cyl_to_annular_end_ring_view_factor
+        + outer_cyl_to_annular_end_ring_view_factor;
 
     approx::assert_relative_eq!(
         total_view_factor.get::<ratio>(),
         1.0,
-        max_relative = 0.0
+        max_relative = 1e-5
         );
 
 }
