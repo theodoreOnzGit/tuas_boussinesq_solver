@@ -242,29 +242,6 @@ pub fn outer_cylinder_to_annular_end_ring_view_factor(
 
 }
 
-/// using view factor algebra, compute inner cylinder to outer cylinder 
-/// view factor
-///
-/// A_inner (F_inner to outer) =  A_outer (F_outer to inner)
-///
-/// A_outer/A_inner = (PI D L)_outer/(PI D L)_inner
-pub fn inner_cylinder_to_outer_cylinder_view_factor(
-    inner_diameter: Length,
-    outer_diameter: Length,
-    cylinder_height: Length) -> Ratio {
-
-    let view_factor_outer_to_inner: Ratio = 
-        outer_cylinder_to_inner_cylinder_view_factor(
-            inner_diameter, 
-            outer_diameter, 
-            cylinder_height);
-
-    let outer_area_by_inner_area: Ratio = outer_diameter/inner_diameter;
-
-    return view_factor_outer_to_inner * outer_area_by_inner_area;
-
-
-}
 
 
 #[cfg(test)]
@@ -296,6 +273,139 @@ pub fn cocentric_cylinders_view_factor_shld_equal_one_for_outer_cyl(){
         outer_to_inner_cyl_view_factor + 
         outer_cyl_to_annular_end_ring_view_factor
         + outer_cyl_to_annular_end_ring_view_factor;
+
+    approx::assert_relative_eq!(
+        total_view_factor.get::<ratio>(),
+        1.0,
+        max_relative = 1e-5
+        );
+
+}
+
+
+/// using view factor algebra, compute inner cylinder to outer cylinder 
+/// view factor
+///
+/// A_inner (F_inner to outer) =  A_outer (F_outer to inner)
+///
+/// A_outer/A_inner = (PI D L)_outer/(PI D L)_inner
+pub fn inner_cylinder_to_outer_cylinder_view_factor(
+    inner_diameter: Length,
+    outer_diameter: Length,
+    cylinder_height: Length) -> Ratio {
+
+    let view_factor_outer_to_inner: Ratio = 
+        outer_cylinder_to_inner_cylinder_view_factor(
+            inner_diameter, 
+            outer_diameter, 
+            cylinder_height);
+
+    let outer_area_by_inner_area: Ratio = outer_diameter/inner_diameter;
+
+    return view_factor_outer_to_inner * outer_area_by_inner_area;
+
+
+}
+
+/// inner surface cylinder to annular end 
+///
+///
+/// F(1-2) = V + 1/(2 pi) * [W - X * Y - Z]
+///
+/// V = B/(8RL)
+///
+/// W = acos(A/B)
+///
+/// X = 1/(2L) sqrt( (A+2)^2/R^2 - 4)
+///
+/// Y = acos( A * R / B)
+///
+/// Z = A/(2 R L) * asin(R)
+///
+///
+/// F(1-2) A1 = F(2-1) A2
+///
+///
+pub fn inner_cylinder_to_annular_end_ring_view_factor(
+    inner_diameter: Length,
+    outer_diameter: Length,
+    cylinder_height: Length) -> Ratio {
+
+    // R = r_1/r_2
+    let ratio_r: Ratio = inner_diameter/outer_diameter;
+    let r_2: Length = 0.5 * outer_diameter;
+    // H = cylinder_height/r_2 
+    let ratio_l: Ratio = cylinder_height/r_2;
+
+    let r_value: f64 = ratio_r.into();
+    let l_value: f64 = ratio_l.into();
+
+    // square and inverse values
+    let r_sq = r_value.powf(2.0);
+    let l_sq = l_value.powf(2.0);
+    let one_over_l = l_value.recip();
+    let one_over_r = r_value.recip();
+
+    let a: f64 = l_sq + r_sq - 1.0;
+    let b: f64 = l_sq - r_sq + 1.0;
+
+
+    // V = B/(8RL)
+
+    let v: f64 = b * 0.125 * one_over_r * one_over_l;
+    //
+    // W = acos(A/B)
+
+
+    let w = (a/b).acos();
+
+    // X = 1/(2L) sqrt( (A+2)^2/R^2 - 4)
+
+    let x = 0.5 * one_over_l * ( (a + 2.0).powf(2.0)/r_sq - 4.0 ).sqrt();
+
+    // Y = acos( A * R / B)
+
+    let y = (a * r_value/b).acos();
+
+    // Z = A/(2 R L) * asin(R)
+
+    let z = (a * 0.5 * one_over_r * one_over_l) * (r_value.asin());
+
+    let view_factor_value =  v + 1.0/(2.0 * PI) * (w - x * y - z);
+
+
+    return Ratio::new::<ratio>(view_factor_value);
+
+}
+
+
+#[cfg(test)]
+#[test]
+pub fn cocentric_cylinders_view_factor_shld_equal_one_for_inner_cyl(){
+    use uom::si::length::meter;
+
+
+    let inner_diameter = Length::new::<meter>(1.0);
+    let outer_diameter = Length::new::<meter>(2.0);
+
+    let cylinder_height = Length::new::<meter>(5.0);
+
+
+
+    let inner_to_outer_cyl_view_factor = 
+        inner_cylinder_to_outer_cylinder_view_factor(
+            inner_diameter, outer_diameter, cylinder_height);
+
+    // this needs to be multiplied twice or added twice 
+    // as there are two ends
+    let inner_cyl_to_annular_end_ring_view_factor = 
+        inner_cylinder_to_annular_end_ring_view_factor(
+            inner_diameter, outer_diameter, cylinder_height);
+
+    let total_view_factor = 
+        inner_to_outer_cyl_view_factor 
+        + inner_cyl_to_annular_end_ring_view_factor
+        + inner_cyl_to_annular_end_ring_view_factor;
 
     approx::assert_relative_eq!(
         total_view_factor.get::<ratio>(),
