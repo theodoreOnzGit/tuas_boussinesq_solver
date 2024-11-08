@@ -242,6 +242,30 @@ pub fn outer_cylinder_to_annular_end_ring_view_factor(
 
 }
 
+/// using view factor algebra, compute inner cylinder to outer cylinder 
+/// view factor
+///
+/// A_inner (F_inner to outer) =  A_outer (F_outer to inner)
+///
+/// A_outer/A_inner = (PI D L)_outer/(PI D L)_inner
+pub fn inner_cylinder_to_outer_cylinder_view_factor(
+    inner_diameter: Length,
+    outer_diameter: Length,
+    cylinder_height: Length) -> Ratio {
+
+    let view_factor_outer_to_inner: Ratio = 
+        outer_cylinder_to_inner_cylinder_view_factor(
+            inner_diameter, 
+            outer_diameter, 
+            cylinder_height);
+
+    let outer_area_by_inner_area: Ratio = outer_diameter/inner_diameter;
+
+    return view_factor_outer_to_inner * outer_area_by_inner_area;
+
+
+}
+
 
 #[cfg(test)]
 #[test]
