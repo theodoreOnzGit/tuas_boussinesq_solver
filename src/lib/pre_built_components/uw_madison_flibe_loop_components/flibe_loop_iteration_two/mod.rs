@@ -29,3 +29,12 @@
 /// the library. The actual one is Pyrogel HPS, but what I found online is 
 /// Pyrogel XT and Pyrogel HT. There are several kinds of pyrogel.
 pub mod components;
+
+/// contains code for clamshell radiative heater,
+/// based on the UW madison flibe loop
+///
+/// this is a generic heater however. 
+///
+/// Its code is based on the shell and tube heat exchanger,
+/// but adds radiative conductances based on cylindrical geometry
+pub mod clamshell_radiative_heater;
