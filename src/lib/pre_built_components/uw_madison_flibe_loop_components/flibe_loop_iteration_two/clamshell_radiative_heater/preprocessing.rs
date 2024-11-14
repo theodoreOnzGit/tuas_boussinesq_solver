@@ -502,4 +502,497 @@ impl ClamshellRadiativeHeater {
 
     }
 
+    /// obtains annular air to pipe shell (inner tube) conductance
+    ///
+    /// See diagram below:
+    /// |            |            |               |             |            |
+    /// |            |            |               |             |            |
+    /// |-tube fluid-|-inner tube-|- annular air -|-heater elem-|-insulation-| ambient
+    /// |            |            |               |             |            |
+    /// |            |            |               |             |            |
+    ///
+    /// radiation not taken into account, assumed to be non-participating 
+    /// media
+    #[inline]
+    pub fn get_annular_air_inner_tube_shell_nodal_conductance(
+        &mut self,
+        correct_prandtl_for_wall_temperatures: bool) 
+        -> Result<ThermalConductance,TuasLibError> 
+    {
+
+        // the thermal conductance here should be based on the 
+        // nusselt number correlation
+
+        // before any calculations, I will first need a clone of 
+        // the fluid array and twisted tape array
+        let mut shell_side_fluid_array_clone: FluidArray = 
+            self.annular_air_array.clone().try_into()?;
+
+        let mut pipe_shell_clone: SolidColumn = 
+            self.pipe_shell_array.clone().try_into()?;
+
+        // also need to get basic temperatures and mass flowrates 
+        // only do this once because some of these methods involve 
+        // cloning, which is computationally expensive
+
+        let shell_side_mass_flowrate: MassRate = 
+            shell_side_fluid_array_clone.get_mass_flowrate();
+
+        let fluid_temperature: ThermodynamicTemperature 
+            = shell_side_fluid_array_clone.try_get_bulk_temperature()?;
+
+        let wall_temperature: ThermodynamicTemperature 
+            = pipe_shell_clone.try_get_bulk_temperature()?;
+
+        let atmospheric_pressure = Pressure::new::<atmosphere>(1.0);
+
+        let pipe_shell_surf_temperature: ThermodynamicTemperature 
+            = pipe_shell_clone.try_get_bulk_temperature()?;
+
+        let shell_side_fluid_hydraulic_diameter = 
+            self.get_annular_air_hydraulic_diameter();
+
+        let shell_side_cross_sectional_flow_area: Area = 
+            self.get_annular_air_cross_sectional_area();
+
+
+        // flow area and hydraulic diameter are ok
+
+
+        let fluid_material: LiquidMaterial
+            = shell_side_fluid_array_clone.material_control_volume.try_into()?;
+
+        let solid_material: SolidMaterial 
+            = pipe_shell_clone.material_control_volume.try_into()?;
+
+        let viscosity: DynamicViscosity = 
+            fluid_material.try_get_dynamic_viscosity(fluid_temperature)?;
+
+        // need to convert hydraulic diameter to an equivalent 
+        // spherical diameter
+        //
+        // but for now, I'm going to use Re and Nu using hydraulic diameter 
+        // and live with it for the time being
+        //
+        let reynolds_number_shell_side: Ratio = 
+            shell_side_mass_flowrate/
+            shell_side_cross_sectional_flow_area
+            *shell_side_fluid_hydraulic_diameter / viscosity;
+
+        // the reynolds number here is used for nusselt number estimates 
+        // so I'm going to have an aboslute value of reynolds number 
+        // for nusselt estimates
+
+        let reynolds_number_abs_for_nusselt_estimate: Ratio 
+            = reynolds_number_shell_side.abs();
+        
+
+        // next, bulk prandtl number 
+
+        let bulk_prandtl_number: Ratio 
+            = fluid_material.try_get_prandtl_liquid(
+                fluid_temperature,
+                atmospheric_pressure
+            )?;
+
+
+
+        let shell_side_fluid_to_inner_tube_surf_nusselt_correlation: NusseltCorrelation
+            = self.annular_air_nusselt_correlation_to_tube;
+
+
+        // now, for gnielinski type correlations, we require the 
+        // darcy friction factor
+        //
+        // However, the darcy friction factor for other components 
+        // will come in the form:
+        //
+        // (f_darcy L/D + K)
+        //
+        // the next best thing we can get is:
+        //
+        // (f_darcy + D/L  K)
+
+        // (f_darcy L/D + K)
+        let fldk: Ratio = self
+            .annular_air_loss_correlation
+            .fldk_based_on_darcy_friction_factor(reynolds_number_abs_for_nusselt_estimate)
+            .unwrap();
+
+        let length_to_diameter: Ratio = 
+            shell_side_fluid_array_clone.get_component_length_immutable()/
+            shell_side_fluid_hydraulic_diameter;
+
+        // (f_darcy + D/L  K)
+        // then let's scale it by length to diameter 
+        let modified_darcy_friction_factor: Ratio = 
+            fldk/length_to_diameter;
+
+        // I need to use Nusselt correlations present in this struct 
+        //
+        // wall correction is optionally done here
+        //
+        // this uses the gnielinski correlation for pipes or tubes
+
+        let nusselt_estimate_shell: Ratio;
+
+        if correct_prandtl_for_wall_temperatures {
+
+            // then wall prandtl number
+            // if the number falls outside the range of correlations,
+            // then use the prandtl number at the max or min 
+
+            let mut wall_temperature_estimate = wall_temperature;
+
+            if wall_temperature_estimate > fluid_material.max_temperature() {
+
+                wall_temperature_estimate = fluid_material.max_temperature();
+
+            } else if wall_temperature_estimate < fluid_material.min_temperature() {
+
+                wall_temperature_estimate = fluid_material.min_temperature();
+
+            }
+
+
+            let wall_prandtl_number: Ratio 
+                = fluid_material.try_get_prandtl_liquid(
+                    wall_temperature_estimate,
+                    atmospheric_pressure
+                )?;
+
+            nusselt_estimate_shell = shell_side_fluid_to_inner_tube_surf_nusselt_correlation.
+            estimate_based_on_prandtl_darcy_and_reynolds_wall_correction(
+                bulk_prandtl_number, 
+                wall_prandtl_number,
+                modified_darcy_friction_factor,
+                reynolds_number_abs_for_nusselt_estimate)?;
+
+        } else {
+            nusselt_estimate_shell = shell_side_fluid_to_inner_tube_surf_nusselt_correlation.
+            estimate_based_on_prandtl_darcy_and_reynolds_no_wall_correction(
+                bulk_prandtl_number, 
+                modified_darcy_friction_factor,
+                reynolds_number_abs_for_nusselt_estimate)?;
+
+        }
+
+        // for debugging
+        //dbg!(&nusselt_estimate_shell);
+
+
+
+        // now we can get the heat transfer coeff, 
+
+        let shell_h_to_fluid: HeatTransfer;
+
+        let k_fluid_average: ThermalConductivity = 
+            fluid_material.try_get_thermal_conductivity(
+                fluid_temperature)?;
+
+        shell_h_to_fluid = nusselt_estimate_shell * k_fluid_average / shell_side_fluid_hydraulic_diameter;
+
+
+        // and then get the convective resistance from shell side fluid 
+        // to the tubes
+        let number_of_temperature_nodes = self.inner_nodes + 2;
+        let heated_length = shell_side_fluid_array_clone.get_component_length();
+        let id = self.tube_id;
+        let od = self.tube_od;
+
+
+        let node_length = heated_length / 
+            number_of_temperature_nodes as f64;
+
+
+        // now I need to calculate resistance of the half length of the 
+        // pipe shell, which is an annular cylinder
+
+        let cylinder_mid_diameter: Length = 0.5*(id+od);
+
+
+
+        // conductance calculations assumes a cylinder with 
+        // liquid on the outside, solid on the inside
+        let shell_fluid_to_inner_tube_surf_conductance_interaction: HeatTransferInteractionType
+            = HeatTransferInteractionType::
+            CylindricalConductionConvectionLiquidOutside(
+                (solid_material.into(), 
+                 (od - cylinder_mid_diameter).into(),
+                 pipe_shell_surf_temperature,
+                 atmospheric_pressure),
+                 (shell_h_to_fluid,
+                  od.into(),
+                  node_length.into())
+            );
+
+        // now based on conductance interaction, 
+        // we can obtain thermal conductance, the temperatures 
+        // and pressures don't really matter
+        //
+        // this is because all the thermal conductance data 
+        // has already been loaded into the thermal conductance 
+        // interaction object
+
+        let shell_fluid_to_inner_tube_surf_nodal_thermal_conductance: ThermalConductance = 
+            try_get_thermal_conductance_based_on_interaction(
+                fluid_temperature,
+                pipe_shell_surf_temperature,
+                atmospheric_pressure,
+                atmospheric_pressure,
+                shell_fluid_to_inner_tube_surf_conductance_interaction)?;
+
+
+        return Ok(shell_fluid_to_inner_tube_surf_nodal_thermal_conductance);
+    }
+
+    /// obtains tube side fluid to pipe shell conductance
+    #[inline]
+    pub fn get_single_tube_side_fluid_array_node_to_inner_pipe_shell_nodal_conductance(
+        &mut self,
+        correct_prandtl_for_wall_temperatures: bool) 
+        -> Result<ThermalConductance,TuasLibError> 
+    {
+
+        // the thermal conductance here should be based on the 
+        // nusselt number correlation
+
+        // before any calculations, I will first need a clone of 
+        // the fluid array and inner shell array
+        //
+        // the fluid array represents only a single tube
+        let mut tube_side_single_fluid_array_clone: FluidArray = 
+            self.pipe_fluid_array.clone().try_into()?;
+
+
+        let mut pipe_shell_clone: SolidColumn = 
+            self.pipe_shell_array.clone().try_into()?;
+
+        // also need to get basic temperatures and mass flowrates 
+        // only do this once because some of these methods involve 
+        // cloning, which is computationally expensive
+
+        let single_tube_mass_flowrate: MassRate = 
+            tube_side_single_fluid_array_clone.get_mass_flowrate();
+
+        let fluid_temperature: ThermodynamicTemperature 
+            = tube_side_single_fluid_array_clone.try_get_bulk_temperature()?;
+
+        let wall_temperature: ThermodynamicTemperature 
+            = pipe_shell_clone.try_get_bulk_temperature()?;
+
+        let atmospheric_pressure = Pressure::new::<atmosphere>(1.0);
+
+        let pipe_shell_surf_temperature: ThermodynamicTemperature 
+            = wall_temperature;
+
+        let single_tube_hydraulic_diameter = 
+            self.get_tube_side_hydraulic_diameter_circular_tube();
+        let single_tube_flow_area: Area = 
+            tube_side_single_fluid_array_clone.get_cross_sectional_area_immutable();
+
+        // flow area and hydraulic diameter are ok
+
+
+        let fluid_material: LiquidMaterial
+            = tube_side_single_fluid_array_clone.material_control_volume.try_into()?;
+
+        let solid_material: SolidMaterial 
+            = pipe_shell_clone.material_control_volume.try_into()?;
+
+        let viscosity: DynamicViscosity = 
+            fluid_material.try_get_dynamic_viscosity(fluid_temperature)?;
+
+        // need to convert hydraulic diameter to an equivalent 
+        // spherical diameter
+        //
+        // but for now, I'm going to use Re and Nu using hydraulic diameter 
+        // and live with it for the time being
+        //
+        let reynolds_number_single_tube: Ratio = 
+            single_tube_mass_flowrate/
+            single_tube_flow_area
+            *single_tube_hydraulic_diameter / viscosity;
+
+        // the reynolds number here is used for nusselt number estimates 
+        // so I'm going to have an aboslute value of reynolds number 
+        // for nusselt estimates
+        
+        let reynolds_number_abs_for_nusselt: Ratio = 
+            reynolds_number_single_tube.abs();
+
+        // next, bulk prandtl number 
+
+        let bulk_prandtl_number: Ratio 
+            = fluid_material.try_get_prandtl_liquid(
+                fluid_temperature,
+                atmospheric_pressure
+            )?;
+
+
+        // for tube side, gnielinski correlation is expected
+        // however, if we want to change this, 
+        // we need to rely on the nusselt correlation set in 
+        // the struct
+
+        let mut pipe_prandtl_reynolds_data: GnielinskiData 
+            = GnielinskiData::default();
+
+        // wall correction is optionally turned on based on whether 
+        // wall correction is true or false
+        pipe_prandtl_reynolds_data.reynolds = reynolds_number_abs_for_nusselt;
+        pipe_prandtl_reynolds_data.prandtl_bulk = bulk_prandtl_number;
+        pipe_prandtl_reynolds_data.prandtl_wall = bulk_prandtl_number;
+        pipe_prandtl_reynolds_data.length_to_diameter = 
+            tube_side_single_fluid_array_clone.get_component_length_immutable()/
+            tube_side_single_fluid_array_clone.get_hydraulic_diameter_immutable();
+
+        if correct_prandtl_for_wall_temperatures {
+
+            // then wall prandtl number
+            //
+            // wall prandtl number will likely be out of range as the 
+            // wall temperature is quite different from bulk fluid 
+            // temperature. May be  out of correlation range
+            // if that is the case, then just go for a partial correction
+            // temperature of the range or go for the lowest temperature 
+            // possible
+
+            // The method I use is to just use the wall prandtl number 
+            // if the number falls outside the range of correlations,
+            // then use the prandtl number at the max or min 
+
+            let mut wall_temperature_estimate = wall_temperature;
+
+            if wall_temperature_estimate > fluid_material.max_temperature() {
+
+                wall_temperature_estimate = fluid_material.max_temperature();
+
+            } else if wall_temperature_estimate < fluid_material.min_temperature() {
+
+                wall_temperature_estimate = fluid_material.min_temperature();
+
+            }
+
+            let wall_prandtl_number: Ratio 
+                = fluid_material.try_get_prandtl_liquid(
+                    wall_temperature_estimate,
+                    atmospheric_pressure
+                )?;
+
+            pipe_prandtl_reynolds_data.prandtl_wall = wall_prandtl_number;
+
+
+
+
+        }
+
+        // I need to use Nusselt correlations present in this struct 
+        //
+        // wall correction is optionally done here
+        //
+        // for tubes,
+        // the gnielinski correlation should be used as it 
+        // is for tubes and pipes.
+        //
+        // but I allow the user to set the nusselt correlation 
+
+        // now, for gnielinski type correlations, we require the 
+        // darcy friction factor
+        //
+        // However, the darcy friction factor for other components 
+        // will come in the form:
+        //
+        // (f_darcy L/D + K)
+        //
+        // the next best thing we can get is:
+        //
+        // (f_darcy + D/L  K)
+
+        // (f_darcy L/D + K)
+        let fldk: Ratio = self
+            .tube_loss_correlation
+            .fldk_based_on_darcy_friction_factor(reynolds_number_abs_for_nusselt)
+            .unwrap();
+
+        // (f_darcy + D/L  K)
+        // then let's scale it by length to diameter 
+        let modified_darcy_friction_factor: Ratio = 
+            fldk/pipe_prandtl_reynolds_data.length_to_diameter;
+
+
+
+
+        let nusselt_estimate_tube_side = 
+            self.tube_side_nusselt_correlation
+            .estimate_based_on_prandtl_darcy_and_reynolds_wall_correction(
+                pipe_prandtl_reynolds_data.prandtl_bulk, 
+                pipe_prandtl_reynolds_data.prandtl_wall, 
+                modified_darcy_friction_factor,
+                reynolds_number_abs_for_nusselt)?;
+
+        // for debugging
+        //dbg!(&nusselt_estimate_tube_side);
+
+
+        // now we can get the heat transfer coeff, 
+
+        let tube_h_to_fluid: HeatTransfer;
+
+        let k_fluid_average: ThermalConductivity = 
+            fluid_material.try_get_thermal_conductivity(
+                fluid_temperature)?;
+
+        tube_h_to_fluid = nusselt_estimate_tube_side * k_fluid_average / single_tube_hydraulic_diameter;
+
+
+        // and then get the convective resistance
+        let number_of_temperature_nodes = self.inner_nodes + 2;
+        let heated_length = tube_side_single_fluid_array_clone.get_component_length();
+        let id = self.tube_id;
+        let od = self.tube_od;
+
+
+        let node_length = heated_length / 
+            number_of_temperature_nodes as f64;
+
+
+        // now I need to calculate resistance of the half length of the 
+        // pipe shell, which is an annular cylinder
+
+        let cylinder_mid_diameter: Length = 0.5*(id+od);
+
+
+
+        let fluid_pipe_shell_conductance_interaction: HeatTransferInteractionType
+            = HeatTransferInteractionType::
+            CylindricalConductionConvectionLiquidInside(
+                (solid_material.into(), 
+                 (cylinder_mid_diameter - id).into(),
+                 pipe_shell_surf_temperature,
+                 atmospheric_pressure),
+                 (tube_h_to_fluid,
+                  id.into(),
+                  node_length.into())
+            );
+
+        // now based on conductance interaction, 
+        // we can obtain thermal conductance, the temperatures 
+        // and pressures don't really matter
+        //
+        // this is because all the thermal conductance data 
+        // has already been loaded into the thermal conductance 
+        // interaction object
+
+        let fluid_pipe_shell_nodal_thermal_conductance: ThermalConductance = 
+            try_get_thermal_conductance_based_on_interaction(
+                fluid_temperature,
+                pipe_shell_surf_temperature,
+                atmospheric_pressure,
+                atmospheric_pressure,
+                fluid_pipe_shell_conductance_interaction)?;
+
+
+        return Ok(fluid_pipe_shell_nodal_thermal_conductance);
+    }
 }

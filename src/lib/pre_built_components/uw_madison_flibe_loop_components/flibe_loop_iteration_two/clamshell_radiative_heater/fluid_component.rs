@@ -54,4 +54,11 @@ impl ClamshellRadiativeHeater {
 
         return shell_side_xs_area;
     }
+    /// returns tube side hydraulic diameter 
+    /// by default, the internal diameter of the tube side
+    /// assumes that tube side is circular
+    #[inline]
+    pub fn get_tube_side_hydraulic_diameter_circular_tube(&self) -> Length {
+        return self.tube_side_id;
+    }
 }

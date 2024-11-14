@@ -871,7 +871,7 @@ impl SimpleShellAndTubeHeatExchanger {
 
         // (f_darcy L/D + K)
         let fldk: Ratio = self
-            .tube_side_custom_component_loss_correlation
+            .shell_side_custom_component_loss_correlation
             .fldk_based_on_darcy_friction_factor(reynolds_number_abs_for_nusselt_estimate)
             .unwrap();
 
@@ -895,19 +895,6 @@ impl SimpleShellAndTubeHeatExchanger {
         if correct_prandtl_for_wall_temperatures {
 
             // then wall prandtl number
-            //
-            // in this case, we partially correct because wall temperatures 
-            // may be outside range of correlation
-
-            let _part_correct_wall_temperature: ThermodynamicTemperature = 
-                ThermodynamicTemperature::new::<kelvin>(
-                    0.1 * (
-                        3.0 * wall_temperature.get::<kelvin>() + 
-                        7.0 * fluid_temperature.get::<kelvin>()
-                    )
-                );
-
-            // the other method is to just use the wall prandtl number 
             // if the number falls outside the range of correlations,
             // then use the prandtl number at the max or min 
 
