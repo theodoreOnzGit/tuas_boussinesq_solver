@@ -417,7 +417,7 @@ impl SimpleShellAndTubeHeatExchanger {
         let outer_node_temperature: ThermodynamicTemperature;
         // shell and tube heat excanger (STHE) to air interaction
         let number_of_temperature_nodes = self.inner_nodes + 2;
-        let outer_solid_array_clone: SolidColumn;
+        let mut outer_solid_array_clone: SolidColumn;
 
         if self.heat_exchanger_has_insulation {
             // if there's insulation, the id is the outer diameter of 
@@ -439,15 +439,12 @@ impl SimpleShellAndTubeHeatExchanger {
             // surface temperature is the insulation bulk temperature 
             // (estimated)
 
-            let mut shell_side_fluid_array: FluidArray = 
-                shell_side_fluid_component_clone.try_into().unwrap();
-
-            outer_node_temperature = shell_side_fluid_array
-                .try_get_bulk_temperature()?;
-
             // the outer node clone is insulation if it is switched on
             outer_solid_array_clone = 
                 self.insulation_array.clone().try_into()?;
+
+            outer_node_temperature = outer_solid_array_clone
+                .try_get_bulk_temperature()?;
 
         } else {
             // if there's no insulation, the id is the inner diameter of 
@@ -467,18 +464,15 @@ impl SimpleShellAndTubeHeatExchanger {
             heated_length = shell_side_fluid_component_clone
                 .get_component_length_immutable();
 
-            // surface temperature is the insulation bulk temperature 
+            // surface temperature is the outer shell bulk temperature 
             // (estimated)
-
-            let mut shell_side_fluid_array: FluidArray = 
-                shell_side_fluid_component_clone.try_into().unwrap();
-
-            outer_node_temperature = shell_side_fluid_array
-                .try_get_bulk_temperature()?;
 
             // the outer node clone is outer shell array if it is switched off
             outer_solid_array_clone = 
                 self.outer_shell.clone().try_into()?;
+
+            outer_node_temperature = outer_solid_array_clone
+                .try_get_bulk_temperature()?;
 
         }
 
