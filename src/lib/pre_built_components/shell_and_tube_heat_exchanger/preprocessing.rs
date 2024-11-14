@@ -1124,8 +1124,11 @@ impl SimpleShellAndTubeHeatExchanger {
         // (f_darcy + D/L  K)
 
         // (f_darcy L/D + K)
-        let fldk: Ratio = self
-            .tube_side_custom_component_loss_correlation
+
+        let pipe_darcy_correlation = 
+            &self.shell_side_custom_component_loss_correlation;
+
+        let fldk: Ratio = pipe_darcy_correlation
             .fldk_based_on_darcy_friction_factor(reynolds_number_abs_for_nusselt_estimate)
             .unwrap();
 

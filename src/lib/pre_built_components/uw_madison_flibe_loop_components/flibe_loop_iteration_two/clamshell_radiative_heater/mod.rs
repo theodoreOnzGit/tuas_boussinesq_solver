@@ -83,8 +83,11 @@ pub struct ClamshellRadiativeHeater {
     /// representative tube flow area on a per tube basis
     pub tube_flow_area: Area,
 
-    /// loss correlation on a per tube basis
+    /// loss correlation for tube
     pub tube_loss_correlation: DimensionlessDarcyLossCorrelations,
+
+    /// loss correlation for annular region
+    pub annular_air_loss_correlation: DimensionlessDarcyLossCorrelations,
 
     /// assuming the heating element 
     /// is circular, provide the internal diameter 

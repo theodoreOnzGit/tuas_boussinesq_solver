@@ -26,4 +26,32 @@ impl ClamshellRadiativeHeater {
         return annular_air_fluid_array.into();
 
     }
+    /// returns the annular air hydraulic diameter
+    #[inline]
+    pub fn get_annular_air_hydraulic_diameter(&self) -> Length {
+
+
+        // or just take the hydraulic diameter from the 
+        // shell side fluid array 
+        // 
+        let shell_side_fluid_array: FluidArray = 
+            self.annular_air_array.clone().try_into().unwrap();
+
+        let hydraulic_diameter: Length 
+            = shell_side_fluid_array.get_hydraulic_diameter_immutable();
+
+        return hydraulic_diameter;
+    }
+
+    /// returns the annular air cross sectional area 
+    pub fn get_annular_air_cross_sectional_area(&self) -> Area {
+
+        let shell_side_fluid_array: FluidArray = 
+            self.annular_air_array.clone().try_into().unwrap();
+
+        let shell_side_xs_area: Area 
+            = shell_side_fluid_array.get_cross_sectional_area_immutable();
+
+        return shell_side_xs_area;
+    }
 }
