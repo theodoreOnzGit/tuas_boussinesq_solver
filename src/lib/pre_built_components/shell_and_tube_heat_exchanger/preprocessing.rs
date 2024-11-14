@@ -1,7 +1,6 @@
 use std::thread::JoinHandle;
 use std::thread;
 
-use uom::si::thermodynamic_temperature::kelvin;
 use uom::ConstZero;
 use uom::si::pressure::atmosphere;
 use uom::si::f64::*;
