@@ -68,7 +68,7 @@ pub struct ClamshellRadiativeHeater {
 
     /// this option allows the user to toggle on or off 
     /// annular airflow
-    pub annular_airflow: bool,
+    pub is_annular_airflow_on: bool,
 
     /// tube outer diameter 
     pub tube_od: Length,
@@ -118,3 +118,6 @@ pub struct ClamshellRadiativeHeater {
 
 /// stuff such as conductances are calculated here
 pub mod preprocessing;
+
+/// 
+pub mod fluid_component;

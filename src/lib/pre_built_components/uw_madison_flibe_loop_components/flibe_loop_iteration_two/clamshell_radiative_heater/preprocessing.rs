@@ -100,4 +100,87 @@ impl ClamshellRadiativeHeater {
 
         Ok(())
     }
+
+    /// obtains air to radiative heater insulation layer
+    /// conductance 
+    ///
+    ///
+    /// excludes radiative heat transfer
+    #[inline]
+    pub fn get_air_to_insulation_nodal_conductance(&mut self,
+        h_air_to_pipe_surf: HeatTransfer) 
+        -> Result<ThermalConductance,TuasLibError> 
+    {
+
+        // for conductance calculations (no radiation), 
+        // it is important to get the temperatures of the ambient 
+        // surroundings and the dimensions of the outer shell or insulation
+
+        let heated_length: Length;
+        let insulation_id: Length;
+        let insulation_od: Length;
+        let outer_node_temperature: ThermodynamicTemperature;
+        // shell and tube heat excanger (STHE) to air interaction
+        let number_of_temperature_nodes = self.inner_nodes + 2;
+        let outer_solid_array_clone: SolidColumn;
+
+        // if there's insulation, the id is the outer diameter of 
+        // the shell. 
+
+        insulation_id = self.heating_element_od;
+        insulation_od = self.heating_element_od + 2.0*self.insulation_thickness;
+
+        // heated length is the shell side length 
+        // first I need the fluid array as a fluid component
+
+        let shell_side_fluid_component_clone: FluidComponent 
+            = self.get_clone_of_annular_air_array();
+
+        // then i need to get the component length 
+        heated_length = shell_side_fluid_component_clone
+            .get_component_length_immutable();
+
+        // surface temperature is the insulation bulk temperature 
+        // (estimated)
+
+        let mut shell_side_fluid_array: FluidArray = 
+            shell_side_fluid_component_clone.try_into().unwrap();
+
+        outer_node_temperature = shell_side_fluid_array
+            .try_get_bulk_temperature()?;
+
+        // the outer node clone is insulation if it is switched on
+        outer_solid_array_clone = 
+            self.insulation_array.clone().try_into()?;
+
+
+        let cylinder_mid_diameter: Length = 0.5*(insulation_id+insulation_od);
+
+
+        let node_length = heated_length / 
+            number_of_temperature_nodes as f64;
+
+        let outer_node_air_conductance_interaction: HeatTransferInteractionType
+        = HeatTransferInteractionType::
+            CylindricalConductionConvectionLiquidOutside(
+                (outer_solid_array_clone.material_control_volume, 
+                    (insulation_od-cylinder_mid_diameter).into(),
+                    outer_node_temperature,
+                    outer_solid_array_clone.pressure_control_volume),
+                (h_air_to_pipe_surf,
+                    insulation_od.into(),
+                    node_length.into())
+            );
+
+        let outer_node_air_nodal_thermal_conductance: ThermalConductance = try_get_thermal_conductance_based_on_interaction(
+            self.ambient_temperature,
+            outer_node_temperature,
+            outer_solid_array_clone.pressure_control_volume,
+            outer_solid_array_clone.pressure_control_volume,
+            outer_node_air_conductance_interaction,
+        )?;
+
+
+        return Ok(outer_node_air_nodal_thermal_conductance);
+    }
 }
