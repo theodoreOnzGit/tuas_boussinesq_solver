@@ -995,4 +995,22 @@ impl ClamshellRadiativeHeater {
 
         return Ok(fluid_pipe_shell_nodal_thermal_conductance);
     }
+    /// calibrates the insulation thickness of this pipe or component, 
+    /// to increase or decrease parasitic heat loss
+    /// however, will not change thermal inertia
+    /// 
+    pub fn calibrate_insulation_thickness(&mut self, 
+        insulation_thickness: Length){
+
+        self.insulation_thickness = insulation_thickness;
+
+    }
+
+    /// gets the insulation thickness based on 
+    /// (insulation_od - insulation_id)/2
+    pub fn get_insulation_thickness(&self) -> Length {
+
+        return self.insulation_thickness;
+
+    }
 }
