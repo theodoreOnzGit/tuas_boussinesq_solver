@@ -83,10 +83,10 @@ impl ClamshellRadiativeHeater {
             interaction)?;
 
         // heating element and insulation
-        self.outer_shell.link_to_front(&mut zero_power_bc,
+        self.heating_element_shell.link_to_front(&mut zero_power_bc,
             interaction)?;
 
-        self.outer_shell.link_to_back(&mut zero_power_bc,
+        self.heating_element_shell.link_to_back(&mut zero_power_bc,
             interaction)?;
 
 
@@ -119,10 +119,10 @@ impl ClamshellRadiativeHeater {
         let heated_length: Length;
         let insulation_id: Length;
         let insulation_od: Length;
-        let outer_node_temperature: ThermodynamicTemperature;
+        let insulation_node_temperature: ThermodynamicTemperature;
         // shell and tube heat excanger (STHE) to air interaction
         let number_of_temperature_nodes = self.inner_nodes + 2;
-        let outer_solid_array_clone: SolidColumn;
+        let mut insulation_array_clone: SolidColumn;
 
         // if there's insulation, the id is the outer diameter of 
         // the shell. 
@@ -133,25 +133,23 @@ impl ClamshellRadiativeHeater {
         // heated length is the shell side length 
         // first I need the fluid array as a fluid component
 
-        let shell_side_fluid_component_clone: FluidComponent 
+        let annular_air_fluid_component_clone: FluidComponent 
             = self.get_clone_of_annular_air_array();
 
         // then i need to get the component length 
-        heated_length = shell_side_fluid_component_clone
+        heated_length = annular_air_fluid_component_clone
             .get_component_length_immutable();
 
         // surface temperature is the insulation bulk temperature 
         // (estimated)
 
-        let mut shell_side_fluid_array: FluidArray = 
-            shell_side_fluid_component_clone.try_into().unwrap();
+        insulation_array_clone = 
+            self.insulation_array.clone().try_into()?;
 
-        outer_node_temperature = shell_side_fluid_array
+        insulation_node_temperature = insulation_array_clone
             .try_get_bulk_temperature()?;
 
         // the outer node clone is insulation if it is switched on
-        outer_solid_array_clone = 
-            self.insulation_array.clone().try_into()?;
 
 
         let cylinder_mid_diameter: Length = 0.5*(insulation_id+insulation_od);
@@ -163,10 +161,10 @@ impl ClamshellRadiativeHeater {
         let outer_node_air_conductance_interaction: HeatTransferInteractionType
         = HeatTransferInteractionType::
             CylindricalConductionConvectionLiquidOutside(
-                (outer_solid_array_clone.material_control_volume, 
+                (insulation_array_clone.material_control_volume, 
                     (insulation_od-cylinder_mid_diameter).into(),
-                    outer_node_temperature,
-                    outer_solid_array_clone.pressure_control_volume),
+                    insulation_node_temperature,
+                    insulation_array_clone.pressure_control_volume),
                 (h_air_to_pipe_surf,
                     insulation_od.into(),
                     node_length.into())
@@ -174,9 +172,9 @@ impl ClamshellRadiativeHeater {
 
         let outer_node_air_nodal_thermal_conductance: ThermalConductance = try_get_thermal_conductance_based_on_interaction(
             self.ambient_temperature,
-            outer_node_temperature,
-            outer_solid_array_clone.pressure_control_volume,
-            outer_solid_array_clone.pressure_control_volume,
+            insulation_node_temperature,
+            insulation_array_clone.pressure_control_volume,
+            insulation_array_clone.pressure_control_volume,
             outer_node_air_conductance_interaction,
         )?;
 
@@ -194,7 +192,7 @@ impl ClamshellRadiativeHeater {
         self.insulation_array.clone().try_into()?;
 
         let mut pipe_shell_clone: SolidColumn = 
-        self.outer_shell.clone().try_into()?;
+        self.heating_element_shell.clone().try_into()?;
 
         // find the length of the array and node length
 

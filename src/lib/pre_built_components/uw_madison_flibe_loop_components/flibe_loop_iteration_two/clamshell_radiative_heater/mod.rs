@@ -51,7 +51,7 @@ pub struct ClamshellRadiativeHeater {
     ///
     /// heating element which is radiatively coupled 
     /// to the pipe shell
-    pub outer_shell: HeatTransferEntity,
+    pub heating_element_shell: HeatTransferEntity,
 
     /// ambient temperature that the shell and tube heat 
     /// exchanger is exposed to.
