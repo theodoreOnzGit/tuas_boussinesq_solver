@@ -123,7 +123,7 @@ impl FluidArray {
                     UserSpecifiedHeatFluxCustomArea or Similar".to_string()
                 ));
             },
-            HeatTransferInteractionType:: SimpleRadiation(_,_,_) => 
+            HeatTransferInteractionType:: SimpleRadiation(_) => 
             {
                 return Err(TuasLibError::NotImplementedForBoundaryConditions(
                         "please specify interaction type as \n 
@@ -273,7 +273,7 @@ impl FluidArray {
             },
             HeatTransferInteractionType::
                 SimpleRadiation
-                (_area_coeff, _hot_temperature, _cold_temperature) => 
+                (_area_coeff) => 
                 {
                     return Err(TuasLibError::NotImplementedForBoundaryConditions(
                             "please specify interaction type as \n 

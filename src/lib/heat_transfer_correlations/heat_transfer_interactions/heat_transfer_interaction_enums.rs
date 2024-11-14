@@ -332,8 +332,6 @@ pub enum HeatTransferInteractionType {
     ///  
     SimpleRadiation(
         Area, 
-        ThermodynamicTemperature,
-        ThermodynamicTemperature,
     ),
 }
 
@@ -701,12 +699,12 @@ impl HeatTransferInteractionType {
 
                 HeatTransferInteractionType::
                     SimpleRadiation
-                    (area_coeff, hot_temperature, cold_temperature) => 
+                    (area_coeff) => 
                     {
                         simple_radiation_conductance(
                             area_coeff, 
-                            hot_temperature, 
-                            cold_temperature)
+                            temperature_1, 
+                            temperature_2)
                     }
                 ,
             };

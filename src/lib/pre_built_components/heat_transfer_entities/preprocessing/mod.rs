@@ -798,12 +798,12 @@ fn try_get_thermal_conductance_based_on_interaction(
                 return Err(TuasLibError::WrongHeatTransferInteractionType);
             },
             HeatTransferInteractionType::SimpleRadiation
-                (area_coeff, hot_temperature, cold_temperature) => 
+                (area_coeff) => 
                 {
                     simple_radiation_conductance(
                         area_coeff, 
-                        hot_temperature, 
-                        cold_temperature)
+                        temperature_1, 
+                        temperature_2)
                 }
             ,
 
@@ -1107,7 +1107,7 @@ pub fn calculate_constant_heat_flux_front_single_cv_back(
             }
         ,
         HeatTransferInteractionType::SimpleRadiation
-            (_area_coeff, _hot_temperature, _cold_temperature) => 
+            (_area_coeff) => 
             {
                 println!("please specify interaction type as \n 
                 UserSpecifiedHeatFluxCustomArea or Similar");

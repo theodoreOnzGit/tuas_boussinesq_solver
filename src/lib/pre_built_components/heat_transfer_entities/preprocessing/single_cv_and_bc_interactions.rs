@@ -87,7 +87,7 @@ pub fn calculate_single_cv_front_heat_flux_back(
             }
         ,
         HeatTransferInteractionType::SimpleRadiation
-            (_area_coeff, _hot_temperature, _cold_temperature) => 
+            (_area_coeff) => 
             {
                 println!("please specify interaction type as \n 
                 UserSpecifiedHeatFluxCustomArea or Similar");
@@ -823,7 +823,7 @@ pub fn calculate_mesh_stability_conduction_timestep_for_single_node_and_bc(
         },
 
         HeatTransferInteractionType::SimpleRadiation
-            (_area_coeff, _hot_temperature, _cold_temperature) => 
+            (_area_coeff) => 
             {
                 // radiation can be construed as a conduction 
                 // process if the optical thickness is thick enough 

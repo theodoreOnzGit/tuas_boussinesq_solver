@@ -1,6 +1,8 @@
+use std::f64::consts::PI;
 use std::thread::JoinHandle;
 use std::thread;
 
+use uom::si::ratio::ratio;
 use uom::si::thermodynamic_temperature::kelvin;
 use uom::ConstZero;
 use uom::si::pressure::atmosphere;
@@ -10,6 +12,7 @@ use super::ClamshellRadiativeHeater;
 use crate::array_control_vol_and_fluid_component_collections::fluid_component_collection::fluid_component::FluidComponent;
 use crate::heat_transfer_correlations::nusselt_number_correlations::enums::NusseltCorrelation;
 use crate::heat_transfer_correlations::thermal_resistance::try_get_thermal_conductance_annular_cylinder;
+use crate::heat_transfer_correlations::view_factors::cocentric_cylinders::outer_cylinder_to_inner_cylinder_view_factor;
 use crate::{heat_transfer_correlations::nusselt_number_correlations::input_structs::GnielinskiData, pre_built_components::heat_transfer_entities::preprocessing::try_get_thermal_conductance_based_on_interaction};
 use crate::boussinesq_thermophysical_properties::LiquidMaterial;
 use crate::boussinesq_thermophysical_properties::SolidMaterial;
@@ -28,6 +31,9 @@ use crate::tuas_lib_error::TuasLibError;
 //
 
 impl ClamshellRadiativeHeater {
+
+
+
 
     /// the end of each node should have a zero power boundary condition 
     /// connected to each of them at the bare minimum
@@ -995,6 +1001,103 @@ impl ClamshellRadiativeHeater {
 
         return Ok(fluid_pipe_shell_nodal_thermal_conductance);
     }
+
+    /// 
+    pub fn calculate_nodal_radiative_conductance_between_cylinders(
+        &mut self) -> Result<ThermalConductance,TuasLibError> {
+
+        // first, we obtain area
+        // 
+        // emissivity and absorptivity are one
+        // assume blackbody for simplicity
+        let emissivity: Ratio = Ratio::new::<ratio>(1.0);
+        let absorptivity: Ratio = Ratio::new::<ratio>(1.0);
+
+        let heating_element_id = self.heating_element_id;
+        let annular_air_fluid_component_clone: FluidComponent 
+            = self.get_clone_of_annular_air_array();
+
+        // then i need to get the component length 
+        let l = 
+            annular_air_fluid_component_clone.
+            get_component_length_immutable();
+
+        // area is PI * D * L
+        let heating_element_area: Area = 
+            PI * heating_element_id * l;
+
+        // view factor from outer cylinder (heating element) 
+        // to inner cylinder 
+        let cylinder_height = l;
+        let outer_diameter = heating_element_id;
+        let inner_diameter = self.tube_od;
+
+        let outer_cylinder_to_inner_cylinder_view_factor: Ratio = 
+            outer_cylinder_to_inner_cylinder_view_factor(
+                inner_diameter, 
+                outer_diameter, 
+                cylinder_height);
+
+        // q = sigma * emissivity * absorptivity * A * F * (T_hot^4 - T_cold^4)
+        let area_coefficient_times_view_factor: Area =
+            heating_element_area * outer_cylinder_to_inner_cylinder_view_factor;
+
+        // emissivity * absoroptivity * A * F 
+        let area_factor : Area = 
+            area_coefficient_times_view_factor * 
+            emissivity *
+            absorptivity;
+
+
+        // inner cylinder temp
+        let mut pipe_shell_clone: SolidColumn = 
+            self.pipe_shell_array.clone().try_into()?;
+
+        let inner_cylinder_temp: ThermodynamicTemperature 
+            = pipe_shell_clone.try_get_bulk_temperature()?;
+
+        // outer cylinder temp 
+        let mut heating_element_clone: SolidColumn = 
+            self.heating_element_shell.clone().try_into()?;
+
+        let outer_cylinder_temp: ThermodynamicTemperature 
+            = heating_element_clone.try_get_bulk_temperature()?;
+
+        // RHT interaction 
+
+        let rht_interaction_between_shells = 
+            HeatTransferInteractionType::SimpleRadiation(
+                area_factor);
+
+        let atmospheric_pressure = Pressure::new::<atmosphere>(1.0);
+
+        let total_cylinder_conductance: ThermalConductance = 
+            rht_interaction_between_shells.
+            get_thermal_conductance_based_on_interaction(
+                inner_cylinder_temp, 
+                outer_cylinder_temp, 
+                atmospheric_pressure, 
+                atmospheric_pressure)?;
+
+        // for now, the simplest thing is to divide the additional 
+        // conductance due to radiation by the number of total nodes 
+        // and then evenly distribute them through the pipe 
+        //
+        // I know this is not quite reality as there will be radiation 
+        // interactions axially and in oblique manners. I just 
+        // ignored that in this case 
+
+        let number_of_nodes: f64 = self.inner_nodes as f64  + 2.0;
+
+        let nodal_cylinder_conductance = 
+            total_cylinder_conductance/number_of_nodes;
+
+        Ok(nodal_cylinder_conductance)
+
+    }
+
+
+
     /// calibrates the insulation thickness of this pipe or component, 
     /// to increase or decrease parasitic heat loss
     /// however, will not change thermal inertia
