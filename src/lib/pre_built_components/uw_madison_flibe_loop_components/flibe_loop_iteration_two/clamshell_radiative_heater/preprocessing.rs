@@ -107,7 +107,7 @@ impl ClamshellRadiativeHeater {
     ///
     /// excludes radiative heat transfer
     #[inline]
-    pub fn get_air_to_insulation_nodal_conductance(&mut self,
+    pub fn get_ambient_air_to_insulation_nodal_conductance(&mut self,
         h_air_to_pipe_surf: HeatTransfer) 
         -> Result<ThermalConductance,TuasLibError> 
     {
@@ -182,5 +182,92 @@ impl ClamshellRadiativeHeater {
 
 
         return Ok(outer_node_air_nodal_thermal_conductance);
+    }
+
+    /// obtains heating element to insulation conductance
+    #[inline]
+    pub fn get_heating_element_to_insulation_conductance(
+    &self) -> Result<ThermalConductance,TuasLibError> {
+        // first, make a clone of outer pipe shell and insulation
+
+        let mut insulation_array_clone: SolidColumn = 
+        self.insulation_array.clone().try_into()?;
+
+        let mut pipe_shell_clone: SolidColumn = 
+        self.outer_shell.clone().try_into()?;
+
+        // find the length of the array and node length
+
+        let array_length =  pipe_shell_clone.get_component_length();
+
+        let number_of_temperature_nodes = self.inner_nodes + 2;
+
+        let node_length = array_length / 
+        number_of_temperature_nodes as f64;
+
+        // then we need to find the surface area of each node 
+        // for steel to insulation_material, it will be 
+        // the steel outer diameter or insulation inner_diameter
+        
+        let heating_element_mid_section_diameter = 0.5 * (self.heating_element_od 
+        + self.heating_element_id);
+
+        let insulation_material_mid_section_diameter = 
+            self.insulation_thickness + 
+            self.heating_element_od;
+
+        let heating_element_od = self.heating_element_od;
+
+        // next, thermal conductivities of both solid_pipe_material and insulation_material 
+
+        let heating_element_material_temperature = pipe_shell_clone.try_get_bulk_temperature() 
+            ?;
+
+        let heating_element_material: SolidMaterial = pipe_shell_clone.material_control_volume
+            .try_into()?;
+
+        let heating_element_material_conductivity: ThermalConductivity 
+        = heating_element_material.try_get_thermal_conductivity(
+            heating_element_material_temperature
+        )?;
+
+
+        let insulation_material_shell_temperature = insulation_array_clone.try_get_bulk_temperature() 
+            ?;
+
+        let insulation_material: SolidMaterial = insulation_array_clone.material_control_volume
+            .try_into()?;
+
+        let insulation_material_conductivity: ThermalConductivity 
+        = insulation_material.try_get_thermal_conductivity(
+            insulation_material_shell_temperature
+        )?;
+
+        // we should be able to get the conductance now
+
+        let insulation_material_layer_conductance: ThermalConductance = 
+        try_get_thermal_conductance_annular_cylinder(
+            heating_element_od,
+            insulation_material_mid_section_diameter,
+            node_length,
+            insulation_material_conductivity
+        )?;
+        
+        let heating_element_material_layer_conductance: ThermalConductance = 
+        try_get_thermal_conductance_annular_cylinder(
+            heating_element_mid_section_diameter,
+            heating_element_od,
+            node_length,
+            heating_element_material_conductivity
+        )?;
+        // now that we have the conductances, we get the resistances 
+
+        let insulation_material_resistance = 1.0/insulation_material_layer_conductance;
+        let heating_element_material_resistance = 1.0/heating_element_material_layer_conductance;
+
+        let total_resistance = insulation_material_resistance + heating_element_material_resistance;
+
+
+        return Ok(1.0/total_resistance);
     }
 }
