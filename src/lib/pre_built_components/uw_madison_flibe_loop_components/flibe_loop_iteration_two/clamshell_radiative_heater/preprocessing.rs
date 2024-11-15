@@ -296,7 +296,6 @@ impl ClamshellRadiativeHeater {
         self.zero_power_bc_axial_connection()?;
 
 
-        todo!();
         Ok(())
     }
 
