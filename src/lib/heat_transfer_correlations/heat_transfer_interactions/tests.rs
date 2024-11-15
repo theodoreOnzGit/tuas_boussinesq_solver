@@ -52,10 +52,10 @@ pub fn radiation_conductance_unit_test(){
     // assert that it is 
     // P = 20956.91616 W
 
-    approx::assert_abs_diff_eq!(
+    approx::assert_relative_eq!(
         power.get::<watt>(),
         20956.91616,
-        epsilon=1e-4
+        max_relative=1e-4
         );
 
 
