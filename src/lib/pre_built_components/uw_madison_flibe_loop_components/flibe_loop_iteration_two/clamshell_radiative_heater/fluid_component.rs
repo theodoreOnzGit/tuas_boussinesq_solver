@@ -61,4 +61,38 @@ impl ClamshellRadiativeHeater {
     pub fn get_tube_side_hydraulic_diameter_circular_tube(&self) -> Length {
         return self.tube_id;
     }
+    /// sets the tube side mass flowrate 
+    pub fn set_tube_side_total_mass_flowrate(&mut self,
+        mass_flowrate: MassRate) {
+
+        let mut tube_side_fluid_array: FluidArray = 
+        self.pipe_fluid_array.clone().try_into().unwrap();
+
+
+        let single_tube_mass_rate = mass_flowrate;
+
+        tube_side_fluid_array.set_mass_flowrate(single_tube_mass_rate);
+        // unfortunately, this makes setting mass flowrate quite 
+        // expensive as we need to clone it everytime
+
+        self.pipe_fluid_array.set(tube_side_fluid_array.into()).unwrap();
+
+    }
+
+    /// sets the tube side mass flowrate 
+    pub fn set_shell_side_total_mass_flowrate(&mut self,
+        mass_flowrate_through_annulus: MassRate) {
+
+        let mut shell_side_fluid_array: FluidArray = 
+        self.annular_air_array.clone().try_into().unwrap();
+
+
+
+        shell_side_fluid_array.set_mass_flowrate(mass_flowrate_through_annulus);
+        // unfortunately, this makes setting mass flowrate quite 
+        // expensive as we need to clone it everytime
+
+        self.annular_air_array.set(shell_side_fluid_array.into()).unwrap();
+
+    }
 }

@@ -33,6 +33,272 @@ use crate::tuas_lib_error::TuasLibError;
 impl ClamshellRadiativeHeater {
 
 
+    /// See diagram below:
+    /// |            |            |               |             |            |
+    /// |            |            |               |             |            |
+    /// |-tube fluid-|-inner tube-|- annular air -|-heater elem-|-insulation-| ambient
+    /// |            |            |               |             |            |
+    /// |            |            |               |             |            |
+    ///
+    /// radiation not taken into account, assumed to be non-participating 
+    /// media
+    #[inline]
+    pub fn lateral_and_miscellaneous_connections(&mut self,
+        prandtl_wall_correction_setting: bool,
+        tube_mass_flowrate: MassRate,
+        annular_air_mass_flowrate: MassRate,
+    ) -> Result<(), TuasLibError>
+    {
+        // set the mass flowrates first on shell and tube side
+        self.set_tube_side_total_mass_flowrate(tube_mass_flowrate);
+        self.set_shell_side_total_mass_flowrate(annular_air_mass_flowrate);
+
+        // first let's get all the conductances 
+        // for convective heat transfer
+        let heat_transfer_to_ambient = self.heat_transfer_to_ambient;
+
+        let outer_node_layer_to_air_conductance = 
+            self.get_ambient_air_to_insulation_nodal_conductance(
+                heat_transfer_to_ambient)?;
+
+        let insulation_to_outer_shell_conductance: ThermalConductance;
+        
+        
+        let outer_shell_to_shell_side_fluid_conductance: ThermalConductance = 
+            self.get_heating_element_to_annular_air_nodal_conductance(
+                prandtl_wall_correction_setting)?;
+
+        let single_tube_to_shell_side_fluid_conductance: ThermalConductance
+            = self.get_annular_air_inner_tube_shell_nodal_conductance(
+                prandtl_wall_correction_setting)?;
+        let single_tube_to_tube_side_fluid_conductance: ThermalConductance
+            = self.get_tube_fluid_array_to_pipe_shell_nodal_conductance(
+                prandtl_wall_correction_setting)?;
+
+        // next, 
+        // radiation heat transfer
+
+        let radiation_cocentric_cylinders_nodal_conductance = 
+            self.get_nodal_radiative_conductance_between_cylinders()?;
+
+        let radiation_inner_cyl_to_axial_nodal_conductance = 
+            self.get_nodal_radiative_conductance_between_pipe_and_axial_exit()?;
+
+        let radiation_outer_cyl_to_axial_nodal_conductance = 
+            self.get_nodal_radiative_conductance_between_heating_element_and_axial_exit()?;
+
+        // ambient temp
+
+
+        let ambient_temp: ThermodynamicTemperature = self.ambient_temperature;
+        let number_of_temperature_nodes = self.inner_nodes + 2;
+
+        // now for the lateral linkages
+        {
+            // let's do the temperature vectors first 
+            let mut ambient_temperature_vector: Vec<ThermodynamicTemperature>
+                = Array1::default(number_of_temperature_nodes)
+                .iter().map( |&temp| {
+                    temp
+                }
+                ).collect();
+
+            ambient_temperature_vector.fill(ambient_temp);
+
+
+            // for this process, I will make a clone of 
+            // each HeatTransferEntity, modify the clone, then 
+            // replace the HeatTransferEntity within the pipe using 
+            // these changed entities
+            let mut tube_fluid_arr_clone: FluidArray = 
+                self.pipe_fluid_array.clone().try_into()?;
+
+            let mut pipe_shell_clone: SolidColumn = 
+                self.pipe_shell_array.clone().try_into()?;
+
+            let mut annular_air_arr_clone: FluidArray = 
+                self.annular_air_array.clone().try_into()?;
+
+            let mut heating_element_shell_clone: SolidColumn = 
+                self.heating_element_shell.clone().try_into()?;
+
+            // let's get the temperature vectors
+
+            let tube_fluid_arr_temp_vec: Vec<ThermodynamicTemperature>
+                = tube_fluid_arr_clone.get_temperature_vector()?;
+
+            let pipe_shell_arr_temp_vec: Vec<ThermodynamicTemperature> 
+                = pipe_shell_clone.get_temperature_vector()?;
+
+            let annular_air_arry_temp_vec: Vec<ThermodynamicTemperature> 
+                = annular_air_arr_clone.get_temperature_vector()?;
+
+            let heating_elem_arr_temp_vec: Vec<ThermodynamicTemperature> 
+                = heating_element_shell_clone.get_temperature_vector()?;
+
+            // perform the inner connections 
+            // for single inner tube fluid to single pipe shell arr 
+            //
+            // so the single inner fluid array must be linked to the 
+            // temperature of the shell via a single tube to single 
+            // tube side fluid conductance
+
+            tube_fluid_arr_clone.
+                lateral_link_new_temperature_vector_avg_conductance(
+                    single_tube_to_tube_side_fluid_conductance, 
+                    pipe_shell_arr_temp_vec.clone())?;
+
+            pipe_shell_clone.
+                lateral_link_new_temperature_vector_avg_conductance(
+                    single_tube_to_tube_side_fluid_conductance, 
+                    tube_fluid_arr_temp_vec)?;
+
+            // next the single inner tube needs to be connected 
+            // laterally to the shell side fluid
+            // no reversals are given here, as in to reverse the 
+            // temperature vector
+            //
+            // the only thing is that to account for parallel tube effects,
+            //
+            // the conductance to the single 
+            // inner tube is based on one tube only,
+            //
+            // while the conductance to shell side fluid is based on all 
+            // the parallel tubes
+
+            pipe_shell_clone.
+                lateral_link_new_temperature_vector_avg_conductance(
+                    single_tube_to_shell_side_fluid_conductance, 
+                    annular_air_arry_temp_vec.clone())?;
+
+            annular_air_arr_clone. 
+                lateral_link_new_temperature_vector_avg_conductance(
+                    single_tube_to_shell_side_fluid_conductance, 
+                    pipe_shell_arr_temp_vec.clone())?;
+
+            // next, we need to link the shell side fluid 
+            // to the outer shell 
+
+            annular_air_arr_clone. 
+                lateral_link_new_temperature_vector_avg_conductance(
+                    outer_shell_to_shell_side_fluid_conductance, 
+                    heating_elem_arr_temp_vec.clone())?;
+
+            heating_element_shell_clone. 
+                lateral_link_new_temperature_vector_avg_conductance(
+                    outer_shell_to_shell_side_fluid_conductance, 
+                    annular_air_arry_temp_vec)?;
+
+            insulation_to_outer_shell_conductance = 
+                self.get_heating_element_to_insulation_conductance()?;
+
+            // we shall need to clone the insulation array 
+            let mut insulation_array_clone: SolidColumn = 
+                self.insulation_array.clone().try_into()?;
+
+            // get its temperature vector
+            let insulation_arr_arr_temp_vec: Vec<ThermodynamicTemperature> 
+                = insulation_array_clone.get_temperature_vector()?;
+
+            // then laterally link it to the outer shell array 
+
+
+            insulation_array_clone. 
+                lateral_link_new_temperature_vector_avg_conductance(
+                    insulation_to_outer_shell_conductance, 
+                    heating_elem_arr_temp_vec.clone())?;
+
+            heating_element_shell_clone 
+                .lateral_link_new_temperature_vector_avg_conductance(
+                    insulation_to_outer_shell_conductance, 
+                    insulation_arr_arr_temp_vec)?;
+
+            // then the ambient air
+
+            insulation_array_clone
+                .lateral_link_new_temperature_vector_avg_conductance(
+                    outer_node_layer_to_air_conductance, 
+                    ambient_temperature_vector.clone())?;
+
+            // now, radiation heat transfer between the cocentric 
+            // tubes
+
+            heating_element_shell_clone
+                .lateral_link_new_temperature_vector_avg_conductance(
+                    radiation_cocentric_cylinders_nodal_conductance, 
+                    pipe_shell_arr_temp_vec)?;
+
+            pipe_shell_clone
+                .lateral_link_new_temperature_vector_avg_conductance(
+                    radiation_cocentric_cylinders_nodal_conductance, 
+                    heating_elem_arr_temp_vec)?;
+
+            // radiation heat transfer to two axial sides 
+
+
+            pipe_shell_clone
+                .lateral_link_new_temperature_vector_avg_conductance(
+                    radiation_inner_cyl_to_axial_nodal_conductance, 
+                    ambient_temperature_vector.clone())?;
+
+            pipe_shell_clone
+                .lateral_link_new_temperature_vector_avg_conductance(
+                    radiation_inner_cyl_to_axial_nodal_conductance, 
+                    ambient_temperature_vector.clone())?;
+
+            heating_element_shell_clone 
+                .lateral_link_new_temperature_vector_avg_conductance(
+                    radiation_outer_cyl_to_axial_nodal_conductance, 
+                    ambient_temperature_vector.clone())?;
+
+            heating_element_shell_clone 
+                .lateral_link_new_temperature_vector_avg_conductance(
+                    radiation_outer_cyl_to_axial_nodal_conductance, 
+                    ambient_temperature_vector)?;
+
+            // for the insulation array,
+            // lateral connections are done, 
+            // so now, modify the heat transfer entity 
+            self.insulation_array.set(
+                insulation_array_clone.into())?;
+
+            // pretty much done here, now for testing..
+
+
+            // after this, we are done for the internal connections
+
+            // by default, we don't expect shell and 
+            // heat exchangers to have heat added to them 
+            // so I'm not going to add heat addition vectors to 
+            // any of these arrays 
+
+
+            // now that lateral connections are done, 
+            // for the outer shell, inner shell and 
+            // both fluid arrays
+            // modify the heat transfer entities
+
+            self.heating_element_shell.set(heating_element_shell_clone.into())?;
+
+            self.annular_air_array.set(annular_air_arr_clone.into())?;
+
+            self.pipe_fluid_array
+                .set(tube_fluid_arr_clone.into())?;
+
+            self.pipe_shell_array
+                .set(pipe_shell_clone.into())?;
+
+            
+
+        }
+
+        // axial connections  (adiabatic by default)
+        self.zero_power_bc_axial_connection()?;
+
+
+        todo!();
+        Ok(())
+    }
 
 
     /// the end of each node should have a zero power boundary condition 
@@ -754,7 +1020,7 @@ impl ClamshellRadiativeHeater {
 
     /// obtains tube side fluid to pipe shell conductance
     #[inline]
-    pub fn get_single_tube_side_fluid_array_node_to_inner_pipe_shell_nodal_conductance(
+    pub fn get_tube_fluid_array_to_pipe_shell_nodal_conductance(
         &mut self,
         correct_prandtl_for_wall_temperatures: bool) 
         -> Result<ThermalConductance,TuasLibError> 
@@ -1016,7 +1282,8 @@ impl ClamshellRadiativeHeater {
     /// factor, and equally divided by the number of nodes.
     ///
     /// Moreover, I assumed that both are perfect blackbodies for simplicity
-    pub fn calculate_nodal_radiative_conductance_between_cylinders(
+    #[inline]
+    pub fn get_nodal_radiative_conductance_between_cylinders(
         &mut self) -> Result<ThermalConductance,TuasLibError> {
 
         // first, we obtain area
@@ -1128,7 +1395,8 @@ impl ClamshellRadiativeHeater {
     ///
     /// Moreover, I assumed that both are perfect blackbodies for simplicity
     ///
-    pub fn calculate_nodal_radiative_conductance_between_heating_element_and_axial_exit(
+    #[inline]
+    pub fn get_nodal_radiative_conductance_between_heating_element_and_axial_exit(
         &mut self) -> Result<ThermalConductance,TuasLibError> {
 
         // first, we obtain area
@@ -1239,7 +1507,8 @@ impl ClamshellRadiativeHeater {
     ///
     /// Moreover, I assumed that both are perfect blackbodies for simplicity
     ///
-    pub fn calculate_nodal_radiative_conductance_between_pipe_and_axial_exit(
+    #[inline]
+    pub fn get_nodal_radiative_conductance_between_pipe_and_axial_exit(
         &mut self) -> Result<ThermalConductance,TuasLibError> {
 
         // first, we obtain area
