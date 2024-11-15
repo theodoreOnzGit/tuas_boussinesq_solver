@@ -42,6 +42,23 @@ impl ClamshellRadiativeHeater {
     ///
     /// radiation not taken into account, assumed to be non-participating 
     /// media
+    ///
+    /// when done correctly, the energy balance across the heater 
+    /// should be such that heat input equals heat output 
+    ///
+    /// this means energy lost through the insulation 
+    /// plus energy loss to the pipe 
+    /// plus energy loss to the axial parts 
+    ///
+    /// should equal energy input.
+    ///
+    /// that is the basis for the unit test
+    ///
+    /// This is the same as the energy balance for the pipe
+    ///
+    /// where energy received from the heating element  
+    /// is equal to energy loss through convection and 
+    /// energy loss through radiation
     #[inline]
     pub fn lateral_and_miscellaneous_connections(&mut self,
         prandtl_wall_correction_setting: bool,
