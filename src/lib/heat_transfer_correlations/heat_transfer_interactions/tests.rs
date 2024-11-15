@@ -50,7 +50,8 @@ pub fn radiation_conductance_unit_test(){
         temperature_interval;
 
     // assert that it is 
-    // P = 20956.91616 W
+    // P = 20956.91616 W to within 0.01%,
+    // the botlzmann constant used will change things.
 
     approx::assert_relative_eq!(
         power.get::<watt>(),
