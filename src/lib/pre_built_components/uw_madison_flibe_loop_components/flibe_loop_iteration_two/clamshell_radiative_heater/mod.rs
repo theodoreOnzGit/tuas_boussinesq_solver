@@ -133,6 +133,9 @@ pub mod calculation;
 /// the heater 
 pub mod postprocessing;
 
+/// convenient functions for type_conversion 
+pub mod type_conversion;
+
 
 /// there some unit tests I will need to conduct for the clamshell
 /// radiative heater in order to test if the heater is functioning 
