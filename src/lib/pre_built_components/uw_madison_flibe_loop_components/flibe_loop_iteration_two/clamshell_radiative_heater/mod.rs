@@ -124,3 +124,64 @@ pub mod preprocessing;
 
 /// 
 pub mod fluid_component;
+
+
+/// there some unit tests I will need to conduct for the clamshell
+/// radiative heater in order to test if the heater is functioning 
+/// correctly. 
+/// 
+/// For a radial nodalisation of the heater
+/// See diagram below:
+/// |            |            |               |             |            |
+/// |            |            |               |             |            |
+/// |-tube fluid-|-inner tube-|- annular air -|-heater elem-|-insulation-| ambient
+/// |            |            |               |             |            |
+/// |            |            |               |             |            |
+///
+/// 
+/// The convection bits themselves should work since they are essentially 
+/// the same as the shell and tube heat exchanger. Provided I copied 
+/// them correctly. The radiation bits are new and will need testing. 
+///
+/// I unit tested radiation heat transfer view factors to see that 
+/// the coaxial cylinder view factors sum up to one. But the energy input 
+/// into the heater should equal the energy loss through convection 
+/// and radiation at steady state.
+///
+///
+/// Basically, in the UW madison FLiBe loop, heaters are 1.7 kW each of power.
+/// Which means the heating element should have a 1.7 kW input.
+///
+/// At steady state, the heating element should lose 
+///
+/// (1) heat through radiant heat to the inner tube 
+/// (2) heat through radiant heat to the exterior 
+/// (3) heat through radiant heat to the axial annular openings between 
+/// the inner tube and heating element 
+/// (4) heat loss to insulation.
+///
+/// At steady state, heat loss from heating element to 
+/// the insulation should be the same as heat loss from insulation 
+/// to the environment.
+///
+/// So a steady state energy balance can be performed over both 
+/// heating element and insulaiton together. If the total heat loss 
+/// is the same as total heat input, then the test passes.
+///
+///
+/// Likewise, the tube fluid and inner tube also need to have 
+/// proper energy balance. The net heat received from the radiant heater 
+/// must be equal to:
+///
+/// (1) convective heat loss through annular air
+/// (2) radiative heat loss to annular axis
+/// (3) convective heat loss through tube fluid
+///
+///
+/// In all these, axial radiation and conduction is neglected
+///
+///
+///
+///
+pub mod tests;
+
