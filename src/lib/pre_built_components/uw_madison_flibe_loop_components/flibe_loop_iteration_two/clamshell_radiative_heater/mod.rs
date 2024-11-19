@@ -129,6 +129,10 @@ pub mod fluid_component;
 ///  timestep advancing and other such steps
 pub mod calculation;
 
+/// postprocessing, which also includes how much radiant heat exits 
+/// the heater 
+pub mod postprocessing;
+
 
 /// there some unit tests I will need to conduct for the clamshell
 /// radiative heater in order to test if the heater is functioning 
