@@ -80,7 +80,7 @@ impl ClamshellRadiativeHeater {
     }
 
     /// sets the tube side mass flowrate 
-    pub fn set_shell_side_total_mass_flowrate(&mut self,
+    pub fn set_annular_side_total_mass_flowrate(&mut self,
         mass_flowrate_through_annulus: MassRate) {
 
         let mut shell_side_fluid_array: FluidArray = 

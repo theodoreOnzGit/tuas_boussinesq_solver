@@ -122,7 +122,8 @@ pub struct ClamshellRadiativeHeater {
 /// stuff such as conductances are calculated here
 pub mod preprocessing;
 
-/// 
+/// fluid component traits
+/// and other things helping make fluid calculations easier
 pub mod fluid_component;
 
 

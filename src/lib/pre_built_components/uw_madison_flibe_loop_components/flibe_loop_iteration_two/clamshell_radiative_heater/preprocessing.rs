@@ -3,7 +3,6 @@ use std::thread::JoinHandle;
 use std::thread;
 
 use uom::si::ratio::ratio;
-use uom::si::thermodynamic_temperature::kelvin;
 use uom::ConstZero;
 use uom::si::pressure::atmosphere;
 use uom::si::f64::*;
@@ -68,7 +67,7 @@ impl ClamshellRadiativeHeater {
     {
         // set the mass flowrates first on shell and tube side
         self.set_tube_side_total_mass_flowrate(tube_mass_flowrate);
-        self.set_shell_side_total_mass_flowrate(annular_air_mass_flowrate);
+        self.set_annular_side_total_mass_flowrate(annular_air_mass_flowrate);
 
         // first let's get all the conductances 
         // for convective heat transfer
@@ -1618,6 +1617,38 @@ impl ClamshellRadiativeHeater {
     }
 
 
+    /// spawns a thread and moves the clone of the entire heater object into the 
+    /// thread, "locking" it for parallel computation
+    ///
+    /// once that is done, the join handle is returned 
+    /// which when unwrapped, returns the heater object
+    pub fn lateral_connection_thread_spawn(&self,
+        prandtl_wall_correction_setting: bool,
+        tube_side_total_mass_flowrate: MassRate,
+        shell_side_total_mass_flowrate: MassRate,) -> JoinHandle<Self>{
+
+        let mut heater_clone = self.clone();
+
+        // move ptr into a new thread 
+
+        let join_handle = thread::spawn(
+            move || -> Self {
+
+                // carry out the connection calculations
+                heater_clone.
+                    lateral_and_miscellaneous_connections(
+                        prandtl_wall_correction_setting,
+                        tube_side_total_mass_flowrate,
+                        shell_side_total_mass_flowrate,).unwrap();
+
+                heater_clone
+
+            }
+        );
+
+        return join_handle;
+
+    }
 
     /// calibrates the insulation thickness of this pipe or component, 
     /// to increase or decrease parasitic heat loss
