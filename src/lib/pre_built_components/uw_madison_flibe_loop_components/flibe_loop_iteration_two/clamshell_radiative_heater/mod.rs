@@ -126,6 +126,9 @@ pub mod preprocessing;
 /// and other things helping make fluid calculations easier
 pub mod fluid_component;
 
+///  timestep advancing and other such steps
+pub mod calculation;
+
 
 /// there some unit tests I will need to conduct for the clamshell
 /// radiative heater in order to test if the heater is functioning 
