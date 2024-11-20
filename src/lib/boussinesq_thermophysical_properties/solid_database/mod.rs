@@ -23,3 +23,8 @@ pub mod custom_solid_material;
 /// Thermal Science and Engineering Progress, 42, 101906.
 pub mod pyrogel_hps;
 
+
+
+/// generic heating element for 
+/// heater, based roughly on tungsten
+pub mod generic_heating_element;
