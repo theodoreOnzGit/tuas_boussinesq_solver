@@ -1,3 +1,4 @@
+use uom::si::diffusion_coefficient::square_millimeter_per_second;
 use uom::si::f64::*;
 use roots::{find_root_brent, SimpleConvergency};
 use specific_enthalpy::try_get_h;
@@ -42,4 +43,20 @@ pub fn fecral_surf_roughness() -> Length {
 pub fn fecral_const_cp_estimate() -> Result<SpecificHeatCapacity, TuasLibError> {
     return Ok(SpecificHeatCapacity::new::<joule_per_kilogram_kelvin>(0.8));
 }
+
+
+
+/// Field, K. G., Snead, M. A., Yamamoto, Y., & Terrani, K. A. (2017). 
+/// Handbook on the material properties of FeCrAl alloys for nuclear 
+/// power production applications. Nuclear Technology Research and 
+/// Development.
+///
+/// While thermal diffusivity is temperature dependent, this provides a rough 
+/// estimate in for simpler approximate calculations 
+///
+pub fn fecral_const_thermal_diffusivity_estimate() -> 
+Result<DiffusionCoefficient, TuasLibError> {
+    return Ok(DiffusionCoefficient::new::<square_millimeter_per_second>(4.0));
+}
+
 
