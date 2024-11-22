@@ -60,3 +60,13 @@ Result<DiffusionCoefficient, TuasLibError> {
 }
 
 
+/// Field, K. G., Snead, M. A., Yamamoto, Y., & Terrani, K. A. (2017). 
+/// Handbook on the material properties of FeCrAl alloys for nuclear 
+/// power production applications. Nuclear Technology Research and 
+/// Development.
+///
+/// 
+pub fn fecral_thermal_conductivity(temperature: ThermodynamicTemperature) -> 
+Result<ThermalConductivity,TuasLibError> {
+    todo!()
+}
