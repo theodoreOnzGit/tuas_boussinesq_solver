@@ -28,3 +28,6 @@ pub mod pyrogel_hps;
 /// generic heating element for 
 /// heater, based roughly on tungsten
 pub mod generic_heating_element;
+
+/// FeCrAl, used as a heating element or for alloys in LWR
+pub mod fecral;
