@@ -51,7 +51,7 @@ Result<(),crate::tuas_lib_error::TuasLibError>{
     use crate::pre_built_components::
         ciet_steady_state_natural_circulation_test_components::dracs_loop_components::*;
     use crate::pre_built_components::ciet_three_branch_plus_dracs::components::{new_active_ctah_horizontal, new_active_ctah_vertical};
-    use crate::pre_built_components::ciet_three_branch_plus_dracs::solver_functions::three_branch_pri_loop_flowrates;
+    use crate::pre_built_components::ciet_three_branch_plus_dracs::solver_functions::{ciet_pri_loop_three_branch_link_up_components, three_branch_pri_loop_flowrates};
     use crate::prelude::beta_testing::FluidArray;
     use uom::ConstZero;
 
@@ -203,7 +203,7 @@ Result<(),crate::tuas_lib_error::TuasLibError>{
     let mut pipe_6a = new_pipe_6a(initial_temperature);
     let mut ctah_vertical_label_7a = new_active_ctah_vertical(initial_temperature);
     let mut ctah_horizontal_label_7b = new_active_ctah_horizontal(initial_temperature);
-    let pipe_8a = new_pipe_8a(initial_temperature);
+    let mut pipe_8a = new_pipe_8a(initial_temperature);
     let mut static_mixer_40_label_8 = new_static_mixer_40_label_8(
         initial_temperature);
     let mut pipe_9 = new_pipe_9(initial_temperature);
@@ -471,6 +471,13 @@ Result<(),crate::tuas_lib_error::TuasLibError>{
 
         };
 
+        // placeholder for ctah heat trf coeff 
+
+        let ctah_heat_transfer_coeff: HeatTransfer = {
+            // need to put pid here
+            reference_tchx_htc
+        };
+
         // fluid calculation loop 
         //
         // first, absolute mass flowrate across two branches
@@ -581,11 +588,14 @@ Result<(),crate::tuas_lib_error::TuasLibError>{
             &mut pipe_38, 
             &mut pipe_39);
 
-        coupled_dracs_pri_loop_dhx_heater_link_up_components(
-            counter_clockwise_dhx_flowrate, 
+        ciet_pri_loop_three_branch_link_up_components(
+            dhx_flow, 
+            heater_flow, 
+            ctah_flow, 
             heat_rate_through_heater, 
             average_temperature_for_density_calcs, 
             ambient_htc, 
+            ctah_heat_transfer_coeff, 
             &mut pipe_4, 
             &mut pipe_3, 
             &mut pipe_2a, 
@@ -606,7 +616,52 @@ Result<(),crate::tuas_lib_error::TuasLibError>{
             &mut pipe_21, 
             &mut pipe_20, 
             &mut pipe_19, 
-            &mut pipe_17b);
+            &mut pipe_17b, 
+            &mut pipe_5b, 
+            &mut static_mixer_41_label_6, 
+            &mut pipe_6a, 
+            &mut ctah_vertical_label_7a, 
+            &mut ctah_horizontal_label_7b, 
+            &mut pipe_8a, 
+            &mut static_mixer_40_label_8, 
+            &mut pipe_9, 
+            &mut pipe_10, 
+            &mut pipe_11, 
+            &mut pipe_12, 
+            &mut ctah_pump, 
+            &mut pipe_13, 
+            &mut pipe_14, 
+            &mut flowmeter_40_14a, 
+            &mut pipe_15, 
+            &mut pipe_16, 
+            &mut pipe_17a);
+
+        //coupled_dracs_pri_loop_dhx_heater_link_up_components(
+        //    counter_clockwise_dhx_flowrate, 
+        //    heat_rate_through_heater, 
+        //    average_temperature_for_density_calcs, 
+        //    ambient_htc, 
+        //    &mut pipe_4, 
+        //    &mut pipe_3, 
+        //    &mut pipe_2a, 
+        //    &mut static_mixer_10_label_2, 
+        //    &mut heater_top_head_1a, 
+        //    &mut heater_ver_1, 
+        //    &mut heater_bottom_head_1b, 
+        //    &mut pipe_18, 
+        //    &mut pipe_5a, 
+        //    &mut pipe_26, 
+        //    &mut pipe_25a, 
+        //    &mut static_mixer_21_label_25, 
+        //    &mut dhx_sthe, 
+        //    &mut static_mixer_20_label_23, 
+        //    &mut pipe_23a, 
+        //    &mut pipe_22, 
+        //    &mut flowmeter_20_21a, 
+        //    &mut pipe_21, 
+        //    &mut pipe_20, 
+        //    &mut pipe_19, 
+        //    &mut pipe_17b);
 
         // need to calibrate dhx sthe ambient htc
         // because the coupled_dracs_pri_loop_dhx_heater_link_up_components 

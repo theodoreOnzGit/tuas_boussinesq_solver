@@ -533,6 +533,10 @@ pub fn ciet_pri_loop_three_branch_link_up_components(
             pipe_17b.pipe_fluid_array = 
                 pipe_17b_fluid_array_clone.try_into().unwrap();
 
+            // a more elegant solution would be to create two single 
+            // cvs with some thermal inertia 
+            // as like mixing nodes or something. 
+            // Then link the cvs to them
 
 
         }
