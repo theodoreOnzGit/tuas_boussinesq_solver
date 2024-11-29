@@ -253,6 +253,10 @@ pub fn ciet_pri_loop_three_branch_link_up_components(
 
             // first,
             // flow downwards in DHX branch
+            top_mixing_node_5a_5b_4.link_to_front(
+                &mut pipe_5a.pipe_fluid_array, 
+                advection_heat_transfer_interaction_dhx)
+                .unwrap();
 
             pipe_5a.pipe_fluid_array.link_to_front(
                 &mut pipe_26.pipe_fluid_array, 
@@ -328,13 +332,17 @@ pub fn ciet_pri_loop_three_branch_link_up_components(
             // now from DHX flow to heater branch
             //
             pipe_17b.pipe_fluid_array.link_to_front(
-                &mut pipe_18.pipe_fluid_array, 
+                bottom_mixing_node_17a_17b_18, 
                 advection_heat_transfer_interaction_dhx)
                 .unwrap();
             }
         {
             // next flow downwards through
             // heater branch
+            top_mixing_node_5a_5b_4.link_to_front(
+                &mut pipe_4.pipe_fluid_array, 
+                advection_heat_transfer_interaction_heater)
+                .unwrap();
 
             pipe_4.pipe_fluid_array.link_to_front(
                 &mut pipe_3.pipe_fluid_array, 
@@ -374,11 +382,21 @@ pub fn ciet_pri_loop_three_branch_link_up_components(
                 advection_heat_transfer_interaction_heater)
                 .unwrap();
 
+            pipe_18.pipe_fluid_array.link_to_front(
+                bottom_mixing_node_17a_17b_18, 
+                advection_heat_transfer_interaction_heater)
+                .unwrap();
+
 
             }
 
         {
             // thirdly ctah branch
+            top_mixing_node_5a_5b_4.link_to_front(
+                &mut pipe_5b.pipe_fluid_array, 
+                advection_heat_transfer_interaction_ctah)
+                .unwrap();
+
             pipe_5b.pipe_fluid_array.link_to_front(
                 &mut static_mixer_41_label_6.pipe_fluid_array, 
                 advection_heat_transfer_interaction_ctah)
@@ -485,6 +503,11 @@ pub fn ciet_pri_loop_three_branch_link_up_components(
                 advection_heat_transfer_interaction_ctah)
                 .unwrap();
 
+            pipe_17a.pipe_fluid_array.link_to_front(
+                bottom_mixing_node_17a_17b_18, 
+                advection_heat_transfer_interaction_ctah)
+                .unwrap();
+
         }
 
         {
@@ -524,36 +547,11 @@ pub fn ciet_pri_loop_three_branch_link_up_components(
             // this mixing node is a single cv
 
 
-            top_mixing_node_5a_5b_4.link_to_front(
-                &mut pipe_5a.pipe_fluid_array, 
-                advection_heat_transfer_interaction_dhx)
-                .unwrap();
-
-            top_mixing_node_5a_5b_4.link_to_front(
-                &mut pipe_4.pipe_fluid_array, 
-                advection_heat_transfer_interaction_heater)
-                .unwrap();
-
-            top_mixing_node_5a_5b_4.link_to_front(
-                &mut pipe_5b.pipe_fluid_array, 
-                advection_heat_transfer_interaction_ctah)
-                .unwrap();
 
 
-            pipe_17b.pipe_fluid_array.link_to_front(
-                bottom_mixing_node_17a_17b_18, 
-                advection_heat_transfer_interaction_dhx)
-                .unwrap();
 
-            pipe_18.pipe_fluid_array.link_to_front(
-                bottom_mixing_node_17a_17b_18, 
-                advection_heat_transfer_interaction_heater)
-                .unwrap();
 
-            pipe_17a.pipe_fluid_array.link_to_front(
-                bottom_mixing_node_17a_17b_18, 
-                advection_heat_transfer_interaction_ctah)
-                .unwrap();
+
 
         }
 

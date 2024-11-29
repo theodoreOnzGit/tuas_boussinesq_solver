@@ -105,7 +105,7 @@ Result<(),crate::tuas_lib_error::TuasLibError>{
     // for this timestep, the simulation fails around 185s of simulated time
     //
     // the conclusion is that this instability is almost independent of timestep
-    let timestep = Time::new::<second>(0.5);
+    let timestep = Time::new::<second>(0.1);
     let heat_rate_through_heater = input_power;
     let mut tchx_heat_transfer_coeff: HeatTransfer;
 
@@ -231,7 +231,7 @@ Result<(),crate::tuas_lib_error::TuasLibError>{
     let mixing_node_diameter = Length::new::<centimeter>(50.84);
     let mixing_node_material = LiquidMaterial::TherminolVP1;
     let mixing_node_pressure = Pressure::new::<atmosphere>(1.0);
-    let mut mixing_node = SingleCVNode::new_sphere(
+    let mixing_node = SingleCVNode::new_sphere(
         mixing_node_diameter, 
         mixing_node_material.into(), 
         initial_temperature, 
@@ -539,6 +539,7 @@ Result<(),crate::tuas_lib_error::TuasLibError>{
 
 
         // flow should go from up to down
+        // this was tested ok
         let (dhx_flow, heater_flow, ctah_flow) = 
             three_branch_pri_loop_flowrates(
                 pump_pressure, 
