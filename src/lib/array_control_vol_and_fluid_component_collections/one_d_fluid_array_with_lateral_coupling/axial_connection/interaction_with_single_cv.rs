@@ -73,8 +73,8 @@ impl FluidArray {
         // now link both cvs or calculate between them
 
         SingleCVNode::calculate_between_two_singular_cv_nodes(
-            single_cv_node_other,
             single_cv_node_self,
+            single_cv_node_other,
             interaction)
     }
 
