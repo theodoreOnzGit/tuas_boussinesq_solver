@@ -52,7 +52,7 @@ Result<(),crate::tuas_lib_error::TuasLibError>{
     use crate::pre_built_components::
         ciet_steady_state_natural_circulation_test_components::dracs_loop_components::*;
     use crate::pre_built_components::ciet_three_branch_plus_dracs::components::{new_active_ctah_horizontal, new_active_ctah_vertical};
-    use crate::pre_built_components::ciet_three_branch_plus_dracs::solver_functions::{ciet_pri_loop_three_branch_link_up_components, three_branch_pri_loop_flowrates};
+    use crate::pre_built_components::ciet_three_branch_plus_dracs::solver_functions::{ciet_pri_loop_three_branch_link_up_components, pri_loop_three_branch_advance_timestep_except_dhx, three_branch_pri_loop_flowrates};
     use crate::prelude::beta_testing::{FluidArray, HeatTransferEntity};
     use crate::single_control_vol::SingleCVNode;
     use uom::ConstZero;
@@ -228,7 +228,7 @@ Result<(),crate::tuas_lib_error::TuasLibError>{
 
     // mixing node is a sphere about diameter of basketball (1 ft) 
 
-    let mixing_node_diameter = Length::new::<centimeter>(30.84);
+    let mixing_node_diameter = Length::new::<centimeter>(50.84);
     let mixing_node_material = LiquidMaterial::TherminolVP1;
     let mixing_node_pressure = Pressure::new::<atmosphere>(1.0);
     let mut mixing_node = SingleCVNode::new_sphere(
@@ -239,7 +239,7 @@ Result<(),crate::tuas_lib_error::TuasLibError>{
         .unwrap();
 
     top_mixing_node_5a_5b_4 = mixing_node.clone().into();
-    bottom_mixing_node_17a_17b_18 = mixing_node.clone().into();
+    bottom_mixing_node_17a_17b_18 = mixing_node.into();
 
     
     
@@ -614,6 +614,8 @@ Result<(),crate::tuas_lib_error::TuasLibError>{
             &mut pipe_38, 
             &mut pipe_39);
 
+        dbg!(&(dhx_flow,heater_flow,ctah_flow));
+
         ciet_pri_loop_three_branch_link_up_components(
             dhx_flow, 
             heater_flow, 
@@ -715,15 +717,35 @@ Result<(),crate::tuas_lib_error::TuasLibError>{
             &mut pipe_36a, &mut pipe_37, &mut flowmeter_60_37a, 
             &mut pipe_38, &mut pipe_39);
 
-        
-        pri_loop_advance_timestep_dhx_br_and_heater_br_except_dhx(
-            timestep, &mut pipe_4, &mut pipe_3, &mut pipe_2a, 
-            &mut static_mixer_10_label_2, &mut heater_top_head_1a, 
-            &mut heater_ver_1, &mut heater_bottom_head_1b, 
-            &mut pipe_18, &mut pipe_5a, &mut pipe_26, &mut pipe_25a, 
-            &mut static_mixer_21_label_25, &mut static_mixer_20_label_23, 
-            &mut pipe_23a, &mut pipe_22, &mut flowmeter_20_21a, 
-            &mut pipe_21, &mut pipe_20, &mut pipe_19, &mut pipe_17b);
+
+        // pri_loop_advance_timestep_dhx_br_and_heater_br_except_dhx(
+        //     timestep, &mut pipe_4, &mut pipe_3, &mut pipe_2a, 
+        //     &mut static_mixer_10_label_2, &mut heater_top_head_1a, 
+        //     &mut heater_ver_1, &mut heater_bottom_head_1b, 
+        //     &mut pipe_18, &mut pipe_5a, &mut pipe_26, &mut pipe_25a, 
+        //     &mut static_mixer_21_label_25, &mut static_mixer_20_label_23, 
+        //     &mut pipe_23a, &mut pipe_22, &mut flowmeter_20_21a, 
+        //     &mut pipe_21, &mut pipe_20, &mut pipe_19, &mut pipe_17b);
+        pri_loop_three_branch_advance_timestep_except_dhx(
+            timestep, &mut pipe_4, &mut pipe_3, 
+            &mut pipe_2a, &mut static_mixer_10_label_2, 
+            &mut heater_top_head_1a, &mut heater_ver_1, 
+            &mut heater_bottom_head_1b, &mut pipe_18, 
+            &mut pipe_5a, &mut pipe_26, &mut pipe_25a, 
+            &mut static_mixer_21_label_25, 
+            &mut static_mixer_20_label_23, &mut pipe_23a, 
+            &mut pipe_22, &mut flowmeter_20_21a, 
+            &mut pipe_21, &mut pipe_20, &mut pipe_19, 
+            &mut pipe_17b, &mut pipe_5b, 
+            &mut static_mixer_41_label_6, &mut pipe_6a, 
+            &mut ctah_vertical_label_7a, 
+            &mut ctah_horizontal_label_7b, &mut pipe_8a, 
+            &mut static_mixer_40_label_8, &mut pipe_9, 
+            &mut pipe_10, &mut pipe_11, &mut pipe_12, 
+            &mut ctah_pump, &mut pipe_13, &mut pipe_14, 
+            &mut flowmeter_40_14a, &mut pipe_15, &mut pipe_16, 
+            &mut pipe_17a, &mut top_mixing_node_5a_5b_4, 
+            &mut bottom_mixing_node_17a_17b_18);
 
         // for dhx, a little more care is needed to do the 
         // lateral and misc connections and advance timestep 
