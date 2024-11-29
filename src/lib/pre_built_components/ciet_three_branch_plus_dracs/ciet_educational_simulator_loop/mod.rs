@@ -648,7 +648,6 @@ Result<(),crate::tuas_lib_error::TuasLibError>{
         let tube_side_total_mass_flowrate = -counter_clockwise_dracs_flowrate;
         let shell_side_total_mass_flowrate = counter_clockwise_dhx_flowrate;
 
-        dhx_sthe.heat_transfer_to_ambient = ambient_htc;
         dhx_sthe.lateral_and_miscellaneous_connections(
             prandtl_wall_correction_setting, 
             tube_side_total_mass_flowrate, 

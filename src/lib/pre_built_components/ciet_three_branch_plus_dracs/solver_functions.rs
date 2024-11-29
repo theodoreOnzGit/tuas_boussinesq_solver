@@ -13,6 +13,7 @@ array_control_vol_and_fluid_component_collections::
 fluid_component_collection::
 fluid_component_collection::FluidComponentCollectionMethods;
 use crate::array_control_vol_and_fluid_component_collections::fluid_component_collection::fluid_component_traits::FluidComponentTrait;
+use crate::pre_built_components::ciet_steady_state_natural_circulation_test_components::coupled_dracs_loop_tests::pri_loop_calc_functions::coupled_dracs_pri_loop_dhx_heater_link_up_components;
 use crate::pre_built_components::shell_and_tube_heat_exchanger::SimpleShellAndTubeHeatExchanger;
 use uom::ConstZero;
 
@@ -31,6 +32,357 @@ use crate::boussinesq_thermophysical_properties::LiquidMaterial;
 use crate::heat_transfer_correlations::heat_transfer_interactions::
 heat_transfer_interaction_enums::HeatTransferInteractionType;
 
+
+/// heat transfer for pri loop, all three branch flowrates 
+/// required 
+
+/// now the heat transfer for the DRACS loop 
+/// for a single timestep, given mass flowrate in a counter clockwise 
+/// fashion in the DRACS
+///
+/// you also must specify the heat transfer coefficient to ambient 
+/// which is assumed to be the same throughout the loop
+/// 
+/// flow goes downwards by default through the DHX
+/// to facilitate this, components are linked in a counter clockwise 
+/// fashion in the primary loop
+pub fn ciet_pri_loop_three_branch_link_up_components(
+    dhx_flow: MassRate,
+    heater_flow: MassRate,
+    ctah_flow: MassRate,
+    heat_rate_through_heater: Power,
+    average_temperature_for_density_calcs: ThermodynamicTemperature,
+    ambient_htc: HeatTransfer,
+    pipe_4: &mut InsulatedFluidComponent,
+    pipe_3: &mut InsulatedFluidComponent,
+    pipe_2a: &mut InsulatedFluidComponent,
+    static_mixer_10_label_2: &mut InsulatedFluidComponent,
+    heater_top_head_1a: &mut InsulatedFluidComponent,
+    heater_version1_1: &mut InsulatedFluidComponent,
+    heater_bottom_head_1b: &mut InsulatedFluidComponent,
+    pipe_18: &mut InsulatedFluidComponent,
+    pipe_5a: &mut InsulatedFluidComponent,
+    pipe_26: &mut InsulatedFluidComponent,
+    pipe_25a: &mut InsulatedFluidComponent,
+    static_mixer_21_label_25: &mut InsulatedFluidComponent,
+    dhx_sthe: &mut SimpleShellAndTubeHeatExchanger,
+    static_mixer_20_label_23: &mut InsulatedFluidComponent,
+    pipe_23a: &mut InsulatedFluidComponent,
+    pipe_22: &mut InsulatedFluidComponent,
+    flowmeter_20_21a: &mut NonInsulatedFluidComponent,
+    pipe_21: &mut InsulatedFluidComponent,
+    pipe_20: &mut InsulatedFluidComponent,
+    pipe_19: &mut InsulatedFluidComponent,
+    pipe_17b: &mut InsulatedFluidComponent,
+    ){
+
+        // in the simple case where ctah flow is zero,
+        // meaning ctah flow is blocked, then just link up the 
+        // dhx and heater branches 
+
+        if ctah_flow == MassRate::ZERO {
+            coupled_dracs_pri_loop_dhx_heater_link_up_components(
+                dhx_flow, 
+                heat_rate_through_heater, 
+                average_temperature_for_density_calcs, 
+                ambient_htc, 
+                pipe_4, 
+                pipe_3, 
+                pipe_2a, 
+                static_mixer_10_label_2, 
+                heater_top_head_1a, 
+                heater_version1_1, 
+                heater_bottom_head_1b, 
+                pipe_18, 
+                pipe_5a, 
+                pipe_26, 
+                pipe_25a, 
+                static_mixer_21_label_25, 
+                dhx_sthe, 
+                static_mixer_20_label_23, 
+                pipe_23a, 
+                pipe_22, 
+                flowmeter_20_21a, 
+                pipe_21, 
+                pipe_20, 
+                pipe_19, 
+                pipe_17b);
+
+        }
+
+
+        
+        // create the heat transfer interaction 
+        let advection_heat_transfer_interaction: HeatTransferInteractionType;
+
+        // I'm going to create the advection interaction
+        //
+        // and probably for the sake of density calcs, I'll take the 
+        // average density using DHX outlet and 
+        // TCHX outlet temperatures, average them for the whole loop 
+        // doesn't make much diff tho based on Boussinesq approximation
+
+        let average_therminol_density = 
+            LiquidMaterial::TherminolVP1.try_get_density(
+                average_temperature_for_density_calcs).unwrap();
+
+        advection_heat_transfer_interaction = 
+            HeatTransferInteractionType::
+            new_advection_interaction(dhx_flow, 
+                average_therminol_density, 
+                average_therminol_density);
+
+        // now, let's link the fluid arrays using advection 
+        // (no conduction here axially between arrays)
+        //
+        // note that by default, flow will always go downwards for the 
+        // DHX so components should be linked in a counter clockwise fashion
+        {
+            // first is flow from heater branch to DHX branch
+            pipe_4.pipe_fluid_array.link_to_front(
+                &mut pipe_5a.pipe_fluid_array, 
+                advection_heat_transfer_interaction)
+                .unwrap();
+
+            // then flow downwards in DHX branch
+
+            pipe_5a.pipe_fluid_array.link_to_front(
+                &mut pipe_26.pipe_fluid_array, 
+                advection_heat_transfer_interaction)
+                .unwrap();
+
+            pipe_26.pipe_fluid_array.link_to_front(
+                &mut pipe_25a.pipe_fluid_array, 
+                advection_heat_transfer_interaction)
+                .unwrap();
+
+            pipe_25a.pipe_fluid_array.link_to_front(
+                &mut static_mixer_21_label_25.pipe_fluid_array, 
+                advection_heat_transfer_interaction)
+                .unwrap();
+
+            //note: for shell side fluid array, linking normally is okay 
+            //because there is only one entity
+            //
+            // for tube side fluid array, link normally as well, because 
+            // the advance timestep portion takes care of the parallel 
+            // tube treatment
+
+            static_mixer_21_label_25.pipe_fluid_array.link_to_front(
+                &mut dhx_sthe.shell_side_fluid_array, 
+                advection_heat_transfer_interaction)
+                .unwrap();
+
+            // for dhx, the flow convention in both shell and tube is 
+            // from top to bottom of the branch
+
+            dhx_sthe.shell_side_fluid_array.link_to_front(
+                &mut static_mixer_20_label_23.pipe_fluid_array, 
+                advection_heat_transfer_interaction)
+                .unwrap();
+
+            static_mixer_20_label_23.pipe_fluid_array.link_to_front(
+                &mut pipe_23a.pipe_fluid_array, 
+                advection_heat_transfer_interaction)
+                .unwrap();
+
+            pipe_23a.pipe_fluid_array.link_to_front(
+                &mut pipe_22.pipe_fluid_array, 
+                advection_heat_transfer_interaction)
+                .unwrap();
+
+            pipe_22.pipe_fluid_array.link_to_front(
+                &mut flowmeter_20_21a.pipe_fluid_array, 
+                advection_heat_transfer_interaction)
+                .unwrap();
+
+            flowmeter_20_21a.pipe_fluid_array.link_to_front(
+                &mut pipe_21.pipe_fluid_array, 
+                advection_heat_transfer_interaction)
+                .unwrap();
+
+            pipe_21.pipe_fluid_array.link_to_front(
+                &mut pipe_20.pipe_fluid_array, 
+                advection_heat_transfer_interaction)
+                .unwrap();
+
+
+            pipe_20.pipe_fluid_array.link_to_front(
+                &mut pipe_19.pipe_fluid_array, 
+                advection_heat_transfer_interaction)
+                .unwrap();
+
+            pipe_19.pipe_fluid_array.link_to_front(
+                &mut pipe_17b.pipe_fluid_array, 
+                advection_heat_transfer_interaction)
+                .unwrap();
+
+            // now from DHX flow to heater branch
+            //
+            pipe_17b.pipe_fluid_array.link_to_front(
+                &mut pipe_18.pipe_fluid_array, 
+                advection_heat_transfer_interaction)
+                .unwrap();
+            // heater branch
+
+            pipe_18.pipe_fluid_array.link_to_front(
+                &mut heater_bottom_head_1b.pipe_fluid_array, 
+                advection_heat_transfer_interaction)
+                .unwrap();
+
+            heater_bottom_head_1b.pipe_fluid_array.link_to_front(
+                &mut heater_version1_1.pipe_fluid_array, 
+                advection_heat_transfer_interaction)
+                .unwrap();
+
+            heater_version1_1.pipe_fluid_array.link_to_front(
+                &mut heater_top_head_1a.pipe_fluid_array, 
+                advection_heat_transfer_interaction)
+                .unwrap();
+
+            heater_top_head_1a.pipe_fluid_array.link_to_front(
+                &mut static_mixer_10_label_2.pipe_fluid_array, 
+                advection_heat_transfer_interaction)
+                .unwrap();
+
+            static_mixer_10_label_2.pipe_fluid_array.link_to_front(
+                &mut pipe_2a.pipe_fluid_array, 
+                advection_heat_transfer_interaction)
+                .unwrap();
+
+            pipe_2a.pipe_fluid_array.link_to_front(
+                &mut pipe_3.pipe_fluid_array, 
+                advection_heat_transfer_interaction)
+                .unwrap();
+
+            pipe_3.pipe_fluid_array.link_to_front(
+                &mut pipe_4.pipe_fluid_array, 
+                advection_heat_transfer_interaction)
+                .unwrap();
+
+        }
+        // set the relevant heat transfer coefficients 
+        // based on the heat transfer to ambient from insulation 
+        // coeff
+        //
+        // also set the ambient temperature for each component
+        {
+            // heater branch
+            pipe_18.heat_transfer_to_ambient = ambient_htc;
+            heater_bottom_head_1b.heat_transfer_to_ambient = ambient_htc;
+            heater_version1_1.heat_transfer_to_ambient = ambient_htc;
+            heater_top_head_1a.heat_transfer_to_ambient = ambient_htc;
+            static_mixer_10_label_2.heat_transfer_to_ambient = ambient_htc;
+            pipe_2a.heat_transfer_to_ambient = ambient_htc;
+            pipe_3.heat_transfer_to_ambient = ambient_htc;
+            pipe_4.heat_transfer_to_ambient = ambient_htc;
+
+            // DHX branch 
+            pipe_5a.heat_transfer_to_ambient = ambient_htc;
+            pipe_26.heat_transfer_to_ambient = ambient_htc;
+            pipe_25a.heat_transfer_to_ambient = ambient_htc;
+            static_mixer_21_label_25.heat_transfer_to_ambient = ambient_htc;
+            dhx_sthe.heat_transfer_to_ambient = ambient_htc;
+            static_mixer_20_label_23.heat_transfer_to_ambient = ambient_htc;
+            pipe_23a.heat_transfer_to_ambient = ambient_htc;
+            pipe_22.heat_transfer_to_ambient = ambient_htc;
+            flowmeter_20_21a.heat_transfer_to_ambient = ambient_htc;
+            pipe_21.heat_transfer_to_ambient = ambient_htc;
+            pipe_20.heat_transfer_to_ambient = ambient_htc;
+            pipe_19.heat_transfer_to_ambient = ambient_htc;
+
+            // ambient temp
+            let ambient_temp_user_set = 
+                ThermodynamicTemperature::new::<degree_celsius>(20.0);
+
+            // heater branch
+            pipe_18.ambient_temperature = ambient_temp_user_set;
+            heater_bottom_head_1b.ambient_temperature = ambient_temp_user_set;
+            heater_version1_1.ambient_temperature = ambient_temp_user_set;
+            heater_top_head_1a.ambient_temperature = ambient_temp_user_set;
+            static_mixer_10_label_2.ambient_temperature = ambient_temp_user_set;
+            pipe_2a.ambient_temperature = ambient_temp_user_set;
+            pipe_3.ambient_temperature = ambient_temp_user_set;
+            pipe_4.ambient_temperature = ambient_temp_user_set;
+            pipe_5a.ambient_temperature = ambient_temp_user_set;
+
+            // DHX branch 
+            pipe_5a.ambient_temperature = ambient_temp_user_set;
+            pipe_26.ambient_temperature = ambient_temp_user_set;
+            pipe_25a.ambient_temperature = ambient_temp_user_set;
+            static_mixer_21_label_25.ambient_temperature = ambient_temp_user_set;
+            dhx_sthe.ambient_temperature = ambient_temp_user_set;
+            static_mixer_20_label_23.ambient_temperature = ambient_temp_user_set;
+            pipe_23a.ambient_temperature = ambient_temp_user_set;
+            pipe_22.ambient_temperature = ambient_temp_user_set;
+            flowmeter_20_21a.ambient_temperature = ambient_temp_user_set;
+            pipe_21.ambient_temperature = ambient_temp_user_set;
+            pipe_20.ambient_temperature = ambient_temp_user_set;
+            pipe_19.ambient_temperature = ambient_temp_user_set;
+            
+        }
+        // add lateral heat losses and power through heater
+        // for everything except the DHX STHE
+        // because DHX sthe requires mass flowrates in both sides of the loop
+        {
+            let zero_power: Power = Power::ZERO;
+            // heater branch
+            pipe_18.lateral_and_miscellaneous_connections_no_wall_correction(
+                dhx_flow, zero_power).unwrap();
+            heater_bottom_head_1b.lateral_and_miscellaneous_connections_no_wall_correction(
+                dhx_flow, zero_power).unwrap();
+
+            heater_version1_1.lateral_and_miscellaneous_connections_no_wall_correction(
+                dhx_flow, heat_rate_through_heater).unwrap();
+
+            heater_top_head_1a.lateral_and_miscellaneous_connections_no_wall_correction(
+                dhx_flow, zero_power).unwrap();
+
+            static_mixer_10_label_2.lateral_and_miscellaneous_connections_no_wall_correction(
+                dhx_flow, zero_power).unwrap();
+
+            pipe_2a.lateral_and_miscellaneous_connections_no_wall_correction(
+                dhx_flow, zero_power).unwrap();
+
+            pipe_3.lateral_and_miscellaneous_connections_no_wall_correction(
+                dhx_flow, zero_power).unwrap();
+
+            pipe_4.lateral_and_miscellaneous_connections_no_wall_correction(
+                dhx_flow, zero_power).unwrap();
+
+
+            // DHX branch 
+            pipe_5a.lateral_and_miscellaneous_connections_no_wall_correction(
+                dhx_flow, zero_power).unwrap();
+
+            pipe_26.lateral_and_miscellaneous_connections_no_wall_correction(
+                dhx_flow, zero_power).unwrap();
+            pipe_25a.lateral_and_miscellaneous_connections_no_wall_correction(
+                dhx_flow, zero_power).unwrap();
+            static_mixer_21_label_25.lateral_and_miscellaneous_connections_no_wall_correction(
+                dhx_flow, zero_power).unwrap();
+            static_mixer_20_label_23.lateral_and_miscellaneous_connections_no_wall_correction(
+                dhx_flow, zero_power).unwrap();
+            pipe_23a.lateral_and_miscellaneous_connections_no_wall_correction(
+                dhx_flow, zero_power).unwrap();
+            pipe_22.lateral_and_miscellaneous_connections_no_wall_correction(
+                dhx_flow, zero_power).unwrap();
+            flowmeter_20_21a.lateral_and_miscellaneous_connections_no_wall_correction(
+                dhx_flow, zero_power).unwrap();
+            pipe_21.lateral_and_miscellaneous_connections_no_wall_correction(
+                dhx_flow, zero_power).unwrap();
+            pipe_20.lateral_and_miscellaneous_connections_no_wall_correction(
+                dhx_flow, zero_power).unwrap();
+            pipe_19.lateral_and_miscellaneous_connections_no_wall_correction(
+                dhx_flow, zero_power).unwrap();
+            pipe_17b.lateral_and_miscellaneous_connections_no_wall_correction(
+                dhx_flow, zero_power).unwrap();
+        }
+
+        // now we are done
+        //
+
+}
 
 /// fluid mechanics bit for DRACS loop
 /// calculate the fluid mechanics for the two branches in parallel
