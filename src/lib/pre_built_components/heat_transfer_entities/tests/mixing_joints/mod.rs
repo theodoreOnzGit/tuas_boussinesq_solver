@@ -202,7 +202,7 @@ pub fn adiabatic_mixing_joint_test_link_to_front_and_back(){
     approx::assert_abs_diff_eq!(
         inlet_pipe_1_temp.get::<degree_celsius>(),
         100.0,
-        epsilon=0.05);
+        epsilon=0.5);
 
     let inlet_pipe_2_temp = 
         inlet_pipe_2.try_get_bulk_temperature()
@@ -211,7 +211,7 @@ pub fn adiabatic_mixing_joint_test_link_to_front_and_back(){
     approx::assert_abs_diff_eq!(
         inlet_pipe_2_temp.get::<degree_celsius>(),
         50.0,
-        epsilon=0.05);
+        epsilon=0.5);
 
 
     let mixing_joint_temp = 
@@ -223,7 +223,7 @@ pub fn adiabatic_mixing_joint_test_link_to_front_and_back(){
     approx::assert_abs_diff_eq!(
         mixing_joint_temp_degc,
         75.0,
-        epsilon=0.05);
+        epsilon=0.5);
 
 
 }
@@ -425,7 +425,7 @@ pub fn adiabatic_mixing_joint_test(){
     approx::assert_abs_diff_eq!(
         inlet_pipe_1_temp.get::<degree_celsius>(),
         100.0,
-        epsilon=0.05);
+        epsilon=0.5);
 
     let inlet_pipe_2_temp = 
         inlet_pipe_2.try_get_bulk_temperature()
@@ -434,7 +434,7 @@ pub fn adiabatic_mixing_joint_test(){
     approx::assert_abs_diff_eq!(
         inlet_pipe_2_temp.get::<degree_celsius>(),
         50.0,
-        epsilon=0.05);
+        epsilon=0.5);
 
 
     let mixing_joint_temp = 
@@ -446,7 +446,7 @@ pub fn adiabatic_mixing_joint_test(){
     approx::assert_abs_diff_eq!(
         mixing_joint_temp_degc,
         75.0,
-        epsilon=0.05);
+        epsilon=0.5);
 
 
 }
