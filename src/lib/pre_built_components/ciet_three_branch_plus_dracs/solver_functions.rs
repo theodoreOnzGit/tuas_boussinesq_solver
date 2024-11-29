@@ -13,7 +13,6 @@ array_control_vol_and_fluid_component_collections::
 fluid_component_collection::
 fluid_component_collection::FluidComponentCollectionMethods;
 use crate::array_control_vol_and_fluid_component_collections::fluid_component_collection::fluid_component_traits::FluidComponentTrait;
-use crate::pre_built_components::ciet_steady_state_natural_circulation_test_components::coupled_dracs_loop_tests::pri_loop_calc_functions::get_abs_mass_flowrate_across_two_branches;
 use crate::pre_built_components::shell_and_tube_heat_exchanger::SimpleShellAndTubeHeatExchanger;
 use uom::ConstZero;
 
@@ -65,6 +64,10 @@ MassRate {
 }
 
 
+/// fluid mechanics bit for pri loop
+/// calculate the fluid mechanics for the two branches in parallel
+/// basically, mass flowrate
+///
 pub fn get_mass_flowrate_two_branches(
     dracs_branches: &FluidComponentSuperCollection) -> 
 (MassRate, MassRate) {
