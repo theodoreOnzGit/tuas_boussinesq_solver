@@ -202,8 +202,9 @@ pub fn ciet_pri_loop_three_branch_link_up_components(
     bottom_mixing_node_17a_17b_18: &mut HeatTransferEntity,
     ){
 
+
         // create the heat transfer interaction 
-        let advection_heat_transfer_interaction_dhx_branch: HeatTransferInteractionType;
+        let advection_heat_transfer_interaction: HeatTransferInteractionType;
 
         // I'm going to create the advection interaction
         //
@@ -216,7 +217,7 @@ pub fn ciet_pri_loop_three_branch_link_up_components(
             LiquidMaterial::TherminolVP1.try_get_density(
                 average_temperature_for_density_calcs).unwrap();
 
-        advection_heat_transfer_interaction_dhx_branch = 
+        advection_heat_transfer_interaction = 
             HeatTransferInteractionType::
             new_advection_interaction(dhx_flow, 
                 average_therminol_density, 
@@ -231,24 +232,24 @@ pub fn ciet_pri_loop_three_branch_link_up_components(
             // first is flow from heater branch to DHX branch
             pipe_4.pipe_fluid_array.link_to_front(
                 &mut pipe_5a.pipe_fluid_array, 
-                advection_heat_transfer_interaction_dhx_branch)
+                advection_heat_transfer_interaction)
                 .unwrap();
 
             // then flow downwards in DHX branch
 
             pipe_5a.pipe_fluid_array.link_to_front(
                 &mut pipe_26.pipe_fluid_array, 
-                advection_heat_transfer_interaction_dhx_branch)
+                advection_heat_transfer_interaction)
                 .unwrap();
 
             pipe_26.pipe_fluid_array.link_to_front(
                 &mut pipe_25a.pipe_fluid_array, 
-                advection_heat_transfer_interaction_dhx_branch)
+                advection_heat_transfer_interaction)
                 .unwrap();
 
             pipe_25a.pipe_fluid_array.link_to_front(
                 &mut static_mixer_21_label_25.pipe_fluid_array, 
-                advection_heat_transfer_interaction_dhx_branch)
+                advection_heat_transfer_interaction)
                 .unwrap();
 
             //note: for shell side fluid array, linking normally is okay 
@@ -260,7 +261,7 @@ pub fn ciet_pri_loop_three_branch_link_up_components(
 
             static_mixer_21_label_25.pipe_fluid_array.link_to_front(
                 &mut dhx_sthe.shell_side_fluid_array, 
-                advection_heat_transfer_interaction_dhx_branch)
+                advection_heat_transfer_interaction)
                 .unwrap();
 
             // for dhx, the flow convention in both shell and tube is 
@@ -268,93 +269,87 @@ pub fn ciet_pri_loop_three_branch_link_up_components(
 
             dhx_sthe.shell_side_fluid_array.link_to_front(
                 &mut static_mixer_20_label_23.pipe_fluid_array, 
-                advection_heat_transfer_interaction_dhx_branch)
+                advection_heat_transfer_interaction)
                 .unwrap();
 
             static_mixer_20_label_23.pipe_fluid_array.link_to_front(
                 &mut pipe_23a.pipe_fluid_array, 
-                advection_heat_transfer_interaction_dhx_branch)
+                advection_heat_transfer_interaction)
                 .unwrap();
 
             pipe_23a.pipe_fluid_array.link_to_front(
                 &mut pipe_22.pipe_fluid_array, 
-                advection_heat_transfer_interaction_dhx_branch)
+                advection_heat_transfer_interaction)
                 .unwrap();
 
             pipe_22.pipe_fluid_array.link_to_front(
                 &mut flowmeter_20_21a.pipe_fluid_array, 
-                advection_heat_transfer_interaction_dhx_branch)
+                advection_heat_transfer_interaction)
                 .unwrap();
 
             flowmeter_20_21a.pipe_fluid_array.link_to_front(
                 &mut pipe_21.pipe_fluid_array, 
-                advection_heat_transfer_interaction_dhx_branch)
+                advection_heat_transfer_interaction)
                 .unwrap();
 
             pipe_21.pipe_fluid_array.link_to_front(
                 &mut pipe_20.pipe_fluid_array, 
-                advection_heat_transfer_interaction_dhx_branch)
+                advection_heat_transfer_interaction)
                 .unwrap();
 
 
             pipe_20.pipe_fluid_array.link_to_front(
                 &mut pipe_19.pipe_fluid_array, 
-                advection_heat_transfer_interaction_dhx_branch)
+                advection_heat_transfer_interaction)
                 .unwrap();
 
             pipe_19.pipe_fluid_array.link_to_front(
                 &mut pipe_17b.pipe_fluid_array, 
-                advection_heat_transfer_interaction_dhx_branch)
+                advection_heat_transfer_interaction)
                 .unwrap();
 
             // now from DHX flow to heater branch
             //
             pipe_17b.pipe_fluid_array.link_to_front(
                 &mut pipe_18.pipe_fluid_array, 
-                advection_heat_transfer_interaction_dhx_branch)
+                advection_heat_transfer_interaction)
                 .unwrap();
             // heater branch
 
             pipe_18.pipe_fluid_array.link_to_front(
                 &mut heater_bottom_head_1b.pipe_fluid_array, 
-                advection_heat_transfer_interaction_dhx_branch)
+                advection_heat_transfer_interaction)
                 .unwrap();
 
             heater_bottom_head_1b.pipe_fluid_array.link_to_front(
                 &mut heater_version1_1.pipe_fluid_array, 
-                advection_heat_transfer_interaction_dhx_branch)
+                advection_heat_transfer_interaction)
                 .unwrap();
 
             heater_version1_1.pipe_fluid_array.link_to_front(
                 &mut heater_top_head_1a.pipe_fluid_array, 
-                advection_heat_transfer_interaction_dhx_branch)
+                advection_heat_transfer_interaction)
                 .unwrap();
 
             heater_top_head_1a.pipe_fluid_array.link_to_front(
                 &mut static_mixer_10_label_2.pipe_fluid_array, 
-                advection_heat_transfer_interaction_dhx_branch)
+                advection_heat_transfer_interaction)
                 .unwrap();
 
             static_mixer_10_label_2.pipe_fluid_array.link_to_front(
                 &mut pipe_2a.pipe_fluid_array, 
-                advection_heat_transfer_interaction_dhx_branch)
+                advection_heat_transfer_interaction)
                 .unwrap();
 
             pipe_2a.pipe_fluid_array.link_to_front(
                 &mut pipe_3.pipe_fluid_array, 
-                advection_heat_transfer_interaction_dhx_branch)
+                advection_heat_transfer_interaction)
                 .unwrap();
 
             pipe_3.pipe_fluid_array.link_to_front(
                 &mut pipe_4.pipe_fluid_array, 
-                advection_heat_transfer_interaction_dhx_branch)
+                advection_heat_transfer_interaction)
                 .unwrap();
-
-        }
-
-        {
-            // lastly, conduction between branches 
-            // this is yet to be done
 
         }
         // set the relevant heat transfer coefficients 
@@ -387,26 +382,6 @@ pub fn ciet_pri_loop_three_branch_link_up_components(
             pipe_20.heat_transfer_to_ambient = ambient_htc;
             pipe_19.heat_transfer_to_ambient = ambient_htc;
 
-            // ctah branch 
-            pipe_5b.heat_transfer_to_ambient = ambient_htc;
-            static_mixer_41_label_6.heat_transfer_to_ambient = ambient_htc;
-            pipe_6a.heat_transfer_to_ambient = ambient_htc;
-            ctah_vertical_label_7a.heat_transfer_to_ambient = ctah_heat_transfer_coeff;
-            ctah_horizontal_label_7b.heat_transfer_to_ambient = ctah_heat_transfer_coeff;
-            pipe_8a.heat_transfer_to_ambient = ambient_htc;
-            static_mixer_40_label_8.heat_transfer_to_ambient = ambient_htc;
-            pipe_9.heat_transfer_to_ambient = ambient_htc;
-            pipe_10.heat_transfer_to_ambient = ambient_htc;
-            pipe_11.heat_transfer_to_ambient = ambient_htc;
-            pipe_12.heat_transfer_to_ambient = ambient_htc;
-            ctah_pump.heat_transfer_to_ambient = ambient_htc;
-            pipe_13.heat_transfer_to_ambient = ambient_htc;
-            pipe_14.heat_transfer_to_ambient = ambient_htc;
-            flowmeter_40_14a.heat_transfer_to_ambient = ambient_htc;
-            pipe_15.heat_transfer_to_ambient = ambient_htc;
-            pipe_16.heat_transfer_to_ambient = ambient_htc;
-            pipe_17a.heat_transfer_to_ambient = ambient_htc;
-
             // ambient temp
             let ambient_temp_user_set = 
                 ThermodynamicTemperature::new::<degree_celsius>(20.0);
@@ -435,26 +410,6 @@ pub fn ciet_pri_loop_three_branch_link_up_components(
             pipe_21.ambient_temperature = ambient_temp_user_set;
             pipe_20.ambient_temperature = ambient_temp_user_set;
             pipe_19.ambient_temperature = ambient_temp_user_set;
-
-            // ctah branch 
-            pipe_5b.ambient_temperature = ambient_temp_user_set;
-            static_mixer_41_label_6.ambient_temperature = ambient_temp_user_set;
-            pipe_6a.ambient_temperature = ambient_temp_user_set;
-            ctah_vertical_label_7a.ambient_temperature = ambient_temp_user_set;
-            ctah_horizontal_label_7b.ambient_temperature = ambient_temp_user_set;
-            pipe_8a.ambient_temperature = ambient_temp_user_set;
-            static_mixer_40_label_8.ambient_temperature = ambient_temp_user_set;
-            pipe_9.ambient_temperature = ambient_temp_user_set;
-            pipe_10.ambient_temperature = ambient_temp_user_set;
-            pipe_11.ambient_temperature = ambient_temp_user_set;
-            pipe_12.ambient_temperature = ambient_temp_user_set;
-            ctah_pump.ambient_temperature = ambient_temp_user_set;
-            pipe_13.ambient_temperature = ambient_temp_user_set;
-            pipe_14.ambient_temperature = ambient_temp_user_set;
-            flowmeter_40_14a.ambient_temperature = ambient_temp_user_set;
-            pipe_15.ambient_temperature = ambient_temp_user_set;
-            pipe_16.ambient_temperature = ambient_temp_user_set;
-            pipe_17a.ambient_temperature = ambient_temp_user_set;
             
         }
         // add lateral heat losses and power through heater
@@ -462,6 +417,31 @@ pub fn ciet_pri_loop_three_branch_link_up_components(
         // because DHX sthe requires mass flowrates in both sides of the loop
         {
             let zero_power: Power = Power::ZERO;
+            // heater branch
+            pipe_18.lateral_and_miscellaneous_connections_no_wall_correction(
+                dhx_flow, zero_power).unwrap();
+            heater_bottom_head_1b.lateral_and_miscellaneous_connections_no_wall_correction(
+                dhx_flow, zero_power).unwrap();
+
+            heater_version1_1.lateral_and_miscellaneous_connections_no_wall_correction(
+                dhx_flow, heat_rate_through_heater).unwrap();
+
+            heater_top_head_1a.lateral_and_miscellaneous_connections_no_wall_correction(
+                dhx_flow, zero_power).unwrap();
+
+            static_mixer_10_label_2.lateral_and_miscellaneous_connections_no_wall_correction(
+                dhx_flow, zero_power).unwrap();
+
+            pipe_2a.lateral_and_miscellaneous_connections_no_wall_correction(
+                dhx_flow, zero_power).unwrap();
+
+            pipe_3.lateral_and_miscellaneous_connections_no_wall_correction(
+                dhx_flow, zero_power).unwrap();
+
+            pipe_4.lateral_and_miscellaneous_connections_no_wall_correction(
+                dhx_flow, zero_power).unwrap();
+
+
             // DHX branch 
             pipe_5a.lateral_and_miscellaneous_connections_no_wall_correction(
                 dhx_flow, zero_power).unwrap();
@@ -488,72 +468,6 @@ pub fn ciet_pri_loop_three_branch_link_up_components(
                 dhx_flow, zero_power).unwrap();
             pipe_17b.lateral_and_miscellaneous_connections_no_wall_correction(
                 dhx_flow, zero_power).unwrap();
-            // heater branch
-            pipe_18.lateral_and_miscellaneous_connections_no_wall_correction(
-                heater_flow, zero_power).unwrap();
-            heater_bottom_head_1b.lateral_and_miscellaneous_connections_no_wall_correction(
-                heater_flow, zero_power).unwrap();
-
-            heater_version1_1.lateral_and_miscellaneous_connections_no_wall_correction(
-                heater_flow, heat_rate_through_heater).unwrap();
-
-            heater_top_head_1a.lateral_and_miscellaneous_connections_no_wall_correction(
-                heater_flow, zero_power).unwrap();
-
-            static_mixer_10_label_2.lateral_and_miscellaneous_connections_no_wall_correction(
-                heater_flow, zero_power).unwrap();
-
-            pipe_2a.lateral_and_miscellaneous_connections_no_wall_correction(
-                heater_flow, zero_power).unwrap();
-
-            pipe_3.lateral_and_miscellaneous_connections_no_wall_correction(
-                heater_flow, zero_power).unwrap();
-
-            pipe_4.lateral_and_miscellaneous_connections_no_wall_correction(
-                heater_flow, zero_power).unwrap();
-
-            let calc_ctah_branch = false;
-
-
-            if calc_ctah_branch {
-                // ctah branch 
-                //
-                pipe_5b.lateral_and_miscellaneous_connections_no_wall_correction(
-                    ctah_flow, zero_power).unwrap();
-                static_mixer_41_label_6.lateral_and_miscellaneous_connections_no_wall_correction(
-                    ctah_flow, zero_power).unwrap();
-                pipe_6a.lateral_and_miscellaneous_connections_no_wall_correction(
-                    ctah_flow, zero_power).unwrap();
-                ctah_vertical_label_7a.lateral_and_miscellaneous_connections_no_wall_correction(
-                    ctah_flow, zero_power).unwrap();
-                ctah_horizontal_label_7b.lateral_and_miscellaneous_connections_no_wall_correction(
-                    ctah_flow, zero_power).unwrap();
-                pipe_8a.lateral_and_miscellaneous_connections_no_wall_correction(
-                    ctah_flow, zero_power).unwrap();
-                static_mixer_40_label_8.lateral_and_miscellaneous_connections_no_wall_correction(
-                    ctah_flow, zero_power).unwrap();
-                pipe_9.lateral_and_miscellaneous_connections_no_wall_correction(
-                    ctah_flow, zero_power).unwrap();
-                pipe_10.lateral_and_miscellaneous_connections_no_wall_correction(
-                    ctah_flow, zero_power).unwrap();
-                pipe_11.lateral_and_miscellaneous_connections_no_wall_correction(
-                    ctah_flow, zero_power).unwrap();
-                pipe_12.lateral_and_miscellaneous_connections_no_wall_correction(
-                    ctah_flow, zero_power).unwrap();
-                ctah_pump.lateral_and_miscellaneous_connections_no_wall_correction(
-                    ctah_flow, zero_power).unwrap();
-                pipe_13.lateral_and_miscellaneous_connections_no_wall_correction(
-                    ctah_flow, zero_power).unwrap();
-                pipe_14.lateral_and_miscellaneous_connections_no_wall_correction(
-                    ctah_flow, zero_power).unwrap();
-                pipe_15.lateral_and_miscellaneous_connections_no_wall_correction(
-                    ctah_flow, zero_power).unwrap();
-                pipe_16.lateral_and_miscellaneous_connections_no_wall_correction(
-                    ctah_flow, zero_power).unwrap();
-                pipe_17b.lateral_and_miscellaneous_connections_no_wall_correction(
-                    ctah_flow, zero_power).unwrap();
-            }
-
         }
 
         // now we are done
