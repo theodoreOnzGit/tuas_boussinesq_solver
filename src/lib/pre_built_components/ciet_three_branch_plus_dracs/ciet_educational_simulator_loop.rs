@@ -493,32 +493,8 @@ Result<(),crate::tuas_lib_error::TuasLibError>{
         // likely the natural circulation is counter clockwise 
         let counter_clockwise_dracs_flowrate = absolute_mass_flowrate_dracs;
 
-        let absolute_mass_flowrate_pri_loop = 
-            coupled_dracs_pri_loop_branches_fluid_mechanics_calc_abs_mass_rate(
-                &pipe_4, 
-                &pipe_3, 
-                &pipe_2a, 
-                &static_mixer_10_label_2, 
-                &heater_top_head_1a, 
-                &heater_ver_1, 
-                &heater_bottom_head_1b, 
-                &pipe_18, 
-                &pipe_5a, 
-                &pipe_26, 
-                &pipe_25a, 
-                &static_mixer_21_label_25, 
-                &dhx_shell_side_pipe_24, 
-                &static_mixer_20_label_23, 
-                &pipe_23a, 
-                &pipe_22, 
-                &flowmeter_20_21a, 
-                &pipe_21, 
-                &pipe_20, 
-                &pipe_19, 
-                &pipe_17b);
 
-        let counter_clockwise_pri_loop_flowrate = absolute_mass_flowrate_pri_loop;
-
+        // flow should go from up to down
         let (dhx_flow, heater_flow, ctah_flow) = 
             three_branch_pri_loop_flowrates(
                 pump_pressure, 
@@ -564,6 +540,7 @@ Result<(),crate::tuas_lib_error::TuasLibError>{
                 &pipe_16, 
                 &pipe_17a);
 
+        let counter_clockwise_dhx_flowrate = dhx_flow.abs();
         // next, 
         // link up the heat transfer entities 
         // all lateral linking is done except for DHX
@@ -594,7 +571,7 @@ Result<(),crate::tuas_lib_error::TuasLibError>{
             &mut pipe_39);
 
         coupled_dracs_pri_loop_dhx_heater_link_up_components(
-            counter_clockwise_pri_loop_flowrate, 
+            counter_clockwise_dhx_flowrate, 
             heat_rate_through_heater, 
             average_temperature_for_density_calcs, 
             ambient_htc, 
@@ -658,7 +635,7 @@ Result<(),crate::tuas_lib_error::TuasLibError>{
 
         let prandtl_wall_correction_setting = true; 
         let tube_side_total_mass_flowrate = -counter_clockwise_dracs_flowrate;
-        let shell_side_total_mass_flowrate = counter_clockwise_pri_loop_flowrate;
+        let shell_side_total_mass_flowrate = counter_clockwise_dhx_flowrate;
 
         dhx_sthe.heat_transfer_to_ambient = ambient_htc;
         dhx_sthe.lateral_and_miscellaneous_connections(
@@ -673,7 +650,7 @@ Result<(),crate::tuas_lib_error::TuasLibError>{
         // record 
         if current_simulation_time > tchx_temperature_record_time_threshold {
             final_mass_flowrate_dracs_loop = counter_clockwise_dracs_flowrate;
-            final_mass_flowrate_pri_loop = counter_clockwise_pri_loop_flowrate;
+            final_mass_flowrate_pri_loop = counter_clockwise_dhx_flowrate;
         }
 
         // debugging 
