@@ -13,6 +13,7 @@ array_control_vol_and_fluid_component_collections::
 fluid_component_collection::
 fluid_component_collection::FluidComponentCollectionMethods;
 use crate::array_control_vol_and_fluid_component_collections::fluid_component_collection::fluid_component_traits::FluidComponentTrait;
+use crate::pre_built_components::ciet_steady_state_natural_circulation_test_components::coupled_dracs_loop_tests::pri_loop_calc_functions::pri_loop_advance_timestep_dhx_br_and_heater_br_except_dhx;
 use crate::pre_built_components::shell_and_tube_heat_exchanger::SimpleShellAndTubeHeatExchanger;
 use crate::prelude::beta_testing::FluidArray;
 use crate::prelude::beta_testing::HeatTransferEntity;
@@ -32,6 +33,106 @@ non_insulated_fluid_components::NonInsulatedFluidComponent;
 use crate::boussinesq_thermophysical_properties::LiquidMaterial;
 use crate::heat_transfer_correlations::heat_transfer_interactions::
 heat_transfer_interaction_enums::HeatTransferInteractionType;
+
+
+
+/// pri loop timestep advance for three loops 
+/// except dhx
+
+pub fn pri_loop_three_branch_advance_timestep_except_dhx(
+    timestep: Time,
+    pipe_4: &mut InsulatedFluidComponent,
+    pipe_3: &mut InsulatedFluidComponent,
+    pipe_2a: &mut InsulatedFluidComponent,
+    static_mixer_10_label_2: &mut InsulatedFluidComponent,
+    heater_top_head_1a: &mut InsulatedFluidComponent,
+    heater_version1_1: &mut InsulatedFluidComponent,
+    heater_bottom_head_1b: &mut InsulatedFluidComponent,
+    pipe_18: &mut InsulatedFluidComponent,
+    pipe_5a: &mut InsulatedFluidComponent,
+    pipe_26: &mut InsulatedFluidComponent,
+    pipe_25a: &mut InsulatedFluidComponent,
+    static_mixer_21_label_25: &mut InsulatedFluidComponent,
+    static_mixer_20_label_23: &mut InsulatedFluidComponent,
+    pipe_23a: &mut InsulatedFluidComponent,
+    pipe_22: &mut InsulatedFluidComponent,
+    flowmeter_20_21a: &mut NonInsulatedFluidComponent,
+    pipe_21: &mut InsulatedFluidComponent,
+    pipe_20: &mut InsulatedFluidComponent,
+    pipe_19: &mut InsulatedFluidComponent,
+    pipe_17b: &mut InsulatedFluidComponent,
+    pipe_5b: &mut InsulatedFluidComponent,
+    static_mixer_41_label_6 :&mut InsulatedFluidComponent,
+    pipe_6a :&mut InsulatedFluidComponent,
+    ctah_vertical_label_7a :&mut NonInsulatedFluidComponent,
+    ctah_horizontal_label_7b :&mut NonInsulatedFluidComponent,
+    pipe_8a :&mut InsulatedFluidComponent,
+    static_mixer_40_label_8 :&mut InsulatedFluidComponent,
+    pipe_9 :&mut InsulatedFluidComponent,
+    pipe_10 :&mut InsulatedFluidComponent,
+    pipe_11 :&mut InsulatedFluidComponent,
+    pipe_12 :&mut InsulatedFluidComponent,
+    ctah_pump :&mut NonInsulatedFluidComponent,
+    pipe_13 : &mut InsulatedFluidComponent,
+    pipe_14 : &mut InsulatedFluidComponent,
+    flowmeter_40_14a :&mut NonInsulatedFluidComponent,
+    pipe_15 :&mut InsulatedFluidComponent,
+    pipe_16 :&mut InsulatedFluidComponent,
+    pipe_17a :&mut InsulatedFluidComponent,
+    top_mixing_node_5a_5b_4: &mut HeatTransferEntity,
+    bottom_mixing_node_17a_17b_18: &mut HeatTransferEntity,
+    ){
+
+    // heater branch
+    pipe_4.advance_timestep(timestep).unwrap();
+    pipe_3.advance_timestep(timestep).unwrap();
+    pipe_2a.advance_timestep(timestep).unwrap();
+    static_mixer_10_label_2.advance_timestep(timestep).unwrap();
+    heater_top_head_1a.advance_timestep(timestep).unwrap();
+    heater_version1_1.advance_timestep(timestep).unwrap();
+    heater_bottom_head_1b.advance_timestep(timestep).unwrap();
+    pipe_18.advance_timestep(timestep).unwrap();
+
+
+    // DHX branch (except DHX shell side)
+    pipe_5a.advance_timestep(timestep).unwrap();
+    pipe_26.advance_timestep(timestep).unwrap();
+    pipe_25a.advance_timestep(timestep).unwrap();
+    static_mixer_21_label_25.advance_timestep(timestep).unwrap();
+    static_mixer_20_label_23.advance_timestep(timestep).unwrap();
+    pipe_23a.advance_timestep(timestep).unwrap();
+    pipe_22.advance_timestep(timestep).unwrap();
+    flowmeter_20_21a.advance_timestep(timestep).unwrap();
+    pipe_21.advance_timestep(timestep).unwrap();
+    pipe_20.advance_timestep(timestep).unwrap();
+    pipe_19.advance_timestep(timestep).unwrap();
+    pipe_17b.advance_timestep(timestep).unwrap();
+
+    // CTAH branch 
+    pipe_5b.advance_timestep(timestep).unwrap();
+    static_mixer_41_label_6.advance_timestep(timestep).unwrap();
+    pipe_6a.advance_timestep(timestep).unwrap();
+    ctah_vertical_label_7a.advance_timestep(timestep).unwrap();
+    ctah_horizontal_label_7b.advance_timestep(timestep).unwrap();
+    pipe_8a.advance_timestep(timestep).unwrap();
+    static_mixer_40_label_8.advance_timestep(timestep).unwrap();
+    pipe_9.advance_timestep(timestep).unwrap();
+    pipe_10.advance_timestep(timestep).unwrap();
+    pipe_11.advance_timestep(timestep).unwrap();
+    pipe_12.advance_timestep(timestep).unwrap();
+    ctah_pump.advance_timestep(timestep).unwrap();
+    pipe_13.advance_timestep(timestep).unwrap();
+    pipe_14.advance_timestep(timestep).unwrap();
+    flowmeter_40_14a.advance_timestep(timestep).unwrap();
+    pipe_15.advance_timestep(timestep).unwrap();
+    pipe_16.advance_timestep(timestep).unwrap();
+    pipe_17a.advance_timestep(timestep).unwrap();
+
+    // two mixing nodes
+    top_mixing_node_5a_5b_4.advance_timestep_mut_self(timestep).unwrap();
+    bottom_mixing_node_17a_17b_18.advance_timestep_mut_self(timestep).unwrap();
+
+}
 
 
 /// heat transfer for pri loop, all three branch flowrates 
@@ -96,6 +197,8 @@ pub fn ciet_pri_loop_three_branch_link_up_components(
     pipe_15 :&mut InsulatedFluidComponent,
     pipe_16 :&mut InsulatedFluidComponent,
     pipe_17a :&mut InsulatedFluidComponent,
+    top_mixing_node_5a_5b_4: &mut HeatTransferEntity,
+    bottom_mixing_node_17a_17b_18: &mut HeatTransferEntity,
     ){
 
         // in the simple case where ctah flow is zero,
@@ -411,133 +514,48 @@ pub fn ciet_pri_loop_three_branch_link_up_components(
             // (pipe 4 back) <----- reverse_dhx_flow + reverse_ctah_flow --- (connecting node)
             //
 
-            // in terms of single_cvs, pipe 4's back cv flows to 
-            // pipe 5a's back cv with dhx_flow 
-            //
-            // (pipe_4 back) ---> dhx flow ---> (pipe 5a back)
-            //
-            // (pipe_4 back) ---> ctah flow ---> (pipe 5b back)
-            //
-            // pipe 4's back cv also flows to pipe 5b's back cv with 
-            // ctah_flow
-
-            let mut pipe_4_fluid_array_clone: FluidArray = 
-                pipe_4.pipe_fluid_array.clone().try_into().unwrap();
-
-            let mut pipe_5a_fluid_array_clone: FluidArray = 
-                pipe_5a.pipe_fluid_array.clone().try_into().unwrap();
-
-            let mut pipe_5b_fluid_array_clone: FluidArray = 
-                pipe_5b.pipe_fluid_array.clone().try_into().unwrap();
-
-            // get the singlecv as heat transfer entities 
-            
-            let mut pipe_4_back_cv_hte_clone: HeatTransferEntity =
-                pipe_4_fluid_array_clone.back_single_cv.clone().into();
-
-            let mut pipe_5a_back_cv_hte_clone: HeatTransferEntity =
-                pipe_5a_fluid_array_clone.back_single_cv.clone().into();
-            
-            let mut pipe_5b_back_cv_hte_clone: HeatTransferEntity =
-                pipe_5b_fluid_array_clone.back_single_cv.clone().into();
-
-            // link them up 
-
-            pipe_4_back_cv_hte_clone.link_to_front(
-                &mut pipe_5a_back_cv_hte_clone, 
-                advection_heat_transfer_interaction_dhx)
-                .unwrap();
-
-            pipe_4_back_cv_hte_clone.link_to_front(
-                &mut pipe_5b_back_cv_hte_clone, 
-                advection_heat_transfer_interaction_ctah)
-                .unwrap();
-
-            // now then, set the back cvs in the cloned fluid arrays 
-
-            pipe_4_fluid_array_clone.back_single_cv = 
-                pipe_4_back_cv_hte_clone.try_into().unwrap();
-
-            pipe_5a_fluid_array_clone.back_single_cv = 
-                pipe_5a_back_cv_hte_clone.try_into().unwrap();
-
-            pipe_5b_fluid_array_clone.back_single_cv = 
-                pipe_5b_back_cv_hte_clone.try_into().unwrap();
-
-            // next set the fluid array clone back into the three pipes 
-            pipe_4.pipe_fluid_array = 
-                pipe_4_fluid_array_clone.try_into().unwrap();
-            
-            pipe_5a.pipe_fluid_array = 
-                pipe_5a_fluid_array_clone.try_into().unwrap();
-
-            pipe_5b.pipe_fluid_array = 
-                pipe_5b_fluid_array_clone.try_into().unwrap();
-
             // now, for the bottom side, a similar thing occurs,
             // front of pipe 17a flows into front of pipe 18
             // (pipe_17a front) ---> dhx flow ---> (pipe 18 front)
-            //
             // (pipe_17b front) ---> ctah flow ---> (pipe 18 front)
+            //
+            // trying this method produced buggy results 
+            //
+            // for simplicity, it was better to introduce a mixing 
+            // node, to prevent pipes from clashing into each other 
+            // this mixing node is a single cv
 
-            let mut pipe_18_fluid_array_clone: FluidArray = 
-                pipe_18.pipe_fluid_array.clone().try_into().unwrap();
 
-            let mut pipe_17a_fluid_array_clone: FluidArray = 
-                pipe_17a.pipe_fluid_array.clone().try_into().unwrap();
-
-            let mut pipe_17b_fluid_array_clone: FluidArray = 
-                pipe_17b.pipe_fluid_array.clone().try_into().unwrap();
-
-            // get the singlecv as heat transfer entities 
-            
-            let mut pipe_18_front_cv_hte_clone: HeatTransferEntity =
-                pipe_18_fluid_array_clone.front_single_cv.clone().into();
-
-            let mut pipe_17a_front_cv_hte_clone: HeatTransferEntity =
-                pipe_17a_fluid_array_clone.front_single_cv.clone().into();
-            
-            let mut pipe_17b_front_cv_hte_clone: HeatTransferEntity =
-                pipe_17b_fluid_array_clone.front_single_cv.clone().into();
-
-            // link them up 
-
-            pipe_17a_front_cv_hte_clone.link_to_front(
-                &mut pipe_18_front_cv_hte_clone, 
+            top_mixing_node_5a_5b_4.link_to_front(
+                &mut pipe_5a.pipe_fluid_array, 
                 advection_heat_transfer_interaction_dhx)
                 .unwrap();
 
-            pipe_17b_front_cv_hte_clone.link_to_front(
-                &mut pipe_18_front_cv_hte_clone, 
+            top_mixing_node_5a_5b_4.link_to_front(
+                &mut pipe_4.pipe_fluid_array, 
+                advection_heat_transfer_interaction_heater)
+                .unwrap();
+
+            top_mixing_node_5a_5b_4.link_to_front(
+                &mut pipe_5b.pipe_fluid_array, 
                 advection_heat_transfer_interaction_ctah)
                 .unwrap();
 
-            // now then, set the front cvs in the cloned fluid arrays 
 
-            pipe_18_fluid_array_clone.front_single_cv = 
-                pipe_18_front_cv_hte_clone.try_into().unwrap();
+            pipe_17b.pipe_fluid_array.link_to_front(
+                bottom_mixing_node_17a_17b_18, 
+                advection_heat_transfer_interaction_dhx)
+                .unwrap();
 
-            pipe_17a_fluid_array_clone.front_single_cv = 
-                pipe_17a_front_cv_hte_clone.try_into().unwrap();
+            pipe_18.pipe_fluid_array.link_to_front(
+                bottom_mixing_node_17a_17b_18, 
+                advection_heat_transfer_interaction_heater)
+                .unwrap();
 
-            pipe_17b_fluid_array_clone.front_single_cv = 
-                pipe_17b_front_cv_hte_clone.try_into().unwrap();
-
-            // next set the fluid array clone front into the three pipes 
-            pipe_18.pipe_fluid_array = 
-                pipe_18_fluid_array_clone.try_into().unwrap();
-            
-            pipe_17a.pipe_fluid_array = 
-                pipe_17a_fluid_array_clone.try_into().unwrap();
-
-            pipe_17b.pipe_fluid_array = 
-                pipe_17b_fluid_array_clone.try_into().unwrap();
-
-            // a more elegant solution would be to create two single 
-            // cvs with some thermal inertia 
-            // as like mixing nodes or something. 
-            // Then link the cvs to them
-
+            pipe_17a.pipe_fluid_array.link_to_front(
+                bottom_mixing_node_17a_17b_18, 
+                advection_heat_transfer_interaction_ctah)
+                .unwrap();
 
         }
 

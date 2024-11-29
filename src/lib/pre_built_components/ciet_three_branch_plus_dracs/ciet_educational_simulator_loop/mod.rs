@@ -37,22 +37,24 @@ pub fn three_branch_ciet_ver1(
     dhx_branch_blocked: bool) -> 
 Result<(),crate::tuas_lib_error::TuasLibError>{
     use uom::si::length::centimeter;
-    use uom::si::pressure::pascal;
+    use uom::si::pressure::{atmosphere, pascal};
     use uom::si::{f64::*, mass_rate::kilogram_per_second, power::watt};
 
     use uom::si::{frequency::hertz, ratio::ratio, time::millisecond};
 
+    use crate::boussinesq_thermophysical_properties::LiquidMaterial;
     use crate::heat_transfer_correlations::nusselt_number_correlations::enums::NusseltCorrelation;
     use crate::pre_built_components::ciet_isothermal_test_components::*;
     use crate::pre_built_components::ciet_steady_state_natural_circulation_test_components::coupled_dracs_loop_tests::dhx_constructor::new_dhx_sthe_version_1;
     use crate::pre_built_components::ciet_steady_state_natural_circulation_test_components::coupled_dracs_loop_tests::dracs_loop_calc_functions_no_tchx_calibration::dracs_loop_dhx_tube_temperature_diagnostics;
     use crate::pre_built_components::ciet_steady_state_natural_circulation_test_components::coupled_dracs_loop_tests::dracs_loop_calc_functions_sam_tchx_calibration::{coupled_dracs_fluid_mechanics_calc_abs_mass_rate_sam_tchx_calibration, coupled_dracs_loop_link_up_components_sam_tchx_calibration, dracs_loop_advance_timestep_except_dhx_sam_tchx_calibration};
-    use crate::pre_built_components::ciet_steady_state_natural_circulation_test_components::coupled_dracs_loop_tests::pri_loop_calc_functions::{coupled_dracs_pri_loop_branches_fluid_mechanics_calc_abs_mass_rate, coupled_dracs_pri_loop_dhx_heater_link_up_components, pri_loop_advance_timestep_except_dhx, pri_loop_dhx_shell_temperature_diagnostics, pri_loop_heater_temperature_diagnostics};
+    use crate::pre_built_components::ciet_steady_state_natural_circulation_test_components::coupled_dracs_loop_tests::pri_loop_calc_functions::{coupled_dracs_pri_loop_branches_fluid_mechanics_calc_abs_mass_rate, coupled_dracs_pri_loop_dhx_heater_link_up_components, pri_loop_advance_timestep_dhx_br_and_heater_br_except_dhx, pri_loop_dhx_shell_temperature_diagnostics, pri_loop_heater_temperature_diagnostics};
     use crate::pre_built_components::
         ciet_steady_state_natural_circulation_test_components::dracs_loop_components::*;
     use crate::pre_built_components::ciet_three_branch_plus_dracs::components::{new_active_ctah_horizontal, new_active_ctah_vertical};
     use crate::pre_built_components::ciet_three_branch_plus_dracs::solver_functions::{ciet_pri_loop_three_branch_link_up_components, three_branch_pri_loop_flowrates};
-    use crate::prelude::beta_testing::FluidArray;
+    use crate::prelude::beta_testing::{FluidArray, HeatTransferEntity};
+    use crate::single_control_vol::SingleCVNode;
     use uom::ConstZero;
 
     use uom::si::thermodynamic_temperature::{degree_celsius, kelvin};
@@ -217,6 +219,30 @@ Result<(),crate::tuas_lib_error::TuasLibError>{
     let mut pipe_15 = new_pipe_15(initial_temperature);
     let mut pipe_16 = new_pipe_16(initial_temperature);
     let mut pipe_17a = new_branch_17a(initial_temperature);
+
+    // mixing nodes between the pipes, should make for more elegant 
+    // way of linking parallel pipes. 
+
+    let mut top_mixing_node_5a_5b_4: HeatTransferEntity;
+    let mut bottom_mixing_node_17a_17b_18: HeatTransferEntity;
+
+    // mixing node is a sphere about diameter of basketball (1 ft) 
+
+    let mixing_node_diameter = Length::new::<centimeter>(30.84);
+    let mixing_node_material = LiquidMaterial::TherminolVP1;
+    let mixing_node_pressure = Pressure::new::<atmosphere>(1.0);
+    let mut mixing_node = SingleCVNode::new_sphere(
+        mixing_node_diameter, 
+        mixing_node_material.into(), 
+        initial_temperature, 
+        mixing_node_pressure)
+        .unwrap();
+
+    top_mixing_node_5a_5b_4 = mixing_node.clone().into();
+    bottom_mixing_node_17a_17b_18 = mixing_node.clone().into();
+
+    
+    
 
 
     // calibration steps **************
@@ -634,7 +660,9 @@ Result<(),crate::tuas_lib_error::TuasLibError>{
             &mut flowmeter_40_14a, 
             &mut pipe_15, 
             &mut pipe_16, 
-            &mut pipe_17a);
+            &mut pipe_17a,
+            &mut top_mixing_node_5a_5b_4,
+            &mut bottom_mixing_node_17a_17b_18);
 
         //coupled_dracs_pri_loop_dhx_heater_link_up_components(
         //    counter_clockwise_dhx_flowrate, 
@@ -674,6 +702,9 @@ Result<(),crate::tuas_lib_error::TuasLibError>{
         heater_ver_1.calibrate_heat_transfer_to_ambient(
             HeatTransfer::ZERO);
 
+        
+        // todo: need to advance timestep here
+
         // advance timestep
         dracs_loop_advance_timestep_except_dhx_sam_tchx_calibration(
             timestep, &mut pipe_34, &mut pipe_33, &mut pipe_32, 
@@ -684,7 +715,7 @@ Result<(),crate::tuas_lib_error::TuasLibError>{
             &mut pipe_36a, &mut pipe_37, &mut flowmeter_60_37a, 
             &mut pipe_38, &mut pipe_39);
 
-        pri_loop_advance_timestep_except_dhx(
+        pri_loop_advance_timestep_dhx_br_and_heater_br_except_dhx(
             timestep, &mut pipe_4, &mut pipe_3, &mut pipe_2a, 
             &mut static_mixer_10_label_2, &mut heater_top_head_1a, 
             &mut heater_ver_1, &mut heater_bottom_head_1b, 

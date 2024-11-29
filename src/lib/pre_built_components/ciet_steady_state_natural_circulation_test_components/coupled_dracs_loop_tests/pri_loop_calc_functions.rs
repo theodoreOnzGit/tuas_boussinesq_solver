@@ -449,7 +449,7 @@ pub fn coupled_dracs_pri_loop_dhx_heater_link_up_components(
 }
 
 /// advances timestep for all components in primary loop except DHX
-pub fn pri_loop_advance_timestep_except_dhx(
+pub fn pri_loop_advance_timestep_dhx_br_and_heater_br_except_dhx(
     timestep: Time,
     pipe_4: &mut InsulatedFluidComponent,
     pipe_3: &mut InsulatedFluidComponent,
