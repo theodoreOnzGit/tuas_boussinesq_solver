@@ -12,6 +12,7 @@ use crate::
 array_control_vol_and_fluid_component_collections::
 fluid_component_collection::
 fluid_component_collection::FluidComponentCollectionMethods;
+use crate::array_control_vol_and_fluid_component_collections::fluid_component_collection::fluid_component_traits::FluidComponentTrait;
 use crate::pre_built_components::shell_and_tube_heat_exchanger::SimpleShellAndTubeHeatExchanger;
 use uom::ConstZero;
 
@@ -126,6 +127,8 @@ pub fn three_branch_pri_loop_flowrates(
     pipe_20: &InsulatedFluidComponent,
     pipe_19: &InsulatedFluidComponent,
     pipe_17b: &InsulatedFluidComponent,
+    // ctah branch
+    pipe_5b: &InsulatedFluidComponent,
     static_mixer_41_label_6 :&InsulatedFluidComponent,
     pipe_6a :&InsulatedFluidComponent,
     ctah_vertical_label_7a :&NonInsulatedFluidComponent,
@@ -143,8 +146,6 @@ pub fn three_branch_pri_loop_flowrates(
     pipe_15 :&InsulatedFluidComponent,
     pipe_16 :&InsulatedFluidComponent,
     pipe_17a :&InsulatedFluidComponent,
-    // ctah branch
-    pipe_5b: &InsulatedFluidComponent,
     ) ->
 (MassRate, MassRate, MassRate) {
 
@@ -179,15 +180,43 @@ pub fn three_branch_pri_loop_flowrates(
     dhx_branch.clone_and_add_component(pipe_19);
     dhx_branch.clone_and_add_component(pipe_17b);
 
+    let mut ctah_branch = FluidComponentCollection::new_series_component_collection();
+    
+    ctah_branch.clone_and_add_component(pipe_5b);
+    ctah_branch.clone_and_add_component(static_mixer_41_label_6);
+    ctah_branch.clone_and_add_component(pipe_6a);
+    ctah_branch.clone_and_add_component(ctah_vertical_label_7a);
+    ctah_branch.clone_and_add_component(ctah_horizontal_label_7b);
+    ctah_branch.clone_and_add_component(pipe_8a);
+    ctah_branch.clone_and_add_component(static_mixer_40_label_8);
+    ctah_branch.clone_and_add_component(pipe_9);
+    ctah_branch.clone_and_add_component(pipe_10);
+    ctah_branch.clone_and_add_component(pipe_11);
+    ctah_branch.clone_and_add_component(pipe_12);
+    let mut ctah_pump_clone: NonInsulatedFluidComponent 
+        = ctah_pump.clone();
+    ctah_pump_clone.set_internal_pressure_source(pump_pressure);
+    ctah_branch.clone_and_add_component(&ctah_pump_clone);
+    ctah_branch.clone_and_add_component(pipe_13);
+    ctah_branch.clone_and_add_component(pipe_14);
+    ctah_branch.clone_and_add_component(flowmeter_40_14a);
+    ctah_branch.clone_and_add_component(pipe_15);
+    ctah_branch.clone_and_add_component(pipe_16);
+    ctah_branch.clone_and_add_component(pipe_17a);
+
     let mut pri_loop_branches = 
         FluidComponentSuperCollection::default();
 
     pri_loop_branches.set_orientation_to_parallel();
     pri_loop_branches.fluid_component_super_vector.push(dhx_branch);
     pri_loop_branches.fluid_component_super_vector.push(heater_branch);
+    pri_loop_branches.fluid_component_super_vector.push(ctah_branch);
 
+    let (dhx_flow, heater_flow, ctah_flow) = 
+        get_mass_flowrate_vector_for_dhx_heater_and_ctah_branches(
+            &pri_loop_branches);
 
-    todo!()
+    return (dhx_flow, heater_flow, ctah_flow);
 }
 
 
