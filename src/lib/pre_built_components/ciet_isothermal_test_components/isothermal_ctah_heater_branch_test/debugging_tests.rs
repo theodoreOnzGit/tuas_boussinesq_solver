@@ -98,7 +98,7 @@ pub fn ctah_branch_pressure_change_test(){
 #[test]
 pub fn partial_ctah_branch_test(){
 
-    use crate::pre_built_components::ciet_isothermal_test_components::{new_branch_17, new_ctah_pump, new_flowmeter_40_14a, new_inactive_ctah_horizontal, new_inactive_ctah_vertical, new_pipe_10, new_pipe_11, new_pipe_12, new_pipe_13, new_pipe_14, new_pipe_15, new_pipe_16, new_pipe_6a, new_pipe_8a, new_pipe_9, new_static_mixer_40, new_static_mixer_41};
+    use crate::pre_built_components::ciet_isothermal_test_components::{new_branch_17, new_ctah_pump, new_flowmeter_40_14a, new_inactive_ctah_horizontal, new_inactive_ctah_vertical, new_pipe_10, new_pipe_11, new_pipe_12, new_pipe_13, new_pipe_14, new_pipe_15, new_pipe_16, new_pipe_6a, new_pipe_8a, new_pipe_9, new_static_mixer_40_label_8, new_static_mixer_41_label_6};
     use uom::si::f64::*;
     use crate::array_control_vol_and_fluid_component_collections::fluid_component_collection::fluid_component_collection::FluidComponentCollection;
     use uom::si::mass_rate::kilogram_per_second;
@@ -110,12 +110,12 @@ pub fn partial_ctah_branch_test(){
     let test_temperature = ThermodynamicTemperature::
         new::<uom::si::thermodynamic_temperature::degree_celsius>(21.7);
 
-    let static_mixer_41_label_6 = new_static_mixer_41(test_temperature);
+    let static_mixer_41_label_6 = new_static_mixer_41_label_6(test_temperature);
     let pipe_6a = new_pipe_6a(test_temperature);
     let ctah_vertical_label_7a = new_inactive_ctah_vertical(test_temperature);
     let ctah_horizontal_label_7b = new_inactive_ctah_horizontal(test_temperature);
     let pipe_8a = new_pipe_8a(test_temperature);
-    let static_mixer_40_label_8 = new_static_mixer_40(test_temperature);
+    let static_mixer_40_label_8 = new_static_mixer_40_label_8(test_temperature);
     let pipe_9 = new_pipe_9(test_temperature);
     let pipe_10 = new_pipe_10(test_temperature);
     let pipe_11 = new_pipe_11(test_temperature);

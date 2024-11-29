@@ -157,12 +157,12 @@ pub fn ctah_branch_test(){
     // this is pipe 6 all the way to branch 17
     let initial_temperature = ThermodynamicTemperature::new::<degree_celsius>(21.7);
 
-    let static_mixer_41_label_6 = new_static_mixer_41(initial_temperature);
+    let static_mixer_41_label_6 = new_static_mixer_41_label_6(initial_temperature);
     let pipe_6a = new_pipe_6a(initial_temperature);
     let ctah_vertical_label_7a = new_inactive_ctah_vertical(initial_temperature);
     let ctah_horizontal_label_7b = new_inactive_ctah_horizontal(initial_temperature);
     let pipe_8a = new_pipe_8a(initial_temperature);
-    let static_mixer_40_label_8 = new_static_mixer_40(initial_temperature);
+    let static_mixer_40_label_8 = new_static_mixer_40_label_8(initial_temperature);
     let pipe_9 = new_pipe_9(initial_temperature);
     let pipe_10 = new_pipe_10(initial_temperature);
     let pipe_11 = new_pipe_11(initial_temperature);
