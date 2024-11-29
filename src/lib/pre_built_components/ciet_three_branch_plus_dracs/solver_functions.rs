@@ -230,6 +230,9 @@ pub fn ciet_pri_loop_three_branch_link_up_components(
         // DHX so components should be linked in a counter clockwise fashion
         {
             // first is flow from heater branch to DHX branch
+            //
+            // note that trying to put a mixing node here is 
+            // problematic. I have to find out why...
             pipe_4.pipe_fluid_array.link_to_front(
                 top_mixing_node_5a_5b_4, 
                 advection_heat_transfer_interaction)
@@ -316,11 +319,6 @@ pub fn ciet_pri_loop_three_branch_link_up_components(
             // now from DHX flow to heater branch
             //
             pipe_17b.pipe_fluid_array.link_to_front(
-                bottom_mixing_node_17a_17b_18, 
-                advection_heat_transfer_interaction)
-                .unwrap();
-
-            bottom_mixing_node_17a_17b_18.link_to_front(
                 &mut pipe_18.pipe_fluid_array, 
                 advection_heat_transfer_interaction)
                 .unwrap();
