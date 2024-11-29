@@ -24,7 +24,7 @@ pub fn fluid_array_adiabatic_mixing_joint_test(){
     use uom::ConstZero;
 
     use crate::boussinesq_thermophysical_properties::{LiquidMaterial, SolidMaterial};
-    use crate::prelude::beta_testing::{FluidArray, HeatTransferEntity, HeatTransferInteractionType};
+    use crate::prelude::beta_testing::{FluidArray, HeatTransferInteractionType};
     use crate::single_control_vol::SingleCVNode;
 
 
