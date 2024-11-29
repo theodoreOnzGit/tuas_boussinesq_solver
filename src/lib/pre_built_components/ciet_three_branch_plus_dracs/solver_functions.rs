@@ -13,6 +13,7 @@ array_control_vol_and_fluid_component_collections::
 fluid_component_collection::
 fluid_component_collection::FluidComponentCollectionMethods;
 use crate::array_control_vol_and_fluid_component_collections::fluid_component_collection::fluid_component_traits::FluidComponentTrait;
+use crate::pre_built_components::ciet_steady_state_natural_circulation_test_components::coupled_dracs_loop_tests::pri_loop_calc_functions::get_abs_mass_flowrate_across_two_branches;
 use crate::pre_built_components::shell_and_tube_heat_exchanger::SimpleShellAndTubeHeatExchanger;
 use uom::ConstZero;
 
@@ -63,6 +64,31 @@ MassRate {
 
 }
 
+
+pub fn get_mass_flowrate_two_branches(
+    dracs_branches: &FluidComponentSuperCollection) -> 
+(MassRate, MassRate) {
+    // basically the net flowrate through the two branches as a 
+    // while is zero
+    let pressure_change_across_each_branch = 
+        dracs_branches.get_pressure_change(MassRate::ZERO);
+
+    let mass_flowrate_across_each_branch: Vec<MassRate> = 
+        dracs_branches.
+        get_mass_flowrate_across_each_parallel_branch(
+            pressure_change_across_each_branch
+        );
+
+    // note, the mass flowrate order depends on how u add the branches 
+    let mass_flow_branch_1 = mass_flowrate_across_each_branch[0];
+    let mass_flow_branch_2 = mass_flowrate_across_each_branch[1];
+
+    return (mass_flow_branch_1, mass_flow_branch_2);
+
+
+
+}
+
 /// fluid mechanics bit for primary loop 
 /// calculate fluid 
 /// calculate the fluid mechanics for the three branches in parallel
@@ -106,6 +132,8 @@ pub fn get_mass_flowrate_vector_for_dhx_heater_and_ctah_branches
 /// 
 pub fn three_branch_pri_loop_flowrates(
     pump_pressure: Pressure,
+    ctah_branch_blocked: bool,
+    dhx_branch_blocked: bool,
     pipe_4: &InsulatedFluidComponent,
     pipe_3: &InsulatedFluidComponent,
     pipe_2a: &InsulatedFluidComponent,
@@ -208,15 +236,104 @@ pub fn three_branch_pri_loop_flowrates(
         FluidComponentSuperCollection::default();
 
     pri_loop_branches.set_orientation_to_parallel();
-    pri_loop_branches.fluid_component_super_vector.push(dhx_branch);
-    pri_loop_branches.fluid_component_super_vector.push(heater_branch);
-    pri_loop_branches.fluid_component_super_vector.push(ctah_branch);
 
-    let (dhx_flow, heater_flow, ctah_flow) = 
-        get_mass_flowrate_vector_for_dhx_heater_and_ctah_branches(
-            &pri_loop_branches);
+    if ctah_branch_blocked {
 
-    return (dhx_flow, heater_flow, ctah_flow);
+        pri_loop_branches.fluid_component_super_vector.push(dhx_branch);
+        pri_loop_branches.fluid_component_super_vector.push(heater_branch);
+
+        let (dhx_flow, heater_flow) = 
+            get_mass_flowrate_two_branches(
+                &pri_loop_branches);
+
+        return (dhx_flow, heater_flow, MassRate::ZERO);
+
+    } else if dhx_branch_blocked {
+
+        pri_loop_branches.fluid_component_super_vector.push(heater_branch);
+        pri_loop_branches.fluid_component_super_vector.push(ctah_branch);
+
+        let (heater_flow, ctah_flow) = 
+            get_mass_flowrate_two_branches(
+                &pri_loop_branches);
+        return (MassRate::ZERO, heater_flow, ctah_flow);
+
+    } else if ctah_branch_blocked && dhx_branch_blocked {
+        // all flows blocked, no nothing to see here
+
+        return (MassRate::ZERO, MassRate::ZERO, MassRate::ZERO);
+    } else {
+
+        // all loops opened
+        pri_loop_branches.fluid_component_super_vector.push(dhx_branch);
+        pri_loop_branches.fluid_component_super_vector.push(heater_branch);
+        pri_loop_branches.fluid_component_super_vector.push(ctah_branch);
+
+        let (dhx_flow, heater_flow, ctah_flow) = 
+            get_mass_flowrate_vector_for_dhx_heater_and_ctah_branches(
+                &pri_loop_branches);
+
+        // if dhx flow is downwards, (positive flow, is ok)
+        // if negative flow, then block it 
+
+        let flow_diode_block_flow: bool = dhx_flow < MassRate::ZERO;
+
+        let dhx_block_flow = flow_diode_block_flow;
+
+        if flow_diode_block_flow {
+
+            return three_branch_pri_loop_flowrates(
+                pump_pressure, 
+                ctah_branch_blocked, 
+                dhx_block_flow, 
+                pipe_4, 
+                pipe_3, 
+                pipe_2a, 
+                static_mixer_10_label_2, 
+                heater_top_head_1a, 
+                heater_version1_1, 
+                heater_bottom_head_1b, 
+                pipe_18, 
+                pipe_5a, 
+                pipe_26, 
+                pipe_25a, 
+                static_mixer_21_label_25, 
+                dhx_shell_side_pipe_24, 
+                static_mixer_20_label_23, 
+                pipe_23a, 
+                pipe_22, 
+                flowmeter_20_21a, 
+                pipe_21, 
+                pipe_20, 
+                pipe_19, 
+                pipe_17b, 
+                pipe_5b, 
+                static_mixer_41_label_6, 
+                pipe_6a, 
+                ctah_vertical_label_7a, 
+                ctah_horizontal_label_7b, 
+                pipe_8a, 
+                static_mixer_40_label_8, 
+                pipe_9, 
+                pipe_10, 
+                pipe_11,
+                pipe_12, 
+                ctah_pump, 
+                pipe_13, 
+                pipe_14, 
+                flowmeter_40_14a, 
+                pipe_15, 
+                pipe_16, 
+                pipe_17a);
+
+        } else {
+
+            return (dhx_flow, heater_flow, ctah_flow);
+        }
+
+
+    }
+
 }
 
 
