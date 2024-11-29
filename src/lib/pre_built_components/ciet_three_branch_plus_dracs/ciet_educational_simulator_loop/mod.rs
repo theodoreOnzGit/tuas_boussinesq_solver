@@ -105,7 +105,7 @@ Result<(),crate::tuas_lib_error::TuasLibError>{
     // for this timestep, the simulation fails around 185s of simulated time
     //
     // the conclusion is that this instability is almost independent of timestep
-    let timestep = Time::new::<second>(0.1);
+    let timestep = Time::new::<second>(0.2);
     let heat_rate_through_heater = input_power;
     let mut tchx_heat_transfer_coeff: HeatTransfer;
 
