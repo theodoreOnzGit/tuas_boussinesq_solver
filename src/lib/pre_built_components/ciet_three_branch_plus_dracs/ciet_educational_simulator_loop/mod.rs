@@ -3,8 +3,12 @@
 /// ciet should still reproduce results 
 ///
 /// eg. natural circulation loop
+///
 pub mod regression_tests;
 
+/// this function runs ciet ver 1 test, 
+/// mass flowrates are calculated serially
+/// for simplicity
 #[cfg(test)]
 pub fn three_branch_ciet_ver1(
     input_power_watts: f64,
