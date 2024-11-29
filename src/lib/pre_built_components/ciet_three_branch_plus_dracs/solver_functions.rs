@@ -95,6 +95,101 @@ pub fn get_mass_flowrate_vector_for_dhx_heater_and_ctah_branches
 
 }
 
+/// fluid mechanics calcs, specific to the primary loop
+/// note that this only works if the components are correct
+/// obtains mass flowrate across the primary loop 
+/// gets flowrate across dhx, heater and ctah branches, in that order 
+/// user must also specify a pump absolute pressure 
+/// 
+/// (pressure drop) not using pump curves here yet
+/// 
+pub fn three_branch_pri_loop_flowrates(
+    pump_pressure: Pressure,
+    pipe_4: &InsulatedFluidComponent,
+    pipe_3: &InsulatedFluidComponent,
+    pipe_2a: &InsulatedFluidComponent,
+    static_mixer_10_label_2: &InsulatedFluidComponent,
+    heater_top_head_1a: &InsulatedFluidComponent,
+    heater_version1_1: &InsulatedFluidComponent,
+    heater_bottom_head_1b: &InsulatedFluidComponent,
+    pipe_18: &InsulatedFluidComponent,
+    pipe_5a: &InsulatedFluidComponent,
+    pipe_26: &InsulatedFluidComponent,
+    pipe_25a: &InsulatedFluidComponent,
+    static_mixer_21_label_25: &InsulatedFluidComponent,
+    dhx_shell_side_pipe_24: &FluidComponent,
+    static_mixer_20_label_23: &InsulatedFluidComponent,
+    pipe_23a: &InsulatedFluidComponent,
+    pipe_22: &InsulatedFluidComponent,
+    flowmeter_20_21a: &NonInsulatedFluidComponent,
+    pipe_21: &InsulatedFluidComponent,
+    pipe_20: &InsulatedFluidComponent,
+    pipe_19: &InsulatedFluidComponent,
+    pipe_17b: &InsulatedFluidComponent,
+    static_mixer_41_label_6 :&InsulatedFluidComponent,
+    pipe_6a :&InsulatedFluidComponent,
+    ctah_vertical_label_7a :&NonInsulatedFluidComponent,
+    ctah_horizontal_label_7b :&NonInsulatedFluidComponent,
+    pipe_8a :&InsulatedFluidComponent,
+    static_mixer_40_label_8 :&InsulatedFluidComponent,
+    pipe_9 :&InsulatedFluidComponent,
+    pipe_10 :&InsulatedFluidComponent,
+    pipe_11 :&InsulatedFluidComponent,
+    pipe_12 :&InsulatedFluidComponent,
+    ctah_pump :&NonInsulatedFluidComponent,
+    pipe_13 : &InsulatedFluidComponent,
+    pipe_14 : &InsulatedFluidComponent,
+    flowmeter_40_14a :&InsulatedFluidComponent,
+    pipe_15 :&InsulatedFluidComponent,
+    pipe_16 :&InsulatedFluidComponent,
+    pipe_17a :&InsulatedFluidComponent,
+    // ctah branch
+    pipe_5b: &InsulatedFluidComponent,
+    ) ->
+(MassRate, MassRate, MassRate) {
+
+
+    let mut heater_branch = 
+        FluidComponentCollection::new_series_component_collection();
+
+    heater_branch.clone_and_add_component(pipe_4);
+    heater_branch.clone_and_add_component(pipe_3);
+    heater_branch.clone_and_add_component(pipe_2a);
+    heater_branch.clone_and_add_component(static_mixer_10_label_2);
+    heater_branch.clone_and_add_component(heater_top_head_1a);
+    heater_branch.clone_and_add_component(heater_version1_1);
+    heater_branch.clone_and_add_component(heater_bottom_head_1b);
+    heater_branch.clone_and_add_component(pipe_18);
+
+
+    let mut dhx_branch = 
+        FluidComponentCollection::new_series_component_collection();
+
+    dhx_branch.clone_and_add_component(pipe_5a);
+    dhx_branch.clone_and_add_component(pipe_26);
+    dhx_branch.clone_and_add_component(pipe_25a);
+    dhx_branch.clone_and_add_component(static_mixer_21_label_25);
+    dhx_branch.clone_and_add_component(dhx_shell_side_pipe_24);
+    dhx_branch.clone_and_add_component(static_mixer_20_label_23);
+    dhx_branch.clone_and_add_component(pipe_23a);
+    dhx_branch.clone_and_add_component(pipe_22);
+    dhx_branch.clone_and_add_component(flowmeter_20_21a);
+    dhx_branch.clone_and_add_component(pipe_21);
+    dhx_branch.clone_and_add_component(pipe_20);
+    dhx_branch.clone_and_add_component(pipe_19);
+    dhx_branch.clone_and_add_component(pipe_17b);
+
+    let mut pri_loop_branches = 
+        FluidComponentSuperCollection::default();
+
+    pri_loop_branches.set_orientation_to_parallel();
+    pri_loop_branches.fluid_component_super_vector.push(dhx_branch);
+    pri_loop_branches.fluid_component_super_vector.push(heater_branch);
+
+
+    todo!()
+}
+
 
 
 /// fluid mechanics calcs, specific to the DRACS loop

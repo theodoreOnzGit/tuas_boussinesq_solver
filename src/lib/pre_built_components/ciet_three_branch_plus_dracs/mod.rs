@@ -27,3 +27,9 @@ pub mod ciet_educational_simulator_loop;
 /// and CTAH branch as well, so as to isolate the loops.
 ///
 pub mod solver_functions;
+
+/// adds extra components specific to the three branch 
+/// simulation,
+/// the other components were borrowed from the isothermal 
+/// test and steady state natural circulation modules
+pub mod components;
