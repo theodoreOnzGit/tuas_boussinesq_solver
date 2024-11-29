@@ -143,14 +143,14 @@ impl FluidArray {
         // then just do conduction timescales 
         // There's no advection in this case so no need to worry 
 
-        let back_cv_ref = &mut self.front_single_cv;
+        let cv_ref = &mut self.front_single_cv;
 
         // push the power power to the back cv 
 
-        back_cv_ref.rate_enthalpy_change_vector.push( 
+        cv_ref.rate_enthalpy_change_vector.push( 
             heat_flowrate_into_control_vol);
         // calculate conduction timescales
-        back_cv_ref.calculate_mesh_stability_conduction_timestep_for_single_node_and_bc(
+        cv_ref.calculate_mesh_stability_conduction_timestep_for_single_node_and_bc(
             interaction)?;
 
         // I don't calculate solid-liquid timescales here, 
@@ -294,14 +294,14 @@ impl FluidArray {
         // then just do conduction timescales 
         // There's no advection in this case so no need to worry 
 
-        let back_cv_ref = &mut self.back_single_cv;
+        let cv_ref = &mut self.back_single_cv;
 
         // push the power power to the back cv 
 
-        back_cv_ref.rate_enthalpy_change_vector.push( 
+        cv_ref.rate_enthalpy_change_vector.push( 
             heat_flowrate_into_control_vol);
         // calculate conduction timescales
-        back_cv_ref.calculate_mesh_stability_conduction_timestep_for_single_node_and_bc(
+        cv_ref.calculate_mesh_stability_conduction_timestep_for_single_node_and_bc(
             interaction)?;
 
         // I don't calculate solid-liquid timescales here, 
