@@ -91,7 +91,6 @@ pub fn pri_loop_three_branch_advance_timestep_except_dhx(
     heater_bottom_head_1b.advance_timestep(timestep).unwrap();
     pipe_18.advance_timestep(timestep).unwrap();
 
-    dbg!(&pipe_18);
 
     // DHX branch (except DHX shell side)
     pipe_5a.advance_timestep(timestep).unwrap();
@@ -107,7 +106,6 @@ pub fn pri_loop_three_branch_advance_timestep_except_dhx(
     pipe_19.advance_timestep(timestep).unwrap();
     pipe_17b.advance_timestep(timestep).unwrap();
 
-    dbg!(&pipe_17b);
     // CTAH branch 
     let calc_ctah = false;
     if calc_ctah {
@@ -131,13 +129,10 @@ pub fn pri_loop_three_branch_advance_timestep_except_dhx(
         pipe_17a.advance_timestep(timestep).unwrap();
     }
 
-    dbg!(&pipe_17a);
     // two mixing nodes
     top_mixing_node_5a_5b_4.advance_timestep_mut_self(timestep).unwrap();
     bottom_mixing_node_17a_17b_18.advance_timestep_mut_self(timestep).unwrap();
 
-    dbg!(&top_mixing_node_5a_5b_4.try_get_bulk_temperature().unwrap());
-    dbg!(&bottom_mixing_node_17a_17b_18.try_get_bulk_temperature().unwrap());
 }
 
 

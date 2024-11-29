@@ -264,7 +264,7 @@ pub fn flow_diode_fwd_flow_for_three_branch(){
         experimental_pri_mass_flowrate_kg_per_s,
         simulated_expected_dracs_mass_flowrate_kg_per_s,
         simulated_expected_pri_mass_flowrate_kg_per_s) 
-        = (0.0, 46.0, 0.0, 0.0, 0.0, 0.0);
+        = (0.0, 46.0, 0.0, 0.08378, 0.0, 0.08378);
 
 
     let (shell_side_to_tubes_nusselt_number_correction_factor,
