@@ -78,3 +78,85 @@ pub fn ciet_coupled_nat_circ_set_a1_for_three_branch(){
 
 
 }
+
+
+/// test series took about 230 s
+/// let's say I block flow in all branches, then the 
+/// branch dhx and dracs flow should be zero
+#[cfg(test)]
+#[test] 
+pub fn zero_flow_for_three_branch(){
+    use crate::pre_built_components::ciet_three_branch_plus_dracs::ciet_educational_simulator_loop::three_branch_ciet_ver1;
+
+
+    let max_simulation_time_seconds: f64 = 300.0;
+    let pri_loop_relative_tolerance = 0.061;
+    let dracs_loop_relative_tolerance = 0.062;
+
+    // the flowrates should all be zero
+    let (heater_power_watts,
+        tchx_outlet_temp_degc,
+        experimental_dracs_mass_flowrate_kg_per_s,
+        experimental_pri_mass_flowrate_kg_per_s,
+        simulated_expected_dracs_mass_flowrate_kg_per_s,
+        simulated_expected_pri_mass_flowrate_kg_per_s) 
+        = (0.0, 46.0, 0.0, 0.0, 0.0, 0.0);
+
+
+    let (shell_side_to_tubes_nusselt_number_correction_factor,
+        insulation_thickness_regression_cm,
+        shell_side_to_ambient_nusselt_correction_factor,
+        dhx_heat_loss_to_ambient_watts_per_m2_kelvin) 
+        = (4.7,0.161,10.3,33.9);
+
+    let ( pri_loop_cold_leg_insulation_thickness_cm,
+        pri_loop_hot_leg_insulation_thickness_cm,
+        dracs_loop_cold_leg_insulation_thickness_cm,
+        dracs_loop_hot_leg_insulation_thickness_cm,) 
+        = (0.15, 0.24, 3.00, 0.75);
+
+    dbg!(max_simulation_time_seconds,
+        pri_loop_relative_tolerance,
+        dracs_loop_relative_tolerance);
+
+    // heater calibration for appropriate surface temp
+    let (heater_calibrated_nusselt_factor_float,
+        expt_heater_surf_temp_avg_degc,
+        simulated_expected_heater_surf_temp_degc,
+        heater_surface_temp_tolerance_degc) = 
+        (10.0,45.49,45.49,5.0);
+
+    let ctah_pump_pressure_pascals = 0.0;
+    let ctah_flow_blocked = true;
+    let dhx_flow_blocked = true;
+
+
+    three_branch_ciet_ver1(
+        heater_power_watts, 
+        max_simulation_time_seconds,
+        tchx_outlet_temp_degc,
+        experimental_dracs_mass_flowrate_kg_per_s,
+        experimental_pri_mass_flowrate_kg_per_s,
+        simulated_expected_dracs_mass_flowrate_kg_per_s,
+        simulated_expected_pri_mass_flowrate_kg_per_s,
+        pri_loop_relative_tolerance,
+        dracs_loop_relative_tolerance,
+        shell_side_to_tubes_nusselt_number_correction_factor,
+        insulation_thickness_regression_cm,
+        shell_side_to_ambient_nusselt_correction_factor,
+        dhx_heat_loss_to_ambient_watts_per_m2_kelvin,
+        pri_loop_cold_leg_insulation_thickness_cm,
+        pri_loop_hot_leg_insulation_thickness_cm,
+        dracs_loop_cold_leg_insulation_thickness_cm,
+        dracs_loop_hot_leg_insulation_thickness_cm,
+        heater_calibrated_nusselt_factor_float,
+        expt_heater_surf_temp_avg_degc,
+        simulated_expected_heater_surf_temp_degc,
+        heater_surface_temp_tolerance_degc,
+        ctah_pump_pressure_pascals,
+        ctah_flow_blocked,
+        dhx_flow_blocked
+    ).unwrap();
+
+
+}
