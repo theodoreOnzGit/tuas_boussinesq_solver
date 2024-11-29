@@ -1,3 +1,10 @@
+
+/// this ensures that despite all the changes, the three branch 
+/// ciet should still reproduce results 
+///
+/// eg. natural circulation loop
+pub mod regression_tests;
+
 #[cfg(test)]
 pub fn three_branch_ciet_ver1(
     input_power_watts: f64,
@@ -540,7 +547,7 @@ Result<(),crate::tuas_lib_error::TuasLibError>{
                 &pipe_16, 
                 &pipe_17a);
 
-        let counter_clockwise_dhx_flowrate = dhx_flow.abs();
+        let counter_clockwise_dhx_flowrate = dhx_flow;
         // next, 
         // link up the heat transfer entities 
         // all lateral linking is done except for DHX

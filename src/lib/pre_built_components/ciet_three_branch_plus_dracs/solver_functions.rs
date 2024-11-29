@@ -189,7 +189,7 @@ pub fn three_branch_pri_loop_flowrates(
     heater_branch.clone_and_add_component(pipe_2a);
     heater_branch.clone_and_add_component(static_mixer_10_label_2);
     heater_branch.clone_and_add_component(heater_top_head_1a);
-    heater_branch.clone_and_add_component(heater_version1_1);
+    heater_branch.clone_and_add_component(heater_ver_1);
     heater_branch.clone_and_add_component(heater_bottom_head_1b);
     heater_branch.clone_and_add_component(pipe_18);
 
@@ -294,7 +294,7 @@ pub fn three_branch_pri_loop_flowrates(
                 pipe_2a, 
                 static_mixer_10_label_2, 
                 heater_top_head_1a, 
-                heater_version1_1, 
+                heater_ver_1, 
                 heater_bottom_head_1b, 
                 pipe_18, 
                 pipe_5a, 
