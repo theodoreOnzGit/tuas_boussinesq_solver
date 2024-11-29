@@ -1,0 +1,227 @@
+/// this test checks if FluidArrays can form adiabatic mixing joints 
+/// with single cvs 
+///
+/// so let's say, two pipes with 0.05 kg/s of therminol vp1 
+/// flowing into a mixing joint (singleCV)
+///
+/// one is 50C, one is 100C
+///
+/// and 0.10 kg/s flows out. it should be 75 C is adiabatically mixed
+#[cfg(test)]
+#[test]
+pub fn adiabatic_mixing_joint_test(){
+    use uom::si::angle::radian;
+    use uom::si::length::{centimeter, foot};
+    use uom::si::mass_rate::kilogram_per_second;
+    use uom::si::pressure::atmosphere;
+    use uom::si::thermodynamic_temperature::degree_celsius;
+    use uom::si::f64::*;
+    use uom::si::time::second;
+    use uom::ConstZero;
+
+    use crate::boussinesq_thermophysical_properties::{LiquidMaterial, SolidMaterial};
+    use crate::prelude::beta_testing::{FluidArray, HeatTransferEntity, HeatTransferInteractionType};
+    use crate::single_control_vol::SingleCVNode;
+
+
+    let hot_temp = ThermodynamicTemperature::new::<degree_celsius>(100.0);
+    let cold_temp = ThermodynamicTemperature::new::<degree_celsius>(50.0);
+    
+    let mut inlet_bc_hot = HeatTransferEntity::new_const_temperature_bc(
+        hot_temp);
+    let mut inlet_bc_cold = HeatTransferEntity::new_const_temperature_bc(
+        cold_temp);
+    let mut outlet_bc_adiabatic = HeatTransferEntity::new_adiabatic_bc();
+
+
+    let mixing_node_diameter = Length::new::<centimeter>(50.84);
+    let mixing_node_material = LiquidMaterial::TherminolVP1;
+    let mixing_node_pressure = Pressure::new::<atmosphere>(1.0);
+    let mixing_node = SingleCVNode::new_sphere(
+        mixing_node_diameter, 
+        mixing_node_material.into(), 
+        cold_temp, 
+        mixing_node_pressure)
+        .unwrap();
+
+    let mut mixing_joint_cv: HeatTransferEntity = mixing_node.into();
+
+    // three pipes 
+    let user_specified_inner_nodes = 0;
+    let pipe_incline_angle = Angle::new::<radian>(0.0);
+    let pipe_form_loss = Ratio::ZERO;
+    let liquid_material = mixing_node_material;
+    let adjacent_solid_material = SolidMaterial::SteelSS304L;
+    let initial_pressure = mixing_node_pressure;
+    let initial_temperature = cold_temp;
+    let length = Length::new::<foot>(1.0);
+    let hydraulic_diameter = Length::new::<centimeter>(2.79);
+    
+
+    let mut inlet_pipe_1: HeatTransferEntity = 
+        FluidArray::new_cylinder(
+            length, 
+            hydraulic_diameter, 
+            initial_temperature, 
+            initial_pressure, 
+            adjacent_solid_material, 
+            liquid_material, 
+            pipe_form_loss, 
+            user_specified_inner_nodes, 
+            pipe_incline_angle).into();
+
+    let mut inlet_pipe_2: HeatTransferEntity = 
+        FluidArray::new_cylinder(
+            length, 
+            hydraulic_diameter, 
+            initial_temperature, 
+            initial_pressure, 
+            adjacent_solid_material, 
+            liquid_material, 
+            pipe_form_loss, 
+            user_specified_inner_nodes, 
+            pipe_incline_angle).into();
+
+
+    let mut outlet_pipe: HeatTransferEntity = 
+        FluidArray::new_cylinder(
+            length, 
+            hydraulic_diameter, 
+            initial_temperature, 
+            initial_pressure, 
+            adjacent_solid_material, 
+            liquid_material, 
+            pipe_form_loss, 
+            user_specified_inner_nodes, 
+            pipe_incline_angle).into();
+
+
+    let advection_heat_transfer_interaction_pre_joint: 
+        HeatTransferInteractionType;
+
+    let mass_flowrate_inlets = 
+        MassRate::new::<kilogram_per_second>(0.05);
+    let mass_flowrate_outlet = 
+        MassRate::new::<kilogram_per_second>(0.1);
+
+    let average_therminol_density = 
+        LiquidMaterial::TherminolVP1.try_get_density(
+            cold_temp).unwrap();
+
+    advection_heat_transfer_interaction_pre_joint = 
+        HeatTransferInteractionType::
+        new_advection_interaction(mass_flowrate_inlets, 
+            average_therminol_density, 
+            average_therminol_density);
+
+    let advection_heat_transfer_interaction_post_joint: 
+        HeatTransferInteractionType;
+
+    advection_heat_transfer_interaction_post_joint = 
+        HeatTransferInteractionType::
+        new_advection_interaction(mass_flowrate_outlet, 
+            average_therminol_density, 
+            average_therminol_density);
+
+    let timestep = Time::new::<second>(0.01);
+    let max_time = Time::new::<second>(300.0);
+    let mut simulation_time = Time::ZERO;
+
+
+
+    while simulation_time < max_time {
+
+        // link inlet pipes 
+        inlet_pipe_1.link_to_back(
+            &mut inlet_bc_hot, 
+            advection_heat_transfer_interaction_pre_joint)
+            .unwrap();
+
+        inlet_pipe_2.link_to_back(
+            &mut inlet_bc_cold, 
+            advection_heat_transfer_interaction_pre_joint)
+            .unwrap();
+
+        inlet_pipe_1.link_to_front(
+            &mut mixing_joint_cv, 
+            advection_heat_transfer_interaction_pre_joint)
+            .unwrap();
+
+        inlet_pipe_2.link_to_front(
+            &mut mixing_joint_cv, 
+            advection_heat_transfer_interaction_pre_joint)
+            .unwrap();
+
+        // link to outlet 
+
+        mixing_joint_cv.link_to_front(
+            &mut outlet_pipe, 
+            advection_heat_transfer_interaction_post_joint)
+            .unwrap();
+        outlet_pipe.link_to_front(
+            &mut outlet_bc_adiabatic, 
+            advection_heat_transfer_interaction_post_joint)
+            .unwrap();
+
+        // advance timestep 
+        inlet_pipe_1.advance_timestep_mut_self(timestep).unwrap();
+        inlet_pipe_2.advance_timestep_mut_self(timestep).unwrap();
+        outlet_pipe.advance_timestep_mut_self(timestep).unwrap();
+        mixing_joint_cv.advance_timestep_mut_self(timestep).unwrap();
+
+
+        let inlet_pipe_1_temp = 
+            inlet_pipe_1.try_get_bulk_temperature()
+            .unwrap();
+        let inlet_pipe_2_temp = 
+            inlet_pipe_2.try_get_bulk_temperature()
+            .unwrap();
+        let mixing_joint_temp = 
+            mixing_joint_cv.try_get_bulk_temperature().unwrap();
+
+        let outlet_pipe_temp = 
+            outlet_pipe.try_get_bulk_temperature().unwrap();
+
+        dbg!(&(
+                simulation_time.get::<second>(),
+                inlet_pipe_1_temp.get::<degree_celsius>(),
+                inlet_pipe_2_temp.get::<degree_celsius>(),
+                mixing_joint_temp.get::<degree_celsius>(),
+                outlet_pipe_temp
+                ));
+
+        simulation_time += timestep;
+    }
+
+    let inlet_pipe_1_temp = 
+        inlet_pipe_1.try_get_bulk_temperature()
+        .unwrap();
+
+    approx::assert_abs_diff_eq!(
+        inlet_pipe_1_temp.get::<degree_celsius>(),
+        100.0,
+        epsilon=0.05);
+
+    let inlet_pipe_2_temp = 
+        inlet_pipe_2.try_get_bulk_temperature()
+        .unwrap();
+
+    approx::assert_abs_diff_eq!(
+        inlet_pipe_2_temp.get::<degree_celsius>(),
+        50.0,
+        epsilon=0.05);
+
+
+    let mixing_joint_temp = 
+        mixing_joint_cv.try_get_bulk_temperature().unwrap();
+
+    let mixing_joint_temp_degc = 
+        mixing_joint_temp.get::<degree_celsius>();
+
+    approx::assert_abs_diff_eq!(
+        mixing_joint_temp_degc,
+        75.0,
+        epsilon=0.05);
+
+
+}

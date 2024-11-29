@@ -294,3 +294,6 @@ pub mod fluid_component_calculation;
 pub mod type_conversion;
 
 
+/// unit tests, especially for connection with single control volumes 
+#[cfg(test)]
+pub mod tests;
