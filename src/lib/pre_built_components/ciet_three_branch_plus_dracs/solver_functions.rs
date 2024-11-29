@@ -594,6 +594,26 @@ pub fn ciet_pri_loop_three_branch_link_up_components(
             pipe_20.heat_transfer_to_ambient = ambient_htc;
             pipe_19.heat_transfer_to_ambient = ambient_htc;
 
+            // ctah branch 
+            pipe_5b.heat_transfer_to_ambient = ambient_htc;
+            static_mixer_41_label_6.heat_transfer_to_ambient = ambient_htc;
+            pipe_6a.heat_transfer_to_ambient = ambient_htc;
+            ctah_vertical_label_7a.heat_transfer_to_ambient = ctah_heat_transfer_coeff;
+            ctah_horizontal_label_7b.heat_transfer_to_ambient = ctah_heat_transfer_coeff;
+            pipe_8a.heat_transfer_to_ambient = ambient_htc;
+            static_mixer_40_label_8.heat_transfer_to_ambient = ambient_htc;
+            pipe_9.heat_transfer_to_ambient = ambient_htc;
+            pipe_10.heat_transfer_to_ambient = ambient_htc;
+            pipe_11.heat_transfer_to_ambient = ambient_htc;
+            pipe_12.heat_transfer_to_ambient = ambient_htc;
+            ctah_pump.heat_transfer_to_ambient = ambient_htc;
+            pipe_13.heat_transfer_to_ambient = ambient_htc;
+            pipe_14.heat_transfer_to_ambient = ambient_htc;
+            flowmeter_40_14a.heat_transfer_to_ambient = ambient_htc;
+            pipe_15.heat_transfer_to_ambient = ambient_htc;
+            pipe_16.heat_transfer_to_ambient = ambient_htc;
+            pipe_17a.heat_transfer_to_ambient = ambient_htc;
+
             // ambient temp
             let ambient_temp_user_set = 
                 ThermodynamicTemperature::new::<degree_celsius>(20.0);
@@ -622,6 +642,26 @@ pub fn ciet_pri_loop_three_branch_link_up_components(
             pipe_21.ambient_temperature = ambient_temp_user_set;
             pipe_20.ambient_temperature = ambient_temp_user_set;
             pipe_19.ambient_temperature = ambient_temp_user_set;
+
+            // ctah branch 
+            pipe_5b.ambient_temperature = ambient_temp_user_set;
+            static_mixer_41_label_6.ambient_temperature = ambient_temp_user_set;
+            pipe_6a.ambient_temperature = ambient_temp_user_set;
+            ctah_vertical_label_7a.ambient_temperature = ambient_temp_user_set;
+            ctah_horizontal_label_7b.ambient_temperature = ambient_temp_user_set;
+            pipe_8a.ambient_temperature = ambient_temp_user_set;
+            static_mixer_40_label_8.ambient_temperature = ambient_temp_user_set;
+            pipe_9.ambient_temperature = ambient_temp_user_set;
+            pipe_10.ambient_temperature = ambient_temp_user_set;
+            pipe_11.ambient_temperature = ambient_temp_user_set;
+            pipe_12.ambient_temperature = ambient_temp_user_set;
+            ctah_pump.ambient_temperature = ambient_temp_user_set;
+            pipe_13.ambient_temperature = ambient_temp_user_set;
+            pipe_14.ambient_temperature = ambient_temp_user_set;
+            flowmeter_40_14a.ambient_temperature = ambient_temp_user_set;
+            pipe_15.ambient_temperature = ambient_temp_user_set;
+            pipe_16.ambient_temperature = ambient_temp_user_set;
+            pipe_17a.ambient_temperature = ambient_temp_user_set;
             
         }
         // add lateral heat losses and power through heater
@@ -629,31 +669,6 @@ pub fn ciet_pri_loop_three_branch_link_up_components(
         // because DHX sthe requires mass flowrates in both sides of the loop
         {
             let zero_power: Power = Power::ZERO;
-            // heater branch
-            pipe_18.lateral_and_miscellaneous_connections_no_wall_correction(
-                dhx_flow, zero_power).unwrap();
-            heater_bottom_head_1b.lateral_and_miscellaneous_connections_no_wall_correction(
-                dhx_flow, zero_power).unwrap();
-
-            heater_version1_1.lateral_and_miscellaneous_connections_no_wall_correction(
-                dhx_flow, heat_rate_through_heater).unwrap();
-
-            heater_top_head_1a.lateral_and_miscellaneous_connections_no_wall_correction(
-                dhx_flow, zero_power).unwrap();
-
-            static_mixer_10_label_2.lateral_and_miscellaneous_connections_no_wall_correction(
-                dhx_flow, zero_power).unwrap();
-
-            pipe_2a.lateral_and_miscellaneous_connections_no_wall_correction(
-                dhx_flow, zero_power).unwrap();
-
-            pipe_3.lateral_and_miscellaneous_connections_no_wall_correction(
-                dhx_flow, zero_power).unwrap();
-
-            pipe_4.lateral_and_miscellaneous_connections_no_wall_correction(
-                dhx_flow, zero_power).unwrap();
-
-
             // DHX branch 
             pipe_5a.lateral_and_miscellaneous_connections_no_wall_correction(
                 dhx_flow, zero_power).unwrap();
@@ -680,6 +695,69 @@ pub fn ciet_pri_loop_three_branch_link_up_components(
                 dhx_flow, zero_power).unwrap();
             pipe_17b.lateral_and_miscellaneous_connections_no_wall_correction(
                 dhx_flow, zero_power).unwrap();
+            // heater branch
+            pipe_18.lateral_and_miscellaneous_connections_no_wall_correction(
+                heater_flow, zero_power).unwrap();
+            heater_bottom_head_1b.lateral_and_miscellaneous_connections_no_wall_correction(
+                heater_flow, zero_power).unwrap();
+
+            heater_version1_1.lateral_and_miscellaneous_connections_no_wall_correction(
+                heater_flow, heat_rate_through_heater).unwrap();
+
+            heater_top_head_1a.lateral_and_miscellaneous_connections_no_wall_correction(
+                heater_flow, zero_power).unwrap();
+
+            static_mixer_10_label_2.lateral_and_miscellaneous_connections_no_wall_correction(
+                heater_flow, zero_power).unwrap();
+
+            pipe_2a.lateral_and_miscellaneous_connections_no_wall_correction(
+                heater_flow, zero_power).unwrap();
+
+            pipe_3.lateral_and_miscellaneous_connections_no_wall_correction(
+                heater_flow, zero_power).unwrap();
+
+            pipe_4.lateral_and_miscellaneous_connections_no_wall_correction(
+                heater_flow, zero_power).unwrap();
+
+
+
+            // ctah branch 
+            //
+            pipe_5b.lateral_and_miscellaneous_connections_no_wall_correction(
+                ctah_flow, zero_power).unwrap();
+            static_mixer_41_label_6.lateral_and_miscellaneous_connections_no_wall_correction(
+                ctah_flow, zero_power).unwrap();
+            pipe_6a.lateral_and_miscellaneous_connections_no_wall_correction(
+                ctah_flow, zero_power).unwrap();
+            ctah_vertical_label_7a.lateral_and_miscellaneous_connections_no_wall_correction(
+                ctah_flow, zero_power).unwrap();
+            ctah_horizontal_label_7b.lateral_and_miscellaneous_connections_no_wall_correction(
+                ctah_flow, zero_power).unwrap();
+            pipe_8a.lateral_and_miscellaneous_connections_no_wall_correction(
+                ctah_flow, zero_power).unwrap();
+            static_mixer_40_label_8.lateral_and_miscellaneous_connections_no_wall_correction(
+                ctah_flow, zero_power).unwrap();
+            pipe_9.lateral_and_miscellaneous_connections_no_wall_correction(
+                ctah_flow, zero_power).unwrap();
+            pipe_10.lateral_and_miscellaneous_connections_no_wall_correction(
+                ctah_flow, zero_power).unwrap();
+            pipe_11.lateral_and_miscellaneous_connections_no_wall_correction(
+                ctah_flow, zero_power).unwrap();
+            pipe_12.lateral_and_miscellaneous_connections_no_wall_correction(
+                ctah_flow, zero_power).unwrap();
+            ctah_pump.lateral_and_miscellaneous_connections_no_wall_correction(
+                ctah_flow, zero_power).unwrap();
+            pipe_13.lateral_and_miscellaneous_connections_no_wall_correction(
+                ctah_flow, zero_power).unwrap();
+            pipe_14.lateral_and_miscellaneous_connections_no_wall_correction(
+                ctah_flow, zero_power).unwrap();
+            pipe_15.lateral_and_miscellaneous_connections_no_wall_correction(
+                ctah_flow, zero_power).unwrap();
+            pipe_16.lateral_and_miscellaneous_connections_no_wall_correction(
+                ctah_flow, zero_power).unwrap();
+            pipe_17b.lateral_and_miscellaneous_connections_no_wall_correction(
+                ctah_flow, zero_power).unwrap();
+
         }
 
         // now we are done
