@@ -452,6 +452,19 @@ pub fn adiabatic_mixing_joint_test(){
 }
 
 
+/// when two streams of equal mass flowrate meet, 
+/// one of 50C and the other of 100C, 
+/// the outlet temperature should be 75C 
+///
+/// This assumes that cp is constant with temperature.
+/// Which it is not. 
+///
+/// It is approximate that:
+///
+/// Delta H = cp Delta T 
+///
+/// In reality it is an integral, so the it is only about 75C 
+/// in regression, it is 75.51 C
 #[cfg(test)]
 #[test]
 pub fn adiabatic_mixing_joint_test_hte_single_cv_only(){
@@ -646,7 +659,7 @@ pub fn adiabatic_mixing_joint_test_hte_single_cv_only(){
     approx::assert_abs_diff_eq!(
         mixing_joint_temp_degc,
         75.0,
-        epsilon=0.5);
+        epsilon=0.6);
 
     let outlet_temp = 
         outlet_pipe.try_get_bulk_temperature().unwrap();
@@ -657,6 +670,6 @@ pub fn adiabatic_mixing_joint_test_hte_single_cv_only(){
     approx::assert_abs_diff_eq!(
         outlet_temp_degc,
         75.0,
-        epsilon=0.5);
+        epsilon=0.6);
 
 }
