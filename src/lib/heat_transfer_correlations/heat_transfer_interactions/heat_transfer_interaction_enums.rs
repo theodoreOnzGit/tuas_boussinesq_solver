@@ -424,6 +424,21 @@ impl Into<HeatTransferInteractionType> for DataAdvection {
     }
 }
 
+impl TryFrom<HeatTransferInteractionType> for DataAdvection {
+    type Error = TuasLibError;
+
+    fn try_from(heat_transfer_interaction: HeatTransferInteractionType) -> Result<Self, Self::Error> {
+
+        match heat_transfer_interaction {
+            HeatTransferInteractionType::Advection(data_advection) => {
+                return Ok(data_advection);
+            },
+            _ => return Err(TuasLibError::WrongHeatTransferInteractionType),
+        }
+
+    }
+}
+
 
 impl HeatTransferInteractionType {
 
