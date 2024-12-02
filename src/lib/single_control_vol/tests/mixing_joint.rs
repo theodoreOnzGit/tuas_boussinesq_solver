@@ -153,26 +153,33 @@ pub fn adiabatic_mixing_joint_test_single_cv_only(){
 
         let outlet_pipe_temp = outlet_pipe.temperature;
 
-        dbg!(&(
-                simulation_time.get::<second>(),
-                inlet_pipe_1_temp.get::<degree_celsius>(),
-                inlet_pipe_2_temp.get::<degree_celsius>(),
-                mixing_joint_temp.get::<degree_celsius>(),
-                outlet_pipe_temp.get::<degree_celsius>(),
-                ));
-
         simulation_time += timestep;
     }
 
-    let inlet_pipe_1_temp = 
-        inlet_pipe_1.temperature;
+    let inlet_pipe_1_temp = inlet_pipe_1.temperature;
+    let inlet_pipe_2_temp = inlet_pipe_2.temperature;
+    let mixing_joint_temp = mixing_joint_cv.temperature;
+    let mixing_joint_temp_degc = 
+        mixing_joint_temp.get::<degree_celsius>();
+    let outlet_temp = outlet_pipe.temperature;
+    let outlet_temp_degc = 
+        outlet_temp.get::<degree_celsius>();
+
+
+    dbg!(&(
+            simulation_time.get::<second>(),
+            inlet_pipe_1_temp.get::<degree_celsius>(),
+            inlet_pipe_2_temp.get::<degree_celsius>(),
+            mixing_joint_temp.get::<degree_celsius>(),
+            outlet_pipe_temp.get::<degree_celsius>(),
+    ));
+
 
     approx::assert_abs_diff_eq!(
         inlet_pipe_1_temp.get::<degree_celsius>(),
         50.0,
         epsilon=0.5);
 
-    let inlet_pipe_2_temp = inlet_pipe_2.temperature;
 
     approx::assert_abs_diff_eq!(
         inlet_pipe_2_temp.get::<degree_celsius>(),
@@ -180,20 +187,12 @@ pub fn adiabatic_mixing_joint_test_single_cv_only(){
         epsilon=0.5);
 
 
-    let mixing_joint_temp = mixing_joint_cv.temperature;
-
-    let mixing_joint_temp_degc = 
-        mixing_joint_temp.get::<degree_celsius>();
 
     approx::assert_abs_diff_eq!(
         mixing_joint_temp_degc,
         75.0,
         epsilon=0.5);
 
-    let outlet_temp = outlet_pipe.temperature;
-
-    let outlet_temp_degc = 
-        outlet_temp.get::<degree_celsius>();
 
     approx::assert_abs_diff_eq!(
         outlet_temp_degc,
