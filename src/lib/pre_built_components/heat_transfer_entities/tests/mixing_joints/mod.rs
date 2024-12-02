@@ -454,7 +454,7 @@ pub fn adiabatic_mixing_joint_test(){
 
 #[cfg(test)]
 #[test]
-pub fn adiabatic_mixing_joint_test_single_cv_only(){
+pub fn adiabatic_mixing_joint_test_hte_single_cv_only(){
     use uom::si::length::centimeter;
     use uom::si::mass_rate::kilogram_per_second;
     use uom::si::pressure::atmosphere;
@@ -463,8 +463,8 @@ pub fn adiabatic_mixing_joint_test_single_cv_only(){
     use uom::si::time::second;
     use uom::ConstZero;
 
-    use crate::boussinesq_thermophysical_properties::{LiquidMaterial, SolidMaterial};
-    use crate::prelude::beta_testing::{link_heat_transfer_entity, FluidArray, HeatTransferEntity, HeatTransferInteractionType};
+    use crate::boussinesq_thermophysical_properties::LiquidMaterial;
+    use crate::prelude::beta_testing::{link_heat_transfer_entity, HeatTransferEntity, HeatTransferInteractionType};
     use crate::single_control_vol::SingleCVNode;
 
 

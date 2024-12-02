@@ -12,21 +12,15 @@ pub fn adiabatic_mixing_joint_test_single_cv_only(){
     use uom::si::time::second;
     use uom::ConstZero;
 
-    use crate::boussinesq_thermophysical_properties::{LiquidMaterial, SolidMaterial};
-    use crate::prelude::beta_testing::{HeatTransferEntity, HeatTransferInteractionType};
-    use crate::single_control_vol::SingleCVNode;
+    use crate::boussinesq_thermophysical_properties::LiquidMaterial;
     use crate::heat_transfer_correlations::heat_transfer_interactions::
-        heat_transfer_interaction_enums::DataAdvection;
+        heat_transfer_interaction_enums::*;
+    use crate::single_control_vol::SingleCVNode;
 
 
     let hot_temp = ThermodynamicTemperature::new::<degree_celsius>(100.0);
     let cold_temp = ThermodynamicTemperature::new::<degree_celsius>(50.0);
     
-    let mut inlet_bc_hot = HeatTransferEntity::new_const_temperature_bc(
-        hot_temp);
-    let mut inlet_bc_cold = HeatTransferEntity::new_const_temperature_bc(
-        cold_temp);
-    let mut outlet_bc_adiabatic = HeatTransferEntity::new_adiabatic_bc();
 
 
     let mixing_node_diameter = Length::new::<centimeter>(2.84);
@@ -101,28 +95,28 @@ pub fn adiabatic_mixing_joint_test_single_cv_only(){
         // probably want to check code
 
         // link inlet pipes 
+        SingleCVNode::calculate_single_cv_node_front_constant_temperature_back(
+            cold_temp, 
+            &mut inlet_pipe_1, 
+            advection_heat_transfer_interaction_pre_joint_cold_data.into()
+            ).unwrap();
+        SingleCVNode::calculate_single_cv_node_front_constant_temperature_back(
+            hot_temp, 
+            &mut inlet_pipe_1, 
+            advection_heat_transfer_interaction_pre_joint_hot_data.into()
+            ).unwrap();
 
         inlet_pipe_1.calculate_advection_interaction_to_front_singular_cv_node(
             &mut mixing_joint_cv, 
             advection_heat_transfer_interaction_pre_joint_cold_data)
             .unwrap();
 
-        SingleCVNode::calculate_single_cv_node_front_constant_temperature_back(
-            cold_temp, 
-            &mut inlet_pipe_1, 
-            advection_heat_transfer_interaction_pre_joint_cold_data.into()
-            ).unwrap();
 
         inlet_pipe_2.calculate_advection_interaction_to_front_singular_cv_node(
             &mut mixing_joint_cv, 
             advection_heat_transfer_interaction_pre_joint_hot_data)
             .unwrap();
 
-        SingleCVNode::calculate_single_cv_node_front_constant_temperature_back(
-            hot_temp, 
-            &mut inlet_pipe_1, 
-            advection_heat_transfer_interaction_pre_joint_hot_data.into()
-            ).unwrap();
 
 
         // link to outlet 
