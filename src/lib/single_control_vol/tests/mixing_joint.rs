@@ -145,14 +145,6 @@ pub fn adiabatic_mixing_joint_test_single_cv_only(){
         mixing_joint_cv.advance_timestep(timestep).unwrap();
 
 
-        let inlet_pipe_1_temp = inlet_pipe_1.temperature;
-
-        let inlet_pipe_2_temp = inlet_pipe_2.temperature;
-
-        let mixing_joint_temp = mixing_joint_cv.temperature;
-
-        let outlet_pipe_temp = outlet_pipe.temperature;
-
         simulation_time += timestep;
     }
 
@@ -161,9 +153,9 @@ pub fn adiabatic_mixing_joint_test_single_cv_only(){
     let mixing_joint_temp = mixing_joint_cv.temperature;
     let mixing_joint_temp_degc = 
         mixing_joint_temp.get::<degree_celsius>();
-    let outlet_temp = outlet_pipe.temperature;
+    let outlet_pipe_temp = outlet_pipe.temperature;
     let outlet_temp_degc = 
-        outlet_temp.get::<degree_celsius>();
+        outlet_pipe_temp.get::<degree_celsius>();
 
 
     dbg!(&(
