@@ -102,9 +102,40 @@ pub fn adiabatic_mixing_joint_test_single_cv_only(){
 
         // link inlet pipes 
 
+        inlet_pipe_1.calculate_advection_interaction_to_front_singular_cv_node(
+            &mut mixing_joint_cv, 
+            advection_heat_transfer_interaction_pre_joint_cold_data)
+            .unwrap();
+
+        SingleCVNode::calculate_single_cv_node_front_constant_temperature_back(
+            cold_temp, 
+            &mut inlet_pipe_1, 
+            advection_heat_transfer_interaction_pre_joint_cold_data.into()
+            ).unwrap();
+
+        inlet_pipe_2.calculate_advection_interaction_to_front_singular_cv_node(
+            &mut mixing_joint_cv, 
+            advection_heat_transfer_interaction_pre_joint_hot_data)
+            .unwrap();
+
+        SingleCVNode::calculate_single_cv_node_front_constant_temperature_back(
+            hot_temp, 
+            &mut inlet_pipe_1, 
+            advection_heat_transfer_interaction_pre_joint_hot_data.into()
+            ).unwrap();
+
 
         // link to outlet 
+        //
 
+        mixing_joint_cv.calculate_advection_interaction_to_front_singular_cv_node(
+            &mut outlet_pipe, 
+            advection_heat_transfer_interaction_post_joint_data)
+            .unwrap();
+
+        outlet_pipe.calculate_bc_front_cv_back_advection_non_set_temperature(
+            advection_heat_transfer_interaction_post_joint_data)
+            .unwrap();
 
 
         // advance timestep 
@@ -138,14 +169,14 @@ pub fn adiabatic_mixing_joint_test_single_cv_only(){
 
     approx::assert_abs_diff_eq!(
         inlet_pipe_1_temp.get::<degree_celsius>(),
-        100.0,
+        50.0,
         epsilon=0.5);
 
     let inlet_pipe_2_temp = inlet_pipe_2.temperature;
 
     approx::assert_abs_diff_eq!(
         inlet_pipe_2_temp.get::<degree_celsius>(),
-        50.0,
+        100.0,
         epsilon=0.5);
 
 
