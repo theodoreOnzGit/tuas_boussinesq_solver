@@ -840,10 +840,6 @@ pub fn three_branch_ciet_ver1(
                 simulated_heater_avg_surf_temp_degc
         ));
 
-        approx::assert_abs_diff_eq!(
-            expt_heater_surf_temp_avg_degc,
-            simulated_heater_avg_surf_temp_degc,
-            epsilon=heater_surface_temp_tolerance_degc);
 
 
         // this asserts the final mass flowrate against experimental flowrate
@@ -878,6 +874,10 @@ pub fn three_branch_ciet_ver1(
             simulated_heater_avg_surf_temp_degc,
             max_relative=0.001);
 
+        approx::assert_abs_diff_eq!(
+            expt_heater_surf_temp_avg_degc,
+            simulated_heater_avg_surf_temp_degc,
+            epsilon=heater_surface_temp_tolerance_degc);
 
 
         Ok(())

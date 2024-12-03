@@ -426,6 +426,9 @@ pub fn ciet_pri_loop_three_branch_link_up_components(
         {
             let zero_power: Power = Power::ZERO;
             // heater branch
+            //
+            // note that flow direction must be set correctly 
+            // in order for this thing to work properly
             pipe_18.lateral_and_miscellaneous_connections_no_wall_correction(
                 dhx_flow, zero_power).unwrap();
             heater_bottom_head_1b.lateral_and_miscellaneous_connections_no_wall_correction(
