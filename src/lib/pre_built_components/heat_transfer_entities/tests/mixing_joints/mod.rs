@@ -239,7 +239,7 @@ pub fn adiabatic_mixing_joint_test_link_to_front_and_back(){
 
 #[cfg(test)]
 #[test]
-pub fn adiabatic_mixing_joint_test(){
+pub fn adiabatic_mixing_joint_test_link_to_front_only(){
     use uom::si::angle::radian;
     use uom::si::length::{centimeter, foot};
     use uom::si::mass_rate::kilogram_per_second;
@@ -353,8 +353,8 @@ pub fn adiabatic_mixing_joint_test(){
             average_therminol_density, 
             average_therminol_density);
 
-    let timestep = Time::new::<second>(0.01);
-    let max_time = Time::new::<second>(300.0);
+    let timestep = Time::new::<second>(0.5);
+    let max_time = Time::new::<second>(3000.0);
     let mut simulation_time = Time::ZERO;
 
 
@@ -397,6 +397,20 @@ pub fn adiabatic_mixing_joint_test(){
             advection_heat_transfer_interaction_post_joint)
             .unwrap();
 
+        // you MUST set mass flowrate for fluid arrays 
+        // before advancing timestep
+
+        inlet_pipe_1.try_set_flowrate_for_fluid_array(
+            mass_flowrate_inlets)
+            .unwrap();
+        inlet_pipe_2.try_set_flowrate_for_fluid_array(
+            mass_flowrate_inlets)
+            .unwrap();
+        outlet_pipe.try_set_flowrate_for_fluid_array(
+            mass_flowrate_outlet)
+            .unwrap();
+
+
         // advance timestep 
         inlet_pipe_1.advance_timestep_mut_self(timestep).unwrap();
         inlet_pipe_2.advance_timestep_mut_self(timestep).unwrap();
@@ -404,59 +418,48 @@ pub fn adiabatic_mixing_joint_test(){
         mixing_joint_cv.advance_timestep_mut_self(timestep).unwrap();
 
 
-        let inlet_pipe_1_temp = 
-            inlet_pipe_1.try_get_bulk_temperature()
-            .unwrap();
-        let inlet_pipe_2_temp = 
-            inlet_pipe_2.try_get_bulk_temperature()
-            .unwrap();
-        let mixing_joint_temp = 
-            mixing_joint_cv.try_get_bulk_temperature().unwrap();
-
-        let outlet_pipe_temp = 
-            outlet_pipe.try_get_bulk_temperature().unwrap();
-
-        dbg!(&(
-                simulation_time.get::<second>(),
-                inlet_pipe_1_temp.get::<degree_celsius>(),
-                inlet_pipe_2_temp.get::<degree_celsius>(),
-                mixing_joint_temp.get::<degree_celsius>(),
-                outlet_pipe_temp
-                ));
 
         simulation_time += timestep;
     }
 
+
+
+
     let inlet_pipe_1_temp = 
         inlet_pipe_1.try_get_bulk_temperature()
         .unwrap();
+    let inlet_pipe_2_temp = 
+        inlet_pipe_2.try_get_bulk_temperature()
+        .unwrap();
+    let mixing_joint_temp = 
+        mixing_joint_cv.try_get_bulk_temperature().unwrap();
 
+    let outlet_pipe_temp = 
+        outlet_pipe.try_get_bulk_temperature().unwrap();
+
+    dbg!(&(
+            simulation_time.get::<second>(),
+            inlet_pipe_1_temp.get::<degree_celsius>(),
+            inlet_pipe_2_temp.get::<degree_celsius>(),
+            mixing_joint_temp.get::<degree_celsius>(),
+            outlet_pipe_temp
+    ));
     approx::assert_abs_diff_eq!(
         inlet_pipe_1_temp.get::<degree_celsius>(),
         100.0,
         epsilon=0.5);
-
-    let inlet_pipe_2_temp = 
-        inlet_pipe_2.try_get_bulk_temperature()
-        .unwrap();
-
     approx::assert_abs_diff_eq!(
         inlet_pipe_2_temp.get::<degree_celsius>(),
         50.0,
         epsilon=0.5);
-
-
-    let mixing_joint_temp = 
-        mixing_joint_cv.try_get_bulk_temperature().unwrap();
-
-    let mixing_joint_temp_degc = 
-        mixing_joint_temp.get::<degree_celsius>();
-
     approx::assert_abs_diff_eq!(
-        mixing_joint_temp_degc,
+        mixing_joint_temp.get::<degree_celsius>(),
         75.0,
         epsilon=0.5);
-
+    approx::assert_abs_diff_eq!(
+        outlet_pipe_temp.get::<degree_celsius>(),
+        75.0,
+        epsilon=0.5);
 
 }
 
