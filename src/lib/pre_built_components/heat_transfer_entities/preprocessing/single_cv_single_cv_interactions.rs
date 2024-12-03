@@ -1,17 +1,7 @@
-
-
-
-use uom::si::f64::*;
-use uom::si::thermodynamic_temperature::kelvin;
-
-use crate::heat_transfer_correlations::heat_transfer_interactions::*;
 use crate::single_control_vol::SingleCVNode;
 use crate::tuas_lib_error::TuasLibError;
 use crate::heat_transfer_correlations::heat_transfer_interactions::heat_transfer_interaction_enums::{DataAdvection, HeatTransferInteractionType};
 
-use uom::num_traits::Zero;
-
-use super::try_get_thermal_conductance_based_on_interaction;
 /// which calls other functions depending on whether the 
 /// heat transfer interaction is conductance based on advection based
 #[inline]

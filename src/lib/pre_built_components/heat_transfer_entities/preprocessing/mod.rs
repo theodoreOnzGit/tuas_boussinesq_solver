@@ -1,4 +1,3 @@
-
 use std::f64::consts::PI;
 
 use uom::si::f64::*;
@@ -74,6 +73,28 @@ impl HeatTransferEntity {
             entity,
             other_hte,
             interaction)
+
+    }
+
+    /// for fluid arrays, it is important to have a method 
+    /// to try and set mass flowrates 
+    /// so that timestep can be advanced correctly
+    #[inline]
+    pub fn try_set_flowrate_for_fluid_array(
+        &mut self,
+        mass_flowrate: MassRate) -> Result<(),TuasLibError>{
+
+        match self {
+            HeatTransferEntity::ControlVolume(
+                CVType::FluidArrayCV(fluid_arr)) => {
+                fluid_arr.set_mass_flowrate(mass_flowrate);
+
+                return Ok(());
+            },
+            _ => (),
+        }
+
+        todo!("this is not a fluid array heat transfer entity");
 
     }
 }
