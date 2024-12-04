@@ -1,4 +1,4 @@
-use crate::pre_built_components::{insulated_pipes_and_fluid_components::InsulatedFluidComponent, non_insulated_fluid_components::NonInsulatedFluidComponent, shell_and_tube_heat_exchanger::SimpleShellAndTubeHeatExchanger};
+use crate::{pre_built_components::{insulated_pipes_and_fluid_components::InsulatedFluidComponent, non_insulated_fluid_components::NonInsulatedFluidComponent, shell_and_tube_heat_exchanger::SimpleShellAndTubeHeatExchanger}, prelude::beta_testing::HeatTransferEntity};
 
 
 /// this function runs ciet ver 2 test, 
@@ -992,6 +992,11 @@ pub struct CIETComponentsAndState {
     pub pipe_39: InsulatedFluidComponent,
 
 
+    // mixing nodes 
+    /// the top of the 3 way joints connecting three branches in pri loop
+    pub top_mixing_node_5a_5b_4: HeatTransferEntity,
+    /// the bottom of the 3 way joints connecting three branches in pri loop
+    pub bottom_mixing_node_17a_17b_18: HeatTransferEntity,
 
 
 
