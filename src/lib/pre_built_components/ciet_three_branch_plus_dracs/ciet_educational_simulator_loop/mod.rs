@@ -226,9 +226,10 @@ pub fn three_branch_ciet_ver1(
         let mut top_mixing_node_5a_5b_4: HeatTransferEntity;
         let mut bottom_mixing_node_17a_17b_18: HeatTransferEntity;
 
-        // mixing node is a sphere about diameter of basketball (1 ft) 
+        // mixing node is a sphere about diameter of ping pong ball
+        // (1 in) 
 
-        let mixing_node_diameter = Length::new::<centimeter>(50.84);
+        let mixing_node_diameter = Length::new::<centimeter>(3.84);
         let mixing_node_material = LiquidMaterial::TherminolVP1;
         let mixing_node_pressure = Pressure::new::<atmosphere>(1.0);
         let mixing_node = SingleCVNode::new_sphere(
