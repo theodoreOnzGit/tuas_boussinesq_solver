@@ -956,6 +956,41 @@ pub struct CIETComponentsAndState {
     /// pipe in bottom of ctah br, connects to three way joint
     pub pipe_17a: InsulatedFluidComponent,
 
+    // dracs loop
+
+    /// dracs loop pipe at bottom of dhx tube side
+    pub dhx_tube_side_30a: InsulatedFluidComponent,
+    /// dracs loop pipe at top of dhx tube side
+    pub dhx_tube_side_30b: InsulatedFluidComponent,
+    /// static mixer pipe dracs loop
+    pub pipe_31a: InsulatedFluidComponent,
+    /// static mixer in dracs loop adjacent to dhx
+    pub static_mixer_61_label_31: InsulatedFluidComponent,
+    /// pipe in dracs loop
+    pub pipe_32: InsulatedFluidComponent,
+    /// pipe in dracs loop
+    pub pipe_33: InsulatedFluidComponent,
+    /// pipe in dracs loop adjacent to tchx
+    pub pipe_34: InsulatedFluidComponent,
+    /// horizontal representation of TCHX (NDHX) 
+    pub tchx_35a: NonInsulatedFluidComponent,
+    /// first half of vertical representation of TCHX (NDHX) 
+    pub tchx_35b_1: NonInsulatedFluidComponent,
+    /// second half of vertical representation of TCHX (NDHX) 
+    pub tchx_35b_2: NonInsulatedFluidComponent,
+    /// static mixer pipe dracs loop
+    pub pipe_36a: InsulatedFluidComponent,
+    /// static mixer in dracs loop adjacent to tchx
+    pub static_mixer_61_label_36: InsulatedFluidComponent,
+    /// pipe in dracs loop
+    pub pipe_37: InsulatedFluidComponent,
+    /// flowmeter in dracs loop
+    pub flowmeter_60_37a: InsulatedFluidComponent,
+    /// pipe in dracs loop
+    pub pipe_38: InsulatedFluidComponent,
+    /// pipe in dracs loop adjacent to dhx bottom tube side (30a)
+    pub pipe_39: InsulatedFluidComponent,
+
 
 
 
