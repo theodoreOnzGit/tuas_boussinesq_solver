@@ -202,6 +202,7 @@ pub fn ciet_pri_loop_three_branch_link_up_components(
     bottom_mixing_node_17a_17b_18: &mut HeatTransferEntity,
     ){
 
+        dbg!(&(dhx_flow,heater_flow,ctah_flow));
 
         // create the heat transfer interaction 
         let dhx_advection_heat_transfer_interaction: HeatTransferInteractionType;
@@ -245,10 +246,6 @@ pub fn ciet_pri_loop_three_branch_link_up_components(
             //
             // note that trying to put a mixing node here is 
             // problematic. I have to find out why...
-            pipe_4.pipe_fluid_array.link_to_front(
-                top_mixing_node_5a_5b_4, 
-                dhx_advection_heat_transfer_interaction)
-                .unwrap();
 
             top_mixing_node_5a_5b_4.link_to_front(
                 &mut pipe_5a.pipe_fluid_array, 
@@ -328,48 +325,60 @@ pub fn ciet_pri_loop_three_branch_link_up_components(
                 dhx_advection_heat_transfer_interaction)
                 .unwrap();
 
-            // now from DHX flow to heater branch
-            //
             pipe_17b.pipe_fluid_array.link_to_front(
-                &mut pipe_18.pipe_fluid_array, 
+                bottom_mixing_node_17a_17b_18, 
                 dhx_advection_heat_transfer_interaction)
                 .unwrap();
+
             // heater branch
 
-            pipe_18.pipe_fluid_array.link_to_front(
-                &mut heater_bottom_head_1b.pipe_fluid_array, 
-                dhx_advection_heat_transfer_interaction)
+            top_mixing_node_5a_5b_4.link_to_front(
+                &mut pipe_4.pipe_fluid_array, 
+                heater_advection_heat_transfer_interaction)
                 .unwrap();
 
-            heater_bottom_head_1b.pipe_fluid_array.link_to_front(
+            pipe_4.pipe_fluid_array.link_to_front(
+                &mut pipe_3.pipe_fluid_array, 
+                heater_advection_heat_transfer_interaction)
+                .unwrap();
+
+            pipe_3.pipe_fluid_array.link_to_front(
+                &mut pipe_2a.pipe_fluid_array, 
+                heater_advection_heat_transfer_interaction)
+                .unwrap();
+
+            pipe_2a.pipe_fluid_array.link_to_front(
+                &mut static_mixer_10_label_2.pipe_fluid_array, 
+                heater_advection_heat_transfer_interaction)
+                .unwrap();
+
+            static_mixer_21_label_25.pipe_fluid_array.link_to_front(
+                &mut heater_top_head_1a.pipe_fluid_array, 
+                heater_advection_heat_transfer_interaction)
+                .unwrap();
+
+
+            heater_top_head_1a.pipe_fluid_array.link_to_front(
                 &mut heater_version1_1.pipe_fluid_array, 
                 dhx_advection_heat_transfer_interaction)
                 .unwrap();
 
             heater_version1_1.pipe_fluid_array.link_to_front(
-                &mut heater_top_head_1a.pipe_fluid_array, 
+                &mut heater_bottom_head_1b.pipe_fluid_array, 
                 dhx_advection_heat_transfer_interaction)
                 .unwrap();
 
-            heater_top_head_1a.pipe_fluid_array.link_to_front(
-                &mut static_mixer_10_label_2.pipe_fluid_array, 
+
+            heater_bottom_head_1b.pipe_fluid_array.link_to_front(
+                &mut pipe_18.pipe_fluid_array, 
                 dhx_advection_heat_transfer_interaction)
                 .unwrap();
 
-            static_mixer_10_label_2.pipe_fluid_array.link_to_front(
-                &mut pipe_2a.pipe_fluid_array, 
+            pipe_18.pipe_fluid_array.link_to_front(
+                bottom_mixing_node_17a_17b_18, 
                 dhx_advection_heat_transfer_interaction)
                 .unwrap();
 
-            pipe_2a.pipe_fluid_array.link_to_front(
-                &mut pipe_3.pipe_fluid_array, 
-                dhx_advection_heat_transfer_interaction)
-                .unwrap();
-
-            pipe_3.pipe_fluid_array.link_to_front(
-                &mut pipe_4.pipe_fluid_array, 
-                dhx_advection_heat_transfer_interaction)
-                .unwrap();
 
         }
         // set the relevant heat transfer coefficients 
@@ -441,28 +450,28 @@ pub fn ciet_pri_loop_three_branch_link_up_components(
             //
             // note that flow direction must be set correctly 
             // in order for this thing to work properly
-            pipe_18.lateral_and_miscellaneous_connections_no_wall_correction(
-                dhx_flow, zero_power).unwrap();
-            heater_bottom_head_1b.lateral_and_miscellaneous_connections_no_wall_correction(
-                dhx_flow, zero_power).unwrap();
 
-            heater_version1_1.lateral_and_miscellaneous_connections_no_wall_correction(
-                dhx_flow, heat_rate_through_heater).unwrap();
 
-            heater_top_head_1a.lateral_and_miscellaneous_connections_no_wall_correction(
-                dhx_flow, zero_power).unwrap();
 
-            static_mixer_10_label_2.lateral_and_miscellaneous_connections_no_wall_correction(
-                dhx_flow, zero_power).unwrap();
 
-            pipe_2a.lateral_and_miscellaneous_connections_no_wall_correction(
-                dhx_flow, zero_power).unwrap();
 
-            pipe_3.lateral_and_miscellaneous_connections_no_wall_correction(
-                dhx_flow, zero_power).unwrap();
 
             pipe_4.lateral_and_miscellaneous_connections_no_wall_correction(
-                dhx_flow, zero_power).unwrap();
+                heater_flow, zero_power).unwrap();
+            pipe_3.lateral_and_miscellaneous_connections_no_wall_correction(
+                heater_flow, zero_power).unwrap();
+            pipe_2a.lateral_and_miscellaneous_connections_no_wall_correction(
+                heater_flow, zero_power).unwrap();
+            static_mixer_10_label_2.lateral_and_miscellaneous_connections_no_wall_correction(
+                heater_flow, zero_power).unwrap();
+            heater_top_head_1a.lateral_and_miscellaneous_connections_no_wall_correction(
+                heater_flow, zero_power).unwrap();
+            heater_version1_1.lateral_and_miscellaneous_connections_no_wall_correction(
+                heater_flow, heat_rate_through_heater).unwrap();
+            heater_bottom_head_1b.lateral_and_miscellaneous_connections_no_wall_correction(
+                heater_flow, zero_power).unwrap();
+            pipe_18.lateral_and_miscellaneous_connections_no_wall_correction(
+                heater_flow, zero_power).unwrap();
 
 
             // DHX branch 
