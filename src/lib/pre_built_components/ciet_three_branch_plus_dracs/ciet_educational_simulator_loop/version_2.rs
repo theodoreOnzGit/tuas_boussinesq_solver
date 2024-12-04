@@ -1,4 +1,4 @@
-use crate::pre_built_components::insulated_pipes_and_fluid_components::InsulatedFluidComponent;
+use crate::pre_built_components::{insulated_pipes_and_fluid_components::InsulatedFluidComponent, non_insulated_fluid_components::NonInsulatedFluidComponent, shell_and_tube_heat_exchanger::SimpleShellAndTubeHeatExchanger};
 
 
 /// this function runs ciet ver 2 test, 
@@ -882,6 +882,82 @@ pub struct CIETComponentsAndState {
     pub heater_top_head_1b: InsulatedFluidComponent,
     /// pipe in bottom of heater br, connects to three way joint
     pub pipe_18: InsulatedFluidComponent,
+
+    // for dhx branch (nat circ loop)
+    
+    /// pipe in top of dhx br, connects to three way joint
+    pub pipe_5a: InsulatedFluidComponent,
+    /// pipe in dhx br
+    pub pipe_26: InsulatedFluidComponent,
+    /// static mixer pipe dhx branch
+    pub pipe_25a: InsulatedFluidComponent,
+    /// static mixer dhx branch
+    pub static_mixer_21_label_25: InsulatedFluidComponent,
+    /// dracs heat exchanger connecting dhx branch in pri loop 
+    /// to dracs branch 
+    ///
+    /// the shell side is on the pri loop side 
+    /// the tube side is on the dracs side
+    pub dhx_sthe: SimpleShellAndTubeHeatExchanger,
+    /// static mixer dhx branch
+    pub static_mixer_20_label_23: InsulatedFluidComponent,
+    /// static mixer pipe dhx branch
+    pub pipe_23a: InsulatedFluidComponent,
+    /// pipe dhx branch
+    pub pipe_22: InsulatedFluidComponent,
+    /// flowmeter in dhx branch
+    pub flowmeter_20_21a: NonInsulatedFluidComponent,
+    /// pipe dhx branch
+    pub pipe_21: InsulatedFluidComponent,
+    /// pipe dhx branch
+    pub pipe_20: InsulatedFluidComponent,
+    /// pipe dhx branch
+    pub pipe_19: InsulatedFluidComponent,
+    /// pipe in bottom of dhx br, connects to three way joint
+    pub pipe_17b: InsulatedFluidComponent,
+
+
+    // for ctah branch (forced circ loop)
+
+    /// pipe in top of ctah br, connects to three way joint
+    pub pipe_5b: InsulatedFluidComponent,
+    /// static mixer pipe ctah branch
+    pub pipe_6a: InsulatedFluidComponent,
+    /// static mixer ctah brm adjacent to ctah
+    pub static_mixer_41_label_6: InsulatedFluidComponent,
+    /// ctah vertical simplified representation
+    pub ctah_vertical_label_7a: NonInsulatedFluidComponent,
+    /// ctah horizontal simplified representation
+    pub ctah_horizontal_label_7b: NonInsulatedFluidComponent,
+    /// static mixer pipe ctah branch
+    pub pipe_8a: InsulatedFluidComponent,
+    /// static mixer ctah brm adjacent to ctah
+    pub static_mixer_40_label_8: InsulatedFluidComponent,
+    /// pipe ctah branch
+    pub pipe_9: InsulatedFluidComponent,
+    /// pipe ctah branch
+    pub pipe_10: InsulatedFluidComponent,
+    /// pipe ctah branch
+    pub pipe_11: InsulatedFluidComponent,
+    /// pipe ctah branch
+    pub pipe_12: InsulatedFluidComponent,
+    /// ctah pump, the only pump for forced circulation in CIET
+    pub ctah_pump: NonInsulatedFluidComponent,
+    /// pipe ctah branch
+    pub pipe_13: InsulatedFluidComponent,
+    /// pipe ctah branch
+    pub pipe_14: InsulatedFluidComponent,
+    /// flowmeter ctah branch
+    pub flowmeter_40_14a: InsulatedFluidComponent,
+    /// pipe ctah branch
+    pub pipe_15: InsulatedFluidComponent,
+    /// pipe ctah branch
+    pub pipe_16: InsulatedFluidComponent,
+    /// pipe in bottom of ctah br, connects to three way joint
+    pub pipe_17a: InsulatedFluidComponent,
+
+
+
 
 
 }
