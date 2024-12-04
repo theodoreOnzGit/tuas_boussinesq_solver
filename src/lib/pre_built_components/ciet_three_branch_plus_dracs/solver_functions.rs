@@ -352,7 +352,7 @@ pub fn ciet_pri_loop_three_branch_link_up_components(
                 heater_advection_heat_transfer_interaction)
                 .unwrap();
 
-            static_mixer_21_label_25.pipe_fluid_array.link_to_front(
+            static_mixer_10_label_2.pipe_fluid_array.link_to_front(
                 &mut heater_top_head_1a.pipe_fluid_array, 
                 heater_advection_heat_transfer_interaction)
                 .unwrap();
@@ -379,6 +379,111 @@ pub fn ciet_pri_loop_three_branch_link_up_components(
                 heater_advection_heat_transfer_interaction)
                 .unwrap();
 
+
+            // ctah branch 
+            top_mixing_node_5a_5b_4.link_to_front(
+                &mut pipe_5b.pipe_fluid_array, 
+                ctah_advection_heat_transfer_interaction)
+                .unwrap();
+
+            pipe_5b.pipe_fluid_array.link_to_front(
+                &mut static_mixer_41_label_6.pipe_fluid_array, 
+                ctah_advection_heat_transfer_interaction)
+                .unwrap();
+
+            static_mixer_41_label_6.pipe_fluid_array.link_to_front(
+                &mut pipe_6a.pipe_fluid_array, 
+                ctah_advection_heat_transfer_interaction)
+                .unwrap();
+
+
+            pipe_6a.pipe_fluid_array.link_to_front(
+                &mut ctah_vertical_label_7a.pipe_fluid_array, 
+                ctah_advection_heat_transfer_interaction)
+                .unwrap();
+
+            ctah_vertical_label_7a.pipe_fluid_array.link_to_front(
+                &mut ctah_horizontal_label_7b.pipe_fluid_array, 
+                ctah_advection_heat_transfer_interaction)
+                .unwrap();
+
+
+            ctah_horizontal_label_7b.pipe_fluid_array.link_to_front(
+                &mut pipe_8a.pipe_fluid_array, 
+                ctah_advection_heat_transfer_interaction)
+                .unwrap();
+
+
+            pipe_8a.pipe_fluid_array.link_to_front(
+                &mut static_mixer_40_label_8.pipe_fluid_array, 
+                ctah_advection_heat_transfer_interaction)
+                .unwrap();
+
+
+            static_mixer_40_label_8.pipe_fluid_array.link_to_front(
+                &mut pipe_9.pipe_fluid_array, 
+                ctah_advection_heat_transfer_interaction)
+                .unwrap();
+
+
+            pipe_9.pipe_fluid_array.link_to_front(
+                &mut pipe_10.pipe_fluid_array, 
+                ctah_advection_heat_transfer_interaction)
+                .unwrap();
+
+
+            pipe_10.pipe_fluid_array.link_to_front(
+                &mut pipe_11.pipe_fluid_array, 
+                ctah_advection_heat_transfer_interaction)
+                .unwrap();
+
+
+            pipe_11.pipe_fluid_array.link_to_front(
+                &mut pipe_12.pipe_fluid_array, 
+                ctah_advection_heat_transfer_interaction)
+                .unwrap();
+
+
+            pipe_12.pipe_fluid_array.link_to_front(
+                &mut ctah_pump.pipe_fluid_array, 
+                ctah_advection_heat_transfer_interaction)
+                .unwrap();
+
+
+            ctah_pump.pipe_fluid_array.link_to_front(
+                &mut pipe_13.pipe_fluid_array, 
+                ctah_advection_heat_transfer_interaction)
+                .unwrap();
+
+            pipe_13.pipe_fluid_array.link_to_front(
+                &mut pipe_14.pipe_fluid_array, 
+                ctah_advection_heat_transfer_interaction)
+                .unwrap();
+
+            pipe_14.pipe_fluid_array.link_to_front(
+                &mut flowmeter_40_14a.pipe_fluid_array, 
+                ctah_advection_heat_transfer_interaction)
+                .unwrap();
+
+            flowmeter_40_14a.pipe_fluid_array.link_to_front(
+                &mut pipe_15.pipe_fluid_array, 
+                ctah_advection_heat_transfer_interaction)
+                .unwrap();
+
+            pipe_15.pipe_fluid_array.link_to_front(
+                &mut pipe_16.pipe_fluid_array, 
+                ctah_advection_heat_transfer_interaction)
+                .unwrap();
+
+            pipe_16.pipe_fluid_array.link_to_front(
+                &mut pipe_17a.pipe_fluid_array, 
+                ctah_advection_heat_transfer_interaction)
+                .unwrap();
+
+            pipe_17a.pipe_fluid_array.link_to_front(
+                bottom_mixing_node_17a_17b_18, 
+                ctah_advection_heat_transfer_interaction)
+                .unwrap();
 
         }
         // set the relevant heat transfer coefficients 
@@ -500,6 +605,45 @@ pub fn ciet_pri_loop_three_branch_link_up_components(
                 dhx_flow, zero_power).unwrap();
             pipe_17b.lateral_and_miscellaneous_connections_no_wall_correction(
                 dhx_flow, zero_power).unwrap();
+
+            // ctah branch 
+            pipe_5b.lateral_and_miscellaneous_connections_no_wall_correction(
+                ctah_flow, zero_power).unwrap();
+            pipe_6a.lateral_and_miscellaneous_connections_no_wall_correction(
+                ctah_flow, zero_power).unwrap();
+            static_mixer_41_label_6.lateral_and_miscellaneous_connections_no_wall_correction(
+                ctah_flow, zero_power).unwrap();
+            ctah_vertical_label_7a.lateral_and_miscellaneous_connections_no_wall_correction(
+                ctah_flow, zero_power).unwrap();
+            ctah_horizontal_label_7b.lateral_and_miscellaneous_connections_no_wall_correction(
+                ctah_flow, zero_power).unwrap();
+            pipe_8a.lateral_and_miscellaneous_connections_no_wall_correction(
+                ctah_flow, zero_power).unwrap();
+            static_mixer_40_label_8.lateral_and_miscellaneous_connections_no_wall_correction(
+                ctah_flow, zero_power).unwrap();
+            pipe_9.lateral_and_miscellaneous_connections_no_wall_correction(
+                ctah_flow, zero_power).unwrap();
+            pipe_10.lateral_and_miscellaneous_connections_no_wall_correction(
+                ctah_flow, zero_power).unwrap();
+            pipe_11.lateral_and_miscellaneous_connections_no_wall_correction(
+                ctah_flow, zero_power).unwrap();
+            pipe_12.lateral_and_miscellaneous_connections_no_wall_correction(
+                ctah_flow, zero_power).unwrap();
+            ctah_pump.lateral_and_miscellaneous_connections_no_wall_correction(
+                ctah_flow, zero_power).unwrap();
+            pipe_13.lateral_and_miscellaneous_connections_no_wall_correction(
+                ctah_flow, zero_power).unwrap();
+            pipe_14.lateral_and_miscellaneous_connections_no_wall_correction(
+                ctah_flow, zero_power).unwrap();
+            flowmeter_40_14a.lateral_and_miscellaneous_connections_no_wall_correction(
+                ctah_flow, zero_power).unwrap();
+            pipe_15.lateral_and_miscellaneous_connections_no_wall_correction(
+                ctah_flow, zero_power).unwrap();
+            pipe_16.lateral_and_miscellaneous_connections_no_wall_correction(
+                ctah_flow, zero_power).unwrap();
+            pipe_17a.lateral_and_miscellaneous_connections_no_wall_correction(
+                ctah_flow, zero_power).unwrap();
+
         }
 
         // now we are done
