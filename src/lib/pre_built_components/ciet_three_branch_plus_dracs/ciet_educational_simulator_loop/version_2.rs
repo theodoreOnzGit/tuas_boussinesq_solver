@@ -1,3 +1,5 @@
+use crate::pre_built_components::insulated_pipes_and_fluid_components::InsulatedFluidComponent;
+
 
 /// this function runs ciet ver 2 test, 
 /// mass flowrates are calculated in parallel 
@@ -855,4 +857,32 @@ pub fn three_branch_ciet_ver2(
         Ok(())
 
     }
+
+/// this contains all the necessary piping and instrumentation in CIET 
+/// so that we need only make one Arc Mutex Pointer for the whole of CIET
+
+#[derive(Clone,Debug,PartialEq)]
+pub struct CIETComponentsAndState {
+    // for heater branch 
+
+
+    /// pipe in top of heater br, connects to three way joint
+    pub pipe_4: InsulatedFluidComponent,
+    /// pipe in heater br
+    pub pipe_3: InsulatedFluidComponent,
+    /// static mixer 
+    pub static_mixer_10_label_2: InsulatedFluidComponent,
+    /// static mixer pipe in heater br
+    pub pipe_2a: InsulatedFluidComponent,
+    /// version 1 of heatertop head
+    pub heater_top_head_1a: InsulatedFluidComponent,
+    /// version 1 of heater
+    pub heater_ver_1: InsulatedFluidComponent,
+    /// version 1 of heaterbottom head
+    pub heater_top_head_1b: InsulatedFluidComponent,
+    /// pipe in bottom of heater br, connects to three way joint
+    pub pipe_18: InsulatedFluidComponent,
+
+
+}
 
