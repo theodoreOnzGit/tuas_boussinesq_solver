@@ -904,6 +904,10 @@ pub fn three_branch_pri_loop_flowrates(
 
         if flow_diode_block_flow {
 
+            // recursively calling the function is kind 
+            // of computationally wasteful.
+            //
+            // dont do this
             return three_branch_pri_loop_flowrates(
                 pump_pressure, 
                 ctah_branch_blocked, 
