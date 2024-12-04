@@ -1,4 +1,8 @@
-use crate::{pre_built_components::{insulated_pipes_and_fluid_components::InsulatedFluidComponent, non_insulated_fluid_components::NonInsulatedFluidComponent, shell_and_tube_heat_exchanger::SimpleShellAndTubeHeatExchanger}, prelude::beta_testing::HeatTransferEntity};
+use uom::si::f64::*;
+
+use crate::prelude::beta_testing::HeatTransferEntity;
+use crate::pre_built_components::{non_insulated_fluid_components::NonInsulatedFluidComponent, shell_and_tube_heat_exchanger::SimpleShellAndTubeHeatExchanger};
+use crate::pre_built_components::insulated_pipes_and_fluid_components::InsulatedFluidComponent;
 
 
 /// this function runs ciet ver 2 test, 
@@ -35,6 +39,8 @@ pub fn three_branch_ciet_ver2(
     ctah_branch_blocked: bool,
     dhx_branch_blocked: bool) -> 
     Result<(),crate::tuas_lib_error::TuasLibError>{
+        use std::sync::{Arc, Mutex};
+
         use uom::si::length::centimeter;
         use uom::si::pressure::{atmosphere, pascal};
         use uom::si::{f64::*, mass_rate::kilogram_per_second, power::watt};
@@ -225,6 +231,9 @@ pub fn three_branch_ciet_ver2(
         let mut top_mixing_node_5a_5b_4: HeatTransferEntity;
         let mut bottom_mixing_node_17a_17b_18: HeatTransferEntity;
 
+
+
+
         // mixing node is a sphere about diameter of ping pong ball
         // (1 in) 
 
@@ -240,8 +249,6 @@ pub fn three_branch_ciet_ver2(
 
         top_mixing_node_5a_5b_4 = mixing_node.clone().into();
         bottom_mixing_node_17a_17b_18 = mixing_node.into();
-
-
 
 
 
@@ -406,10 +413,90 @@ pub fn three_branch_ciet_ver2(
             = MassRate::ZERO;
 
         let ambient_htc = HeatTransfer::new::<watt_per_square_meter_kelvin>(20.0);
+
+        // create shared state pointer for parallelism
+        //
+
+        let ciet_state_ptr_main_loop = Arc::new(Mutex::new(
+                CIETComponentsAndState {
+                    pipe_4,
+                    pipe_3,
+                    static_mixer_10_label_2,
+                    pipe_2a,
+                    heater_top_head_1a,
+                    heater_ver_1,
+                    heater_bottom_head_1b,
+                    pipe_18,
+                    pipe_5a,
+                    pipe_26,
+                    pipe_25a,
+                    static_mixer_21_label_25,
+                    dhx_sthe,
+                    static_mixer_20_label_23,
+                    pipe_23a,
+                    pipe_22,
+                    flowmeter_20_21a,
+                    pipe_21,
+                    pipe_20,
+                    pipe_19,
+                    pipe_17b,
+                    pipe_5b,
+                    pipe_6a,
+                    static_mixer_41_label_6,
+                    ctah_vertical_label_7a,
+                    ctah_horizontal_label_7b,
+                    pipe_8a,
+                    static_mixer_40_label_8,
+                    pipe_9,
+                    pipe_10,
+                    pipe_11,
+                    pipe_12,
+                    ctah_pump,
+                    pipe_13,
+                    pipe_14,
+                    flowmeter_40_14a,
+                    pipe_15,
+                    pipe_16,
+                    pipe_17a,
+                    dhx_tube_side_30a,
+                    dhx_tube_side_30b,
+                    pipe_31a,
+                    static_mixer_61_label_31,
+                    pipe_32,
+                    pipe_33,
+                    pipe_34,
+                    tchx_35a,
+                    tchx_35b_1,
+                    tchx_35b_2,
+                    pipe_36a,
+                    static_mixer_60_label_36,
+                    pipe_37,
+                    flowmeter_60_37a,
+                    pipe_38,
+                    pipe_39,
+                    top_mixing_node_5a_5b_4,
+                    bottom_mixing_node_17a_17b_18,
+                    counter_clockwise_dracs_flowrate: MassRate::ZERO,
+                    dhx_br_flowrate: MassRate::ZERO,
+                    heater_br_flowrate: MassRate::ZERO,
+                    ctah_br_flowrate: MassRate::ZERO,
+                }));
+
+        let ciet_state_ptr_for_dracs_mass_rate = ciet_state_ptr_main_loop.clone();
+        let ciet_state_ptr_for_pri_mass_rate = ciet_state_ptr_main_loop.clone();
+        let ciet_state_ptr_for_dracs_calcs = ciet_state_ptr_main_loop.clone();
+        let ciet_state_ptr_for_pri_calcs = ciet_state_ptr_main_loop.clone();
+
+
         // calculation loop
         while current_simulation_time < max_simulation_time {
 
+            // this one just reads the temperature, so make a clone
             let tchx_outlet_temperature: ThermodynamicTemperature = {
+
+                let mut tchx_35b_2 = 
+                    ciet_state_ptr_main_loop.lock().unwrap().tchx_35b_2
+                    .clone();
 
                 // the front of the tchx is connected to static mixer 
                 // 60 label 36
@@ -507,167 +594,259 @@ pub fn three_branch_ciet_ver2(
             // fluid calculation loop 
             //
             // first, absolute mass flowrate across two branches
-            let dhx_tube_side_heat_exchanger_30 = 
-                dhx_sthe.get_clone_of_tube_side_parallel_tube_fluid_component();
-            let dhx_shell_side_pipe_24 = 
-                dhx_sthe.get_clone_of_shell_side_fluid_component();
+
+            let dracs_massrate_join_handle = 
+                std::thread::spawn(move|| {
+
+                    let mut ciet_state_clone: CIETComponentsAndState = 
+                        ciet_state_ptr_for_dracs_mass_rate
+                        .lock().unwrap().clone();
+
+                    let dhx_tube_side_heat_exchanger_30 = 
+                        ciet_state_clone.
+                        dhx_sthe.
+                        get_clone_of_tube_side_parallel_tube_fluid_component();
+
+                    let absolute_mass_flowrate_dracs = 
+                        coupled_dracs_fluid_mechanics_calc_abs_mass_rate_sam_tchx_calibration(
+                            &ciet_state_clone.pipe_34, 
+                            &ciet_state_clone.pipe_33, 
+                            &ciet_state_clone.pipe_32, 
+                            &ciet_state_clone.pipe_31a, 
+                            &ciet_state_clone.static_mixer_61_label_31, 
+                            &ciet_state_clone.dhx_tube_side_30b, 
+                            &dhx_tube_side_heat_exchanger_30, 
+                            &ciet_state_clone.dhx_tube_side_30a, 
+                            &ciet_state_clone.tchx_35a, 
+                            &ciet_state_clone.tchx_35b_1, 
+                            &ciet_state_clone.tchx_35b_2, 
+                            &ciet_state_clone.static_mixer_60_label_36, 
+                            &ciet_state_clone.pipe_36a, 
+                            &ciet_state_clone.pipe_37, 
+                            &ciet_state_clone.flowmeter_60_37a, 
+                            &ciet_state_clone.pipe_38, 
+                            &ciet_state_clone.pipe_39);
+
+                    // likely the natural circulation is counter clockwise 
+                    let counter_clockwise_dracs_flowrate = absolute_mass_flowrate_dracs;
+
+
+                    // the only thing here I want to set is the 
+                    // mass flowrate, nothing else 
+                    //
 
 
 
-            let absolute_mass_flowrate_dracs = 
-                coupled_dracs_fluid_mechanics_calc_abs_mass_rate_sam_tchx_calibration(
-                    &pipe_34, 
-                    &pipe_33, 
-                    &pipe_32, 
-                    &pipe_31a, 
-                    &static_mixer_61_label_31, 
-                    &dhx_tube_side_30b, 
-                    &dhx_tube_side_heat_exchanger_30, 
-                    &dhx_tube_side_30a, 
-                    &tchx_35a, 
-                    &tchx_35b_1, 
-                    &tchx_35b_2, 
-                    &static_mixer_60_label_36, 
-                    &pipe_36a, 
-                    &pipe_37, 
-                    &flowmeter_60_37a, 
-                    &pipe_38, 
-                    &pipe_39);
-
-            // likely the natural circulation is counter clockwise 
-            let counter_clockwise_dracs_flowrate = absolute_mass_flowrate_dracs;
+                    ciet_state_ptr_for_dracs_mass_rate.lock().unwrap()
+                        .counter_clockwise_dracs_flowrate = 
+                        counter_clockwise_dracs_flowrate;
 
 
-            // flow should go from up to down
-            // this was tested ok
-            let (dhx_flow, heater_flow, ctah_flow) = 
-                three_branch_pri_loop_flowrates(
-                    pump_pressure, 
-                    ctah_branch_blocked, 
-                    dhx_branch_blocked, 
-                    &pipe_4, 
-                    &pipe_3, 
-                    &pipe_2a, 
-                    &static_mixer_10_label_2, 
-                    &heater_top_head_1a, 
-                    &heater_ver_1, 
-                    &heater_bottom_head_1b, 
-                    &pipe_18, 
-                    &pipe_5a, 
-                    &pipe_26, 
-                    &pipe_25a, 
-                    &static_mixer_21_label_25, 
-                    &dhx_shell_side_pipe_24, 
-                    &static_mixer_20_label_23, 
-                    &pipe_23a, 
-                    &pipe_22, 
-                    &flowmeter_20_21a, 
-                    &pipe_21, 
-                    &pipe_20, 
-                    &pipe_19, 
-                    &pipe_17b, 
-                    &pipe_5b, 
-                    &static_mixer_41_label_6, 
-                    &pipe_6a, 
-                    &ctah_vertical_label_7a, 
-                    &ctah_horizontal_label_7b, 
-                    &pipe_8a, 
-                    &static_mixer_40_label_8, 
-                    &pipe_9, 
-                    &pipe_10, 
-                    &pipe_11, 
-                    &pipe_12, 
-                    &ctah_pump, 
-                    &pipe_13, 
-                    &pipe_14, 
-                    &flowmeter_40_14a, 
-                    &pipe_15, 
-                    &pipe_16, 
-                    &pipe_17a);
+                });
 
-            let counter_clockwise_dhx_flowrate = dhx_flow;
-            // next, 
-            // link up the heat transfer entities 
-            // all lateral linking is done except for DHX
-            //
-            // note, the ambient heat transfer coefficient is not set for 
-            // the DHX sthe
-            coupled_dracs_loop_link_up_components_sam_tchx_calibration(
-                counter_clockwise_dracs_flowrate, 
-                tchx_heat_transfer_coeff, 
-                average_temperature_for_density_calcs, 
-                ambient_htc, 
-                &mut pipe_34, 
-                &mut pipe_33, 
-                &mut pipe_32, 
-                &mut pipe_31a, 
-                &mut static_mixer_61_label_31, 
-                &mut dhx_tube_side_30b, 
-                &mut dhx_sthe, 
-                &mut dhx_tube_side_30a, 
-                &mut tchx_35a, 
-                &mut tchx_35b_1, 
-                &mut tchx_35b_2, 
-                &mut static_mixer_60_label_36, 
-                &mut pipe_36a, 
-                &mut pipe_37, 
-                &mut flowmeter_60_37a, 
-                &mut pipe_38, 
-                &mut pipe_39);
+            let pri_loop_flowrate_join_handle = 
+                std::thread::spawn(move || {
+
+                    let mut ciet_state_clone: CIETComponentsAndState = 
+                        ciet_state_ptr_for_pri_mass_rate
+                        .lock().unwrap().clone();
+
+
+                    let dhx_shell_side_pipe_24 = 
+                        ciet_state_clone.
+                        dhx_sthe.get_clone_of_shell_side_fluid_component();
+
+                    // flow should go from up to down
+                    // this was tested ok
+                    let (dhx_flow, heater_flow, ctah_flow) = 
+                        three_branch_pri_loop_flowrates(
+                            pump_pressure, 
+                            ctah_branch_blocked, 
+                            dhx_branch_blocked, 
+                            &ciet_state_clone.pipe_4, 
+                            &ciet_state_clone.pipe_3, 
+                            &ciet_state_clone.pipe_2a, 
+                            &ciet_state_clone.static_mixer_10_label_2, 
+                            &ciet_state_clone.heater_top_head_1a, 
+                            &ciet_state_clone.heater_ver_1, 
+                            &ciet_state_clone.heater_bottom_head_1b, 
+                            &ciet_state_clone.pipe_18, 
+                            &ciet_state_clone.pipe_5a, 
+                            &ciet_state_clone.pipe_26, 
+                            &ciet_state_clone.pipe_25a, 
+                            &ciet_state_clone.static_mixer_21_label_25, 
+                            &dhx_shell_side_pipe_24, 
+                            &ciet_state_clone.static_mixer_20_label_23, 
+                            &ciet_state_clone.pipe_23a, 
+                            &ciet_state_clone.pipe_22, 
+                            &ciet_state_clone.flowmeter_20_21a, 
+                            &ciet_state_clone.pipe_21, 
+                            &ciet_state_clone.pipe_20, 
+                            &ciet_state_clone.pipe_19, 
+                            &ciet_state_clone.pipe_17b, 
+                            &ciet_state_clone.pipe_5b, 
+                            &ciet_state_clone.static_mixer_41_label_6, 
+                            &ciet_state_clone.pipe_6a, 
+                            &ciet_state_clone.ctah_vertical_label_7a, 
+                            &ciet_state_clone.ctah_horizontal_label_7b, 
+                            &ciet_state_clone.pipe_8a, 
+                            &ciet_state_clone.static_mixer_40_label_8, 
+                            &ciet_state_clone.pipe_9, 
+                            &ciet_state_clone.pipe_10, 
+                            &ciet_state_clone.pipe_11, 
+                            &ciet_state_clone.pipe_12, 
+                            &ciet_state_clone.ctah_pump, 
+                            &ciet_state_clone.pipe_13, 
+                            &ciet_state_clone.pipe_14, 
+                            &ciet_state_clone.flowmeter_40_14a, 
+                            &ciet_state_clone.pipe_15, 
+                            &ciet_state_clone.pipe_16, 
+                            &ciet_state_clone.pipe_17a);
+
+                    ciet_state_ptr_for_dracs_mass_rate.lock().unwrap()
+                        .dhx_br_flowrate = 
+                        dhx_flow;
+                    ciet_state_ptr_for_dracs_mass_rate.lock().unwrap()
+                        .heater_br_flowrate = 
+                        heater_flow;
+                    ciet_state_ptr_for_dracs_mass_rate.lock().unwrap()
+                        .ctah_br_flowrate = 
+                        ctah_flow;
+
+                });
+
+            let mut ciet_state_from_dracs_loop_heat_trf_calc: CIETComponentsAndState;
+
+            let dracs_heat_trf_join_handle = 
+                std::thread::spawn(move||{
+                    let mut ciet_state_clone: CIETComponentsAndState = 
+                        ciet_state_ptr_for_dracs_calcs
+                        .lock().unwrap().clone();
+
+                    let counter_clockwise_dracs_flowrate = 
+                        ciet_state_clone.counter_clockwise_dracs_flowrate;
+                    // next, 
+                    // link up the heat transfer entities 
+                    // all lateral linking is done except for DHX
+                    //
+                    // note, the ambient heat transfer coefficient is not set for 
+                    // the DHX sthe
+                    coupled_dracs_loop_link_up_components_sam_tchx_calibration(
+                        counter_clockwise_dracs_flowrate, 
+                        tchx_heat_transfer_coeff, 
+                        average_temperature_for_density_calcs, 
+                        ambient_htc, 
+                        &mut ciet_state_clone.pipe_34, 
+                        &mut ciet_state_clone.pipe_33, 
+                        &mut ciet_state_clone.pipe_32, 
+                        &mut ciet_state_clone.pipe_31a, 
+                        &mut ciet_state_clone.static_mixer_61_label_31, 
+                        &mut ciet_state_clone.dhx_tube_side_30b, 
+                        &mut ciet_state_clone.dhx_sthe, 
+                        &mut ciet_state_clone.dhx_tube_side_30a, 
+                        &mut ciet_state_clone.tchx_35a, 
+                        &mut ciet_state_clone.tchx_35b_1, 
+                        &mut ciet_state_clone.tchx_35b_2, 
+                        &mut ciet_state_clone.static_mixer_60_label_36, 
+                        &mut ciet_state_clone.pipe_36a, 
+                        &mut ciet_state_clone.pipe_37, 
+                        &mut ciet_state_clone.flowmeter_60_37a, 
+                        &mut ciet_state_clone.pipe_38, 
+                        &mut ciet_state_clone.pipe_39);
+
+                    ciet_state_from_dracs_loop_heat_trf_calc = 
+                        ciet_state_clone;
+
+                });
+
 
             //dbg!(&(dhx_flow,heater_flow,ctah_flow));
 
+            let mut ciet_state_from_pri_loop_heat_trf_calc: CIETComponentsAndState;
+            let pri_heat_trf_join_handle = 
+                std::thread::spawn(move||{
+                    let mut ciet_state_clone: CIETComponentsAndState = 
+                        ciet_state_ptr_for_pri_calcs
+                        .lock().unwrap().clone();
 
 
-            ciet_pri_loop_three_branch_link_up_components(
-                dhx_flow, 
-                heater_flow, 
-                ctah_flow, 
-                heat_rate_through_heater, 
-                average_temperature_for_density_calcs, 
-                ambient_htc, 
-                ctah_heat_transfer_coeff, 
-                &mut pipe_4, 
-                &mut pipe_3, 
-                &mut pipe_2a, 
-                &mut static_mixer_10_label_2, 
-                &mut heater_top_head_1a, 
-                &mut heater_ver_1, 
-                &mut heater_bottom_head_1b, 
-                &mut pipe_18, 
-                &mut pipe_5a, 
-                &mut pipe_26, 
-                &mut pipe_25a, 
-                &mut static_mixer_21_label_25, 
-                &mut dhx_sthe, 
-                &mut static_mixer_20_label_23, 
-                &mut pipe_23a, 
-                &mut pipe_22, 
-                &mut flowmeter_20_21a, 
-                &mut pipe_21, 
-                &mut pipe_20, 
-                &mut pipe_19, 
-                &mut pipe_17b, 
-                &mut pipe_5b, 
-                &mut static_mixer_41_label_6, 
-                &mut pipe_6a, 
-                &mut ctah_vertical_label_7a, 
-                &mut ctah_horizontal_label_7b, 
-                &mut pipe_8a, 
-                &mut static_mixer_40_label_8, 
-                &mut pipe_9, 
-                &mut pipe_10, 
-                &mut pipe_11, 
-                &mut pipe_12, 
-                &mut ctah_pump, 
-                &mut pipe_13, 
-                &mut pipe_14, 
-                &mut flowmeter_40_14a, 
-                &mut pipe_15, 
-                &mut pipe_16, 
-                &mut pipe_17a,
-                &mut top_mixing_node_5a_5b_4,
-                &mut bottom_mixing_node_17a_17b_18);
+                    let dhx_flow = 
+                        ciet_state_clone.dhx_br_flowrate;
+                    let heater_flow = 
+                        ciet_state_clone.heater_br_flowrate;
+                    let ctah_flow = 
+                        ciet_state_clone.ctah_br_flowrate;
+
+                    ciet_pri_loop_three_branch_link_up_components(
+                        dhx_flow, 
+                        heater_flow, 
+                        ctah_flow, 
+                        heat_rate_through_heater, 
+                        average_temperature_for_density_calcs, 
+                        ambient_htc, 
+                        ctah_heat_transfer_coeff, 
+                        &mut ciet_state_clone.pipe_4, 
+                        &mut ciet_state_clone.pipe_3, 
+                        &mut ciet_state_clone.pipe_2a, 
+                        &mut ciet_state_clone.static_mixer_10_label_2, 
+                        &mut ciet_state_clone.heater_top_head_1a, 
+                        &mut ciet_state_clone.heater_ver_1, 
+                        &mut ciet_state_clone.heater_bottom_head_1b, 
+                        &mut ciet_state_clone.pipe_18, 
+                        &mut ciet_state_clone.pipe_5a, 
+                        &mut ciet_state_clone.pipe_26, 
+                        &mut ciet_state_clone.pipe_25a, 
+                        &mut ciet_state_clone.static_mixer_21_label_25, 
+                        &mut ciet_state_clone.dhx_sthe, 
+                        &mut ciet_state_clone.static_mixer_20_label_23, 
+                        &mut ciet_state_clone.pipe_23a, 
+                        &mut ciet_state_clone.pipe_22, 
+                        &mut ciet_state_clone.flowmeter_20_21a, 
+                        &mut ciet_state_clone.pipe_21, 
+                        &mut ciet_state_clone.pipe_20, 
+                        &mut ciet_state_clone.pipe_19, 
+                        &mut ciet_state_clone.pipe_17b, 
+                        &mut ciet_state_clone.pipe_5b, 
+                        &mut ciet_state_clone.static_mixer_41_label_6, 
+                        &mut ciet_state_clone.pipe_6a, 
+                        &mut ciet_state_clone.ctah_vertical_label_7a, 
+                        &mut ciet_state_clone.ctah_horizontal_label_7b, 
+                        &mut ciet_state_clone.pipe_8a, 
+                        &mut ciet_state_clone.static_mixer_40_label_8, 
+                        &mut ciet_state_clone.pipe_9, 
+                        &mut ciet_state_clone.pipe_10, 
+                        &mut ciet_state_clone.pipe_11, 
+                        &mut ciet_state_clone.pipe_12, 
+                        &mut ciet_state_clone.ctah_pump, 
+                        &mut ciet_state_clone.pipe_13, 
+                        &mut ciet_state_clone.pipe_14, 
+                        &mut ciet_state_clone.flowmeter_40_14a, 
+                        &mut ciet_state_clone.pipe_15, 
+                        &mut ciet_state_clone.pipe_16, 
+                        &mut ciet_state_clone.pipe_17a,
+                        &mut ciet_state_clone.top_mixing_node_5a_5b_4,
+                        &mut ciet_state_clone.bottom_mixing_node_17a_17b_18);
+
+                    ciet_state_from_dracs_loop_heat_trf_calc = 
+                        ciet_state_clone;
+
+                });
+
+
+
+            // join the handles
+            dracs_massrate_join_handle.join().unwrap();
+            pri_loop_flowrate_join_handle.join().unwrap();
+            dracs_heat_trf_join_handle.join().unwrap();
+            pri_heat_trf_join_handle.join().unwrap();
+
+            // update the states from dracs loop into the pri loop 
+            // except dhx sthe
+
+            ciet_state_from_pri_loop_heat_trf_calc.dhx_tube_side_30b = 
+                ciet_state_from_dracs_loop_heat_trf_calc.dhx_tube_side_30b;
+            ciet_state_from_pri_loop_heat_trf_calc.dhx_tube_side_30a = 
+                ciet_state_from_dracs_loop_heat_trf_calc.dhx_tube_side_30a;
 
 
             // need to calibrate dhx sthe ambient htc
@@ -682,7 +861,6 @@ pub fn three_branch_ciet_ver2(
                 HeatTransfer::ZERO);
 
 
-            // todo: need to advance timestep here
 
             // advance timestep
             dracs_loop_advance_timestep_except_dhx_sam_tchx_calibration(
@@ -729,6 +907,14 @@ pub fn three_branch_ciet_ver2(
             // advance timestep
             //
             // by default, dhx flowrate is downwards in this setup
+
+            let counter_clockwise_dracs_flowrate = 
+                ciet_state_ptr_main_loop.lock().unwrap()
+                .counter_clockwise_dracs_flowrate;
+
+            let counter_clockwise_dhx_flowrate = 
+                ciet_state_ptr_main_loop.lock().unwrap()
+                .dhx_br_flowrate;
 
             let prandtl_wall_correction_setting = true; 
             let tube_side_total_mass_flowrate = -counter_clockwise_dracs_flowrate;
@@ -874,12 +1060,12 @@ pub struct CIETComponentsAndState {
     pub static_mixer_10_label_2: InsulatedFluidComponent,
     /// static mixer pipe in heater br
     pub pipe_2a: InsulatedFluidComponent,
-    /// version 1 of heatertop head
+    /// version 1 of heater top head
     pub heater_top_head_1a: InsulatedFluidComponent,
     /// version 1 of heater
     pub heater_ver_1: InsulatedFluidComponent,
-    /// version 1 of heaterbottom head
-    pub heater_top_head_1b: InsulatedFluidComponent,
+    /// version 1 of heater bottom head
+    pub heater_bottom_head_1b: InsulatedFluidComponent,
     /// pipe in bottom of heater br, connects to three way joint
     pub pipe_18: InsulatedFluidComponent,
 
@@ -948,7 +1134,7 @@ pub struct CIETComponentsAndState {
     /// pipe ctah branch
     pub pipe_14: InsulatedFluidComponent,
     /// flowmeter ctah branch
-    pub flowmeter_40_14a: InsulatedFluidComponent,
+    pub flowmeter_40_14a: NonInsulatedFluidComponent,
     /// pipe ctah branch
     pub pipe_15: InsulatedFluidComponent,
     /// pipe ctah branch
@@ -959,9 +1145,9 @@ pub struct CIETComponentsAndState {
     // dracs loop
 
     /// dracs loop pipe at bottom of dhx tube side
-    pub dhx_tube_side_30a: InsulatedFluidComponent,
+    pub dhx_tube_side_30a: NonInsulatedFluidComponent,
     /// dracs loop pipe at top of dhx tube side
-    pub dhx_tube_side_30b: InsulatedFluidComponent,
+    pub dhx_tube_side_30b: NonInsulatedFluidComponent,
     /// static mixer pipe dracs loop
     pub pipe_31a: InsulatedFluidComponent,
     /// static mixer in dracs loop adjacent to dhx
@@ -981,11 +1167,11 @@ pub struct CIETComponentsAndState {
     /// static mixer pipe dracs loop
     pub pipe_36a: InsulatedFluidComponent,
     /// static mixer in dracs loop adjacent to tchx
-    pub static_mixer_61_label_36: InsulatedFluidComponent,
+    pub static_mixer_60_label_36: InsulatedFluidComponent,
     /// pipe in dracs loop
     pub pipe_37: InsulatedFluidComponent,
     /// flowmeter in dracs loop
-    pub flowmeter_60_37a: InsulatedFluidComponent,
+    pub flowmeter_60_37a: NonInsulatedFluidComponent,
     /// pipe in dracs loop
     pub pipe_38: InsulatedFluidComponent,
     /// pipe in dracs loop adjacent to dhx bottom tube side (30a)
@@ -999,6 +1185,22 @@ pub struct CIETComponentsAndState {
     pub bottom_mixing_node_17a_17b_18: HeatTransferEntity,
 
 
+    // flowrates for all branches and loops 
+    /// dracs loop flowrate 
+    pub counter_clockwise_dracs_flowrate: MassRate,
+    /// dhx branch flowrate 
+    pub dhx_br_flowrate: MassRate,
+    /// heater branch flowrate 
+    pub heater_br_flowrate: MassRate,
+    /// ctah branch flowrate 
+    pub ctah_br_flowrate: MassRate,
 
+}
+
+impl CIETComponentsAndState {
+    /// allows you to set the value of ciet state
+    pub fn overwrite(&mut self, ciet_state: Self){
+        *self = ciet_state;
+    }
 }
 
