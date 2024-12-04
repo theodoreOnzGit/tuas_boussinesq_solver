@@ -202,8 +202,6 @@ pub fn ciet_pri_loop_three_branch_link_up_components(
     bottom_mixing_node_17a_17b_18: &mut HeatTransferEntity,
     ){
 
-        dbg!(&(dhx_flow,heater_flow,ctah_flow));
-
         // create the heat transfer interaction 
         let dhx_advection_heat_transfer_interaction: HeatTransferInteractionType;
 
