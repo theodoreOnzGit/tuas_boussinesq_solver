@@ -360,23 +360,23 @@ pub fn ciet_pri_loop_three_branch_link_up_components(
 
             heater_top_head_1a.pipe_fluid_array.link_to_front(
                 &mut heater_version1_1.pipe_fluid_array, 
-                dhx_advection_heat_transfer_interaction)
+                heater_advection_heat_transfer_interaction)
                 .unwrap();
 
             heater_version1_1.pipe_fluid_array.link_to_front(
                 &mut heater_bottom_head_1b.pipe_fluid_array, 
-                dhx_advection_heat_transfer_interaction)
+                heater_advection_heat_transfer_interaction)
                 .unwrap();
 
 
             heater_bottom_head_1b.pipe_fluid_array.link_to_front(
                 &mut pipe_18.pipe_fluid_array, 
-                dhx_advection_heat_transfer_interaction)
+                heater_advection_heat_transfer_interaction)
                 .unwrap();
 
             pipe_18.pipe_fluid_array.link_to_front(
                 bottom_mixing_node_17a_17b_18, 
-                dhx_advection_heat_transfer_interaction)
+                heater_advection_heat_transfer_interaction)
                 .unwrap();
 
 
