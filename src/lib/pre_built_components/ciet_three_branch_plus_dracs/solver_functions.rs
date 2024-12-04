@@ -516,6 +516,26 @@ pub fn ciet_pri_loop_three_branch_link_up_components(
             pipe_20.heat_transfer_to_ambient = ambient_htc;
             pipe_19.heat_transfer_to_ambient = ambient_htc;
 
+            // ctah branch 
+            pipe_5b.heat_transfer_to_ambient = ambient_htc;
+            pipe_6a.heat_transfer_to_ambient = ambient_htc;
+            static_mixer_41_label_6.heat_transfer_to_ambient = ambient_htc;
+            ctah_vertical_label_7a.heat_transfer_to_ambient = ctah_heat_transfer_coeff;
+            ctah_horizontal_label_7b.heat_transfer_to_ambient = ctah_heat_transfer_coeff;
+            pipe_8a.heat_transfer_to_ambient = ambient_htc;
+            static_mixer_40_label_8.heat_transfer_to_ambient = ambient_htc;
+            pipe_9.heat_transfer_to_ambient = ambient_htc;
+            pipe_10.heat_transfer_to_ambient = ambient_htc;
+            pipe_11.heat_transfer_to_ambient = ambient_htc;
+            pipe_12.heat_transfer_to_ambient = ambient_htc;
+            ctah_pump.heat_transfer_to_ambient = ambient_htc;
+            pipe_13.heat_transfer_to_ambient = ambient_htc;
+            pipe_14.heat_transfer_to_ambient = ambient_htc;
+            flowmeter_40_14a.heat_transfer_to_ambient = ambient_htc;
+            pipe_15.heat_transfer_to_ambient = ambient_htc;
+            pipe_16.heat_transfer_to_ambient = ambient_htc;
+            pipe_17a.heat_transfer_to_ambient = ambient_htc;
+
             // ambient temp
             let ambient_temp_user_set = 
                 ThermodynamicTemperature::new::<degree_celsius>(20.0);
@@ -544,6 +564,26 @@ pub fn ciet_pri_loop_three_branch_link_up_components(
             pipe_21.ambient_temperature = ambient_temp_user_set;
             pipe_20.ambient_temperature = ambient_temp_user_set;
             pipe_19.ambient_temperature = ambient_temp_user_set;
+
+            // ctah branch 
+            pipe_5b.ambient_temperature = ambient_temp_user_set;
+            pipe_6a.ambient_temperature = ambient_temp_user_set;
+            static_mixer_41_label_6.ambient_temperature = ambient_temp_user_set;
+            ctah_vertical_label_7a.ambient_temperature = ambient_temp_user_set;
+            ctah_horizontal_label_7b.ambient_temperature = ambient_temp_user_set;
+            pipe_8a.ambient_temperature = ambient_temp_user_set;
+            static_mixer_40_label_8.ambient_temperature = ambient_temp_user_set;
+            pipe_9.ambient_temperature = ambient_temp_user_set;
+            pipe_10.ambient_temperature = ambient_temp_user_set;
+            pipe_11.ambient_temperature = ambient_temp_user_set;
+            pipe_12.ambient_temperature = ambient_temp_user_set;
+            ctah_pump.ambient_temperature = ambient_temp_user_set;
+            pipe_13.ambient_temperature = ambient_temp_user_set;
+            pipe_14.ambient_temperature = ambient_temp_user_set;
+            flowmeter_40_14a.ambient_temperature = ambient_temp_user_set;
+            pipe_15.ambient_temperature = ambient_temp_user_set;
+            pipe_16.ambient_temperature = ambient_temp_user_set;
+            pipe_17a.ambient_temperature = ambient_temp_user_set;
             
         }
         // add lateral heat losses and power through heater

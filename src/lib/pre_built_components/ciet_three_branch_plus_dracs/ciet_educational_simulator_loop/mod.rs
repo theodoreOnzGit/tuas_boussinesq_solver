@@ -670,32 +670,6 @@ pub fn three_branch_ciet_ver1(
                  &mut top_mixing_node_5a_5b_4,
                  &mut bottom_mixing_node_17a_17b_18);
 
-            //coupled_dracs_pri_loop_dhx_heater_link_up_components(
-            //    counter_clockwise_dhx_flowrate, 
-            //    heat_rate_through_heater, 
-            //    average_temperature_for_density_calcs, 
-            //    ambient_htc, 
-            //    &mut pipe_4, 
-            //    &mut pipe_3, 
-            //    &mut pipe_2a, 
-            //    &mut static_mixer_10_label_2, 
-            //    &mut heater_top_head_1a, 
-            //    &mut heater_ver_1, 
-            //    &mut heater_bottom_head_1b, 
-            //    &mut pipe_18, 
-            //    &mut pipe_5a, 
-            //    &mut pipe_26, 
-            //    &mut pipe_25a, 
-            //    &mut static_mixer_21_label_25, 
-            //    &mut dhx_sthe, 
-            //    &mut static_mixer_20_label_23, 
-            //    &mut pipe_23a, 
-            //    &mut pipe_22, 
-            //    &mut flowmeter_20_21a, 
-            //    &mut pipe_21, 
-            //    &mut pipe_20, 
-            //    &mut pipe_19, 
-            //    &mut pipe_17b);
 
             // need to calibrate dhx sthe ambient htc
             // because the coupled_dracs_pri_loop_dhx_heater_link_up_components 
