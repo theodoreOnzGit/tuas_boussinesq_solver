@@ -9,6 +9,7 @@ pub fn three_branch_ciet_ver2(
     input_power_watts: f64,
     max_time_seconds: f64,
     tchx_outlet_temperature_set_point_degc: f64,
+    ctah_outlet_temperature_set_point_degc: f64,
     experimental_dracs_mass_flowrate_kg_per_s: f64,
     experimental_primary_mass_flowrate_kg_per_s: f64,
     simulated_expected_dracs_mass_flowrate_kg_per_s: f64,
@@ -74,37 +75,12 @@ pub fn three_branch_ciet_ver2(
         use chem_eng_real_time_process_control_simulator::alpha_nightly::controllers::ProportionalController;
         use chem_eng_real_time_process_control_simulator::alpha_nightly::controllers::AnalogController;
 
-        // max error is 0.5% according to SAM 
-        // is okay, because typical flowmeter measurement error is 2% anyway
-        // set timestep to lower values for set b9
-        // as compared to the rest
-        //
-        // setting to 0.01s didn't work, so my second candidate for change is 
-        // to change the controller, but set timestep at 0.5s
-        //
-        // This is because this dataset b9, has the highest heater power 
-        // but lowest TCHX outlet temperature of all datasets. And therefore, 
-        // the highest cooling loads are placed on the TCHX 
-        //
-        // It is understandable at this extreme then, for the controller 
-        // to be unstable if we don't change settings
-        //
-        // let timestep = Time::new::<second>(0.1);
-        // for this timestep, the simulation fails around 181s of simulated time
-        //
-        //
-        // let timestep = Time::new::<second>(0.01);
-        // for this timestep, the simulation fails around 181s of simulated time
-        //
-        // let timestep = Time::new::<second>(0.5);
-        // for this timestep, the simulation fails around 185s of simulated time
-        //
-        // the conclusion is that this instability is almost independent of timestep
+        // timestep settings
         let timestep = Time::new::<second>(0.2);
         let heat_rate_through_heater = input_power;
         let mut tchx_heat_transfer_coeff: HeatTransfer;
 
-        let reference_tchx_htc = 
+        let reference_tchx_and_ctah_htc = 
             HeatTransfer::new::<watt_per_square_meter_kelvin>(40.0);
         let average_temperature_for_density_calcs = 
             ThermodynamicTemperature::new::<degree_celsius>(80.0);
@@ -129,11 +105,20 @@ pub fn three_branch_ciet_ver2(
                 derivative_time,
                 alpha).unwrap();
 
-        // need to change this to get the ctah controller working 
-        // in version 2
-        // in version 1, i just want to ensure all three branches are 
-        // working normally
-        let mut _ctah_pid_controller = dhx_pid_controller.clone();
+        // ctah pid controller is the same type as the dracs one
+        // but I changed the gain
+        let ctah_controller_gain = Ratio::new::<ratio>(4.75);
+        let ctah_integral_time: Time = ctah_controller_gain / Frequency::new::<hertz>(1.0);
+        let ctah_derivative_time: Time = Time::new::<second>(1.0);
+        // derivative time ratio
+        let ctah_alpha: Ratio = Ratio::new::<ratio>(1.0);
+        let mut ctah_pid_controller = 
+            AnalogController::new_filtered_pid_controller(ctah_controller_gain,
+                ctah_integral_time,
+                ctah_derivative_time,
+                ctah_alpha).unwrap();
+
+
 
         // we also have a measurement delay of 0.0001 s 
         // or 0.1 ms
@@ -477,11 +462,11 @@ pub fn three_branch_ciet_ver2(
                 // 
                 //
                 // the reference value is decided by the user 
-                // in this case 250 W/(m^2 K)
+                // in this case 40 W/(m^2 K)
 
                 let mut tchx_heat_trf_output = 
-                    dimensionless_heat_trf_input * reference_tchx_htc
-                    + reference_tchx_htc;
+                    dimensionless_heat_trf_input * reference_tchx_and_ctah_htc
+                    + reference_tchx_and_ctah_htc;
 
                 // make sure it cannot be less than a certain amount 
                 let tchx_minimum_heat_transfer = 
@@ -497,11 +482,58 @@ pub fn three_branch_ciet_ver2(
 
             };
 
-            // placeholder for ctah heat trf coeff 
+            // now let's caluculate the ctah heat trf coeff
+            // first get the ctah outlet temperature at around 
+            // pipe 8a
 
             let ctah_heat_transfer_coeff: HeatTransfer = {
-                // need to put pid here
-                reference_tchx_htc
+                let ctah_outlet_temp_degc = pipe_8a
+                    .pipe_fluid_array
+                    .try_get_bulk_temperature()
+                    .unwrap()
+                    .get::<degree_celsius>();
+
+
+                let reference_temperature_interval_deg_celsius = 80.0;
+
+                // error = y_sp - y_measured
+                let set_point_abs_error_deg_celsius = 
+                    - ctah_outlet_temperature_set_point_degc
+                    + ctah_outlet_temp_degc;
+
+                let nondimensional_error: Ratio = 
+                    (set_point_abs_error_deg_celsius/
+                     reference_temperature_interval_deg_celsius).into();
+
+                // let's get the output 
+
+                let dimensionless_heat_trf_input: Ratio
+                    = ctah_pid_controller.set_user_input_and_calc(
+                        nondimensional_error, 
+                        current_simulation_time).unwrap();
+                // the dimensionless output is:
+                //
+                // (desired output - ref_val)/ref_val = dimensionless_input
+                // 
+                //
+                // the reference value is decided by the user 
+                // in this case 40 W/(m^2 K)
+
+                let mut ctah_heat_trf_output = 
+                    dimensionless_heat_trf_input * reference_tchx_and_ctah_htc
+                    + reference_tchx_and_ctah_htc;
+
+                // make sure it cannot be less than a certain amount 
+                let ctah_minimum_heat_transfer = 
+                    HeatTransfer::new::<watt_per_square_meter_kelvin>(
+                        5.0);
+
+                // this makes it physically realistic
+                if ctah_heat_trf_output < ctah_minimum_heat_transfer {
+                    ctah_heat_trf_output = ctah_minimum_heat_transfer;
+                }
+
+                ctah_heat_trf_output
             };
 
             // fluid calculation loop 
