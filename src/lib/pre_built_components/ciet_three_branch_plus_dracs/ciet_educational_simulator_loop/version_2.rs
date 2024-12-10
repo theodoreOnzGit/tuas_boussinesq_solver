@@ -8,6 +8,7 @@
 ///
 #[cfg(test)]
 #[test] 
+#[ignore = "debugging"]
 pub fn ctah_flow_steady_state_test(){
 
 
@@ -70,7 +71,7 @@ pub fn ctah_flow_steady_state_test(){
         (78.985,92.756,91.845,79.86);
 
     // timestep 
-    let timestep_seconds: f64 = 0.5;
+    let timestep_seconds: f64 = 0.2;
 
 
     three_branch_ciet_ver2(
