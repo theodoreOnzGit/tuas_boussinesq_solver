@@ -4,6 +4,8 @@
 /// for simplicity
 ///
 /// version 1 also has no pid control for ctah
+///
+/// this is meant to test steady state flow on the ctah
 #[cfg(test)]
 pub fn three_branch_ciet_ver2(
     input_power_watts: f64,
@@ -28,9 +30,15 @@ pub fn three_branch_ciet_ver2(
     expt_heater_surf_temp_avg_degc: f64,
     simulated_expected_heater_surf_temp_degc: f64,
     heater_surface_temp_tolerance_degc: f64,
+    expt_heater_outlet_temp_degc: f64,
+    expt_heater_inlet_temp_degc: f64,
+    expt_ctah_outlet_temp_degc: f64,
+    expt_ctah_inlet_temp_degc: f64,
+    expt_temperature_tolerance_degc: f64,
     ctah_pump_pressure_pascals: f64,
     ctah_branch_blocked: bool,
-    dhx_branch_blocked: bool) -> 
+    dhx_branch_blocked: bool,
+    ) -> 
     Result<(),crate::tuas_lib_error::TuasLibError>{
         use uom::si::length::centimeter;
         use uom::si::pressure::{atmosphere, pascal};
@@ -814,7 +822,7 @@ pub fn three_branch_ciet_ver2(
 
         let display_temperatures = true;
         // temperatures before and after heater
-        let ((_bt_11,_wt_10),(_bt_12,_wt_13)) = 
+        let ((bt_11,_wt_10),(bt_12,_wt_13)) = 
             pri_loop_heater_temperature_diagnostics(
                 &mut heater_bottom_head_1b, 
                 &mut static_mixer_10_label_2, 
@@ -839,6 +847,20 @@ pub fn three_branch_ciet_ver2(
         let simulated_heater_avg_surf_temp_degc: f64 = 
             heater_avg_surf_temp.get::<degree_celsius>();
 
+        // ctah inlet and ctah outlet
+        // for inlet temperature, use pipe 6a and pipe 8a temperatures 
+        // as proxies
+
+        let simulated_ctah_inlet_temp_degc = pipe_6a
+            .pipe_fluid_array
+            .try_get_bulk_temperature()
+            .unwrap()
+            .get::<degree_celsius>();
+        let simulated_ctah_outlet_temp_degc = pipe_8a
+            .pipe_fluid_array
+            .try_get_bulk_temperature()
+            .unwrap()
+            .get::<degree_celsius>();
         dbg!(&(
                 input_power,
                 final_mass_flowrate_pri_loop,
@@ -885,6 +907,30 @@ pub fn three_branch_ciet_ver2(
             simulated_heater_avg_surf_temp_degc,
             epsilon=heater_surface_temp_tolerance_degc);
 
+        // heater inlet and outlet check to user set temperature tolerance 
+
+        approx::assert_abs_diff_eq!(
+            expt_heater_inlet_temp_degc,
+            bt_11.get::<degree_celsius>(),
+            epsilon=expt_temperature_tolerance_degc);
+
+        approx::assert_abs_diff_eq!(
+            expt_heater_outlet_temp_degc,
+            bt_12.get::<degree_celsius>(),
+            epsilon=expt_temperature_tolerance_degc);
+
+        // ctah inlet and outlet temperature check to user set temperature 
+        // tolerance 
+
+        approx::assert_abs_diff_eq!(
+            expt_ctah_inlet_temp_degc,
+            simulated_ctah_inlet_temp_degc,
+            epsilon=expt_temperature_tolerance_degc);
+
+        approx::assert_abs_diff_eq!(
+            expt_ctah_outlet_temp_degc,
+            simulated_ctah_outlet_temp_degc,
+            epsilon=expt_temperature_tolerance_degc);
 
         Ok(())
 

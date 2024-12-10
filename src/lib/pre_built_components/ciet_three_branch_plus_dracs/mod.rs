@@ -2,7 +2,8 @@
 /// simulation. It will not be validated, but it will be 
 /// fun to play with as a simulator. Useful for education and etc.
 ///
-/// 
+/// Also included here is some csv data for ciet's ctah loop forced circulation 
+/// transients
 pub mod ciet_educational_simulator_loop;
 
 /// CIET needs Thermo-hydraulic equations solved in TUAS 
