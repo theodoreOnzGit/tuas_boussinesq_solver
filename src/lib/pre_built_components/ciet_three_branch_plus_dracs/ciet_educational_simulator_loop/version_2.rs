@@ -39,6 +39,7 @@ pub fn three_branch_ciet_ver2(
     ctah_branch_blocked: bool,
     dhx_branch_blocked: bool) -> 
     Result<(),crate::tuas_lib_error::TuasLibError>{
+        use std::ops::DerefMut;
         use std::sync::{Arc, Mutex};
 
         use uom::si::length::centimeter;
@@ -482,14 +483,15 @@ pub fn three_branch_ciet_ver2(
                     ctah_br_flowrate: MassRate::ZERO,
                 }));
 
-        let ciet_state_ptr_for_dracs_mass_rate = ciet_state_ptr_main_loop.clone();
-        let ciet_state_ptr_for_pri_mass_rate = ciet_state_ptr_main_loop.clone();
-        let ciet_state_ptr_for_dracs_calcs = ciet_state_ptr_main_loop.clone();
-        let ciet_state_ptr_for_pri_calcs = ciet_state_ptr_main_loop.clone();
 
 
         // calculation loop
         while current_simulation_time < max_simulation_time {
+
+            let ciet_state_ptr_for_dracs_mass_rate = ciet_state_ptr_main_loop.clone();
+            let ciet_state_ptr_for_pri_mass_rate = ciet_state_ptr_main_loop.clone();
+            let ciet_state_ptr_for_dracs_calcs = ciet_state_ptr_main_loop.clone();
+            let ciet_state_ptr_for_pri_calcs = ciet_state_ptr_main_loop.clone();
 
             // this one just reads the temperature, so make a clone
             let tchx_outlet_temperature: ThermodynamicTemperature = {
@@ -664,14 +666,53 @@ pub fn three_branch_ciet_ver2(
             let pri_loop_flowrate_join_handle = 
                 std::thread::spawn(move || {
 
-                    let mut ciet_state_clone: CIETComponentsAndState = 
+                    let ciet_state_clone: CIETComponentsAndState = 
                         ciet_state_ptr_for_pri_mass_rate
                         .lock().unwrap().clone();
 
-
+                    let pipe_4 = ciet_state_clone.pipe_4.clone();
+                    let pipe_3 = ciet_state_clone.pipe_3.clone();
+                    let pipe_2a = ciet_state_clone.pipe_2a.clone();
+                    let static_mixer_10_label_2 = ciet_state_clone.static_mixer_10_label_2.clone();
+                    let heater_top_head_1a = ciet_state_clone.heater_top_head_1a.clone();
+                    let heater_ver_1 = ciet_state_clone.heater_ver_1.clone();
+                    let heater_bottom_head_1b = ciet_state_clone.heater_bottom_head_1b.clone();
+                    let pipe_18 = ciet_state_clone.pipe_18.clone();
+                    let pipe_5a = ciet_state_clone.pipe_5a.clone();
+                    let pipe_26 = ciet_state_clone.pipe_26.clone();
+                    let pipe_25a = ciet_state_clone.pipe_25a.clone();
+                    let static_mixer_21_label_25 = ciet_state_clone.static_mixer_21_label_25.clone();
                     let dhx_shell_side_pipe_24 = 
                         ciet_state_clone.
                         dhx_sthe.get_clone_of_shell_side_fluid_component();
+                    let static_mixer_20_label_23 = ciet_state_clone.static_mixer_20_label_23.clone();
+                    let pipe_23a = ciet_state_clone.pipe_23a.clone();
+                    let pipe_22 = ciet_state_clone.pipe_22.clone();
+                    let flowmeter_20_21a = ciet_state_clone.flowmeter_20_21a.clone();
+                    let pipe_21 = ciet_state_clone.pipe_21.clone();
+                    let pipe_20 = ciet_state_clone.pipe_20.clone();
+                    let pipe_19 = ciet_state_clone.pipe_19.clone();
+                    let pipe_17b = ciet_state_clone.pipe_17b.clone();
+                    let pipe_5b = ciet_state_clone.pipe_5b.clone();
+                    let static_mixer_41_label_6 = ciet_state_clone.static_mixer_41_label_6.clone();
+                    let pipe_6a = ciet_state_clone.pipe_6a.clone();
+                    let ctah_vertical_label_7a = ciet_state_clone.ctah_vertical_label_7a.clone();
+                    let ctah_horizontal_label_7b = ciet_state_clone.ctah_horizontal_label_7b.clone();
+                    let pipe_8a = ciet_state_clone.pipe_8a.clone();
+                    let static_mixer_40_label_8 = ciet_state_clone.static_mixer_40_label_8.clone();
+                    let pipe_9 = ciet_state_clone.pipe_9.clone();
+                    let pipe_10 = ciet_state_clone.pipe_10.clone();
+                    let pipe_11 = ciet_state_clone.pipe_11.clone();
+                    let pipe_12 = ciet_state_clone.pipe_12.clone();
+                    let ctah_pump = ciet_state_clone.ctah_pump.clone();
+                    // todo: ciet state should contain pump pressure for UI 
+                    // real-time interaction
+                    let pipe_13 = ciet_state_clone.pipe_13.clone();
+                    let pipe_14 = ciet_state_clone.pipe_14.clone();
+                    let flowmeter_40_14a = ciet_state_clone.flowmeter_40_14a.clone();
+                    let pipe_15 = ciet_state_clone.pipe_15.clone();
+                    let pipe_16 = ciet_state_clone.pipe_16.clone();
+                    let pipe_17a = ciet_state_clone.pipe_17a.clone();
 
                     // flow should go from up to down
                     // this was tested ok
@@ -680,68 +721,85 @@ pub fn three_branch_ciet_ver2(
                             pump_pressure, 
                             ctah_branch_blocked, 
                             dhx_branch_blocked, 
-                            &ciet_state_clone.pipe_4, 
-                            &ciet_state_clone.pipe_3, 
-                            &ciet_state_clone.pipe_2a, 
-                            &ciet_state_clone.static_mixer_10_label_2, 
-                            &ciet_state_clone.heater_top_head_1a, 
-                            &ciet_state_clone.heater_ver_1, 
-                            &ciet_state_clone.heater_bottom_head_1b, 
-                            &ciet_state_clone.pipe_18, 
-                            &ciet_state_clone.pipe_5a, 
-                            &ciet_state_clone.pipe_26, 
-                            &ciet_state_clone.pipe_25a, 
-                            &ciet_state_clone.static_mixer_21_label_25, 
+                            &pipe_4, 
+                            &pipe_3, 
+                            &pipe_2a, 
+                            &static_mixer_10_label_2, 
+                            &heater_top_head_1a, 
+                            &heater_ver_1, 
+                            &heater_bottom_head_1b, 
+                            &pipe_18, 
+                            &pipe_5a, 
+                            &pipe_26, 
+                            &pipe_25a, 
+                            &static_mixer_21_label_25, 
                             &dhx_shell_side_pipe_24, 
-                            &ciet_state_clone.static_mixer_20_label_23, 
-                            &ciet_state_clone.pipe_23a, 
-                            &ciet_state_clone.pipe_22, 
-                            &ciet_state_clone.flowmeter_20_21a, 
-                            &ciet_state_clone.pipe_21, 
-                            &ciet_state_clone.pipe_20, 
-                            &ciet_state_clone.pipe_19, 
-                            &ciet_state_clone.pipe_17b, 
-                            &ciet_state_clone.pipe_5b, 
-                            &ciet_state_clone.static_mixer_41_label_6, 
-                            &ciet_state_clone.pipe_6a, 
-                            &ciet_state_clone.ctah_vertical_label_7a, 
-                            &ciet_state_clone.ctah_horizontal_label_7b, 
-                            &ciet_state_clone.pipe_8a, 
-                            &ciet_state_clone.static_mixer_40_label_8, 
-                            &ciet_state_clone.pipe_9, 
-                            &ciet_state_clone.pipe_10, 
-                            &ciet_state_clone.pipe_11, 
-                            &ciet_state_clone.pipe_12, 
-                            &ciet_state_clone.ctah_pump, 
-                            &ciet_state_clone.pipe_13, 
-                            &ciet_state_clone.pipe_14, 
-                            &ciet_state_clone.flowmeter_40_14a, 
-                            &ciet_state_clone.pipe_15, 
-                            &ciet_state_clone.pipe_16, 
-                            &ciet_state_clone.pipe_17a);
+                            &static_mixer_20_label_23, 
+                            &pipe_23a, 
+                            &pipe_22, 
+                            &flowmeter_20_21a, 
+                            &pipe_21, 
+                            &pipe_20, 
+                            &pipe_19, 
+                            &pipe_17b, 
+                            &pipe_5b, 
+                            &static_mixer_41_label_6, 
+                            &pipe_6a, 
+                            &ctah_vertical_label_7a, 
+                            &ctah_horizontal_label_7b, 
+                            &pipe_8a, 
+                            &static_mixer_40_label_8, 
+                            &pipe_9, 
+                            &pipe_10, 
+                            &pipe_11, 
+                            &pipe_12, 
+                            &ctah_pump, 
+                            &pipe_13, 
+                            &pipe_14, 
+                            &flowmeter_40_14a, 
+                            &pipe_15, 
+                            &pipe_16, 
+                            &pipe_17a);
 
-                    ciet_state_ptr_for_dracs_mass_rate.lock().unwrap()
+                    ciet_state_ptr_for_pri_mass_rate.lock().unwrap()
                         .dhx_br_flowrate = 
                         dhx_flow;
-                    ciet_state_ptr_for_dracs_mass_rate.lock().unwrap()
+                    ciet_state_ptr_for_pri_mass_rate.lock().unwrap()
                         .heater_br_flowrate = 
                         heater_flow;
-                    ciet_state_ptr_for_dracs_mass_rate.lock().unwrap()
+                    ciet_state_ptr_for_pri_mass_rate.lock().unwrap()
                         .ctah_br_flowrate = 
                         ctah_flow;
 
                 });
 
-            let mut ciet_state_from_dracs_loop_heat_trf_calc: CIETComponentsAndState;
 
             let dracs_heat_trf_join_handle = 
                 std::thread::spawn(move||{
-                    let mut ciet_state_clone: CIETComponentsAndState = 
+                    let ciet_state_clone: CIETComponentsAndState = 
                         ciet_state_ptr_for_dracs_calcs
                         .lock().unwrap().clone();
 
                     let counter_clockwise_dracs_flowrate = 
                         ciet_state_clone.counter_clockwise_dracs_flowrate;
+                    let mut pipe_34 = ciet_state_clone.pipe_34.clone();
+                    let mut pipe_33 = ciet_state_clone.pipe_33.clone();
+                    let mut pipe_32 = ciet_state_clone.pipe_32.clone();
+                    let mut pipe_31a = ciet_state_clone.pipe_31a.clone();
+                    let mut static_mixer_61_label_31 = ciet_state_clone.static_mixer_61_label_31.clone();
+                    let mut dhx_tube_side_30b = ciet_state_clone.dhx_tube_side_30b.clone();
+                    let mut dhx_tube_side_30a = ciet_state_clone.dhx_tube_side_30a.clone();
+                    let mut tchx_35a = ciet_state_clone.tchx_35a.clone();
+                    let mut tchx_35b_1 = ciet_state_clone.tchx_35b_1.clone();
+                    let mut tchx_35b_2 = ciet_state_clone.tchx_35b_2.clone();
+                    let mut static_mixer_60_label_36 = ciet_state_clone.static_mixer_60_label_36.clone();
+                    let mut pipe_36a = ciet_state_clone.pipe_36a.clone();
+                    let mut pipe_37 = ciet_state_clone.pipe_37.clone();
+                    let mut flowmeter_60_37a = ciet_state_clone.flowmeter_60_37a.clone();
+                    let mut pipe_38 = ciet_state_clone.pipe_38.clone();
+                    let mut pipe_39 = ciet_state_clone.pipe_39.clone();
+
+                    let mut dhx_sthe = ciet_state_clone.dhx_sthe.clone();
                     // next, 
                     // link up the heat transfer entities 
                     // all lateral linking is done except for DHX
@@ -753,33 +811,74 @@ pub fn three_branch_ciet_ver2(
                         tchx_heat_transfer_coeff, 
                         average_temperature_for_density_calcs, 
                         ambient_htc, 
-                        &mut ciet_state_clone.pipe_34, 
-                        &mut ciet_state_clone.pipe_33, 
-                        &mut ciet_state_clone.pipe_32, 
-                        &mut ciet_state_clone.pipe_31a, 
-                        &mut ciet_state_clone.static_mixer_61_label_31, 
-                        &mut ciet_state_clone.dhx_tube_side_30b, 
-                        &mut ciet_state_clone.dhx_sthe, 
-                        &mut ciet_state_clone.dhx_tube_side_30a, 
-                        &mut ciet_state_clone.tchx_35a, 
-                        &mut ciet_state_clone.tchx_35b_1, 
-                        &mut ciet_state_clone.tchx_35b_2, 
-                        &mut ciet_state_clone.static_mixer_60_label_36, 
-                        &mut ciet_state_clone.pipe_36a, 
-                        &mut ciet_state_clone.pipe_37, 
-                        &mut ciet_state_clone.flowmeter_60_37a, 
-                        &mut ciet_state_clone.pipe_38, 
-                        &mut ciet_state_clone.pipe_39);
+                        &mut pipe_34, 
+                        &mut pipe_33, 
+                        &mut pipe_32, 
+                        &mut pipe_31a, 
+                        &mut static_mixer_61_label_31, 
+                        &mut dhx_tube_side_30b, 
+                        &mut dhx_sthe, 
+                        &mut dhx_tube_side_30a, 
+                        &mut tchx_35a, 
+                        &mut tchx_35b_1, 
+                        &mut tchx_35b_2, 
+                        &mut static_mixer_60_label_36, 
+                        &mut pipe_36a, 
+                        &mut pipe_37, 
+                        &mut flowmeter_60_37a, 
+                        &mut pipe_38, 
+                        &mut pipe_39);
 
-                    ciet_state_from_dracs_loop_heat_trf_calc = 
-                        ciet_state_clone;
+                    // now lock the pointer to update the state
+                {
+                    ciet_state_ptr_for_dracs_calcs
+                        .lock().unwrap().deref_mut().pipe_34 = pipe_34;
+                    ciet_state_ptr_for_dracs_calcs
+                        .lock().unwrap().deref_mut().pipe_33 = pipe_33;
+                    ciet_state_ptr_for_dracs_calcs
+                        .lock().unwrap().deref_mut().pipe_32 = pipe_32;
+                    ciet_state_ptr_for_dracs_calcs
+                        .lock().unwrap().deref_mut().pipe_31a = pipe_31a;
+                    ciet_state_ptr_for_dracs_calcs
+                        .lock().unwrap().deref_mut().static_mixer_61_label_31 = static_mixer_61_label_31;
+                    ciet_state_ptr_for_dracs_calcs
+                        .lock().unwrap().deref_mut().dhx_tube_side_30b = dhx_tube_side_30b;
+                    // note: both calc loops require the dhx sthe. I cannot 
+                    // replace the whole dhx sthe
+                    // have to change the tube side only
+                    ciet_state_ptr_for_dracs_calcs
+                        .lock().unwrap().deref_mut().dhx_sthe.tube_side_fluid_array_for_single_tube 
+                        = dhx_sthe.tube_side_fluid_array_for_single_tube;
+                    ciet_state_ptr_for_dracs_calcs
+                        .lock().unwrap().deref_mut().dhx_tube_side_30a = dhx_tube_side_30a;
+                    ciet_state_ptr_for_dracs_calcs
+                        .lock().unwrap().deref_mut().tchx_35a = tchx_35a;
+                    ciet_state_ptr_for_dracs_calcs
+                        .lock().unwrap().deref_mut().tchx_35b_1 = tchx_35b_1;
+                    ciet_state_ptr_for_dracs_calcs
+                        .lock().unwrap().deref_mut().tchx_35b_2 = tchx_35b_2;
+                    ciet_state_ptr_for_dracs_calcs
+                        .lock().unwrap().deref_mut().static_mixer_60_label_36 = static_mixer_60_label_36;
+                    ciet_state_ptr_for_dracs_calcs
+                        .lock().unwrap().deref_mut().pipe_36a = pipe_36a;
+                    ciet_state_ptr_for_dracs_calcs
+                        .lock().unwrap().deref_mut().pipe_37 = pipe_37;
+                    ciet_state_ptr_for_dracs_calcs
+                        .lock().unwrap().deref_mut().flowmeter_60_37a = flowmeter_60_37a;
+                    ciet_state_ptr_for_dracs_calcs
+                        .lock().unwrap().deref_mut().pipe_38 = pipe_38;
+                    ciet_state_ptr_for_dracs_calcs
+                        .lock().unwrap().deref_mut().pipe_39 = pipe_39;
+
+
+                }
+
 
                 });
 
 
             //dbg!(&(dhx_flow,heater_flow,ctah_flow));
 
-            let mut ciet_state_from_pri_loop_heat_trf_calc: CIETComponentsAndState;
             let pri_heat_trf_join_handle = 
                 std::thread::spawn(move||{
                     let mut ciet_state_clone: CIETComponentsAndState = 
@@ -794,6 +893,52 @@ pub fn three_branch_ciet_ver2(
                     let ctah_flow = 
                         ciet_state_clone.ctah_br_flowrate;
 
+
+                    let mut pipe_4 = ciet_state_clone.pipe_4.clone();
+                    let mut pipe_3 = ciet_state_clone.pipe_3.clone();
+                    let mut pipe_2a = ciet_state_clone.pipe_2a.clone();
+                    let mut static_mixer_10_label_2 = ciet_state_clone.static_mixer_10_label_2.clone();
+                    let mut heater_top_head_1a = ciet_state_clone.heater_top_head_1a.clone();
+                    let mut heater_ver_1 = ciet_state_clone.heater_ver_1.clone();
+                    let mut heater_bottom_head_1b = ciet_state_clone.heater_bottom_head_1b.clone();
+                    let mut pipe_18 = ciet_state_clone.pipe_18.clone();
+                    let mut pipe_5a = ciet_state_clone.pipe_5a.clone();
+                    let mut pipe_26 = ciet_state_clone.pipe_26.clone();
+                    let mut pipe_25a = ciet_state_clone.pipe_25a.clone();
+                    let mut static_mixer_21_label_25 = ciet_state_clone.static_mixer_21_label_25.clone();
+                    let mut static_mixer_20_label_23 = ciet_state_clone.static_mixer_20_label_23.clone();
+                    let mut pipe_23a = ciet_state_clone.pipe_23a.clone();
+                    let mut pipe_22 = ciet_state_clone.pipe_22.clone();
+                    let mut flowmeter_20_21a = ciet_state_clone.flowmeter_20_21a.clone();
+                    let mut pipe_21 = ciet_state_clone.pipe_21.clone();
+                    let mut pipe_20 = ciet_state_clone.pipe_20.clone();
+                    let mut pipe_19 = ciet_state_clone.pipe_19.clone();
+                    let mut pipe_17b = ciet_state_clone.pipe_17b.clone();
+                    let mut pipe_5b = ciet_state_clone.pipe_5b.clone();
+                    let mut static_mixer_41_label_6 = ciet_state_clone.static_mixer_41_label_6.clone();
+                    let mut pipe_6a = ciet_state_clone.pipe_6a.clone();
+                    let mut ctah_vertical_label_7a = ciet_state_clone.ctah_vertical_label_7a.clone();
+                    let mut ctah_horizontal_label_7b = ciet_state_clone.ctah_horizontal_label_7b.clone();
+                    let mut pipe_8a = ciet_state_clone.pipe_8a.clone();
+                    let mut static_mixer_40_label_8 = ciet_state_clone.static_mixer_40_label_8.clone();
+                    let mut pipe_9 = ciet_state_clone.pipe_9.clone();
+                    let mut pipe_10 = ciet_state_clone.pipe_10.clone();
+                    let mut pipe_11 = ciet_state_clone.pipe_11.clone();
+                    let mut pipe_12 = ciet_state_clone.pipe_12.clone();
+                    let mut ctah_pump = ciet_state_clone.ctah_pump.clone();
+                    // todo: ciet state should contain pump pressure for UI 
+                    // real-time interaction
+                    let mut pipe_13 = ciet_state_clone.pipe_13.clone();
+                    let mut pipe_14 = ciet_state_clone.pipe_14.clone();
+                    let mut flowmeter_40_14a = ciet_state_clone.flowmeter_40_14a.clone();
+                    let mut pipe_15 = ciet_state_clone.pipe_15.clone();
+                    let mut pipe_16 = ciet_state_clone.pipe_16.clone();
+                    let mut pipe_17a = ciet_state_clone.pipe_17a.clone();
+
+                    let mut dhx_sthe = ciet_state_clone.dhx_sthe.clone();
+                    let mut top_mixing_node_5a_5b_4 = ciet_state_clone.top_mixing_node_5a_5b_4.clone();
+                    let mut bottom_mixing_node_17a_17b_18 = ciet_state_clone.bottom_mixing_node_17a_17b_18.clone();
+
                     ciet_pri_loop_three_branch_link_up_components(
                         dhx_flow, 
                         heater_flow, 
@@ -802,50 +947,145 @@ pub fn three_branch_ciet_ver2(
                         average_temperature_for_density_calcs, 
                         ambient_htc, 
                         ctah_heat_transfer_coeff, 
-                        &mut ciet_state_clone.pipe_4, 
-                        &mut ciet_state_clone.pipe_3, 
-                        &mut ciet_state_clone.pipe_2a, 
-                        &mut ciet_state_clone.static_mixer_10_label_2, 
-                        &mut ciet_state_clone.heater_top_head_1a, 
-                        &mut ciet_state_clone.heater_ver_1, 
-                        &mut ciet_state_clone.heater_bottom_head_1b, 
-                        &mut ciet_state_clone.pipe_18, 
-                        &mut ciet_state_clone.pipe_5a, 
-                        &mut ciet_state_clone.pipe_26, 
-                        &mut ciet_state_clone.pipe_25a, 
-                        &mut ciet_state_clone.static_mixer_21_label_25, 
-                        &mut ciet_state_clone.dhx_sthe, 
-                        &mut ciet_state_clone.static_mixer_20_label_23, 
-                        &mut ciet_state_clone.pipe_23a, 
-                        &mut ciet_state_clone.pipe_22, 
-                        &mut ciet_state_clone.flowmeter_20_21a, 
-                        &mut ciet_state_clone.pipe_21, 
-                        &mut ciet_state_clone.pipe_20, 
-                        &mut ciet_state_clone.pipe_19, 
-                        &mut ciet_state_clone.pipe_17b, 
-                        &mut ciet_state_clone.pipe_5b, 
-                        &mut ciet_state_clone.static_mixer_41_label_6, 
-                        &mut ciet_state_clone.pipe_6a, 
-                        &mut ciet_state_clone.ctah_vertical_label_7a, 
-                        &mut ciet_state_clone.ctah_horizontal_label_7b, 
-                        &mut ciet_state_clone.pipe_8a, 
-                        &mut ciet_state_clone.static_mixer_40_label_8, 
-                        &mut ciet_state_clone.pipe_9, 
-                        &mut ciet_state_clone.pipe_10, 
-                        &mut ciet_state_clone.pipe_11, 
-                        &mut ciet_state_clone.pipe_12, 
-                        &mut ciet_state_clone.ctah_pump, 
-                        &mut ciet_state_clone.pipe_13, 
-                        &mut ciet_state_clone.pipe_14, 
-                        &mut ciet_state_clone.flowmeter_40_14a, 
-                        &mut ciet_state_clone.pipe_15, 
-                        &mut ciet_state_clone.pipe_16, 
-                        &mut ciet_state_clone.pipe_17a,
-                        &mut ciet_state_clone.top_mixing_node_5a_5b_4,
-                        &mut ciet_state_clone.bottom_mixing_node_17a_17b_18);
+                        &mut pipe_4, 
+                        &mut pipe_3, 
+                        &mut pipe_2a, 
+                        &mut static_mixer_10_label_2, 
+                        &mut heater_top_head_1a, 
+                        &mut heater_ver_1, 
+                        &mut heater_bottom_head_1b, 
+                        &mut pipe_18, 
+                        &mut pipe_5a, 
+                        &mut pipe_26, 
+                        &mut pipe_25a, 
+                        &mut static_mixer_21_label_25, 
+                        &mut dhx_sthe, 
+                        &mut static_mixer_20_label_23, 
+                        &mut pipe_23a, 
+                        &mut pipe_22, 
+                        &mut flowmeter_20_21a, 
+                        &mut pipe_21, 
+                        &mut pipe_20, 
+                        &mut pipe_19, 
+                        &mut pipe_17b, 
+                        &mut pipe_5b, 
+                        &mut static_mixer_41_label_6, 
+                        &mut pipe_6a, 
+                        &mut ctah_vertical_label_7a, 
+                        &mut ctah_horizontal_label_7b, 
+                        &mut pipe_8a, 
+                        &mut static_mixer_40_label_8, 
+                        &mut pipe_9, 
+                        &mut pipe_10, 
+                        &mut pipe_11, 
+                        &mut pipe_12, 
+                        &mut ctah_pump, 
+                        &mut pipe_13, 
+                        &mut pipe_14, 
+                        &mut flowmeter_40_14a, 
+                        &mut pipe_15, 
+                        &mut pipe_16, 
+                        &mut pipe_17a,
+                        &mut top_mixing_node_5a_5b_4,
+                        &mut bottom_mixing_node_17a_17b_18);
 
-                    ciet_state_from_dracs_loop_heat_trf_calc = 
-                        ciet_state_clone;
+                    // need to update state of CIET
+                {
+                    // heater br
+                    ciet_state_ptr_for_pri_calcs
+                        .lock().unwrap().deref_mut().pipe_4 = pipe_4;
+                    ciet_state_ptr_for_pri_calcs
+                        .lock().unwrap().deref_mut().pipe_3 = pipe_3;
+                    ciet_state_ptr_for_pri_calcs
+                        .lock().unwrap().deref_mut().pipe_2a = pipe_2a;
+                    ciet_state_ptr_for_pri_calcs
+                        .lock().unwrap().deref_mut().static_mixer_10_label_2 = static_mixer_10_label_2;
+                    ciet_state_ptr_for_pri_calcs
+                        .lock().unwrap().deref_mut().heater_top_head_1a = heater_top_head_1a;
+                    ciet_state_ptr_for_pri_calcs
+                        .lock().unwrap().deref_mut().heater_ver_1 = heater_ver_1;
+                    ciet_state_ptr_for_pri_calcs
+                        .lock().unwrap().deref_mut().heater_bottom_head_1b = heater_bottom_head_1b;
+                    ciet_state_ptr_for_pri_calcs
+                        .lock().unwrap().deref_mut().pipe_18 = pipe_18;
+                    ciet_state_ptr_for_pri_calcs
+                        .lock().unwrap().deref_mut().pipe_5a = pipe_5a;
+                    // dhx br
+                    ciet_state_ptr_for_pri_calcs
+                        .lock().unwrap().deref_mut().pipe_26 = pipe_26;
+                    ciet_state_ptr_for_pri_calcs
+                        .lock().unwrap().deref_mut().pipe_25a = pipe_25a;
+                    ciet_state_ptr_for_pri_calcs
+                        .lock().unwrap().deref_mut().static_mixer_21_label_25 = static_mixer_21_label_25;
+                    // note: both calc loops require the dhx sthe. I cannot 
+                    // replace the whole dhx sthe
+                    // have to change the shell side only
+                    ciet_state_ptr_for_pri_calcs
+                        .lock().unwrap().deref_mut().dhx_sthe.shell_side_fluid_array 
+                        = dhx_sthe.shell_side_fluid_array;
+                    ciet_state_ptr_for_pri_calcs
+                        .lock().unwrap().deref_mut().static_mixer_20_label_23 = static_mixer_20_label_23;
+                    ciet_state_ptr_for_pri_calcs
+                        .lock().unwrap().deref_mut().pipe_23a = pipe_23a;
+                    ciet_state_ptr_for_pri_calcs
+                        .lock().unwrap().deref_mut().pipe_22 = pipe_22;
+                    ciet_state_ptr_for_pri_calcs
+                        .lock().unwrap().deref_mut().flowmeter_20_21a = flowmeter_20_21a;
+                    ciet_state_ptr_for_pri_calcs
+                        .lock().unwrap().deref_mut().pipe_21 = pipe_21;
+                    ciet_state_ptr_for_pri_calcs
+                        .lock().unwrap().deref_mut().pipe_20 = pipe_20;
+                    ciet_state_ptr_for_pri_calcs
+                        .lock().unwrap().deref_mut().pipe_19 = pipe_19;
+                    ciet_state_ptr_for_pri_calcs
+                        .lock().unwrap().deref_mut().pipe_19 = pipe_17b;
+                    // ctah br
+                    ciet_state_ptr_for_pri_calcs
+                        .lock().unwrap().deref_mut().pipe_5b = pipe_5b;
+                    ciet_state_ptr_for_pri_calcs
+                        .lock().unwrap().deref_mut().static_mixer_41_label_6 = static_mixer_41_label_6;
+                    ciet_state_ptr_for_pri_calcs
+                        .lock().unwrap().deref_mut().pipe_6a = pipe_6a;
+                    ciet_state_ptr_for_pri_calcs
+                        .lock().unwrap().deref_mut().ctah_vertical_label_7a = ctah_vertical_label_7a;
+                    ciet_state_ptr_for_pri_calcs
+                        .lock().unwrap().deref_mut().ctah_horizontal_label_7b = ctah_horizontal_label_7b;
+                    ciet_state_ptr_for_pri_calcs
+                        .lock().unwrap().deref_mut().pipe_8a = pipe_8a;
+                    ciet_state_ptr_for_pri_calcs
+                        .lock().unwrap().deref_mut().static_mixer_40_label_8 = static_mixer_40_label_8;
+                    ciet_state_ptr_for_pri_calcs
+                        .lock().unwrap().deref_mut().pipe_9 = pipe_9;
+                    ciet_state_ptr_for_pri_calcs
+                        .lock().unwrap().deref_mut().pipe_10 = pipe_10;
+                    ciet_state_ptr_for_pri_calcs
+                        .lock().unwrap().deref_mut().pipe_11 = pipe_11;
+                    ciet_state_ptr_for_pri_calcs
+                        .lock().unwrap().deref_mut().pipe_12 = pipe_12;
+                    ciet_state_ptr_for_pri_calcs
+                        .lock().unwrap().deref_mut().ctah_pump = ctah_pump;
+                    ciet_state_ptr_for_pri_calcs
+                        .lock().unwrap().deref_mut().pipe_13 = pipe_13;
+                    ciet_state_ptr_for_pri_calcs
+                        .lock().unwrap().deref_mut().pipe_14 = pipe_14;
+                    ciet_state_ptr_for_pri_calcs
+                        .lock().unwrap().deref_mut().flowmeter_40_14a = flowmeter_40_14a;
+                    ciet_state_ptr_for_pri_calcs
+                        .lock().unwrap().deref_mut().pipe_15 = pipe_15;
+                    ciet_state_ptr_for_pri_calcs
+                        .lock().unwrap().deref_mut().pipe_16 = pipe_16;
+                    ciet_state_ptr_for_pri_calcs
+                        .lock().unwrap().deref_mut().pipe_17a = pipe_17a;
+
+                    // mixing nodes 
+                    ciet_state_ptr_for_pri_calcs
+                        .lock().unwrap().deref_mut().top_mixing_node_5a_5b_4 = top_mixing_node_5a_5b_4;
+                    ciet_state_ptr_for_pri_calcs
+                        .lock().unwrap().deref_mut().bottom_mixing_node_17a_17b_18 = bottom_mixing_node_17a_17b_18;
+
+
+
+                }
 
                 });
 
@@ -859,11 +1099,70 @@ pub fn three_branch_ciet_ver2(
 
             // update the states from dracs loop into the pri loop 
             // except dhx sthe
+            let ciet_state_clone :CIETComponentsAndState 
+                = ciet_state_ptr_main_loop.lock().unwrap().clone();
 
-            ciet_state_from_pri_loop_heat_trf_calc.dhx_tube_side_30b = 
-                ciet_state_from_dracs_loop_heat_trf_calc.dhx_tube_side_30b;
-            ciet_state_from_pri_loop_heat_trf_calc.dhx_tube_side_30a = 
-                ciet_state_from_dracs_loop_heat_trf_calc.dhx_tube_side_30a;
+            let mut pipe_34 = ciet_state_clone.pipe_34.clone();
+            let mut pipe_33 = ciet_state_clone.pipe_33.clone();
+            let mut pipe_32 = ciet_state_clone.pipe_32.clone();
+            let mut pipe_31a = ciet_state_clone.pipe_31a.clone();
+            let mut static_mixer_61_label_31 = ciet_state_clone.static_mixer_61_label_31.clone();
+            let mut dhx_tube_side_30b = ciet_state_clone.dhx_tube_side_30b.clone();
+            let mut dhx_tube_side_30a = ciet_state_clone.dhx_tube_side_30a.clone();
+            let mut tchx_35a = ciet_state_clone.tchx_35a.clone();
+            let mut tchx_35b_1 = ciet_state_clone.tchx_35b_1.clone();
+            let mut tchx_35b_2 = ciet_state_clone.tchx_35b_2.clone();
+            let mut static_mixer_60_label_36 = ciet_state_clone.static_mixer_60_label_36.clone();
+            let mut pipe_36a = ciet_state_clone.pipe_36a.clone();
+            let mut pipe_37 = ciet_state_clone.pipe_37.clone();
+            let mut flowmeter_60_37a = ciet_state_clone.flowmeter_60_37a.clone();
+            let mut pipe_38 = ciet_state_clone.pipe_38.clone();
+            let mut pipe_39 = ciet_state_clone.pipe_39.clone();
+
+            let mut dhx_sthe = ciet_state_clone.dhx_sthe.clone();
+            let mut pipe_4 = ciet_state_clone.pipe_4.clone();
+            let mut pipe_3 = ciet_state_clone.pipe_3.clone();
+            let mut pipe_2a = ciet_state_clone.pipe_2a.clone();
+            let mut static_mixer_10_label_2 = ciet_state_clone.static_mixer_10_label_2.clone();
+            let mut heater_top_head_1a = ciet_state_clone.heater_top_head_1a.clone();
+            let mut heater_ver_1 = ciet_state_clone.heater_ver_1.clone();
+            let mut heater_bottom_head_1b = ciet_state_clone.heater_bottom_head_1b.clone();
+            let mut pipe_18 = ciet_state_clone.pipe_18.clone();
+            let mut pipe_5a = ciet_state_clone.pipe_5a.clone();
+            let mut pipe_26 = ciet_state_clone.pipe_26.clone();
+            let mut pipe_25a = ciet_state_clone.pipe_25a.clone();
+            let mut static_mixer_21_label_25 = ciet_state_clone.static_mixer_21_label_25.clone();
+            let mut static_mixer_20_label_23 = ciet_state_clone.static_mixer_20_label_23.clone();
+            let mut pipe_23a = ciet_state_clone.pipe_23a.clone();
+            let mut pipe_22 = ciet_state_clone.pipe_22.clone();
+            let mut flowmeter_20_21a = ciet_state_clone.flowmeter_20_21a.clone();
+            let mut pipe_21 = ciet_state_clone.pipe_21.clone();
+            let mut pipe_20 = ciet_state_clone.pipe_20.clone();
+            let mut pipe_19 = ciet_state_clone.pipe_19.clone();
+            let mut pipe_17b = ciet_state_clone.pipe_17b.clone();
+            let mut pipe_5b = ciet_state_clone.pipe_5b.clone();
+            let mut static_mixer_41_label_6 = ciet_state_clone.static_mixer_41_label_6.clone();
+            let mut pipe_6a = ciet_state_clone.pipe_6a.clone();
+            let mut ctah_vertical_label_7a = ciet_state_clone.ctah_vertical_label_7a.clone();
+            let mut ctah_horizontal_label_7b = ciet_state_clone.ctah_horizontal_label_7b.clone();
+            let mut pipe_8a = ciet_state_clone.pipe_8a.clone();
+            let mut static_mixer_40_label_8 = ciet_state_clone.static_mixer_40_label_8.clone();
+            let mut pipe_9 = ciet_state_clone.pipe_9.clone();
+            let mut pipe_10 = ciet_state_clone.pipe_10.clone();
+            let mut pipe_11 = ciet_state_clone.pipe_11.clone();
+            let mut pipe_12 = ciet_state_clone.pipe_12.clone();
+            let mut ctah_pump = ciet_state_clone.ctah_pump.clone();
+            // todo: ciet state should contain pump pressure for UI 
+            // real-time interaction
+            let mut pipe_13 = ciet_state_clone.pipe_13.clone();
+            let mut pipe_14 = ciet_state_clone.pipe_14.clone();
+            let mut flowmeter_40_14a = ciet_state_clone.flowmeter_40_14a.clone();
+            let mut pipe_15 = ciet_state_clone.pipe_15.clone();
+            let mut pipe_16 = ciet_state_clone.pipe_16.clone();
+            let mut pipe_17a = ciet_state_clone.pipe_17a.clone();
+
+            let mut top_mixing_node_5a_5b_4 = ciet_state_clone.top_mixing_node_5a_5b_4.clone();
+            let mut bottom_mixing_node_17a_17b_18 = ciet_state_clone.bottom_mixing_node_17a_17b_18.clone();
 
 
             // need to calibrate dhx sthe ambient htc
@@ -944,6 +1243,137 @@ pub fn three_branch_ciet_ver2(
 
             dhx_sthe.advance_timestep(timestep).unwrap();
 
+            // after all the timestep advancing,
+            // update the state
+            {
+                // heater br
+                ciet_state_ptr_main_loop
+                    .lock().unwrap().deref_mut().pipe_4 = pipe_4;
+                ciet_state_ptr_main_loop
+                    .lock().unwrap().deref_mut().pipe_3 = pipe_3;
+                ciet_state_ptr_main_loop
+                    .lock().unwrap().deref_mut().pipe_2a = pipe_2a;
+                ciet_state_ptr_main_loop
+                    .lock().unwrap().deref_mut().static_mixer_10_label_2 = static_mixer_10_label_2.clone();
+                ciet_state_ptr_main_loop
+                    .lock().unwrap().deref_mut().heater_top_head_1a = heater_top_head_1a;
+                ciet_state_ptr_main_loop
+                    .lock().unwrap().deref_mut().heater_ver_1 = heater_ver_1;
+                ciet_state_ptr_main_loop
+                    .lock().unwrap().deref_mut().heater_bottom_head_1b = heater_bottom_head_1b.clone();
+                ciet_state_ptr_main_loop
+                    .lock().unwrap().deref_mut().pipe_18 = pipe_18;
+                ciet_state_ptr_main_loop
+                    .lock().unwrap().deref_mut().pipe_5a = pipe_5a;
+                // dhx br
+                ciet_state_ptr_main_loop
+                    .lock().unwrap().deref_mut().pipe_26 = pipe_26;
+                ciet_state_ptr_main_loop
+                    .lock().unwrap().deref_mut().pipe_25a = pipe_25a.clone();
+                ciet_state_ptr_main_loop
+                    .lock().unwrap().deref_mut().static_mixer_21_label_25 = static_mixer_21_label_25;
+                // note: both calc loops require the dhx sthe. I cannot 
+                // replace the whole dhx sthe
+                // have to change the shell side only
+                ciet_state_ptr_main_loop
+                    .lock().unwrap().deref_mut().dhx_sthe = dhx_sthe;
+                ciet_state_ptr_main_loop
+                    .lock().unwrap().deref_mut().static_mixer_20_label_23 = static_mixer_20_label_23.clone();
+                ciet_state_ptr_main_loop
+                    .lock().unwrap().deref_mut().pipe_23a = pipe_23a;
+                ciet_state_ptr_main_loop
+                    .lock().unwrap().deref_mut().pipe_22 = pipe_22;
+                ciet_state_ptr_main_loop
+                    .lock().unwrap().deref_mut().flowmeter_20_21a = flowmeter_20_21a;
+                ciet_state_ptr_main_loop
+                    .lock().unwrap().deref_mut().pipe_21 = pipe_21;
+                ciet_state_ptr_main_loop
+                    .lock().unwrap().deref_mut().pipe_20 = pipe_20;
+                ciet_state_ptr_main_loop
+                    .lock().unwrap().deref_mut().pipe_19 = pipe_19;
+                ciet_state_ptr_main_loop
+                    .lock().unwrap().deref_mut().pipe_19 = pipe_17b;
+                // ctah br
+                ciet_state_ptr_main_loop
+                    .lock().unwrap().deref_mut().pipe_5b = pipe_5b;
+                ciet_state_ptr_main_loop
+                    .lock().unwrap().deref_mut().static_mixer_41_label_6 = static_mixer_41_label_6;
+                ciet_state_ptr_main_loop
+                    .lock().unwrap().deref_mut().pipe_6a = pipe_6a;
+                ciet_state_ptr_main_loop
+                    .lock().unwrap().deref_mut().ctah_vertical_label_7a = ctah_vertical_label_7a;
+                ciet_state_ptr_main_loop
+                    .lock().unwrap().deref_mut().ctah_horizontal_label_7b = ctah_horizontal_label_7b;
+                ciet_state_ptr_main_loop
+                    .lock().unwrap().deref_mut().pipe_8a = pipe_8a;
+                ciet_state_ptr_main_loop
+                    .lock().unwrap().deref_mut().static_mixer_40_label_8 = static_mixer_40_label_8;
+                ciet_state_ptr_main_loop
+                    .lock().unwrap().deref_mut().pipe_9 = pipe_9;
+                ciet_state_ptr_main_loop
+                    .lock().unwrap().deref_mut().pipe_10 = pipe_10;
+                ciet_state_ptr_main_loop
+                    .lock().unwrap().deref_mut().pipe_11 = pipe_11;
+                ciet_state_ptr_main_loop
+                    .lock().unwrap().deref_mut().pipe_12 = pipe_12;
+                ciet_state_ptr_main_loop
+                    .lock().unwrap().deref_mut().ctah_pump = ctah_pump;
+                ciet_state_ptr_main_loop
+                    .lock().unwrap().deref_mut().pipe_13 = pipe_13;
+                ciet_state_ptr_main_loop
+                    .lock().unwrap().deref_mut().pipe_14 = pipe_14;
+                ciet_state_ptr_main_loop
+                    .lock().unwrap().deref_mut().flowmeter_40_14a = flowmeter_40_14a;
+                ciet_state_ptr_main_loop
+                    .lock().unwrap().deref_mut().pipe_15 = pipe_15;
+                ciet_state_ptr_main_loop
+                    .lock().unwrap().deref_mut().pipe_16 = pipe_16;
+                ciet_state_ptr_main_loop
+                    .lock().unwrap().deref_mut().pipe_17a = pipe_17a;
+
+                // mixing nodes 
+                ciet_state_ptr_main_loop
+                    .lock().unwrap().deref_mut().top_mixing_node_5a_5b_4 = top_mixing_node_5a_5b_4;
+                ciet_state_ptr_main_loop
+                    .lock().unwrap().deref_mut().bottom_mixing_node_17a_17b_18 = bottom_mixing_node_17a_17b_18;
+
+                // dracs loop
+
+                ciet_state_ptr_main_loop
+                    .lock().unwrap().deref_mut().pipe_34 = pipe_34;
+                ciet_state_ptr_main_loop
+                    .lock().unwrap().deref_mut().pipe_33 = pipe_33;
+                ciet_state_ptr_main_loop
+                    .lock().unwrap().deref_mut().pipe_32 = pipe_32;
+                ciet_state_ptr_main_loop
+                    .lock().unwrap().deref_mut().pipe_31a = pipe_31a;
+                ciet_state_ptr_main_loop
+                    .lock().unwrap().deref_mut().static_mixer_61_label_31 = static_mixer_61_label_31;
+                ciet_state_ptr_main_loop
+                    .lock().unwrap().deref_mut().dhx_tube_side_30b = dhx_tube_side_30b.clone();
+                ciet_state_ptr_main_loop
+                    .lock().unwrap().deref_mut().dhx_tube_side_30a = dhx_tube_side_30a.clone();
+                ciet_state_ptr_main_loop
+                    .lock().unwrap().deref_mut().tchx_35a = tchx_35a;
+                ciet_state_ptr_main_loop
+                    .lock().unwrap().deref_mut().tchx_35b_1 = tchx_35b_1;
+                ciet_state_ptr_main_loop
+                    .lock().unwrap().deref_mut().tchx_35b_2 = tchx_35b_2;
+                ciet_state_ptr_main_loop
+                    .lock().unwrap().deref_mut().static_mixer_60_label_36 = static_mixer_60_label_36;
+                ciet_state_ptr_main_loop
+                    .lock().unwrap().deref_mut().pipe_36a = pipe_36a;
+                ciet_state_ptr_main_loop
+                    .lock().unwrap().deref_mut().pipe_37 = pipe_37;
+                ciet_state_ptr_main_loop
+                    .lock().unwrap().deref_mut().flowmeter_60_37a = flowmeter_60_37a;
+                ciet_state_ptr_main_loop
+                    .lock().unwrap().deref_mut().pipe_38 = pipe_38;
+                ciet_state_ptr_main_loop
+                    .lock().unwrap().deref_mut().pipe_39 = pipe_39;
+
+                }
+
 
 
             // record 
@@ -984,6 +1414,76 @@ pub fn three_branch_ciet_ver2(
         }
 
         let display_temperatures = true;
+
+
+        // for displaying temperatures, it is good to take the last state 
+        // out of the arc mutex ptr
+
+        let ciet_state_clone :CIETComponentsAndState 
+            = ciet_state_ptr_main_loop.lock().unwrap().clone();
+
+        let mut _pipe_34 = ciet_state_clone.pipe_34.clone();
+        let mut _pipe_33 = ciet_state_clone.pipe_33.clone();
+        let mut _pipe_32 = ciet_state_clone.pipe_32.clone();
+        let mut _pipe_31a = ciet_state_clone.pipe_31a.clone();
+        let mut _static_mixer_61_label_31 = ciet_state_clone.static_mixer_61_label_31.clone();
+        let mut dhx_tube_side_30b = ciet_state_clone.dhx_tube_side_30b.clone();
+        let mut dhx_tube_side_30a = ciet_state_clone.dhx_tube_side_30a.clone();
+        let mut _tchx_35a = ciet_state_clone.tchx_35a.clone();
+        let mut _tchx_35b_1 = ciet_state_clone.tchx_35b_1.clone();
+        let mut _tchx_35b_2 = ciet_state_clone.tchx_35b_2.clone();
+        let mut _static_mixer_60_label_36 = ciet_state_clone.static_mixer_60_label_36.clone();
+        let mut _pipe_36a = ciet_state_clone.pipe_36a.clone();
+        let mut _pipe_37 = ciet_state_clone.pipe_37.clone();
+        let mut _flowmeter_60_37a = ciet_state_clone.flowmeter_60_37a.clone();
+        let mut _pipe_38 = ciet_state_clone.pipe_38.clone();
+        let mut _pipe_39 = ciet_state_clone.pipe_39.clone();
+
+        let mut _dhx_sthe = ciet_state_clone.dhx_sthe.clone();
+        let mut _pipe_4 = ciet_state_clone.pipe_4.clone();
+        let mut _pipe_3 = ciet_state_clone.pipe_3.clone();
+        let mut _pipe_2a = ciet_state_clone.pipe_2a.clone();
+        let mut static_mixer_10_label_2 = ciet_state_clone.static_mixer_10_label_2.clone();
+        let mut _heater_top_head_1a = ciet_state_clone.heater_top_head_1a.clone();
+        let mut heater_ver_1 = ciet_state_clone.heater_ver_1.clone();
+        let mut heater_bottom_head_1b = ciet_state_clone.heater_bottom_head_1b.clone();
+        let mut _pipe_18 = ciet_state_clone.pipe_18.clone();
+        let mut _pipe_5a = ciet_state_clone.pipe_5a.clone();
+        let mut _pipe_26 = ciet_state_clone.pipe_26.clone();
+        let mut pipe_25a = ciet_state_clone.pipe_25a.clone();
+        let mut _static_mixer_21_label_25 = ciet_state_clone.static_mixer_21_label_25.clone();
+        let mut static_mixer_20_label_23 = ciet_state_clone.static_mixer_20_label_23.clone();
+        let mut _pipe_23a = ciet_state_clone.pipe_23a.clone();
+        let mut _pipe_22 = ciet_state_clone.pipe_22.clone();
+        let mut _flowmeter_20_21a = ciet_state_clone.flowmeter_20_21a.clone();
+        let mut _pipe_21 = ciet_state_clone.pipe_21.clone();
+        let mut _pipe_20 = ciet_state_clone.pipe_20.clone();
+        let mut _pipe_19 = ciet_state_clone.pipe_19.clone();
+        let mut _pipe_17b = ciet_state_clone.pipe_17b.clone();
+        let mut _pipe_5b = ciet_state_clone.pipe_5b.clone();
+        let mut _static_mixer_41_label_6 = ciet_state_clone.static_mixer_41_label_6.clone();
+        let mut _pipe_6a = ciet_state_clone.pipe_6a.clone();
+        let mut _ctah_vertical_label_7a = ciet_state_clone.ctah_vertical_label_7a.clone();
+        let mut _ctah_horizontal_label_7b = ciet_state_clone.ctah_horizontal_label_7b.clone();
+        let mut _pipe_8a = ciet_state_clone.pipe_8a.clone();
+        let mut _static_mixer_40_label_8 = ciet_state_clone.static_mixer_40_label_8.clone();
+        let mut _pipe_9 = ciet_state_clone.pipe_9.clone();
+        let mut _pipe_10 = ciet_state_clone.pipe_10.clone();
+        let mut _pipe_11 = ciet_state_clone.pipe_11.clone();
+        let mut _pipe_12 = ciet_state_clone.pipe_12.clone();
+        let mut _ctah_pump = ciet_state_clone.ctah_pump.clone();
+        // todo: ciet state should contain pump pressure for UI 
+        // real-time interaction
+        let mut _pipe_13 = ciet_state_clone.pipe_13.clone();
+        let mut _pipe_14 = ciet_state_clone.pipe_14.clone();
+        let mut _flowmeter_40_14a = ciet_state_clone.flowmeter_40_14a.clone();
+        let mut _pipe_15 = ciet_state_clone.pipe_15.clone();
+        let mut _pipe_16 = ciet_state_clone.pipe_16.clone();
+        let mut _pipe_17a = ciet_state_clone.pipe_17a.clone();
+
+        let mut _top_mixing_node_5a_5b_4 = ciet_state_clone.top_mixing_node_5a_5b_4.clone();
+        let mut _bottom_mixing_node_17a_17b_18 = ciet_state_clone.bottom_mixing_node_17a_17b_18.clone();
+
         // temperatures before and after heater
         let ((_bt_11,_wt_10),(_bt_12,_wt_13)) = 
             pri_loop_heater_temperature_diagnostics(
