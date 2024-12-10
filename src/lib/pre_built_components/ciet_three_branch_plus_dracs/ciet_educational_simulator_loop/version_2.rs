@@ -8,7 +8,7 @@
 ///
 #[cfg(test)]
 #[test] 
-#[ignore = "debugging"]
+//#[ignore = "debugging"]
 pub fn ctah_flow_steady_state_test(){
 
 
@@ -70,8 +70,9 @@ pub fn ctah_flow_steady_state_test(){
         expt_ctah_outlet_temp_degc, ) = 
         (78.985,92.756,91.845,79.86);
 
-    // timestep 
-    let timestep_seconds: f64 = 0.2;
+    // timestep 50 millisecond or 0.05 s
+    // or slightly less
+    let timestep_seconds: f64 = 0.04;
 
 
     three_branch_ciet_ver2(
@@ -172,16 +173,16 @@ pub fn ctah_flow_short_test_dhx_blocked(){
     
     // now for ctah flow stuff
 
-    let experimental_ctah_br_mass_flowrate_kg_per_s = 0.18;
+    let regression_ctah_br_mass_flowrate_kg_per_s = 0.07366;
     let ctah_outlet_temperature_set_point_degc = 80.0;
 
     let expt_temperature_tolerance_degc = 0.5;
 
-    let ( expt_heater_inlet_temp_degc, 
-        expt_heater_outlet_temp_degc, 
-        expt_ctah_inlet_temp_degc, 
-        expt_ctah_outlet_temp_degc, ) = 
-        (78.985,92.756,91.845,79.86);
+    let ( regresssion_heater_inlet_temp_degc, 
+        regression_heater_outlet_temp_degc, 
+        regression_ctah_inlet_temp_degc, 
+        regression_ctah_outlet_temp_degc, ) = 
+        (73.11,89.11,85.64,82.96);
 
     // timestep 
     let timestep_seconds: f64 = 0.2;
@@ -194,7 +195,7 @@ pub fn ctah_flow_short_test_dhx_blocked(){
         ctah_outlet_temperature_set_point_degc, 
         experimental_dracs_mass_flowrate_kg_per_s, 
         experimental_dhx_br_mass_flowrate_kg_per_s, 
-        experimental_ctah_br_mass_flowrate_kg_per_s, 
+        regression_ctah_br_mass_flowrate_kg_per_s, 
         simulated_expected_dracs_mass_flowrate_kg_per_s, 
         simulated_expected_dhx_br_mass_flowrate_kg_per_s, 
         pri_loop_relative_tolerance, 
@@ -211,10 +212,10 @@ pub fn ctah_flow_short_test_dhx_blocked(){
         expt_heater_surf_temp_avg_degc, 
         simulated_expected_heater_surf_temp_degc, 
         heater_surface_temp_tolerance_degc, 
-        expt_heater_outlet_temp_degc, 
-        expt_heater_inlet_temp_degc, 
-        expt_ctah_outlet_temp_degc, 
-        expt_ctah_inlet_temp_degc, 
+        regression_heater_outlet_temp_degc, 
+        regresssion_heater_inlet_temp_degc, 
+        regression_ctah_outlet_temp_degc, 
+        regression_ctah_inlet_temp_degc, 
         expt_temperature_tolerance_degc, 
         ctah_pump_pressure_pascals, 
         ctah_flow_blocked, 
@@ -277,22 +278,24 @@ pub fn ctah_flow_short_test_reverse_diode_effect(){
         heater_surface_temp_tolerance_degc) = 
         (10.0,45.49,45.94,5.0);
 
+    // to counteract natural circulation u need about this much 
+    // 5000 Pa 
     let ctah_pump_pressure_pascals = 4400.0;
     let ctah_flow_blocked = false;
     let dhx_flow_blocked = false;
     
     // now for ctah flow stuff
 
-    let experimental_ctah_br_mass_flowrate_kg_per_s = 0.18;
+    let regression_ctah_br_mass_flowrate_kg_per_s = 0.10;
     let ctah_outlet_temperature_set_point_degc = 80.0;
 
     let expt_temperature_tolerance_degc = 0.5;
 
-    let ( expt_heater_inlet_temp_degc, 
-        expt_heater_outlet_temp_degc, 
-        expt_ctah_inlet_temp_degc, 
-        expt_ctah_outlet_temp_degc, ) = 
-        (78.985,92.756,91.845,79.86);
+    let ( regression_heater_inlet_temp_degc, 
+        regression_heater_outlet_temp_degc, 
+        regression_ctah_inlet_temp_degc, 
+        regression_ctah_outlet_temp_degc, ) = 
+        (74.99,86.6,83.92,81.88);
 
     // timestep 
     let timestep_seconds: f64 = 0.2;
@@ -305,7 +308,7 @@ pub fn ctah_flow_short_test_reverse_diode_effect(){
         ctah_outlet_temperature_set_point_degc, 
         experimental_dracs_mass_flowrate_kg_per_s, 
         experimental_dhx_br_mass_flowrate_kg_per_s, 
-        experimental_ctah_br_mass_flowrate_kg_per_s, 
+        regression_ctah_br_mass_flowrate_kg_per_s, 
         simulated_expected_dracs_mass_flowrate_kg_per_s, 
         simulated_expected_dhx_br_mass_flowrate_kg_per_s, 
         pri_loop_relative_tolerance, 
@@ -322,10 +325,10 @@ pub fn ctah_flow_short_test_reverse_diode_effect(){
         expt_heater_surf_temp_avg_degc, 
         simulated_expected_heater_surf_temp_degc, 
         heater_surface_temp_tolerance_degc, 
-        expt_heater_outlet_temp_degc, 
-        expt_heater_inlet_temp_degc, 
-        expt_ctah_outlet_temp_degc, 
-        expt_ctah_inlet_temp_degc, 
+        regression_heater_outlet_temp_degc, 
+        regression_heater_inlet_temp_degc, 
+        regression_ctah_outlet_temp_degc, 
+        regression_ctah_inlet_temp_degc, 
         expt_temperature_tolerance_degc, 
         ctah_pump_pressure_pascals, 
         ctah_flow_blocked, 
