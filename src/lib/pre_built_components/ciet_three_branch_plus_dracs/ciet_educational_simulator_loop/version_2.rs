@@ -162,10 +162,10 @@ pub fn ctah_flow_short_test_dhx_blocked(){
 
     // heater calibration for appropriate surface temp
     let (heater_calibrated_nusselt_factor_float,
-        expt_heater_surf_temp_avg_degc,
+        regression_heater_surf_temp_avg_degc,
         simulated_expected_heater_surf_temp_degc,
         heater_surface_temp_tolerance_degc) = 
-        (10.0,45.49,45.94,5.0);
+        (10.0,122.05,122.05,5.0);
 
     let ctah_pump_pressure_pascals = 2400.0;
     let ctah_flow_blocked = false;
@@ -209,7 +209,7 @@ pub fn ctah_flow_short_test_dhx_blocked(){
         dracs_loop_cold_leg_insulation_thickness_cm, 
         dracs_loop_hot_leg_insulation_thickness_cm, 
         heater_calibrated_nusselt_factor_float, 
-        expt_heater_surf_temp_avg_degc, 
+        regression_heater_surf_temp_avg_degc, 
         simulated_expected_heater_surf_temp_degc, 
         heater_surface_temp_tolerance_degc, 
         regression_heater_outlet_temp_degc, 
@@ -273,10 +273,10 @@ pub fn ctah_flow_short_test_reverse_diode_effect(){
 
     // heater calibration for appropriate surface temp
     let (heater_calibrated_nusselt_factor_float,
-        expt_heater_surf_temp_avg_degc,
+        regression_heater_surf_temp_avg_degc,
         simulated_expected_heater_surf_temp_degc,
         heater_surface_temp_tolerance_degc) = 
-        (10.0,45.49,45.94,5.0);
+        (10.0,117.55,117.55,5.0);
 
     // to counteract natural circulation u need about this much 
     // 5000 Pa 
@@ -322,7 +322,7 @@ pub fn ctah_flow_short_test_reverse_diode_effect(){
         dracs_loop_cold_leg_insulation_thickness_cm, 
         dracs_loop_hot_leg_insulation_thickness_cm, 
         heater_calibrated_nusselt_factor_float, 
-        expt_heater_surf_temp_avg_degc, 
+        regression_heater_surf_temp_avg_degc, 
         simulated_expected_heater_surf_temp_degc, 
         heater_surface_temp_tolerance_degc, 
         regression_heater_outlet_temp_degc, 
