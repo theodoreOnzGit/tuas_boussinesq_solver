@@ -106,28 +106,24 @@ pub fn pri_loop_three_branch_advance_timestep_except_dhx(
     pipe_19.advance_timestep(timestep).unwrap();
     pipe_17b.advance_timestep(timestep).unwrap();
 
-    // CTAH branch 
-    let calc_ctah = false;
-    if calc_ctah {
-        pipe_5b.advance_timestep(timestep).unwrap();
-        static_mixer_41_label_6.advance_timestep(timestep).unwrap();
-        pipe_6a.advance_timestep(timestep).unwrap();
-        ctah_vertical_label_7a.advance_timestep(timestep).unwrap();
-        ctah_horizontal_label_7b.advance_timestep(timestep).unwrap();
-        pipe_8a.advance_timestep(timestep).unwrap();
-        static_mixer_40_label_8.advance_timestep(timestep).unwrap();
-        pipe_9.advance_timestep(timestep).unwrap();
-        pipe_10.advance_timestep(timestep).unwrap();
-        pipe_11.advance_timestep(timestep).unwrap();
-        pipe_12.advance_timestep(timestep).unwrap();
-        ctah_pump.advance_timestep(timestep).unwrap();
-        pipe_13.advance_timestep(timestep).unwrap();
-        pipe_14.advance_timestep(timestep).unwrap();
-        flowmeter_40_14a.advance_timestep(timestep).unwrap();
-        pipe_15.advance_timestep(timestep).unwrap();
-        pipe_16.advance_timestep(timestep).unwrap();
-        pipe_17a.advance_timestep(timestep).unwrap();
-    }
+    pipe_5b.advance_timestep(timestep).unwrap();
+    static_mixer_41_label_6.advance_timestep(timestep).unwrap();
+    pipe_6a.advance_timestep(timestep).unwrap();
+    ctah_vertical_label_7a.advance_timestep(timestep).unwrap();
+    ctah_horizontal_label_7b.advance_timestep(timestep).unwrap();
+    pipe_8a.advance_timestep(timestep).unwrap();
+    static_mixer_40_label_8.advance_timestep(timestep).unwrap();
+    pipe_9.advance_timestep(timestep).unwrap();
+    pipe_10.advance_timestep(timestep).unwrap();
+    pipe_11.advance_timestep(timestep).unwrap();
+    pipe_12.advance_timestep(timestep).unwrap();
+    ctah_pump.advance_timestep(timestep).unwrap();
+    pipe_13.advance_timestep(timestep).unwrap();
+    pipe_14.advance_timestep(timestep).unwrap();
+    flowmeter_40_14a.advance_timestep(timestep).unwrap();
+    pipe_15.advance_timestep(timestep).unwrap();
+    pipe_16.advance_timestep(timestep).unwrap();
+    pipe_17a.advance_timestep(timestep).unwrap();
 
     // two mixing nodes
     top_mixing_node_5a_5b_4.advance_timestep_mut_self(timestep).unwrap();
