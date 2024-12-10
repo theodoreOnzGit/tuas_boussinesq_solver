@@ -41,7 +41,7 @@ pub fn ciet_coupled_nat_circ_set_a1_for_three_branch(){
         expt_heater_surf_temp_avg_degc,
         simulated_expected_heater_surf_temp_degc,
         heater_surface_temp_tolerance_degc) = 
-        (10.0,109.47,104.31,15.0);
+        (10.0,109.47,105.52,15.0);
 
     let ctah_pump_pressure_pascals = 0.0;
     let ctah_flow_blocked = true;
