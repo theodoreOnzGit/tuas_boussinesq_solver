@@ -33,6 +33,9 @@ ndarray-linalg = { version = "0.16.0", features = ["openblas-system"] }
 name = "tuas_boussinesq_solver"
 path = "src/lib/lib.rs"
 
+[[example]]
+name = "ciet_educational_simulator"
+
 
 [dev-dependencies]
 # the natural circulation loop requires a PID controller
