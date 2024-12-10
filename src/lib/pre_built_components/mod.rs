@@ -105,3 +105,34 @@ pub mod ciet_isothermal_test_components;
 /// data (No. ANL/NSE-19/11). Argonne National 
 /// Lab.(ANL), Argonne, IL (United States).
 pub mod ciet_steady_state_natural_circulation_test_components;
+
+
+/// From UW Madison FLiBe loop:
+///
+///
+/// Britsch, K., Anderson, M., Brooks, P., & 
+/// Sridharan, K. (2019). Natural circulation 
+/// FLiBe loop overview. International Journal of 
+/// Heat and Mass Transfer, 134, 970-983.
+pub mod uw_madison_flibe_loop_components;
+
+
+/// Based on the natural circulation and isothermal loop, 
+/// I'm constructing CIET as a full loop now, inclusive of all 3 
+/// branches. 
+///
+/// todo: will need to validate this loop for steady state,
+/// natural circulation flow, and transient response (freq response 
+/// testing)
+/// 
+///
+/// Zweibaum, N. (2015). Experimental validation of passive safety 
+/// system models: Application to design and optimization of 
+/// fluoride-salt-cooled, high-temperature reactors. University 
+/// of California, Berkeley.
+///
+/// Zou, L., Hu, R., & Charpentier, A. (2019). SAM code 
+/// validation using the compact integral effects test (CIET) experimental 
+/// data (No. ANL/NSE-19/11). Argonne National 
+/// Lab.(ANL), Argonne, IL (United States).
+pub mod ciet_three_branch_plus_dracs;

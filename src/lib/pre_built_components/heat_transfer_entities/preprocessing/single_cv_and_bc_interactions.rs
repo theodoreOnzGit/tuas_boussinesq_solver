@@ -4,16 +4,12 @@ use std::f64::consts::PI;
 use super::heat_transfer_interaction_enums::HeatTransferInteractionType;
 use uom::si::f64::*;
 
-use crate::boussinesq_thermophysical_properties::density::try_get_rho;
-use crate::boussinesq_thermophysical_properties::specific_enthalpy::try_get_h;
 use crate::boussinesq_thermophysical_properties::thermal_diffusivity::try_get_alpha_thermal_diffusivity;
 use crate::boussinesq_thermophysical_properties::Material;
-use crate::heat_transfer_correlations::heat_transfer_interactions::*;
 use crate::single_control_vol::SingleCVNode;
 use crate::tuas_lib_error::TuasLibError;
 use crate::heat_transfer_correlations::heat_transfer_interactions::heat_transfer_interaction_enums::DataAdvection;
 
-use uom::num_traits::Zero;
 
 
 
@@ -87,7 +83,7 @@ pub fn calculate_single_cv_front_heat_flux_back(
             }
         ,
         HeatTransferInteractionType::SimpleRadiation
-            (_area_coeff, _hot_temperature, _cold_temperature) => 
+            (_area_coeff) => 
             {
                 println!("please specify interaction type as \n 
                 UserSpecifiedHeatFluxCustomArea or Similar");
@@ -250,6 +246,9 @@ pub fn calculate_constant_heat_addition_front_single_cv_back(
             ()
         },
         HeatTransferInteractionType::Advection(advection_data) => {
+            // in case the cv has fluid flowing into an adibatic 
+            // condition, it could be zero heat addition BC also,
+            // so take care of this case
             calculate_bc_front_cv_back_advection_for_heat_flux_or_heat_addition(
                 control_vol,
                 advection_data)?;
@@ -334,6 +333,13 @@ pub fn calculate_single_cv_front_constant_heat_addition_back(
             ()
         },
         HeatTransferInteractionType::Advection(advection_data) => {
+            // in case the cv has fluid flowing from an adibatic 
+            // condition, it could be zero heat addition BC also,
+            // so take care of this case
+            //
+            // if temperature is not specified by the adiabatic bc,
+            // then the fluid flowing in is in the temperature of 
+            // the cv
             calculate_cv_front_bc_back_advection_for_heat_flux_or_heat_addition(
                 control_vol,
                 advection_data)?;
@@ -823,7 +829,7 @@ pub fn calculate_mesh_stability_conduction_timestep_for_single_node_and_bc(
         },
 
         HeatTransferInteractionType::SimpleRadiation
-            (_area_coeff, _hot_temperature, _cold_temperature) => 
+            (_area_coeff) => 
             {
                 // radiation can be construed as a conduction 
                 // process if the optical thickness is thick enough 
@@ -857,74 +863,10 @@ pub (crate) fn calculate_cv_front_bc_back_advection_for_heat_flux_or_heat_additi
     advection_data: DataAdvection
 ) -> Result<(), TuasLibError>{
 
-    let mass_flow_from_bc_to_cv = advection_data.mass_flowrate;
-
-    let specific_enthalpy_cv: AvailableEnergy = 
-    control_vol.current_timestep_control_volume_specific_enthalpy;
-
-    // for the constant temperature bc, 
-    // I'll just assume the fluid flowing from the bc is the same as the 
-    // fluid in the cv
-    //
-    // and the pressure is same as the cv
-
-    let control_vol_material = control_vol.material_control_volume;
-    let control_vol_pressure = control_vol.pressure_control_volume;
-    let control_vol_temperature = control_vol.temperature;
-
-    let specific_enthalpy_bc_zero_gradient: AvailableEnergy = try_get_h(
-        control_vol_material,
-        control_vol_temperature,
-        control_vol_pressure
-    )?;
-    // calculate heat rate 
-
-    let heat_flowrate_from_bc_to_cv: Power 
-    = advection_heat_rate(mass_flow_from_bc_to_cv,
-        specific_enthalpy_bc_zero_gradient,
-        specific_enthalpy_cv,)?;
-
-    // push to cv
-    control_vol.rate_enthalpy_change_vector.
-        push(heat_flowrate_from_bc_to_cv);
-
-
-    let density_cv = advection_data.fluid_density_heat_transfer_entity_2;
-
-    // we also need to calculate bc density 
-    // now this doesn't quite work well for compressible flow but for 
-    // now I'll let it be
-
-    let density_bc: MassDensity = try_get_rho(
-        control_vol_material,
-        control_vol_temperature,
-        control_vol_pressure
-    )?;
-
-    let volumetric_flowrate: VolumeRate;
-
-    if mass_flow_from_bc_to_cv > MassRate::zero() {
-        // if mass flowrate is positive, flow is moving from bc 
-        // to cv 
-        // then the density we use is bc 
-
-        volumetric_flowrate = mass_flow_from_bc_to_cv/density_bc;
-
-    } else {
-        // if mass flowrate is positive, flow is moving from cv
-        // to bc
-        // then the density we use is cv
-
-        volumetric_flowrate = mass_flow_from_bc_to_cv/density_cv;
-    }
-
-
-    // for courant number
-    control_vol.volumetric_flowrate_vector.push(
-        volumetric_flowrate);
-
-
-    Ok(())
+    // call the method from single_cv_node 
+    // makes testing easier 
+    control_vol.calculate_cv_front_bc_back_advection_non_set_temperature(
+        advection_data)
 }
 /// for advection calculations with heat flux or heat addition BC,
 /// the temperature of flows flowing in and out of the BC will be 
@@ -942,72 +884,8 @@ pub (crate) fn calculate_bc_front_cv_back_advection_for_heat_flux_or_heat_additi
     advection_data: DataAdvection
 ) -> Result<(), TuasLibError>{
 
-    let mass_flow_from_cv_to_bc = advection_data.mass_flowrate;
-
-    let specific_enthalpy_cv: AvailableEnergy = 
-    control_vol.current_timestep_control_volume_specific_enthalpy;
-
-    // for the constant temperature bc, 
-    // I'll just assume the fluid flowing from the bc is the same as the 
-    // fluid in the cv
-    //
-    // and the pressure is same as the cv
-
-    let control_vol_material = control_vol.material_control_volume;
-    let control_vol_pressure = control_vol.pressure_control_volume;
-    let control_vol_temperature = control_vol.temperature;
-
-    let specific_enthalpy_bc_zero_gradient: AvailableEnergy = try_get_h(
-        control_vol_material,
-        control_vol_temperature,
-        control_vol_pressure
-    )?;
-    // calculate heat rate 
-
-    let heat_flowrate_from_bc_to_cv: Power 
-    = advection_heat_rate(mass_flow_from_cv_to_bc,
-        specific_enthalpy_cv,
-        specific_enthalpy_bc_zero_gradient,)?;
-
-    // push to cv
-    control_vol.rate_enthalpy_change_vector.
-        push(-heat_flowrate_from_bc_to_cv);
-
-
-    let density_cv = advection_data.fluid_density_heat_transfer_entity_2;
-
-    // we also need to calculate bc density 
-    // now this doesn't quite work well for compressible flow but for 
-    // now I'll let it be
-
-    let density_bc: MassDensity = try_get_rho(
-        control_vol_material,
-        control_vol_temperature,
-        control_vol_pressure
-    )?;
-
-    let volumetric_flowrate: VolumeRate;
-
-    if mass_flow_from_cv_to_bc > MassRate::zero() {
-        // if mass flowrate is positive, flow is moving from bc 
-        // to cv 
-        // then the density we use is bc 
-
-        volumetric_flowrate = mass_flow_from_cv_to_bc/density_bc;
-
-    } else {
-        // if mass flowrate is positive, flow is moving from cv
-        // to bc
-        // then the density we use is cv
-
-        volumetric_flowrate = mass_flow_from_cv_to_bc/density_cv;
-    }
-
-
-    // for courant number
-    control_vol.volumetric_flowrate_vector.push(
-        -volumetric_flowrate);
-
-
-    Ok(())
+    // call the method from single_cv_node 
+    // makes testing easier 
+    control_vol.calculate_bc_front_cv_back_advection_non_set_temperature(
+        advection_data)
 }

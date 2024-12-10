@@ -13,6 +13,8 @@ use super::solid_database::copper::max_temp_copper_zou_zweibaum_spline;
 use super::solid_database::copper::min_temp_copper_zou_zweibaum_spline;
 use super::solid_database::fiberglass::max_temp_fiberglass_zou_zweibaum_spline;
 use super::solid_database::fiberglass::min_temp_fiberglass_zou_zweibaum_spline;
+use super::solid_database::pyrogel_hps::max_temp_pyrogel_hps;
+use super::solid_database::pyrogel_hps::min_temp_pyrogel_hps;
 use super::solid_database::ss_304_l::max_temp_ss_304l_zou_zweibaum_spline;
 use super::solid_database::ss_304_l::min_temp_ss_304l_zou_zweibaum_spline;
 use super::SolidMaterial;
@@ -118,6 +120,7 @@ impl SolidMaterial {
             SolidMaterial::SteelSS304L => max_temp_ss_304l_zou_zweibaum_spline(),
             SolidMaterial::Copper => max_temp_copper_zou_zweibaum_spline(),
             SolidMaterial::Fiberglass => max_temp_fiberglass_zou_zweibaum_spline(),
+            SolidMaterial::PyrogelHPS => max_temp_pyrogel_hps(),
             SolidMaterial::CustomSolid((_lower_bound,upper_bound), 
                 _, _, _, _) => {
                 *upper_bound
@@ -131,6 +134,7 @@ impl SolidMaterial {
             SolidMaterial::SteelSS304L => min_temp_ss_304l_zou_zweibaum_spline(),
             SolidMaterial::Copper => min_temp_copper_zou_zweibaum_spline(),
             SolidMaterial::Fiberglass => min_temp_fiberglass_zou_zweibaum_spline(),
+            SolidMaterial::PyrogelHPS => min_temp_pyrogel_hps(),
             SolidMaterial::CustomSolid((lower_bound, _upper_bound), 
                 _, _, _, _) => {
                 *lower_bound

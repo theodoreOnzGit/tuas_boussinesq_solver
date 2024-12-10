@@ -1,7 +1,6 @@
 use std::thread::JoinHandle;
 use std::thread;
 
-use uom::si::thermodynamic_temperature::kelvin;
 use uom::ConstZero;
 use uom::si::pressure::atmosphere;
 use uom::si::f64::*;
@@ -417,7 +416,7 @@ impl SimpleShellAndTubeHeatExchanger {
         let outer_node_temperature: ThermodynamicTemperature;
         // shell and tube heat excanger (STHE) to air interaction
         let number_of_temperature_nodes = self.inner_nodes + 2;
-        let outer_solid_array_clone: SolidColumn;
+        let mut outer_solid_array_clone: SolidColumn;
 
         if self.heat_exchanger_has_insulation {
             // if there's insulation, the id is the outer diameter of 
@@ -439,15 +438,12 @@ impl SimpleShellAndTubeHeatExchanger {
             // surface temperature is the insulation bulk temperature 
             // (estimated)
 
-            let mut shell_side_fluid_array: FluidArray = 
-                shell_side_fluid_component_clone.try_into().unwrap();
-
-            outer_node_temperature = shell_side_fluid_array
-                .try_get_bulk_temperature()?;
-
             // the outer node clone is insulation if it is switched on
             outer_solid_array_clone = 
                 self.insulation_array.clone().try_into()?;
+
+            outer_node_temperature = outer_solid_array_clone
+                .try_get_bulk_temperature()?;
 
         } else {
             // if there's no insulation, the id is the inner diameter of 
@@ -467,18 +463,15 @@ impl SimpleShellAndTubeHeatExchanger {
             heated_length = shell_side_fluid_component_clone
                 .get_component_length_immutable();
 
-            // surface temperature is the insulation bulk temperature 
+            // surface temperature is the outer shell bulk temperature 
             // (estimated)
-
-            let mut shell_side_fluid_array: FluidArray = 
-                shell_side_fluid_component_clone.try_into().unwrap();
-
-            outer_node_temperature = shell_side_fluid_array
-                .try_get_bulk_temperature()?;
 
             // the outer node clone is outer shell array if it is switched off
             outer_solid_array_clone = 
                 self.outer_shell.clone().try_into()?;
+
+            outer_node_temperature = outer_solid_array_clone
+                .try_get_bulk_temperature()?;
 
         }
 
@@ -877,7 +870,7 @@ impl SimpleShellAndTubeHeatExchanger {
 
         // (f_darcy L/D + K)
         let fldk: Ratio = self
-            .tube_side_custom_component_loss_correlation
+            .shell_side_custom_component_loss_correlation
             .fldk_based_on_darcy_friction_factor(reynolds_number_abs_for_nusselt_estimate)
             .unwrap();
 
@@ -901,19 +894,6 @@ impl SimpleShellAndTubeHeatExchanger {
         if correct_prandtl_for_wall_temperatures {
 
             // then wall prandtl number
-            //
-            // in this case, we partially correct because wall temperatures 
-            // may be outside range of correlation
-
-            let _part_correct_wall_temperature: ThermodynamicTemperature = 
-                ThermodynamicTemperature::new::<kelvin>(
-                    0.1 * (
-                        3.0 * wall_temperature.get::<kelvin>() + 
-                        7.0 * fluid_temperature.get::<kelvin>()
-                    )
-                );
-
-            // the other method is to just use the wall prandtl number 
             // if the number falls outside the range of correlations,
             // then use the prandtl number at the max or min 
 
@@ -1130,8 +1110,11 @@ impl SimpleShellAndTubeHeatExchanger {
         // (f_darcy + D/L  K)
 
         // (f_darcy L/D + K)
-        let fldk: Ratio = self
-            .tube_side_custom_component_loss_correlation
+
+        let pipe_darcy_correlation = 
+            &self.shell_side_custom_component_loss_correlation;
+
+        let fldk: Ratio = pipe_darcy_correlation
             .fldk_based_on_darcy_friction_factor(reynolds_number_abs_for_nusselt_estimate)
             .unwrap();
 

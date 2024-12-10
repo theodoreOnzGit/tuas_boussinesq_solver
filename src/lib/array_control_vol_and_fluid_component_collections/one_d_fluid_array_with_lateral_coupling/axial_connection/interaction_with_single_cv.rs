@@ -33,7 +33,8 @@ impl FluidArray {
         // and this will be the back cv or inner cv 
         //
 
-        let single_cv_node_self: &mut SingleCVNode = &mut self.back_single_cv;
+        let single_cv_node_self: &mut SingleCVNode = 
+            &mut self.back_single_cv;
 
         // now link both cvs or calculate between them
 
@@ -68,13 +69,14 @@ impl FluidArray {
         // and this will be the front cv or outer cv 
         //
 
-        let single_cv_node_self: &mut SingleCVNode = &mut self.front_single_cv;
+        let single_cv_node_self: &mut SingleCVNode = 
+            &mut self.front_single_cv;
 
         // now link both cvs or calculate between them
 
         SingleCVNode::calculate_between_two_singular_cv_nodes(
-            single_cv_node_other,
             single_cv_node_self,
+            single_cv_node_other,
             interaction)
     }
 

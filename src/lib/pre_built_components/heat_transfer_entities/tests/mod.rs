@@ -838,3 +838,8 @@ fn _heat_transfer_coefficient_ciet_v_2_0(mass_flowrate: MassRate,
     heat_transfer_coeff
 
 }
+
+/// mixing joints are not working well when wrapped in 
+/// heat transfer entity enums 
+/// I'll need to see why
+pub mod mixing_joints;

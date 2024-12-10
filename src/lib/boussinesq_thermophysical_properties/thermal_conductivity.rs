@@ -9,6 +9,7 @@ use super::liquid_database::yd_325_heat_transfer_oil::get_yd325_thermal_conducti
 use super::solid_database::copper::copper_thermal_conductivity_zou_zweibaum_spline;
 use super::solid_database::custom_solid_material;
 use super::solid_database::fiberglass::fiberglass_thermal_conductivity_zou_zweibaum_spline;
+use super::solid_database::pyrogel_hps::pyrogel_thermal_conductivity_commercial_factsheet_spline;
 use super::solid_database::ss_304_l::steel_304_l_libreoffice_spline_thermal_conductivity_zweibaum;
 use super::solid_database::ss_304_l::steel_304_l_spline_thermal_conductivity;
 use super::LiquidMaterial;
@@ -77,6 +78,7 @@ fn solid_thermal_conductivity(material: Material,
     let solid_material: SolidMaterial = match material {
         Material::Solid(SteelSS304L) => SteelSS304L,
         Material::Solid(Fiberglass) => Fiberglass,
+        Material::Solid(PyrogelHPS) => PyrogelHPS,
         Material::Solid(Copper) => Copper,
         Material::Solid(CustomSolid((low_bound_temp,high_bound_temp),cp,k,rho,roughness)) => {
             CustomSolid((low_bound_temp,high_bound_temp), cp, k, rho,roughness)
@@ -129,6 +131,7 @@ impl SolidMaterial {
 
             let thermal_conductivity: ThermalConductivity = match self {
                 Fiberglass => fiberglass_thermal_conductivity_zou_zweibaum_spline(solid_temp)?,
+                PyrogelHPS => pyrogel_thermal_conductivity_commercial_factsheet_spline(solid_temp)?,
                 SteelSS304L => {
 
                     let conductivity_result = 

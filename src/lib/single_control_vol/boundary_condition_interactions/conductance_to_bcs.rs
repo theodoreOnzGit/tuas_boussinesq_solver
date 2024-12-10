@@ -559,8 +559,9 @@ impl SingleCVNode {
             ,
             HeatTransferInteractionType::
                 SimpleRadiation
-                (_area_coeff, _hot_temperature, _cold_temperature) => 
+                (_area_coeff) => 
                 {
+
                     // while radiation can be treated as conduction 
                     // in optically thick media, im not implementing this yet 
                     ()

@@ -38,27 +38,6 @@ Coding and Homogeneous fluid simulation ENvironment for Gen IV molten
 salt Thermal hydraulics and Natural circulation Governed flows (CHENG TNG),
 as well, but maybe that name is for another project.
 
-## Adding to Cargo
-
-An easy way to start is to use cargo to add the fluid mechanics rust
-package
-```bash
-cargo add tuas
-```
-
-If you want the full thermal hydraulics library: 
-
-```rust 
-extern crate tuas;
-use tuas::prelude::beta_testing::*;
-```
-
-Do note that the alpha nightly API 
-is still highly unstable and subject to change. The beta testing 
-library is more stable, but still subject to change
-
-Please refer to crate documentation for more details,
-especially the prelude documentation for more examples.
 
 ## Prerequisites
 

@@ -435,10 +435,13 @@ pub fn simple_radiation_conductance(
     // Radiative heat transfer. Academic press. 
     // List of Symbols (page 32 of 2174) 
     //
-    // 5.670e-8 W m^(-2) K^(-4)
+    // 5.6704e-8 W m^(-2) K^(-4)
+    // a more precise version is: 
+    let stefan_boltzmann_constant_watts_per_m2_kelvin = 
+        5.670374419e-8_f64;
     
     let stefan_boltzmann_constant = 
-        Power::new::<watt>(5.670e-8) /
+        Power::new::<watt>(stefan_boltzmann_constant_watts_per_m2_kelvin) /
         Area::new::<square_meter>(1.0) /
         TemperatureInterval::new::<temperature_interval::kelvin>(1.0) /
         TemperatureInterval::new::<temperature_interval::kelvin>(1.0) /

@@ -496,7 +496,7 @@ pub fn ciet_coupled_nat_circ_set_a7(){
 ///
 /// for the DHX STHE,
 ///
-/// shell side to tubes nusselt correction factor is 4.08
+/// shell side to tubes nusselt correction factor is 4.7
 /// insulation thickness is 0.161 cm 
 /// shell side to ambient correction factor is 10.3 
 /// heat loss to ambient is 33.9 W/(m^2 K)
@@ -575,7 +575,7 @@ Result<(),crate::tuas_lib_error::TuasLibError>{
     use crate::pre_built_components::ciet_steady_state_natural_circulation_test_components::coupled_dracs_loop_tests::dhx_constructor::new_dhx_sthe_version_1;
     use crate::pre_built_components::ciet_steady_state_natural_circulation_test_components::coupled_dracs_loop_tests::dracs_loop_calc_functions_no_tchx_calibration::dracs_loop_dhx_tube_temperature_diagnostics;
     use crate::pre_built_components::ciet_steady_state_natural_circulation_test_components::coupled_dracs_loop_tests::dracs_loop_calc_functions_sam_tchx_calibration::{coupled_dracs_fluid_mechanics_calc_abs_mass_rate_sam_tchx_calibration, coupled_dracs_loop_link_up_components_sam_tchx_calibration, dracs_loop_advance_timestep_except_dhx_sam_tchx_calibration};
-    use crate::pre_built_components::ciet_steady_state_natural_circulation_test_components::coupled_dracs_loop_tests::pri_loop_calc_functions::{coupled_dracs_pri_loop_branches_fluid_mechanics_calc_abs_mass_rate, coupled_dracs_pri_loop_dhx_heater_link_up_components, pri_loop_advance_timestep_except_dhx, pri_loop_dhx_shell_temperature_diagnostics, pri_loop_heater_temperature_diagnostics};
+    use crate::pre_built_components::ciet_steady_state_natural_circulation_test_components::coupled_dracs_loop_tests::pri_loop_calc_functions::{coupled_dracs_pri_loop_branches_fluid_mechanics_calc_abs_mass_rate, coupled_dracs_pri_loop_dhx_heater_link_up_components, pri_loop_advance_timestep_dhx_br_and_heater_br_except_dhx, pri_loop_dhx_shell_temperature_diagnostics, pri_loop_heater_temperature_diagnostics};
     use crate::pre_built_components::
         ciet_steady_state_natural_circulation_test_components::dracs_loop_components::*;
     use crate::prelude::beta_testing::FluidArray;
@@ -1031,7 +1031,8 @@ Result<(),crate::tuas_lib_error::TuasLibError>{
 
         let counter_clockwise_pri_loop_flowrate = absolute_mass_flowrate_pri_loop;
 
-        // next, link up the heat transfer entities 
+        // next, 
+        // link up the heat transfer entities 
         // all lateral linking is done except for DHX
         //
         // note, the ambient heat transfer coefficient is not set for 
@@ -1107,7 +1108,7 @@ Result<(),crate::tuas_lib_error::TuasLibError>{
             &mut pipe_36a, &mut pipe_37, &mut flowmeter_60_37a, 
             &mut pipe_38, &mut pipe_39);
 
-        pri_loop_advance_timestep_except_dhx(
+        pri_loop_advance_timestep_dhx_br_and_heater_br_except_dhx(
             timestep, &mut pipe_4, &mut pipe_3, &mut pipe_2a, 
             &mut static_mixer_10_label_2, &mut heater_top_head_1a, 
             &mut heater_ver_1, &mut heater_bottom_head_1b, 

@@ -1,4 +1,3 @@
-
 use std::f64::consts::PI;
 
 use uom::si::f64::*;
@@ -74,6 +73,28 @@ impl HeatTransferEntity {
             entity,
             other_hte,
             interaction)
+
+    }
+
+    /// for fluid arrays, it is important to have a method 
+    /// to try and set mass flowrates 
+    /// so that timestep can be advanced correctly
+    #[inline]
+    pub fn try_set_flowrate_for_fluid_array(
+        &mut self,
+        mass_flowrate: MassRate) -> Result<(),TuasLibError>{
+
+        match self {
+            HeatTransferEntity::ControlVolume(
+                CVType::FluidArrayCV(fluid_arr)) => {
+                fluid_arr.set_mass_flowrate(mass_flowrate);
+
+                return Ok(());
+            },
+            _ => (),
+        }
+
+        todo!("this is not a fluid array heat transfer entity");
 
     }
 }
@@ -798,12 +819,12 @@ fn try_get_thermal_conductance_based_on_interaction(
                 return Err(TuasLibError::WrongHeatTransferInteractionType);
             },
             HeatTransferInteractionType::SimpleRadiation
-                (area_coeff, hot_temperature, cold_temperature) => 
+                (area_coeff) => 
                 {
                     simple_radiation_conductance(
                         area_coeff, 
-                        hot_temperature, 
-                        cold_temperature)
+                        temperature_1, 
+                        temperature_2)
                 }
             ,
 
@@ -1107,7 +1128,7 @@ pub fn calculate_constant_heat_flux_front_single_cv_back(
             }
         ,
         HeatTransferInteractionType::SimpleRadiation
-            (_area_coeff, _hot_temperature, _cold_temperature) => 
+            (_area_coeff) => 
             {
                 println!("please specify interaction type as \n 
                 UserSpecifiedHeatFluxCustomArea or Similar");

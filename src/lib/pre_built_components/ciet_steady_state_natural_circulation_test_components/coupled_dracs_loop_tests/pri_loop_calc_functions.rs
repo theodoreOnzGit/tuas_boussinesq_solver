@@ -36,7 +36,7 @@ heat_transfer_interaction_enums::HeatTransferInteractionType;
 /// the mass flowrate through that branch,
 /// can be used for
 /// DHX + Heater branch (both branches form one loop)
-pub fn get_mass_flowrate_across_two_branches(dhx_and_heater_branches: &FluidComponentSuperCollection) -> 
+pub fn get_abs_mass_flowrate_across_two_branches(dhx_and_heater_branches: &FluidComponentSuperCollection) -> 
 MassRate {
     let pressure_change_across_each_branch = 
         dhx_and_heater_branches.get_pressure_change(MassRate::ZERO);
@@ -131,7 +131,7 @@ pub fn coupled_dracs_pri_loop_branches_fluid_mechanics_calc_abs_mass_rate(
     pri_loop_branches.fluid_component_super_vector.push(heater_branch);
     pri_loop_branches.fluid_component_super_vector.push(dhx_branch);
 
-    let mass_rate = get_mass_flowrate_across_two_branches(&pri_loop_branches);
+    let mass_rate = get_abs_mass_flowrate_across_two_branches(&pri_loop_branches);
 
     mass_rate
 
@@ -449,7 +449,7 @@ pub fn coupled_dracs_pri_loop_dhx_heater_link_up_components(
 }
 
 /// advances timestep for all components in primary loop except DHX
-pub fn pri_loop_advance_timestep_except_dhx(
+pub fn pri_loop_advance_timestep_dhx_br_and_heater_br_except_dhx(
     timestep: Time,
     pipe_4: &mut InsulatedFluidComponent,
     pipe_3: &mut InsulatedFluidComponent,

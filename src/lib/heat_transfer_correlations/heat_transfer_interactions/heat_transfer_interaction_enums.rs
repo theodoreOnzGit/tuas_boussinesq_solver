@@ -332,8 +332,6 @@ pub enum HeatTransferInteractionType {
     ///  
     SimpleRadiation(
         Area, 
-        ThermodynamicTemperature,
-        ThermodynamicTemperature,
     ),
 }
 
@@ -423,6 +421,21 @@ impl DataAdvection {
 impl Into<HeatTransferInteractionType> for DataAdvection {
     fn into(self) -> HeatTransferInteractionType {
         HeatTransferInteractionType::Advection(self)
+    }
+}
+
+impl TryFrom<HeatTransferInteractionType> for DataAdvection {
+    type Error = TuasLibError;
+
+    fn try_from(heat_transfer_interaction: HeatTransferInteractionType) -> Result<Self, Self::Error> {
+
+        match heat_transfer_interaction {
+            HeatTransferInteractionType::Advection(data_advection) => {
+                return Ok(data_advection);
+            },
+            _ => return Err(TuasLibError::WrongHeatTransferInteractionType),
+        }
+
     }
 }
 
@@ -701,12 +714,12 @@ impl HeatTransferInteractionType {
 
                 HeatTransferInteractionType::
                     SimpleRadiation
-                    (area_coeff, hot_temperature, cold_temperature) => 
+                    (area_coeff) => 
                     {
                         simple_radiation_conductance(
                             area_coeff, 
-                            hot_temperature, 
-                            cold_temperature)
+                            temperature_1, 
+                            temperature_2)
                     }
                 ,
             };

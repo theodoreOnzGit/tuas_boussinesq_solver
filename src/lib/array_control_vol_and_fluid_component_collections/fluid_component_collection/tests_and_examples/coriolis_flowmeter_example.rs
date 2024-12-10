@@ -365,5 +365,14 @@ crate::tuas_lib_error::TuasLibError>{
             -3474.0,
             max_relative=0.01);
     }
+
+    {
+        // test abs roughness 
+        let reference_abs_roughness = Length::new::<millimeter>(0.001);
+        approx::assert_relative_eq!(
+            reference_abs_roughness.value,
+            coriolis_flowmeter.absolute_roughness.value,
+            max_relative=0.01);
+    }
     Ok(())
 }

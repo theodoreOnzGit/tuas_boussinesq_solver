@@ -1,7 +1,7 @@
 use crate::tuas_lib_error::TuasLibError;
 use uom::si::f64::*;
 
-use super::{solid_database::{copper::copper_surf_roughness, fiberglass::fiberglass_surf_roughness}, Material};
+use super::{solid_database::{copper::copper_surf_roughness, fiberglass::fiberglass_surf_roughness, pyrogel_hps::pyrogel_hps_surf_roughness}, Material};
 use super::SolidMaterial;
 use super::solid_database::ss_304_l::steel_surf_roughness;
 
@@ -35,6 +35,20 @@ impl SolidMaterial {
             // 8th illustrated ed. New York: McGraw-Hill.
             SolidMaterial::Fiberglass => {
                 fiberglass_surf_roughness()
+            },
+            // Based on:
+            // Mahadik, D. B., Venkateswara Rao, A., Parale, V. G., Kavale, M. S., 
+            // Wagh, P. B., Ingale, S. V., & Gupta, S. C. (2011). Effect of surface 
+            // composition and roughness on the apparent surface free energy of 
+            // silica aerogel materials. Applied Physics Letters, 99(10).
+            //
+            // Paper mentioned 1150–1450 nm
+            //
+            // I'll just use 1500 nm as an estimate
+            //
+            //
+            SolidMaterial::PyrogelHPS => {
+                pyrogel_hps_surf_roughness()
             },
             // user defined surface roughness
             SolidMaterial::CustomSolid(

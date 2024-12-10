@@ -104,7 +104,7 @@ impl SingleCVNode {
             },
 
             HeatTransferInteractionType:: SimpleRadiation
-                (_area_coeff, _hot_temperature, _cold_temperature) => 
+                (_area_coeff) => 
                 {
                     Self::calculate_conductance_interaction_between_two_singular_cv_nodes(
                         single_cv_1,

@@ -445,6 +445,17 @@ crate::tuas_lib_error::TuasLibError>{
             .deref_mut()
             .get_pressure_change();
 
+
+        {
+            // test abs roughness 
+            let reference_abs_roughness = Length::new::<millimeter>(0.001);
+            approx::assert_relative_eq!(
+                reference_abs_roughness.value,
+                coriolis_flowmeter_ptr_clone_eight
+                .lock().unwrap().deref_mut().absolute_roughness.value,
+                max_relative=0.01);
+        }
+
         // expected pressure change is -3474 Pa
         approx::assert_relative_eq!(
             pressure_change_reverse_test.get::<pascal>(),

@@ -69,6 +69,9 @@ pub enum SolidMaterial {
     Copper,
     /// Fiberglass material
     Fiberglass,
+    /// Pyrogel HPS, or rather a best effort approximation of that given 
+    /// available data 
+    PyrogelHPS,
     /// Custom solid, for the user to decide the correlations himself 
     /// or herself
     CustomSolid(

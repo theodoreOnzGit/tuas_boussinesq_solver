@@ -111,7 +111,7 @@ impl SolidColumn {
                     UserSpecifiedHeatFluxCustomArea or Similar");
                 return Err( TuasLibError::WrongHeatTransferInteractionType);
             },
-            HeatTransferInteractionType::SimpleRadiation(_,_,_) => 
+            HeatTransferInteractionType::SimpleRadiation(_) => 
             {
                 println!("please specify interaction type as \n 
                     UserSpecifiedHeatFluxCustomArea or Similar");
@@ -249,7 +249,7 @@ impl SolidColumn {
                     UserSpecifiedHeatFluxCustomArea or Similar");
                 return Err( TuasLibError::WrongHeatTransferInteractionType);
             },
-            HeatTransferInteractionType::SimpleRadiation(_,_,_) => 
+            HeatTransferInteractionType::SimpleRadiation(_) => 
             {
                 println!("please specify interaction type as \n 
                     UserSpecifiedHeatFluxCustomArea or Similar");
