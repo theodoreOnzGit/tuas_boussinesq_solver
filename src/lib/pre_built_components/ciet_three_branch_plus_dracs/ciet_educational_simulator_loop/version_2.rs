@@ -1,3 +1,109 @@
+/// this is for testing steady state forced circulation with ctah
+///
+/// this is approximately based on Zou's publication 
+/// where at 4000s, the pump caused fluid to flow at 0.18 kg/s 
+/// through the CTAH branch and Heater branch 
+/// so the DHX branch was closed
+/// and 
+///
+#[cfg(test)]
+#[test] 
+pub fn ctah_flow_steady_state_test(){
+
+
+    let max_simulation_time_seconds: f64 = 4000.0;
+    let pri_loop_relative_tolerance = 0.061;
+    let dracs_loop_relative_tolerance = 0.062;
+
+    // the flowrates should all be zero
+    //
+    // heater input power in watts
+    //
+    let (heater_input_power_watts,
+        tchx_outlet_temp_set_pt_degc,
+        experimental_dracs_mass_flowrate_kg_per_s,
+        experimental_dhx_br_mass_flowrate_kg_per_s,
+        simulated_expected_dracs_mass_flowrate_kg_per_s,
+        simulated_expected_dhx_br_mass_flowrate_kg_per_s) 
+        = (4220.0, 46.0, 0.0, 0.0, 0.0, 0.0);
+
+
+    let (shell_side_to_tubes_nusselt_number_correction_factor,
+        dhx_insulation_thickness_regression_cm,
+        shell_side_to_ambient_nusselt_correction_factor,
+        dhx_heat_loss_to_ambient_watts_per_m2_kelvin) 
+        = (4.7,0.161,10.3,33.9);
+
+    let ( pri_loop_cold_leg_insulation_thickness_cm,
+        pri_loop_hot_leg_insulation_thickness_cm,
+        dracs_loop_cold_leg_insulation_thickness_cm,
+        dracs_loop_hot_leg_insulation_thickness_cm,) 
+        = (0.15, 0.24, 3.00, 0.75);
+
+    dbg!(max_simulation_time_seconds,
+        pri_loop_relative_tolerance,
+        dracs_loop_relative_tolerance);
+
+    // heater calibration for appropriate surface temp
+    let (heater_calibrated_nusselt_factor_float,
+        expt_heater_surf_temp_avg_degc,
+        simulated_expected_heater_surf_temp_degc,
+        heater_surface_temp_tolerance_degc) = 
+        (10.0,45.49,45.94,5.0);
+
+    let ctah_pump_pressure_pascals = 16200.0;
+    let ctah_flow_blocked = false;
+    let dhx_flow_blocked = true;
+    
+    // now for ctah flow stuff
+
+    let experimental_ctah_br_mass_flowrate_kg_per_s = 0.18;
+    let ctah_outlet_temperature_set_point_degc = 80.0;
+
+    let expt_temperature_tolerance_degc = 0.5;
+
+    let ( expt_heater_inlet_temp_degc, 
+        expt_heater_outlet_temp_degc, 
+        expt_ctah_inlet_temp_degc, 
+        expt_ctah_outlet_temp_degc, ) = 
+        (78.985,92.756,91.845,79.86);
+
+
+    three_branch_ciet_ver2(
+        heater_input_power_watts, 
+        max_simulation_time_seconds, 
+        tchx_outlet_temp_set_pt_degc, 
+        ctah_outlet_temperature_set_point_degc, 
+        experimental_dracs_mass_flowrate_kg_per_s, 
+        experimental_dhx_br_mass_flowrate_kg_per_s, 
+        experimental_ctah_br_mass_flowrate_kg_per_s, 
+        simulated_expected_dracs_mass_flowrate_kg_per_s, 
+        simulated_expected_dhx_br_mass_flowrate_kg_per_s, 
+        pri_loop_relative_tolerance, 
+        dracs_loop_relative_tolerance, 
+        shell_side_to_tubes_nusselt_number_correction_factor, 
+        dhx_insulation_thickness_regression_cm, 
+        shell_side_to_ambient_nusselt_correction_factor, 
+        dhx_heat_loss_to_ambient_watts_per_m2_kelvin, 
+        pri_loop_cold_leg_insulation_thickness_cm, 
+        pri_loop_hot_leg_insulation_thickness_cm, 
+        dracs_loop_cold_leg_insulation_thickness_cm, 
+        dracs_loop_hot_leg_insulation_thickness_cm, 
+        heater_calibrated_nusselt_factor_float, 
+        expt_heater_surf_temp_avg_degc, 
+        simulated_expected_heater_surf_temp_degc, 
+        heater_surface_temp_tolerance_degc, 
+        expt_heater_outlet_temp_degc, 
+        expt_heater_inlet_temp_degc, 
+        expt_ctah_outlet_temp_degc, 
+        expt_ctah_inlet_temp_degc, 
+        expt_temperature_tolerance_degc, 
+        ctah_pump_pressure_pascals, 
+        ctah_flow_blocked, 
+        dhx_flow_blocked).unwrap();
+
+
+}
 
 /// this function runs ciet ver 1 test, 
 /// mass flowrates are calculated serially
@@ -8,14 +114,15 @@
 /// this is meant to test steady state flow on the ctah
 #[cfg(test)]
 pub fn three_branch_ciet_ver2(
-    input_power_watts: f64,
+    heater_input_power_watts: f64,
     max_time_seconds: f64,
     tchx_outlet_temperature_set_point_degc: f64,
     ctah_outlet_temperature_set_point_degc: f64,
     experimental_dracs_mass_flowrate_kg_per_s: f64,
-    experimental_primary_mass_flowrate_kg_per_s: f64,
+    experimental_dhx_br_mass_flowrate_kg_per_s: f64,
+    experimental_ctah_br_mass_flowrate_kg_per_s: f64,
     simulated_expected_dracs_mass_flowrate_kg_per_s: f64,
-    simulated_expected_primary_mass_flowrate_kg_per_s: f64,
+    simulated_expected_dhx_br_mass_flowrate_kg_per_s: f64,
     pri_loop_relative_tolerance: f64,
     dracs_loop_relative_tolerance: f64,
     shell_side_to_tubes_nusselt_number_correction_factor: f64,
@@ -65,13 +172,13 @@ pub fn three_branch_ciet_ver2(
         use uom::si::heat_transfer::watt_per_square_meter_kelvin;
         use uom::si::time::second;
 
-        let input_power = Power::new::<watt>(input_power_watts);
+        let input_power = Power::new::<watt>(heater_input_power_watts);
         let experimental_dracs_mass_flowrate = 
             MassRate::new::<kilogram_per_second>(
                 experimental_dracs_mass_flowrate_kg_per_s);
-        let experimental_primary_mass_flowrate = 
+        let experimental_dhx_br_mass_flowrate = 
             MassRate::new::<kilogram_per_second>(
-                experimental_primary_mass_flowrate_kg_per_s);
+                experimental_dhx_br_mass_flowrate_kg_per_s);
 
         let pump_pressure: Pressure = 
             Pressure::new::<pascal>(ctah_pump_pressure_pascals);
@@ -84,7 +191,7 @@ pub fn three_branch_ciet_ver2(
         use chem_eng_real_time_process_control_simulator::alpha_nightly::controllers::AnalogController;
 
         // timestep settings
-        let timestep = Time::new::<second>(0.2);
+        let timestep = Time::new::<second>(0.1);
         let heat_rate_through_heater = input_power;
         let mut tchx_heat_transfer_coeff: HeatTransfer;
 
@@ -393,9 +500,11 @@ pub fn three_branch_ciet_ver2(
 
 
 
-        let mut final_mass_flowrate_pri_loop: MassRate 
+        let mut final_mass_flowrate_dhx_br: MassRate 
             = MassRate::ZERO;
         let mut final_mass_flowrate_dracs_loop: MassRate 
+            = MassRate::ZERO;
+        let mut final_mass_flowrate_ctah_br: MassRate 
             = MassRate::ZERO;
 
         let ambient_htc = HeatTransfer::new::<watt_per_square_meter_kelvin>(20.0);
@@ -786,7 +895,8 @@ pub fn three_branch_ciet_ver2(
             // record 
             if current_simulation_time > tchx_temperature_record_time_threshold {
                 final_mass_flowrate_dracs_loop = counter_clockwise_dracs_flowrate;
-                final_mass_flowrate_pri_loop = counter_clockwise_dhx_flowrate;
+                final_mass_flowrate_dhx_br = counter_clockwise_dhx_flowrate;
+                final_mass_flowrate_ctah_br = ctah_flow.abs();
             }
 
             // debugging 
@@ -863,7 +973,8 @@ pub fn three_branch_ciet_ver2(
             .get::<degree_celsius>();
         dbg!(&(
                 input_power,
-                final_mass_flowrate_pri_loop,
+                final_mass_flowrate_ctah_br,
+                final_mass_flowrate_dhx_br,
                 final_mass_flowrate_dracs_loop,
                 simulated_heater_avg_surf_temp_degc
         ));
@@ -872,13 +983,18 @@ pub fn three_branch_ciet_ver2(
 
         // this asserts the final mass flowrate against experimental flowrate
         approx::assert_relative_eq!(
-            experimental_primary_mass_flowrate.get::<kilogram_per_second>(),
-            final_mass_flowrate_pri_loop.get::<kilogram_per_second>(),
+            experimental_dhx_br_mass_flowrate.get::<kilogram_per_second>(),
+            final_mass_flowrate_dhx_br.get::<kilogram_per_second>(),
             max_relative=pri_loop_relative_tolerance);
 
         approx::assert_relative_eq!(
             experimental_dracs_mass_flowrate.get::<kilogram_per_second>(),
             final_mass_flowrate_dracs_loop.get::<kilogram_per_second>(),
+            max_relative=dracs_loop_relative_tolerance);
+
+        approx::assert_relative_eq!(
+            experimental_ctah_br_mass_flowrate_kg_per_s,
+            final_mass_flowrate_ctah_br.get::<kilogram_per_second>(),
             max_relative=dracs_loop_relative_tolerance);
 
         // check heater surface temp to within tolerance 
@@ -887,8 +1003,8 @@ pub fn three_branch_ciet_ver2(
         // this asserts the final mass flowrate against experimental flowrate 
         // for regression to within 0.1%
         approx::assert_relative_eq!(
-            simulated_expected_primary_mass_flowrate_kg_per_s,
-            final_mass_flowrate_pri_loop.get::<kilogram_per_second>(),
+            simulated_expected_dhx_br_mass_flowrate_kg_per_s,
+            final_mass_flowrate_dhx_br.get::<kilogram_per_second>(),
             max_relative=0.001);
 
         approx::assert_relative_eq!(
