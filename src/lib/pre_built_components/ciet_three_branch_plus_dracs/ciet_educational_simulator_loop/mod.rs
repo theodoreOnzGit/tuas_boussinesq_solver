@@ -11,17 +11,8 @@ pub mod regression_tests;
 /// mass flowrates are calculated serially
 /// for simplicity
 ///
-/// it may work, but this runs slower than real-time
+/// it works well enough, but the CTAH branch is not configured yet
 pub mod version_1;
 
 #[cfg(test)]
 pub use version_1::*;
-
-
-/// version 2 is version 1 with speed enhancements 
-/// basically a better algorithm flow and 
-/// some parallel computing 
-pub mod version_2;
-
-#[cfg(test)]
-pub use version_2::*;

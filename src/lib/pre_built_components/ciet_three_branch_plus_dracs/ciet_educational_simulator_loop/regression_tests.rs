@@ -1,9 +1,8 @@
-
-/// test series took about 230 s
+/// test series took about 450s seems to be fast enough
 #[cfg(test)]
 #[test] 
 pub fn ciet_coupled_nat_circ_set_a1_for_three_branch(){
-    use crate::pre_built_components::ciet_three_branch_plus_dracs::ciet_educational_simulator_loop::three_branch_ciet_ver2;
+    use crate::pre_built_components::ciet_three_branch_plus_dracs::ciet_educational_simulator_loop::three_branch_ciet_ver1;
 
 
     let max_simulation_time_seconds: f64 = 6300.0;
@@ -18,7 +17,7 @@ pub fn ciet_coupled_nat_circ_set_a1_for_three_branch(){
         experimental_pri_mass_flowrate_kg_per_s,
         simulated_expected_dracs_mass_flowrate_kg_per_s,
         simulated_expected_pri_mass_flowrate_kg_per_s) 
-        = (1479.86, 46.0, 3.3410e-2, 2.7380e-2, 3.5142e-2, 2.7575e-2);
+        = (1479.86, 46.0, 3.3410e-2, 2.7380e-2, 3.4940e-2, 2.7583e-2);
 
 
     let (shell_side_to_tubes_nusselt_number_correction_factor,
@@ -42,14 +41,14 @@ pub fn ciet_coupled_nat_circ_set_a1_for_three_branch(){
         expt_heater_surf_temp_avg_degc,
         simulated_expected_heater_surf_temp_degc,
         heater_surface_temp_tolerance_degc) = 
-        (10.0,109.47,104.31,15.0);
+        (10.0,109.47,105.52,15.0);
 
     let ctah_pump_pressure_pascals = 0.0;
     let ctah_flow_blocked = true;
     let dhx_flow_blocked = false;
 
 
-    three_branch_ciet_ver2(
+    three_branch_ciet_ver1(
         heater_power_watts, 
         max_simulation_time_seconds,
         tchx_outlet_temp_degc,
@@ -78,14 +77,12 @@ pub fn ciet_coupled_nat_circ_set_a1_for_three_branch(){
 
 
 }
-
-
 /// let's say I block flow in all branches, then the 
 /// branch dhx and dracs flow should be zero
 #[cfg(test)]
 #[test] 
-pub fn zero_flow_for_three_branch(){
-    use crate::pre_built_components::ciet_three_branch_plus_dracs::ciet_educational_simulator_loop::three_branch_ciet_ver2;
+pub fn zero_flow_for_three_branch_ver_1(){
+    use crate::pre_built_components::ciet_three_branch_plus_dracs::ciet_educational_simulator_loop::three_branch_ciet_ver1;
 
 
     let max_simulation_time_seconds: f64 = 30.0;
@@ -130,7 +127,7 @@ pub fn zero_flow_for_three_branch(){
     let dhx_flow_blocked = true;
 
 
-    three_branch_ciet_ver2(
+    three_branch_ciet_ver1(
         heater_power_watts, 
         max_simulation_time_seconds,
         tchx_outlet_temp_degc,
@@ -167,8 +164,8 @@ pub fn zero_flow_for_three_branch(){
 /// in the dhx loop
 #[cfg(test)]
 #[test] 
-pub fn flow_diode_reverse_flow_for_three_branch(){
-    use crate::pre_built_components::ciet_three_branch_plus_dracs::ciet_educational_simulator_loop::three_branch_ciet_ver2;
+pub fn flow_diode_reverse_flow_for_three_branch_ver1(){
+    use crate::pre_built_components::ciet_three_branch_plus_dracs::ciet_educational_simulator_loop::three_branch_ciet_ver1;
 
 
     let max_simulation_time_seconds: f64 = 30.0;
@@ -213,7 +210,7 @@ pub fn flow_diode_reverse_flow_for_three_branch(){
     let dhx_flow_blocked = false;
 
 
-    three_branch_ciet_ver2(
+    three_branch_ciet_ver1(
         heater_power_watts, 
         max_simulation_time_seconds,
         tchx_outlet_temp_degc,
@@ -249,8 +246,8 @@ pub fn flow_diode_reverse_flow_for_three_branch(){
 /// there should be some flow in the dhx loop
 #[cfg(test)]
 #[test] 
-pub fn flow_diode_fwd_flow_for_three_branch(){
-    use crate::pre_built_components::ciet_three_branch_plus_dracs::ciet_educational_simulator_loop::three_branch_ciet_ver2;
+pub fn flow_diode_fwd_flow_for_three_branch_ver1(){
+    use crate::pre_built_components::ciet_three_branch_plus_dracs::ciet_educational_simulator_loop::three_branch_ciet_ver1;
 
 
     let max_simulation_time_seconds: f64 = 30.0;
@@ -295,7 +292,7 @@ pub fn flow_diode_fwd_flow_for_three_branch(){
     let dhx_flow_blocked = false;
 
 
-    three_branch_ciet_ver2(
+    three_branch_ciet_ver1(
         heater_power_watts, 
         max_simulation_time_seconds,
         tchx_outlet_temp_degc,
