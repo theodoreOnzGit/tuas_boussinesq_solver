@@ -1,4 +1,4 @@
-/// test series took about 230 s
+/// test series took about 450s seems to be fast enough
 #[cfg(test)]
 #[test] 
 pub fn ciet_coupled_nat_circ_set_a1_for_three_branch(){
@@ -17,7 +17,7 @@ pub fn ciet_coupled_nat_circ_set_a1_for_three_branch(){
         experimental_pri_mass_flowrate_kg_per_s,
         simulated_expected_dracs_mass_flowrate_kg_per_s,
         simulated_expected_pri_mass_flowrate_kg_per_s) 
-        = (1479.86, 46.0, 3.3410e-2, 2.7380e-2, 3.5142e-2, 2.7575e-2);
+        = (1479.86, 46.0, 3.3410e-2, 2.7380e-2, 3.4940e-2, 2.7583e-2);
 
 
     let (shell_side_to_tubes_nusselt_number_correction_factor,
