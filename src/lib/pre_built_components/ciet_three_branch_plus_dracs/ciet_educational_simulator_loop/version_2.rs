@@ -277,7 +277,7 @@ pub fn ctah_flow_short_test_reverse_diode_effect(){
         heater_surface_temp_tolerance_degc) = 
         (10.0,45.49,45.94,5.0);
 
-    let ctah_pump_pressure_pascals = 2400.0;
+    let ctah_pump_pressure_pascals = 4400.0;
     let ctah_flow_blocked = false;
     let dhx_flow_blocked = false;
     
