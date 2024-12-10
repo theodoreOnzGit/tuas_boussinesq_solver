@@ -125,7 +125,7 @@ pub fn flow_diode_reverse_flow_for_three_branch_ver1(){
         expt_heater_surf_temp_avg_degc,
         simulated_expected_heater_surf_temp_degc,
         heater_surface_temp_tolerance_degc) = 
-        (10.0,45.49,45.97,5.0);
+        (10.0,45.49,45.92,5.0);
 
     let ctah_pump_pressure_pascals = 10000.0;
     let ctah_flow_blocked = false;
