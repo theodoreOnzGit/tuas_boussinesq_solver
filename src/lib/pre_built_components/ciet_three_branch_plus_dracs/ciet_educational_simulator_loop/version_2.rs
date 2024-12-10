@@ -600,7 +600,7 @@ pub fn three_branch_ciet_ver2(
             let dracs_massrate_join_handle = 
                 std::thread::spawn(move|| {
 
-                    let mut ciet_state_clone: CIETComponentsAndState = 
+                    let ciet_state_clone: CIETComponentsAndState = 
                         ciet_state_ptr_for_dracs_mass_rate
                         .lock().unwrap().clone();
 
@@ -760,6 +760,13 @@ pub fn three_branch_ciet_ver2(
                             &pipe_15, 
                             &pipe_16, 
                             &pipe_17a);
+                    dbg!(&(
+                            ctah_branch_blocked,
+                            dhx_branch_blocked,
+                            dhx_flow,
+                            heater_flow,
+                            ctah_flow
+                            ));
 
                     ciet_state_ptr_for_pri_mass_rate.lock().unwrap()
                         .dhx_br_flowrate = 
@@ -881,7 +888,7 @@ pub fn three_branch_ciet_ver2(
 
             let pri_heat_trf_join_handle = 
                 std::thread::spawn(move||{
-                    let mut ciet_state_clone: CIETComponentsAndState = 
+                    let ciet_state_clone: CIETComponentsAndState = 
                         ciet_state_ptr_for_pri_calcs
                         .lock().unwrap().clone();
 
@@ -1038,7 +1045,7 @@ pub fn three_branch_ciet_ver2(
                     ciet_state_ptr_for_pri_calcs
                         .lock().unwrap().deref_mut().pipe_19 = pipe_19;
                     ciet_state_ptr_for_pri_calcs
-                        .lock().unwrap().deref_mut().pipe_19 = pipe_17b;
+                        .lock().unwrap().deref_mut().pipe_17b = pipe_17b;
                     // ctah br
                     ciet_state_ptr_for_pri_calcs
                         .lock().unwrap().deref_mut().pipe_5b = pipe_5b;
@@ -1474,12 +1481,12 @@ pub fn three_branch_ciet_ver2(
         let mut _ctah_pump = ciet_state_clone.ctah_pump.clone();
         // todo: ciet state should contain pump pressure for UI 
         // real-time interaction
-        let mut _pipe_13 = ciet_state_clone.pipe_13.clone();
-        let mut _pipe_14 = ciet_state_clone.pipe_14.clone();
-        let mut _flowmeter_40_14a = ciet_state_clone.flowmeter_40_14a.clone();
-        let mut _pipe_15 = ciet_state_clone.pipe_15.clone();
-        let mut _pipe_16 = ciet_state_clone.pipe_16.clone();
-        let mut _pipe_17a = ciet_state_clone.pipe_17a.clone();
+        let mut pipe_13 = ciet_state_clone.pipe_13.clone();
+        let mut pipe_14 = ciet_state_clone.pipe_14.clone();
+        let mut flowmeter_40_14a = ciet_state_clone.flowmeter_40_14a.clone();
+        let mut pipe_15 = ciet_state_clone.pipe_15.clone();
+        let mut pipe_16 = ciet_state_clone.pipe_16.clone();
+        let mut pipe_17a = ciet_state_clone.pipe_17a.clone();
 
         let mut _top_mixing_node_5a_5b_4 = ciet_state_clone.top_mixing_node_5a_5b_4.clone();
         let mut _bottom_mixing_node_17a_17b_18 = ciet_state_clone.bottom_mixing_node_17a_17b_18.clone();
