@@ -607,25 +607,42 @@ pub fn three_branch_ciet_ver2(
                         dhx_sthe.
                         get_clone_of_tube_side_parallel_tube_fluid_component();
 
+                    let pipe_34 = ciet_state_clone.pipe_34.clone();
+                    let pipe_33 = ciet_state_clone.pipe_33.clone();
+                    let pipe_32 = ciet_state_clone.pipe_32.clone();
+                    let pipe_31a = ciet_state_clone.pipe_31a.clone();
+                    let static_mixer_61_label_31 = ciet_state_clone.static_mixer_61_label_31.clone();
+                    let dhx_tube_side_30b = ciet_state_clone.dhx_tube_side_30b.clone();
+                    let dhx_tube_side_30a = ciet_state_clone.dhx_tube_side_30a.clone();
+                    let tchx_35a = ciet_state_clone.tchx_35a.clone();
+                    let tchx_35b_1 = ciet_state_clone.tchx_35b_1.clone();
+                    let tchx_35b_2 = ciet_state_clone.tchx_35b_2.clone();
+                    let static_mixer_60_label_36 = ciet_state_clone.static_mixer_60_label_36.clone();
+                    let pipe_36a = ciet_state_clone.pipe_36a.clone();
+                    let pipe_37 = ciet_state_clone.pipe_37.clone();
+                    let flowmeter_60_37a = ciet_state_clone.flowmeter_60_37a.clone();
+                    let pipe_38 = ciet_state_clone.pipe_38.clone();
+                    let pipe_39 = ciet_state_clone.pipe_39.clone();
+
                     let absolute_mass_flowrate_dracs = 
                         coupled_dracs_fluid_mechanics_calc_abs_mass_rate_sam_tchx_calibration(
-                            &ciet_state_clone.pipe_34, 
-                            &ciet_state_clone.pipe_33, 
-                            &ciet_state_clone.pipe_32, 
-                            &ciet_state_clone.pipe_31a, 
-                            &ciet_state_clone.static_mixer_61_label_31, 
-                            &ciet_state_clone.dhx_tube_side_30b, 
+                            &pipe_34, 
+                            &pipe_33, 
+                            &pipe_32, 
+                            &pipe_31a, 
+                            &static_mixer_61_label_31, 
+                            &dhx_tube_side_30b, 
                             &dhx_tube_side_heat_exchanger_30, 
-                            &ciet_state_clone.dhx_tube_side_30a, 
-                            &ciet_state_clone.tchx_35a, 
-                            &ciet_state_clone.tchx_35b_1, 
-                            &ciet_state_clone.tchx_35b_2, 
-                            &ciet_state_clone.static_mixer_60_label_36, 
-                            &ciet_state_clone.pipe_36a, 
-                            &ciet_state_clone.pipe_37, 
-                            &ciet_state_clone.flowmeter_60_37a, 
-                            &ciet_state_clone.pipe_38, 
-                            &ciet_state_clone.pipe_39);
+                            &dhx_tube_side_30a, 
+                            &tchx_35a, 
+                            &tchx_35b_1, 
+                            &tchx_35b_2, 
+                            &static_mixer_60_label_36, 
+                            &pipe_36a, 
+                            &pipe_37, 
+                            &flowmeter_60_37a, 
+                            &pipe_38, 
+                            &pipe_39);
 
                     // likely the natural circulation is counter clockwise 
                     let counter_clockwise_dracs_flowrate = absolute_mass_flowrate_dracs;
