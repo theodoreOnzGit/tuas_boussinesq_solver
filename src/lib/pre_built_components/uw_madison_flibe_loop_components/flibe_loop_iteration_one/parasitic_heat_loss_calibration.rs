@@ -448,10 +448,8 @@ pub fn calibrate_uw_madison_parasitic_heat_loss_fixed_flowrate(
 
     use uom::si::{ratio::ratio, time::millisecond};
 
-    use crate::heat_transfer_correlations::nusselt_number_correlations::enums::NusseltCorrelation;
     use crate::pre_built_components::uw_madison_flibe_loop_components::flibe_loop_iteration_one::components::*;
     use crate::pre_built_components::uw_madison_flibe_loop_components::flibe_loop_iteration_one::thermal_hydraulics_calculations::{uw_madison_flibe_loop_advance_timestep, uw_madison_flibe_loop_iteration_1_temperature_diagnostics, uw_madison_flibe_loop_link_up_components};
-    use crate::prelude::beta_testing::FluidArray;
     use uom::ConstZero;
 
     use uom::si::thermodynamic_temperature::{degree_celsius, kelvin};

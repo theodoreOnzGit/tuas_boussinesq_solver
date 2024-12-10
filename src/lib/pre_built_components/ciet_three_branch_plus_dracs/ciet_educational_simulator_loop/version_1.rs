@@ -365,7 +365,7 @@ pub fn three_branch_ciet_ver1(
         use crate::pre_built_components::ciet_steady_state_natural_circulation_test_components::coupled_dracs_loop_tests::dhx_constructor::new_dhx_sthe_version_1;
         use crate::pre_built_components::ciet_steady_state_natural_circulation_test_components::coupled_dracs_loop_tests::dracs_loop_calc_functions_no_tchx_calibration::dracs_loop_dhx_tube_temperature_diagnostics;
         use crate::pre_built_components::ciet_steady_state_natural_circulation_test_components::coupled_dracs_loop_tests::dracs_loop_calc_functions_sam_tchx_calibration::{coupled_dracs_fluid_mechanics_calc_abs_mass_rate_sam_tchx_calibration, coupled_dracs_loop_link_up_components_sam_tchx_calibration, dracs_loop_advance_timestep_except_dhx_sam_tchx_calibration};
-        use crate::pre_built_components::ciet_steady_state_natural_circulation_test_components::coupled_dracs_loop_tests::pri_loop_calc_functions::{coupled_dracs_pri_loop_branches_fluid_mechanics_calc_abs_mass_rate, coupled_dracs_pri_loop_dhx_heater_link_up_components, pri_loop_advance_timestep_dhx_br_and_heater_br_except_dhx, pri_loop_dhx_shell_temperature_diagnostics, pri_loop_heater_temperature_diagnostics};
+        use crate::pre_built_components::ciet_steady_state_natural_circulation_test_components::coupled_dracs_loop_tests::pri_loop_calc_functions::{pri_loop_dhx_shell_temperature_diagnostics, pri_loop_heater_temperature_diagnostics};
         use crate::pre_built_components::
             ciet_steady_state_natural_circulation_test_components::dracs_loop_components::*;
         use crate::pre_built_components::ciet_three_branch_plus_dracs::components::{new_active_ctah_horizontal, new_active_ctah_vertical};
@@ -451,7 +451,11 @@ pub fn three_branch_ciet_ver1(
                 derivative_time,
                 alpha).unwrap();
 
-        let mut_ctah_pid_controller = dhx_pid_controller.clone();
+        // need to change this to get the ctah controller working 
+        // in version 2
+        // in version 1, i just want to ensure all three branches are 
+        // working normally
+        let mut _ctah_pid_controller = dhx_pid_controller.clone();
 
         // we also have a measurement delay of 0.0001 s 
         // or 0.1 ms

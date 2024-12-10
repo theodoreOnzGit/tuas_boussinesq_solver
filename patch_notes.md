@@ -1,9 +1,31 @@
 ## v 0.0.4 
 
+The main thing is demonstration of a full educational simulator backend 
+for CIET that runs in real-time. This demonstrates that the CIET 
+simulator with all three branches can run in real-time even with additional 
+computational burden and timesteps of 0.2s. 
+On my 4.0 GHz i7-10875H, this simulation was able to run on single 
+thread at under 460s of computational time, for 6300s of simulated 
+natural circulation. 
+
+Likewise, when forward and reverse flow heat transfer was 
+simulated for 30s across all three branches, the simulations took about 4-5 s 
+on this same core and same timestep with heat transfer calculations and 
+fluid mechanics calculations all running serially. This is good because 
+it demonstrates the ability for a full simulation CIET to be run in 
+real-time for educational purposes. Now, this simulation should still be 
+validated using transient data. But that is for future regression testing.
+
+There were also some bugfixes for HeatTransferEntity classes that previously 
+did not correctly connect SingleCVNode HeatTransferEntity objects 
+to FluidArray HeatTransferEntity objects.
+
 Added pyrogel material for FLiBe loop UW madison,
 also tidied up the temperature from enthalpy functions and 
 enthalpy functions. Moved the enthalpy functions to their own 
-respective materials.
+respective materials. 
+
+Still need to do work on the ClamshellRadiativeHeater class.
 
 ## v 0.0.3 
 

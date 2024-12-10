@@ -24,10 +24,12 @@ pub mod custom_solid_material;
 pub mod pyrogel_hps;
 
 
+// standby code for heating elements and radiative heaters
 
-/// generic heating element for 
-/// heater, based roughly on tungsten
-pub mod generic_heating_element;
-
-/// FeCrAl, used as a heating element or for alloys in LWR
-pub mod fecral;
+///// generic heating element for 
+///// heater, based roughly on tungsten
+//#[cfg(test)]
+//pub mod generic_heating_element;
+//
+///// FeCrAl, used as a heating element or for alloys in LWR
+//pub mod fecral;
