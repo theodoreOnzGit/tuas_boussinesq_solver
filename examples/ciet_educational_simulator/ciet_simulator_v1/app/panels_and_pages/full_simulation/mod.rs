@@ -684,9 +684,11 @@ pub fn educational_ciet_loop_version_3(
 
             // pump pressure and valve settings, read from ciet state 
             // place holder first
-            let pump_pressure = Pressure::new::<pascal>(4000.0);
-            let ctah_branch_blocked = false;
-            let dhx_branch_blocked = false;
+            let pump_pressure = Pressure::new::<pascal>(
+                local_ciet_state.get_ctah_pump_pressure_f64()
+            );
+            let ctah_branch_blocked = local_ciet_state.is_ctah_branch_blocked;
+            let dhx_branch_blocked = local_ciet_state.is_dhx_branch_blocked;
 
 
             let pri_flowrate_join_handle = thread::spawn(move || {

@@ -91,6 +91,14 @@ pub struct CIETState {
     timestep_seconds: f32,
     fast_forward_settings_turned_on: bool,
 
+    // pump pressure (loop pressure drop) across ctah pump 
+    // is also user settable 
+    // but must be less than 17000 Pa
+    ctah_pump_pressure_pascals: f32,
+    // this allows the user to block flow across the ctah branch
+    pub is_ctah_branch_blocked: bool,
+    pub is_dhx_branch_blocked: bool,
+
 
 }
 
@@ -169,8 +177,13 @@ impl Default for CIETState {
             pipe_16_temp_degc: 21.0,
             pipe_17a_temp_degc: 21.0,
             // timestep settings are user settable as well
-            timestep_seconds: 0.2,
+            timestep_seconds: 0.1,
             fast_forward_settings_turned_on: false,
+            // valve and pump settings 
+            //
+            ctah_pump_pressure_pascals: 0.0,
+            is_ctah_branch_blocked: false,
+            is_dhx_branch_blocked: false,
         }
     }
 }
@@ -279,6 +292,41 @@ impl CIETState {
     pub fn is_fast_fwd_on(&self) -> bool{
         return self.fast_forward_settings_turned_on;
     }
+
+    // 
+
+    pub fn set_ctah_pump_pressure(&mut self,
+        ctah_pump_pressure_pascals: f64){
+
+        let mut user_set_ctah_pump_pressure_pascals = 
+            ctah_pump_pressure_pascals;
+        // bounds ctah pump pressure from going beyond this number
+        let max_pump_pressure_pascals = 17000.0;
+        if ctah_pump_pressure_pascals.abs() > max_pump_pressure_pascals {
+
+            // check sign 
+
+            if ctah_pump_pressure_pascals.is_sign_positive() {
+                user_set_ctah_pump_pressure_pascals = 
+                    max_pump_pressure_pascals;
+            } else {
+
+                user_set_ctah_pump_pressure_pascals = 
+                    -max_pump_pressure_pascals;
+            }
+
+        }
+
+        self.ctah_pump_pressure_pascals = 
+            user_set_ctah_pump_pressure_pascals as f32;
+
+    }
+
+    pub fn get_ctah_pump_pressure_f64(&self) -> f64 {
+        return self.ctah_pump_pressure_pascals as f64;
+    }
+
+
 
 }
 
