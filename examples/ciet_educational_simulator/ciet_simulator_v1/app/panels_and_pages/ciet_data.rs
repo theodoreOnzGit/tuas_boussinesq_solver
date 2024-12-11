@@ -15,8 +15,7 @@ pub struct CIETState {
     // time diagnostics
     pub simulation_time_seconds: f64,
     pub elapsed_time_seconds: f64,
-    pub heat_trf_calc_time_ms: f64,
-    pub fluid_mech_calc_time_ms: f64,
+    pub calc_time_ms: f64,
     // user inputs
     pub heater_power_kilowatts: f64,
     pub ctah_pump_massrate_set_point: f64,
@@ -126,8 +125,7 @@ impl Default for CIETState {
             fm40_ctah_branch_kg_per_s: 0.0,
             simulation_time_seconds: 0.0,
             elapsed_time_seconds: 0.0,
-            heat_trf_calc_time_ms: 0.0,
-            fluid_mech_calc_time_ms: 0.0,
+            calc_time_ms: 0.0,
             //heater branch
             pipe_1a_temp_degc: 21.0,
             pipe_1b_temp_degc: 21.0,

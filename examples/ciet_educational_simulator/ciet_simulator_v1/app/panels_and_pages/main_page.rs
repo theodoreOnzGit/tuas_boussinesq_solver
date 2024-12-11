@@ -50,7 +50,7 @@ impl CIETApp {
         // time display 
         let sim_time_seconds = ciet_state_local.simulation_time_seconds;
         let elapsed_time_seconds = ciet_state_local.elapsed_time_seconds;
-        let calc_time_ms = ciet_state_local.heat_trf_calc_time_ms;
+        let calc_time_ms = ciet_state_local.calc_time_ms;
 
         let time_display_text = 
             "Simulation Time (s): ".to_string() 

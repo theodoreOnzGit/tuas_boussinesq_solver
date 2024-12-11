@@ -1013,7 +1013,7 @@ pub fn coupled_dracs_loop_version_7(
         let time_taken_for_calculation_loop_milliseconds: f64 = 
             (loop_time_end - loop_time_start)
             .as_millis() as f64;
-        local_ciet_state.heat_trf_calc_time_ms = 
+        local_ciet_state.calc_time_ms = 
             time_taken_for_calculation_loop_milliseconds;
 
         let time_to_sleep_milliseconds: u64 = 
