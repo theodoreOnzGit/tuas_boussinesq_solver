@@ -1321,7 +1321,9 @@ pub fn educational_ciet_loop_version_3(
 
             }
 
-            // still need to do ctah update
+            // still need to do ctah branch update
+
+            // lastly, mixing node update
 
 
 

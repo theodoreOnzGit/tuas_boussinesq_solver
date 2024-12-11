@@ -86,6 +86,9 @@ pub struct CIETState {
     pub pipe_15_temp_degc: f32,
     pub pipe_16_temp_degc: f32,
     pub pipe_17a_temp_degc: f32,
+    // mixing node temperatures
+    pub top_mixing_node_5a_5b_4_temp_degc: f32,
+    pub bottom_mixing_node_17a_17b_18_temp_degc: f32,
 
     // timestep settings are user settable 
     timestep_seconds: f32,
@@ -176,6 +179,10 @@ impl Default for CIETState {
             pipe_15_temp_degc: 21.0,
             pipe_16_temp_degc: 21.0,
             pipe_17a_temp_degc: 21.0,
+            // mixing nodes 
+            top_mixing_node_5a_5b_4_temp_degc: 21.0,
+            bottom_mixing_node_17a_17b_18_temp_degc: 21.0,
+            
             // timestep settings are user settable as well
             timestep_seconds: 0.1,
             fast_forward_settings_turned_on: false,
