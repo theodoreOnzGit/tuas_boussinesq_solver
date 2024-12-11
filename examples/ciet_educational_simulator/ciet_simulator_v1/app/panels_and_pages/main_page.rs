@@ -570,6 +570,54 @@ impl CIETApp {
             40.0, 
             1.0);
 
+        // ctah branch 
+
+        let button_temp_degc = ciet_state_local.pipe_5b_temp_degc;
+        let pipe_5b = new_temp_sensitive_button(
+            min_temp_degc, 
+            max_temp_degc, 
+            button_temp_degc, 
+            "5b");
+
+        self.place_horizontal_widget_with_length(
+            ui, 
+            pipe_5b, 
+            heater_x + 120.0, 
+            heater_y - 270.0, 
+            240.0, 
+            10.0);
+
+        let button_temp_degc = ciet_state_local.pipe_6_temp_degc;
+        let pipe_6 = new_temp_sensitive_button(
+            min_temp_degc, 
+            max_temp_degc, 
+            button_temp_degc, 
+            "6");
+
+        self.place_horizontal_widget_with_length(
+            ui, 
+            pipe_6, 
+            heater_x + 360.0, 
+            heater_y - 270.0, 
+            240.0, 
+            10.0);
+
+
+        let button_temp_degc = ciet_state_local.pipe_6a_temp_degc;
+        let pipe_6a = new_temp_sensitive_button(
+            min_temp_degc, 
+            max_temp_degc, 
+            button_temp_degc, 
+            "6a");
+
+        self.place_horizontal_widget_with_length(
+            ui, 
+            pipe_6a, 
+            heater_x + 600.0, 
+            heater_y - 270.0, 
+            240.0, 
+            10.0);
+
 
 
         // dracs loop
