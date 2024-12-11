@@ -1106,7 +1106,7 @@ pub fn educational_ciet_loop_version_3(
 
 
                 local_ciet_state.fm20_dhx_branch_kg_per_s = 
-                    ((mass_flowrate_dhx_br.clone().abs()
+                    ((mass_flowrate_dhx_br.clone()
                       .get::<kilogram_per_second>() *1000.0).round()/1000.0
                     ) as f32 ;
 
@@ -1322,9 +1322,186 @@ pub fn educational_ciet_loop_version_3(
             }
 
             // still need to do ctah branch update
+            {
+                let pipe_5a_temp = 
+                    *pipe_5a
+                    .pipe_fluid_array_temperature()
+                    .unwrap()
+                    .first()
+                    .unwrap();
+
+                local_ciet_state.pipe_5a_temp_degc = 
+                    pipe_5a_temp.get::<degree_celsius>() as f32;
+
+                let pipe_6a_temp = 
+                    *pipe_6a
+                    .pipe_fluid_array_temperature()
+                    .unwrap()
+                    .first()
+                    .unwrap();
+
+                local_ciet_state.pipe_6a_temp_degc = 
+                    pipe_6a_temp.get::<degree_celsius>() as f32;
+
+                let pipe_6_temp = 
+                    *static_mixer_41_label_6
+                    .pipe_fluid_array_temperature()
+                    .unwrap()
+                    .first()
+                    .unwrap();
+
+                local_ciet_state.pipe_6_temp_degc = 
+                    pipe_6_temp.get::<degree_celsius>() as f32;
+
+                let pipe_8a_temp = 
+                    *pipe_8a
+                    .pipe_fluid_array_temperature()
+                    .unwrap()
+                    .first()
+                    .unwrap();
+
+                local_ciet_state.pipe_8a_temp_degc = 
+                    pipe_8a_temp.get::<degree_celsius>() as f32;
+
+                let pipe_8_temp = 
+                    *static_mixer_40_label_8
+                    .pipe_fluid_array_temperature()
+                    .unwrap()
+                    .first()
+                    .unwrap();
+
+                local_ciet_state.pipe_8_temp_degc = 
+                    pipe_8_temp.get::<degree_celsius>() as f32;
+
+                let pipe_9_temp = 
+                    *pipe_9
+                    .pipe_fluid_array_temperature()
+                    .unwrap()
+                    .first()
+                    .unwrap();
+
+                local_ciet_state.pipe_9_temp_degc = 
+                    pipe_9_temp.get::<degree_celsius>() as f32;
+
+                let pipe_10_temp = 
+                    *pipe_10
+                    .pipe_fluid_array_temperature()
+                    .unwrap()
+                    .first()
+                    .unwrap();
+
+                local_ciet_state.pipe_10_temp_degc = 
+                    pipe_10_temp.get::<degree_celsius>() as f32;
+
+
+                let pipe_11_temp = 
+                    *pipe_11
+                    .pipe_fluid_array_temperature()
+                    .unwrap()
+                    .first()
+                    .unwrap();
+
+                local_ciet_state.pipe_11_temp_degc = 
+                    pipe_11_temp.get::<degree_celsius>() as f32;
+
+                let pipe_12_temp = 
+                    *pipe_12
+                    .pipe_fluid_array_temperature()
+                    .unwrap()
+                    .first()
+                    .unwrap();
+
+                local_ciet_state.pipe_12_temp_degc = 
+                    pipe_12_temp.get::<degree_celsius>() as f32;
+
+                let pipe_13_temp = 
+                    *pipe_13
+                    .pipe_fluid_array_temperature()
+                    .unwrap()
+                    .first()
+                    .unwrap();
+
+                local_ciet_state.pipe_13_temp_degc = 
+                    pipe_13_temp.get::<degree_celsius>() as f32;
+
+                let pipe_14_temp = 
+                    *pipe_14
+                    .pipe_fluid_array_temperature()
+                    .unwrap()
+                    .first()
+                    .unwrap();
+
+                local_ciet_state.pipe_14_temp_degc = 
+                    pipe_14_temp.get::<degree_celsius>() as f32;
+
+                let pipe_14a_temp = 
+                    *flowmeter_40_14a
+                    .pipe_fluid_array_temperature()
+                    .unwrap()
+                    .first()
+                    .unwrap();
+
+                local_ciet_state.fm40_label_14a_temp_degc = 
+                    pipe_14a_temp.get::<degree_celsius>() as f32;
+
+
+                local_ciet_state.fm40_ctah_branch_kg_per_s = 
+                    (mass_flowrate_ctah_br.clone()
+                     .get::<kilogram_per_second>() *1000.0).round()/1000.0;
+
+                let pipe_15_temp = 
+                    *pipe_15
+                    .pipe_fluid_array_temperature()
+                    .unwrap()
+                    .first()
+                    .unwrap();
+
+                local_ciet_state.pipe_15_temp_degc = 
+                    pipe_15_temp.get::<degree_celsius>() as f32;
+
+
+                let pipe_16_temp = 
+                    *pipe_16
+                    .pipe_fluid_array_temperature()
+                    .unwrap()
+                    .first()
+                    .unwrap();
+
+                local_ciet_state.pipe_16_temp_degc = 
+                    pipe_16_temp.get::<degree_celsius>() as f32;
+
+                let pipe_17a_temp = 
+                    *pipe_17a
+                    .pipe_fluid_array_temperature()
+                    .unwrap()
+                    .first()
+                    .unwrap();
+
+                local_ciet_state.pipe_17a_temp_degc = 
+                    pipe_17a_temp.get::<degree_celsius>() as f32;
+
+            }
 
             // lastly, mixing node update
 
+            {
+                let top_mixing_node_5a_5b_4_temp = 
+                    top_mixing_node_5a_5b_4
+                    .try_get_bulk_temperature()
+                    .unwrap();
+
+                local_ciet_state.top_mixing_node_5a_5b_4_temp_degc = 
+                    top_mixing_node_5a_5b_4_temp.get::<degree_celsius>() as f32;
+
+                let bottom_mixing_node_17a_17b_18_temp = 
+                    bottom_mixing_node_17a_17b_18
+                    .try_get_bulk_temperature()
+                    .unwrap();
+
+                local_ciet_state.bottom_mixing_node_17a_17b_18_temp_degc = 
+                    bottom_mixing_node_17a_17b_18_temp.get::<degree_celsius>() as f32;
+
+            }
 
 
             current_simulation_time += timestep;
