@@ -1337,8 +1337,13 @@ pub fn educational_ciet_loop_version_3(
                 .first()
                 .unwrap();
 
+            // 6a and inlet bt-43 are about the same
+
             local_ciet_state.pipe_6a_temp_degc = 
                 pipe_6a_temp.get::<degree_celsius>() as f32;
+
+            local_ciet_state.bt_43_ctah_inlet_deg_c = 
+                (pipe_6a_temp.get::<degree_celsius>() *100.0).round()/100.0;
 
             let pipe_6_temp = 
                 *static_mixer_41_label_6
@@ -1346,6 +1351,8 @@ pub fn educational_ciet_loop_version_3(
                 .unwrap()
                 .first()
                 .unwrap();
+
+                
 
             local_ciet_state.pipe_6_temp_degc = 
                 pipe_6_temp.get::<degree_celsius>() as f32;
@@ -1357,8 +1364,12 @@ pub fn educational_ciet_loop_version_3(
                 .first()
                 .unwrap();
 
+            // pipe 8a and bt41 are about the same
             local_ciet_state.pipe_8a_temp_degc = 
                 pipe_8a_temp.get::<degree_celsius>() as f32;
+
+            local_ciet_state.bt_41_ctah_outlet_deg_c = 
+                (pipe_8a_temp.get::<degree_celsius>() *100.0).round()/100.0;
 
             let pipe_8_temp = 
                 *static_mixer_40_label_8
