@@ -1323,15 +1323,15 @@ pub fn educational_ciet_loop_version_3(
 
             // still need to do ctah branch update
             {
-                let pipe_5a_temp = 
-                    *pipe_5a
+                let pipe_5b_temp = 
+                    *pipe_5b
                     .pipe_fluid_array_temperature()
                     .unwrap()
                     .first()
                     .unwrap();
 
-                local_ciet_state.pipe_5a_temp_degc = 
-                    pipe_5a_temp.get::<degree_celsius>() as f32;
+                local_ciet_state.pipe_5b_temp_degc = 
+                    pipe_5b_temp.get::<degree_celsius>() as f32;
 
                 let pipe_6a_temp = 
                     *pipe_6a
