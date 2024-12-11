@@ -97,7 +97,7 @@ pub struct CIETState {
     // pump pressure (loop pressure drop) across ctah pump 
     // is also user settable 
     // but must be less than 17000 Pa
-    ctah_pump_pressure_pascals: f32,
+    pub ctah_pump_pressure_pascals: f32,
     // this allows the user to block flow across the ctah branch
     pub is_ctah_branch_blocked: bool,
     pub is_dhx_branch_blocked: bool,

@@ -41,9 +41,6 @@ pub fn educational_ciet_loop_version_3(
             tchx_outlet_temperature_set_point_degc);
     let ctah_outlet_temperature_set_point_degc = 
         local_ciet_state.bt_41_ctah_outlet_set_pt_deg_c;
-    let ctah_outlet_temperature_set_point = 
-        ThermodynamicTemperature::new::<degree_celsius>(
-            ctah_outlet_temperature_set_point_degc);
 
     // timestep settings are user set 
 

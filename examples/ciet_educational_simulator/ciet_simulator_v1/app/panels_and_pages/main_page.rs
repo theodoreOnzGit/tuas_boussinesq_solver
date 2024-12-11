@@ -760,6 +760,27 @@ impl CIETApp {
             10.0);
 
 
+        // ctah pump 
+
+        // for user to set ctah pump 
+        let ctah_pump_slider_pa = egui::Slider::new(
+            &mut ciet_state_local.ctah_pump_pressure_pascals, -15000.0..=15000.0)
+            .vertical()
+            .text("CTAH pump pressure, loop pressure drop (Pa)");
+
+        let ctah_pump_slider_x = ctah_pump_x + 0.7 * ctah_pump_x_width;
+        let ctah_pump_slider_y = ctah_pump_y + 10.0;
+        let ctah_pump_slider_x_width = 30.0;
+        let ctah_pump_slider_y_width = ctah_pump_y_width;
+
+        self.put_widget_with_size_and_centre(
+            ui, 
+            ctah_pump_slider_pa, 
+            ctah_pump_slider_x, 
+            ctah_pump_slider_y, 
+            ctah_pump_slider_x_width, 
+            ctah_pump_slider_y_width);
+
         // obtain a lock for ciet state, set it 
         self.ciet_state.lock().unwrap().overwrite_state(ciet_state_local);
     }
