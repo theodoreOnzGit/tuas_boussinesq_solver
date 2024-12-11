@@ -22,7 +22,7 @@
 ///
 #[cfg(test)]
 #[test] 
-//#[ignore = "debugging"]
+#[ignore = "deprecated, older single threaded version of ciet simulator"]
 pub fn ctah_flow_steady_state_test(){
 
 

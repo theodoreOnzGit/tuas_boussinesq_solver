@@ -87,6 +87,10 @@ pub struct CIETState {
     pub pipe_16_temp_degc: f32,
     pub pipe_17a_temp_degc: f32,
 
+    // timestep settings are user settable 
+    timestep_seconds: f32,
+    fast_forward_settings_turned_on: bool,
+
 
 }
 
@@ -164,7 +168,9 @@ impl Default for CIETState {
             pipe_15_temp_degc: 21.0,
             pipe_16_temp_degc: 21.0,
             pipe_17a_temp_degc: 21.0,
-
+            // timestep settings are user settable as well
+            timestep_seconds: 0.2,
+            fast_forward_settings_turned_on: false,
         }
     }
 }
@@ -234,6 +240,44 @@ impl CIETState {
 
     pub fn get_ctah_inlet_temp_degc(&self) -> f64 {
         return self.bt_43_ctah_inlet_deg_c;
+    }
+
+    // timestep settings 
+    pub fn set_timestep_seconds(&mut self, timestep_seconds: f64){
+        let mut user_timestep = timestep_seconds;
+
+        // have a minimum of 0.04s 
+        let min_timestep_seconds = 0.04;
+
+        if user_timestep < min_timestep_seconds {
+            user_timestep = min_timestep_seconds;
+        }
+
+
+        self.timestep_seconds = user_timestep as f32;
+
+    }
+
+    // gets the timestep in seconds
+    pub fn get_timestep_seconds(&self) -> f32 {
+        return self.timestep_seconds;
+    }
+
+    // toggles the fast forward settings
+    pub fn toggle_fast_fwd_settings(&mut self){
+
+        // basically, the user has a switch to turn on and off 
+        // the fast forward button for simulation.
+        if self.fast_forward_settings_turned_on == true {
+            self.fast_forward_settings_turned_on = false;
+        } else {
+            self.fast_forward_settings_turned_on = true;
+        }
+    }
+
+    // gets the fast fwd settings 
+    pub fn is_fast_fwd_on(&self) -> bool{
+        return self.fast_forward_settings_turned_on;
     }
 
 }

@@ -21,3 +21,7 @@ pub mod ciet_data;
 
 /// contains code for natural circulation only
 pub mod nat_circ_simulation;
+
+/// contains code for the full educational simulator of CIET 
+/// both forced and natural circulation
+pub mod full_simulation;

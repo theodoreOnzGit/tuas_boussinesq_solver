@@ -848,9 +848,6 @@ pub fn three_branch_ciet_ver3(
             //
             // record tchx outlet temperature if it is last 5s of time 
 
-            let tchx_temperature_record_time_threshold = max_simulation_time - 
-                Time::new::<second>(5.0);
-
 
             tchx_heat_transfer_coeff = {
                 // first, calculate the set point error 
