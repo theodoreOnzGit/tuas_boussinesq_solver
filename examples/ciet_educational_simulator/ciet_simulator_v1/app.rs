@@ -124,7 +124,9 @@ impl eframe::App for CIETApp {
                     self.ciet_sim_main_page(ui);
 
                 },
-                Panel::CTAHPump => {},
+                Panel::CTAHPump => {
+                    self.ciet_sim_ctah_pump_page(ui);
+                },
                 Panel::CTAH => {
                     self.ciet_sim_ctah_page(ui);
                 },

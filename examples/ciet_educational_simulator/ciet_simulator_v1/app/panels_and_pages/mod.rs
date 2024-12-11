@@ -17,6 +17,9 @@ pub mod heater_page;
 
 pub mod ctah_page;
 
+/// page for controlling pumps and valves
+pub mod ctah_pump_page;
+
 pub mod ciet_data;
 
 /// contains code for natural circulation only
