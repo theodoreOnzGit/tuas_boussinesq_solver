@@ -745,6 +745,23 @@ impl CIETApp {
             100.0, 
             10.0);
 
+        let button_temp_degc = ciet_state_local.fm40_label_14a_temp_degc;
+        let fm14a_mass_rate_kg_per_s = ciet_state_local.fm40_ctah_branch_kg_per_s;
+        let fm40_text: String = "FM40 (14a). flowrate (kg/s) : ".to_string() 
+            + &fm14a_mass_rate_kg_per_s.to_string();
+        let pipe_14a_vertical = new_temp_sensitive_button(
+            min_temp_degc, 
+            max_temp_degc, 
+            button_temp_degc, 
+            &fm40_text);
+
+        self.place_horizontal_widget_with_length(
+            ui, 
+            pipe_14a_vertical, 
+            ctah_x - 350.0, 
+            ctah_y + 600.0, 
+            90.0, 
+            1.0);
 
         // dracs loop
         let button_temp_degc = ciet_state_local.pipe_30a_temp_degc;
