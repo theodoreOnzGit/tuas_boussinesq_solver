@@ -1276,12 +1276,10 @@ pub fn three_branch_ciet_ver3(
 
 
             // record and mutate global flowrates
-            if current_simulation_time > tchx_temperature_record_time_threshold {
-                mass_flowrate_dracs_loop_abs = *mass_flow_dracs_loop_ptr.lock().unwrap().deref();
-                mass_flowrate_dhx_br = *mass_flow_dhx_br_ptr.lock().unwrap().deref();
-                mass_flowrate_ctah_br = *mass_flow_ctah_br_ptr.lock().unwrap().deref();
-                mass_flowrate_heater_br = *mass_flow_heater_br_ptr.lock().unwrap().deref();
-            }
+            mass_flowrate_dracs_loop_abs = *mass_flow_dracs_loop_ptr.lock().unwrap().deref();
+            mass_flowrate_dhx_br = *mass_flow_dhx_br_ptr.lock().unwrap().deref();
+            mass_flowrate_ctah_br = *mass_flow_ctah_br_ptr.lock().unwrap().deref();
+            mass_flowrate_heater_br = *mass_flow_heater_br_ptr.lock().unwrap().deref();
 
             // debugging 
             let debug_settings = false;
