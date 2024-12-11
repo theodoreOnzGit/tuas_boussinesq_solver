@@ -405,12 +405,23 @@ pub fn educational_ciet_loop_version_3(
         let heater_inlet_temp_degc = 
             local_ciet_state.get_heater_inlet_temp_degc();
 
+        let heater_bulk_temp_degc = 
+            heater_ver_1.pipe_fluid_array.try_get_bulk_temperature()
+            .unwrap()
+            .get::<degree_celsius>();
+
+
         let heat_rate_through_heater;
 
         if heater_outlet_temp_degc > 150.0 {
             heat_rate_through_heater = Power::ZERO;
             local_ciet_state.set_heater_power_kilowatts(0.0);
         } else if heater_inlet_temp_degc > 150.0 {
+            heat_rate_through_heater = Power::ZERO;
+            local_ciet_state.set_heater_power_kilowatts(0.0);
+        } else if heater_bulk_temp_degc > 150.0 {
+            // if heater bulk temp exceeds 150.0c,
+            // then kill heater also 
             heat_rate_through_heater = Power::ZERO;
             local_ciet_state.set_heater_power_kilowatts(0.0);
         } else {
