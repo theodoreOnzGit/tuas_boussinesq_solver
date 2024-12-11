@@ -6,19 +6,21 @@
 /// so the DHX branch was closed
 /// and 
 ///
-/// on i7-10875H it ran at 1900s approximately 
+/// on i7-10875H 
+/// the single thread ran at 1900s approximately 
 /// test conducted on 10 dec 2024
+/// the parallel version with three threads ran at about 875 seconds 
+/// (more can be added for additional physics)
+/// test conducted on 11 dec 2024
 ///
-/// for a 4000s simulation, it ran at twice the simulated speed. 
-/// this is with single thread and timestep of 0.04s 
+/// for a 4000s simulation, it ran at more than four times 
+/// the simulated speed. 
+/// this is with three threads and timestep of 0.04s.
 ///
-/// This means that even with single thread, it is fast enough for real-time 
-/// in forced circulation, at least to prevent instabilities.
+/// With simple parallelisation, I was able to obtain decent results. 
+/// It can be further optimised by changing the way that the flow is calculated 
+/// for diode behaviour. 
 ///
-/// I'd still like to speed this up however, because it is still cutting it 
-/// close. Like parallel threads would be good. 
-///
-/// Then I can calibrate the PID controller with more ease as well
 ///
 #[cfg(test)]
 #[test] 
@@ -75,22 +77,22 @@ pub fn ctah_flow_steady_state_test(){
     
     // now for ctah flow stuff
 
-    let experimental_ctah_br_mass_flowrate_kg_per_s = 0.18;
+    let _experimental_ctah_br_mass_flowrate_kg_per_s = 0.18;
     let regression_ctah_br_mass_flowrate_kg_per_s = 0.1937;
     let ctah_outlet_temperature_set_point_degc = 80.0;
 
     let expt_temperature_tolerance_degc = 0.5;
 
-    let ( expt_heater_inlet_temp_degc, 
-        expt_heater_outlet_temp_degc, 
-        expt_ctah_inlet_temp_degc, 
-        expt_ctah_outlet_temp_degc, ) = 
+    let ( _expt_heater_inlet_temp_degc, 
+        _expt_heater_outlet_temp_degc, 
+        _expt_ctah_inlet_temp_degc, 
+        _expt_ctah_outlet_temp_degc, ) = 
         (78.985,92.756,91.845,79.86);
     let ( regression_heater_inlet_temp_degc, 
         regression_heater_outlet_temp_degc, 
         regression_ctah_inlet_temp_degc, 
         regression_ctah_outlet_temp_degc, ) = 
-        (126.29,137.66,137.07,236.95);
+        (126.29,137.66,137.07,126.95);
 
     // timestep 50 millisecond or 0.05 s
     // or slightly less
@@ -250,9 +252,23 @@ pub fn ctah_flow_short_test_dhx_blocked(){
 /// just to check if it is stable
 /// and if the numbers make sense
 ///
-/// this took about 60s and the simulation results seem to make sense
+/// the version 2
+/// single thread took about 60s and the simulation results seem to make sense
 /// the max simulation time is 400s
 /// it's about 5 times faster than real-time
+///
+/// the version 3 
+/// multithread thread ran at about 44s which is marginally faster than the 
+/// single thread. 
+/// about 9 times as fast as real-time 
+///
+/// This is with timestep of 0.2s
+/// If timestep is reduced to 0.04s (which is 5 times shorter),
+/// there will still be real-time capability. Twice as fast to be precise.
+/// This is on i7-10875H gaming laptop.
+///
+/// If on a slower laptop, or slower clockspeed, real-time for reverse diode 
+/// may not work
 #[cfg(test)]
 #[test] 
 pub fn ctah_flow_short_test_reverse_diode_effect(){
