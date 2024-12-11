@@ -402,9 +402,15 @@ pub fn educational_ciet_loop_version_3(
         let heater_outlet_temp_degc = 
             local_ciet_state.get_heater_outlet_temp_degc();
 
+        let heater_inlet_temp_degc = 
+            local_ciet_state.get_heater_inlet_temp_degc();
+
         let heat_rate_through_heater;
 
         if heater_outlet_temp_degc > 150.0 {
+            heat_rate_through_heater = Power::ZERO;
+            local_ciet_state.set_heater_power_kilowatts(0.0);
+        } else if heater_inlet_temp_degc > 150.0 {
             heat_rate_through_heater = Power::ZERO;
             local_ciet_state.set_heater_power_kilowatts(0.0);
         } else {
