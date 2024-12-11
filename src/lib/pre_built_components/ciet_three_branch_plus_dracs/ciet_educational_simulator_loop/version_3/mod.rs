@@ -403,6 +403,10 @@ pub fn three_branch_ciet_ver3(
     timestep_seconds: f64,
     ) -> 
     Result<(),crate::tuas_lib_error::TuasLibError>{
+        use std::ops::{Deref, DerefMut};
+        use std::sync::{Arc, Mutex};
+        use std::thread;
+
         use uom::si::length::centimeter;
         use uom::si::pressure::{atmosphere, pascal};
         use uom::si::{f64::*, mass_rate::kilogram_per_second, power::watt};
@@ -756,16 +760,40 @@ pub fn three_branch_ciet_ver3(
 
 
 
-        let mut final_mass_flowrate_dhx_br: MassRate 
+        let mut mass_flowrate_dhx_br: MassRate 
             = MassRate::ZERO;
-        let mut final_mass_flowrate_dracs_loop: MassRate 
+        let mut mass_flowrate_dracs_loop_abs: MassRate 
             = MassRate::ZERO;
-        let mut final_mass_flowrate_ctah_br: MassRate 
+        let mut mass_flowrate_ctah_br: MassRate 
+            = MassRate::ZERO;
+        let mut mass_flowrate_heater_br: MassRate 
             = MassRate::ZERO;
 
         let ambient_htc = HeatTransfer::new::<watt_per_square_meter_kelvin>(20.0);
+
+
+
+
+
+
         // calculation loop
         while current_simulation_time < max_simulation_time {
+
+
+            // set initial mass flowrate pointers for parallelism first 
+
+            let mass_flow_dhx_br_ptr = Arc::new(Mutex::new(mass_flowrate_dhx_br.clone()));
+            let mass_flow_dracs_loop_ptr = Arc::new(Mutex::new(mass_flowrate_dracs_loop_abs.clone()));
+            let mass_flow_ctah_br_ptr = Arc::new(Mutex::new(mass_flowrate_ctah_br.clone()));
+            let mass_flow_heater_br_ptr = Arc::new(Mutex::new(mass_flowrate_heater_br.clone()));
+
+            // clone the pointers to move into the mass flowrate calc
+
+            let mass_flow_dhx_br_ptr_clone = mass_flow_dhx_br_ptr.clone();
+            let mass_flow_dracs_loop_ptr_clone = mass_flow_dracs_loop_ptr.clone();
+            let mass_flow_ctah_br_ptr_clone = mass_flow_ctah_br_ptr.clone();
+            let mass_flow_heater_br_ptr_clone = mass_flow_heater_br_ptr.clone();
+
 
             let tchx_outlet_temperature: ThermodynamicTemperature = {
 
@@ -910,87 +938,181 @@ pub fn three_branch_ciet_ver3(
             };
 
             // fluid calculation loop 
-            //
-            // first, absolute mass flowrate across two branches
-            let dhx_tube_side_heat_exchanger_30 = 
-                dhx_sthe.get_clone_of_tube_side_parallel_tube_fluid_component();
-            let dhx_shell_side_pipe_24 = 
-                dhx_sthe.get_clone_of_shell_side_fluid_component();
+
+            // now first parallel loop
+            // clone all components
+
+            let cloned_pipe_34 = pipe_34.clone();
+            let cloned_pipe_33 = pipe_33.clone();
+            let cloned_pipe_32 = pipe_32.clone();
+            let cloned_pipe_31a = pipe_31a.clone();
+            let cloned_static_mixer_61_label_31 = static_mixer_61_label_31.clone();
+            let cloned_dhx_tube_side_30b = dhx_tube_side_30b.clone();
+            let cloned_dhx_sthe = dhx_sthe.clone();
+            let cloned_dhx_sthe_2 = dhx_sthe.clone();
+            let cloned_dhx_tube_side_30a = dhx_tube_side_30a.clone();
 
 
+            // DRACS cold branch or (mostly) cold leg
+            let cloned_tchx_35a = tchx_35a.clone();
+            let cloned_tchx_35b_1 = tchx_35b_1.clone();
+            let cloned_tchx_35b_2 = tchx_35b_2.clone();
+            let cloned_static_mixer_60_label_36 = static_mixer_60_label_36.clone();
+            let cloned_pipe_36a = pipe_36a.clone();
+            let cloned_pipe_37 = pipe_37.clone();
+            let cloned_flowmeter_60_37a = flowmeter_60_37a.clone();
+            let cloned_pipe_38 = pipe_38.clone();
+            let cloned_pipe_39 = pipe_39.clone();
 
-            let absolute_mass_flowrate_dracs = 
-                coupled_dracs_fluid_mechanics_calc_abs_mass_rate_sam_tchx_calibration(
-                    &pipe_34, 
-                    &pipe_33, 
-                    &pipe_32, 
-                    &pipe_31a, 
-                    &static_mixer_61_label_31, 
-                    &dhx_tube_side_30b, 
-                    &dhx_tube_side_heat_exchanger_30, 
-                    &dhx_tube_side_30a, 
-                    &tchx_35a, 
-                    &tchx_35b_1, 
-                    &tchx_35b_2, 
-                    &static_mixer_60_label_36, 
-                    &pipe_36a, 
-                    &pipe_37, 
-                    &flowmeter_60_37a, 
-                    &pipe_38, 
-                    &pipe_39);
+            // pri loop dhx branch top to bottom 5a to 17b 
 
-            // likely the natural circulation is counter clockwise 
-            let counter_clockwise_dracs_flowrate = absolute_mass_flowrate_dracs;
+            let cloned_pipe_5a = pipe_5a.clone();
+            let cloned_pipe_26 = pipe_26.clone();
+            let cloned_pipe_25a = pipe_25a.clone();
+            let cloned_static_mixer_21_label_25 = static_mixer_21_label_25.clone();
+            // here is where the dhx shell side should be (component 24)
+            let cloned_pipe_23a = pipe_23a.clone();
+            let cloned_static_mixer_20_label_23 = static_mixer_20_label_23.clone();
+            let cloned_pipe_22 = pipe_22.clone();
+            let cloned_flowmeter_20_21a = flowmeter_20_21a.clone();
+            let cloned_pipe_21 = pipe_21.clone();
+            let cloned_pipe_20 = pipe_20.clone();
+            let cloned_pipe_19 = pipe_19.clone();
+            let cloned_pipe_17b = pipe_17b.clone();
+
+            // heater branch top to bottom 4 to 18
+            let cloned_pipe_4 = pipe_4.clone();
+            let cloned_pipe_3 = pipe_3.clone();
+            let cloned_pipe_2a = pipe_2a.clone();
+            let cloned_static_mixer_10_label_2 = static_mixer_10_label_2.clone();
+            let cloned_heater_top_head_1a = heater_top_head_1a.clone();
+            let cloned_heater_ver_1 = heater_ver_1.clone();
+            let cloned_heater_bottom_head_1b = heater_bottom_head_1b.clone();
+            let cloned_pipe_18 = pipe_18.clone();
 
 
+            // ctah branch 
+            let cloned_pipe_5b = pipe_5b.clone();
+            let cloned_static_mixer_41_label_6 = static_mixer_41_label_6.clone();
+            let cloned_pipe_6a = pipe_6a.clone();
+            let cloned_ctah_vertical_label_7a = ctah_vertical_label_7a.clone();
+            let cloned_ctah_horizontal_label_7b = ctah_horizontal_label_7b.clone();
+            let cloned_pipe_8a = pipe_8a.clone();
+            let cloned_static_mixer_40_label_8 = static_mixer_40_label_8.clone();
+            let cloned_pipe_9 = pipe_9.clone();
+            let cloned_pipe_10 = pipe_10.clone();
+            let cloned_pipe_11 = pipe_11.clone();
+            let cloned_pipe_12 = pipe_12.clone();
+            let cloned_ctah_pump = ctah_pump.clone();
+            let cloned_pipe_13 = pipe_13.clone();
+            let cloned_pipe_14 = pipe_14.clone();
+            let cloned_flowmeter_40_14a = flowmeter_40_14a.clone();
+            let cloned_pipe_15 = pipe_15.clone();
+            let cloned_pipe_16 = pipe_16.clone();
+            let cloned_pipe_17a = pipe_17a.clone();
+
+            let dracs_flowrate_join_handle = thread::spawn( move ||{
+
+                let cloned_dhx_tube_side_heat_exchanger_30 = 
+                    cloned_dhx_sthe.get_clone_of_tube_side_parallel_tube_fluid_component();
+                let absolute_mass_flowrate_dracs = 
+                    coupled_dracs_fluid_mechanics_calc_abs_mass_rate_sam_tchx_calibration(
+                        &cloned_pipe_34, 
+                        &cloned_pipe_33, 
+                        &cloned_pipe_32, 
+                        &cloned_pipe_31a, 
+                        &cloned_static_mixer_61_label_31, 
+                        &cloned_dhx_tube_side_30b, 
+                        &cloned_dhx_tube_side_heat_exchanger_30, 
+                        &cloned_dhx_tube_side_30a, 
+                        &cloned_tchx_35a, 
+                        &cloned_tchx_35b_1, 
+                        &cloned_tchx_35b_2, 
+                        &cloned_static_mixer_60_label_36, 
+                        &cloned_pipe_36a, 
+                        &cloned_pipe_37, 
+                        &cloned_flowmeter_60_37a, 
+                        &cloned_pipe_38, 
+                        &cloned_pipe_39);
+
+                // mutate the pointer 
+                *mass_flow_dracs_loop_ptr_clone.lock().unwrap().deref_mut()
+                    = absolute_mass_flowrate_dracs;
+            }
+            );
+
+            let pri_flowrate_join_handle = thread::spawn(move || {
+                //
+                // first, absolute mass flowrate across two branches
+                let cloned_dhx_shell_side_pipe_24 = 
+                    cloned_dhx_sthe_2.get_clone_of_shell_side_fluid_component();
             // flow should go from up to down
             // this was tested ok
-            let (dhx_flow, heater_flow, ctah_flow) = 
-                three_branch_pri_loop_flowrates(
-                    pump_pressure, 
-                    ctah_branch_blocked, 
-                    dhx_branch_blocked, 
-                    &pipe_4, 
-                    &pipe_3, 
-                    &pipe_2a, 
-                    &static_mixer_10_label_2, 
-                    &heater_top_head_1a, 
-                    &heater_ver_1, 
-                    &heater_bottom_head_1b, 
-                    &pipe_18, 
-                    &pipe_5a, 
-                    &pipe_26, 
-                    &pipe_25a, 
-                    &static_mixer_21_label_25, 
-                    &dhx_shell_side_pipe_24, 
-                    &static_mixer_20_label_23, 
-                    &pipe_23a, 
-                    &pipe_22, 
-                    &flowmeter_20_21a, 
-                    &pipe_21, 
-                    &pipe_20, 
-                    &pipe_19, 
-                    &pipe_17b, 
-                    &pipe_5b, 
-                    &static_mixer_41_label_6, 
-                    &pipe_6a, 
-                    &ctah_vertical_label_7a, 
-                    &ctah_horizontal_label_7b, 
-                    &pipe_8a, 
-                    &static_mixer_40_label_8, 
-                    &pipe_9, 
-                    &pipe_10, 
-                    &pipe_11, 
-                    &pipe_12, 
-                    &ctah_pump, 
-                    &pipe_13, 
-                    &pipe_14, 
-                    &flowmeter_40_14a, 
-                    &pipe_15, 
-                    &pipe_16, 
-                    &pipe_17a);
+                let (dhx_flow, heater_flow, ctah_flow) = 
+                    three_branch_pri_loop_flowrates(
+                        pump_pressure, 
+                        ctah_branch_blocked, 
+                        dhx_branch_blocked, 
+                        &cloned_pipe_4, 
+                        &cloned_pipe_3, 
+                        &cloned_pipe_2a, 
+                        &cloned_static_mixer_10_label_2, 
+                        &cloned_heater_top_head_1a, 
+                        &cloned_heater_ver_1, 
+                        &cloned_heater_bottom_head_1b, 
+                        &cloned_pipe_18, 
+                        &cloned_pipe_5a, 
+                        &cloned_pipe_26, 
+                        &cloned_pipe_25a, 
+                        &cloned_static_mixer_21_label_25, 
+                        &cloned_dhx_shell_side_pipe_24, 
+                        &cloned_static_mixer_20_label_23, 
+                        &cloned_pipe_23a, 
+                        &cloned_pipe_22, 
+                        &cloned_flowmeter_20_21a, 
+                        &cloned_pipe_21, 
+                        &cloned_pipe_20, 
+                        &cloned_pipe_19, 
+                        &cloned_pipe_17b, 
+                        &cloned_pipe_5b, 
+                        &cloned_static_mixer_41_label_6, 
+                        &cloned_pipe_6a, 
+                        &cloned_ctah_vertical_label_7a, 
+                        &cloned_ctah_horizontal_label_7b, 
+                        &cloned_pipe_8a, 
+                        &cloned_static_mixer_40_label_8, 
+                        &cloned_pipe_9, 
+                        &cloned_pipe_10, 
+                        &cloned_pipe_11, 
+                        &cloned_pipe_12, 
+                        &cloned_ctah_pump, 
+                        &cloned_pipe_13, 
+                        &cloned_pipe_14, 
+                        &cloned_flowmeter_40_14a, 
+                        &cloned_pipe_15, 
+                        &cloned_pipe_16, 
+                        &cloned_pipe_17a);
 
-            let counter_clockwise_dhx_flowrate = dhx_flow;
+                *mass_flow_dhx_br_ptr_clone.lock().unwrap().deref_mut() 
+                    = dhx_flow;
+                *mass_flow_heater_br_ptr_clone.lock().unwrap().deref_mut() 
+                    = heater_flow;
+                *mass_flow_ctah_br_ptr_clone.lock().unwrap().deref_mut() 
+                    = ctah_flow;
+
+
+            }
+            );
+
+
+
+
+            // likely the natural circulation is counter clockwise 
+            // now, set flowrate using the global flowrate first
+            let counter_clockwise_dracs_flowrate = mass_flowrate_dracs_loop_abs;
+            let dhx_flow = mass_flowrate_dhx_br;
+            let heater_flow = mass_flowrate_heater_br;
+            let ctah_flow = mass_flowrate_ctah_br;
             // next, 
             // link up the heat transfer entities 
             // all lateral linking is done except for DHX
@@ -1129,6 +1251,7 @@ pub fn three_branch_ciet_ver3(
                 &mut pipe_17a, &mut top_mixing_node_5a_5b_4, 
                 &mut bottom_mixing_node_17a_17b_18);
 
+
             // for dhx, a little more care is needed to do the 
             // lateral and misc connections and advance timestep 
             // advance timestep
@@ -1137,7 +1260,7 @@ pub fn three_branch_ciet_ver3(
 
             let prandtl_wall_correction_setting = true; 
             let tube_side_total_mass_flowrate = -counter_clockwise_dracs_flowrate;
-            let shell_side_total_mass_flowrate = counter_clockwise_dhx_flowrate;
+            let shell_side_total_mass_flowrate = dhx_flow;
 
             dhx_sthe.lateral_and_miscellaneous_connections(
                 prandtl_wall_correction_setting, 
@@ -1146,13 +1269,18 @@ pub fn three_branch_ciet_ver3(
 
             dhx_sthe.advance_timestep(timestep).unwrap();
 
+            // join the mass flow calculation handles 
+
+            dracs_flowrate_join_handle.join().unwrap();
+            pri_flowrate_join_handle.join().unwrap();
 
 
-            // record 
+            // record and mutate global flowrates
             if current_simulation_time > tchx_temperature_record_time_threshold {
-                final_mass_flowrate_dracs_loop = counter_clockwise_dracs_flowrate;
-                final_mass_flowrate_dhx_br = counter_clockwise_dhx_flowrate;
-                final_mass_flowrate_ctah_br = ctah_flow.abs();
+                mass_flowrate_dracs_loop_abs = *mass_flow_dracs_loop_ptr.lock().unwrap().deref();
+                mass_flowrate_dhx_br = *mass_flow_dhx_br_ptr.lock().unwrap().deref();
+                mass_flowrate_ctah_br = *mass_flow_ctah_br_ptr.lock().unwrap().deref();
+                mass_flowrate_heater_br = *mass_flow_heater_br_ptr.lock().unwrap().deref();
             }
 
             // debugging 
@@ -1229,9 +1357,9 @@ pub fn three_branch_ciet_ver3(
             .get::<degree_celsius>();
         dbg!(&(
                 input_power,
-                final_mass_flowrate_ctah_br,
-                final_mass_flowrate_dhx_br,
-                final_mass_flowrate_dracs_loop,
+                mass_flowrate_ctah_br,
+                mass_flowrate_dhx_br,
+                mass_flowrate_dracs_loop_abs,
                 simulated_heater_avg_surf_temp_degc
         ));
 
@@ -1247,17 +1375,17 @@ pub fn three_branch_ciet_ver3(
         // this asserts the final mass flowrate against experimental flowrate
         approx::assert_relative_eq!(
             experimental_dhx_br_mass_flowrate.get::<kilogram_per_second>(),
-            final_mass_flowrate_dhx_br.get::<kilogram_per_second>(),
+            mass_flowrate_dhx_br.get::<kilogram_per_second>(),
             max_relative=pri_loop_relative_tolerance);
 
         approx::assert_relative_eq!(
             experimental_dracs_mass_flowrate.get::<kilogram_per_second>(),
-            final_mass_flowrate_dracs_loop.get::<kilogram_per_second>(),
+            mass_flowrate_dracs_loop_abs.get::<kilogram_per_second>(),
             max_relative=dracs_loop_relative_tolerance);
 
         approx::assert_relative_eq!(
             experimental_ctah_br_mass_flowrate_kg_per_s,
-            final_mass_flowrate_ctah_br.get::<kilogram_per_second>(),
+            mass_flowrate_ctah_br.get::<kilogram_per_second>().abs(),
             max_relative=dracs_loop_relative_tolerance);
 
         // check heater surface temp to within tolerance 
@@ -1267,12 +1395,12 @@ pub fn three_branch_ciet_ver3(
         // for regression to within 0.1%
         approx::assert_relative_eq!(
             simulated_expected_dhx_br_mass_flowrate_kg_per_s,
-            final_mass_flowrate_dhx_br.get::<kilogram_per_second>(),
+            mass_flowrate_dhx_br.get::<kilogram_per_second>(),
             max_relative=0.001);
 
         approx::assert_relative_eq!(
             simulated_expected_dracs_mass_flowrate_kg_per_s,
-            final_mass_flowrate_dracs_loop.get::<kilogram_per_second>(),
+            mass_flowrate_dracs_loop_abs.get::<kilogram_per_second>(),
             max_relative=0.001);
 
         // also assert heater surface temp to within 0.1%
