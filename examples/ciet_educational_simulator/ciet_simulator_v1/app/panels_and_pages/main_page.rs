@@ -487,7 +487,7 @@ impl CIETApp {
             ui, 
             pipe_25a_vertical, 
             heater_x - 260.0 , 
-            heater_y - 225.0, 
+            heater_y - 255.0, 
             50.0, 
             10.0);
 
@@ -502,7 +502,7 @@ impl CIETApp {
             ui, 
             pipe_25_vertical, 
             heater_x - 260.0 , 
-            heater_y - 125.0, 
+            heater_y - 155.0, 
             150.0, 
             10.0);
 
@@ -518,7 +518,7 @@ impl CIETApp {
             ui, 
             pipe_26_horizontal, 
             heater_x - 190.0 , 
-            heater_y - 240.0, 
+            heater_y - 270.0, 
             120.0, 
             10.0);
 
@@ -533,9 +533,28 @@ impl CIETApp {
             ui, 
             pipe_5a_horizontal, 
             heater_x - 70.0 , 
-            heater_y - 240.0, 
+            heater_y - 270.0, 
             120.0, 
             10.0);
+
+        // mixing nodes
+
+        let button_temp_degc = ciet_state_local.top_mixing_node_5a_5b_4_temp_degc;
+        let top_mixing_node = new_temp_sensitive_button(
+            min_temp_degc, 
+            max_temp_degc, 
+            button_temp_degc, 
+            "");
+
+        self.place_horizontal_widget_with_length(
+            ui, 
+            top_mixing_node, 
+            heater_x, 
+            heater_y - 270.0, 
+            40.0, 
+            1.0);
+
+
 
         // dracs loop
         let button_temp_degc = ciet_state_local.pipe_30a_temp_degc;
