@@ -1,6 +1,6 @@
 use std::{sync::{Arc,Mutex}, thread, time::Duration};
 
-use panels_and_pages::{ciet_data::CIETState, nat_circ_simulation::coupled_dracs_loop_version_7, Panel};
+use panels_and_pages::{ciet_data::CIETState, full_simulation::educational_ciet_loop_version_3, Panel};
 
 
 
@@ -60,7 +60,7 @@ impl CIETApp {
         // now spawn a thread moving in the pointer 
         //
         thread::spawn(move ||{
-            coupled_dracs_loop_version_7(ciet_state_ptr);
+            educational_ciet_loop_version_3(ciet_state_ptr);
         });
 
         new_ciet_app
