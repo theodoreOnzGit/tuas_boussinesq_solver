@@ -345,6 +345,22 @@ impl CIETApp {
             150.0, 
             4.0);
 
+
+        let button_temp_degc = ciet_state_local.bottom_mixing_node_17a_17b_18_temp_degc;
+        let bottom_mixing_node = new_temp_sensitive_button(
+            min_temp_degc, 
+            max_temp_degc, 
+            button_temp_degc, 
+            "");
+
+        self.place_horizontal_widget_with_length(
+            ui, 
+            bottom_mixing_node, 
+            heater_x - 140.0, 
+            heater_y + 290.0, 
+            40.0, 
+            1.0);
+
         // dhx branch
 
         let button_temp_degc = ciet_state_local.pipe_17b_temp_degc;
