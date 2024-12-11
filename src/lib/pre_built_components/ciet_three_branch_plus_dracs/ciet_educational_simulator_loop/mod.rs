@@ -24,3 +24,7 @@ pub use version_1::*;
 /// It runs in a single threaded manner. 
 ///
 pub mod version_2;
+
+/// version 3 adds parallelism to version 2,
+/// hopefully to get it faster
+pub mod version_3;
