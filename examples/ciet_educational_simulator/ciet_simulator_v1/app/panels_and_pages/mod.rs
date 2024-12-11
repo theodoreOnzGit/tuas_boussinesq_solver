@@ -17,8 +17,13 @@ pub mod heater_page;
 
 pub mod ctah_page;
 
-/// page for controlling pumps and valves
+/// page for controlling pumps and valves along the CTAH
 pub mod ctah_pump_page;
+
+/// page for controlling valves along the dhx branch 
+/// and for seeing the DHX more closely
+pub mod dhx_page;
+
 
 pub mod ciet_data;
 
