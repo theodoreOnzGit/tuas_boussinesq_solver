@@ -618,6 +618,132 @@ impl CIETApp {
             240.0, 
             10.0);
 
+        let button_temp_degc = ciet_state_local.pipe_8a_temp_degc;
+        let pipe_8a = new_temp_sensitive_button(
+            min_temp_degc, 
+            max_temp_degc, 
+            button_temp_degc, 
+            "8a");
+
+        self.place_vertical_widget_with_length(
+            ui, 
+            pipe_8a, 
+            ctah_x, 
+            ctah_y + 100.0, 
+            100.0, 
+            10.0);
+
+
+        let button_temp_degc = ciet_state_local.pipe_8_temp_degc;
+        let pipe_8 = new_temp_sensitive_button(
+            min_temp_degc, 
+            max_temp_degc, 
+            button_temp_degc, 
+            "8");
+
+        self.place_vertical_widget_with_length(
+            ui, 
+            pipe_8, 
+            ctah_x, 
+            ctah_y + 200.0, 
+            100.0, 
+            10.0);
+
+
+        let button_temp_degc = ciet_state_local.pipe_9_temp_degc;
+        let pipe_9 = new_temp_sensitive_button(
+            min_temp_degc, 
+            max_temp_degc, 
+            button_temp_degc, 
+            "9");
+
+        self.place_horizontal_widget_with_length(
+            ui, 
+            pipe_9, 
+            ctah_x - 90.0, 
+            ctah_y + 260.0, 
+            200.0, 
+            10.0);
+
+
+        let button_temp_degc = ciet_state_local.pipe_10_temp_degc;
+        let pipe_10 = new_temp_sensitive_button(
+            min_temp_degc, 
+            max_temp_degc, 
+            button_temp_degc, 
+            "10");
+
+        self.place_vertical_widget_with_length(
+            ui, 
+            pipe_10, 
+            ctah_x - 200.0, 
+            ctah_y + 350.0, 
+            200.0, 
+            10.0);
+
+
+        let button_temp_degc = ciet_state_local.pipe_11_temp_degc;
+        let pipe_11 = new_temp_sensitive_button(
+            min_temp_degc, 
+            max_temp_degc, 
+            button_temp_degc, 
+            "11");
+
+        self.place_vertical_widget_with_length(
+            ui, 
+            pipe_11, 
+            ctah_x - 200.0, 
+            ctah_y + 500.0, 
+            100.0, 
+            10.0);
+
+
+        let button_temp_degc = ciet_state_local.pipe_12_temp_degc;
+        let pipe_12 = new_temp_sensitive_button(
+            min_temp_degc, 
+            max_temp_degc, 
+            button_temp_degc, 
+            "12");
+
+        self.place_horizontal_widget_with_length(
+            ui, 
+            pipe_12, 
+            ctah_x - 160.0, 
+            ctah_y + 550.0, 
+            100.0, 
+            10.0);
+
+
+        let button_temp_degc = ciet_state_local.pipe_13_temp_degc;
+        let pipe_13 = new_temp_sensitive_button(
+            min_temp_degc, 
+            max_temp_degc, 
+            button_temp_degc, 
+            "13");
+
+        self.place_horizontal_widget_with_length(
+            ui, 
+            pipe_13, 
+            ctah_x - 160.0, 
+            ctah_y + 630.0, 
+            100.0, 
+            10.0);
+
+
+        let button_temp_degc = ciet_state_local.pipe_14_temp_degc;
+        let pipe_14 = new_temp_sensitive_button(
+            min_temp_degc, 
+            max_temp_degc, 
+            button_temp_degc, 
+            "14");
+
+        self.place_horizontal_widget_with_length(
+            ui, 
+            pipe_14, 
+            ctah_x - 260.0, 
+            ctah_y + 630.0, 
+            100.0, 
+            10.0);
 
 
         // dracs loop
