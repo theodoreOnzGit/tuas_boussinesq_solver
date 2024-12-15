@@ -89,6 +89,8 @@ add a graph
 inlet and outlet temperatures on a graph, 
 csv generator 
 
+also, display current heat transfer coefficient at the surface
+
 - DHX Branch 
 
 DHX should have inlet and outlet temperatures. Plus a full schematic 
@@ -96,6 +98,8 @@ diagram on all its individual temperatures.
 
 Also show flowrates in both loops on a graph
 
+- Dracs loop
+also, display current heat transfer coefficient at the surface
 
 ## Regression, Testing, Validation and Verification
 

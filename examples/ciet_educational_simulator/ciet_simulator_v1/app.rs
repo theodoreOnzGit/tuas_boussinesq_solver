@@ -136,7 +136,9 @@ impl eframe::App for CIETApp {
                 Panel::DHX => {
                     self.ciet_sim_dhx_branch_page(ui);
                 },
-                Panel::TCHX => {},
+                Panel::TCHX => {
+                    self.ciet_sim_tchx_page(ui);
+                },
                 Panel::NodalisedDiagram => {
                     // enables scrolling within the image
                     egui::ScrollArea::both().show(ui, |ui| {
