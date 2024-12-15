@@ -61,6 +61,8 @@ impl CIETApp {
             + &calc_time_ms.to_string();
         let time_display_label = egui::Label::new(time_display_text);
         ui.horizontal(|ui|{
+            // this method sort of has a bug where toggling fast fwd off 
+            // is kind of annoying, but doable
             ui.checkbox(&mut ciet_state_local.fast_forward_settings_turned_on, 
                 "Fast Fowrard");
             ui.add(time_display_label);

@@ -56,7 +56,7 @@ pub fn educational_ciet_loop_version_3(
 
     // controller for tchx 
 
-    let tchx_controller_gain = Ratio::new::<ratio>(90.75);
+    let tchx_controller_gain = Ratio::new::<ratio>(9.75);
     let tchx_integral_time: Time = tchx_controller_gain / Frequency::new::<hertz>(5.0);
     let tchx_derivative_time: Time = Time::new::<second>(1.0);
     // derivative time ratio
@@ -75,7 +75,7 @@ pub fn educational_ciet_loop_version_3(
     tchx_measurement_delay_block.set_dead_time(tchx_measurement_delay);
 
     // controller for ctah
-    let ctah_controller_gain = Ratio::new::<ratio>(90.75);
+    let ctah_controller_gain = Ratio::new::<ratio>(9.75);
     let ctah_integral_time: Time = ctah_controller_gain / Frequency::new::<hertz>(5.0);
     let ctah_derivative_time: Time = Time::new::<second>(1.0);
     // derivative time ratio
@@ -276,6 +276,21 @@ pub fn educational_ciet_loop_version_3(
     calibrate_nusselt_correlation_of_heat_transfer_entity(
         &mut dhx_sthe.shell_side_nusselt_correlation_parasitic, 
         calibrated_parasitic_heat_loss_nusselt_factor);
+    // calibrate nusselt correlation within TCHX, CTAH to high values 
+    // eg 10k.
+
+    let ideal_nusselt_number_for_coolers: NusseltCorrelation = 
+        NusseltCorrelation::FixedNusselt(
+            Ratio::new::<ratio>(500.0));
+
+    tchx_35b_2.calibrate_nusselt_correlation_for_fluid_within_pipe(
+        ideal_nusselt_number_for_coolers);
+
+    ctah_vertical_label_7a.calibrate_nusselt_correlation_for_fluid_within_pipe(
+        ideal_nusselt_number_for_coolers);
+    ctah_horizontal_label_7b.calibrate_nusselt_correlation_for_fluid_within_pipe(
+        ideal_nusselt_number_for_coolers);
+
 
     // for the heater, i also calibrate the Nusselt correlation by 5 times,
     // to prevent the steel from overheating due to high power 
