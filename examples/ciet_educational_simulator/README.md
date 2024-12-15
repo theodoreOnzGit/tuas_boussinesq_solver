@@ -24,7 +24,8 @@ parallel
 - Should solution time be too slow for certain timesteps, then I want 
 the thread not to sleep too long so that the simulation can speed up. 
 So that means if elapsed time is more than simulation time, do not allow 
-thread sleep so that the simulation can be in real-time.
+thread sleep so that the simulation can be in real-time. This makes it 
+more palatable for slower computers.
 
 
 
@@ -44,7 +45,9 @@ to the Nusselt numbers within the pipe representing CTAH or TCHX is
 partly to blame. Hence, need to increase nusselt numbers within the CTAH/TCHX 
 pipings, and readjust PID controllers.
 
-
+- DRACS loop flowrates currently can only be simulated one way because 
+I used absolute flowrates. This is a simplification that made coding easier.
+This should change to be able to simulate negative flowrates. 
 
 
 ## User Interface and User Experience (UI and UX)
@@ -60,7 +63,7 @@ use a radio button rather than a toggle button
 This is because, the simulator won't work for resolutions other than 
 1920 x 1080.
 
-- spelling error in title
+- spelling error in title "Ciet Simualtorv1"
 
 
 ## Features
@@ -74,15 +77,39 @@ should have a csv file generator, so that I can take perhaps the last
 500s worth of data. (at least) Can improve in future to make it user 
 customisable
 
+- CTAH pump page 
+
+Just inlet and outlet temperatures (pipe 12 and 13) nothing too interesting 
+to display here. 
+
+add a graph
+
+- CTAH page 
+
+inlet and outlet temperatures on a graph, 
+csv generator 
+
+- DHX Branch 
+
+DHX should have inlet and outlet temperatures. Plus a full schematic 
+diagram on all its individual temperatures.
+
+Also show flowrates in both loops on a graph
+
 
 ## Regression, Testing, Validation and Verification
 
 
-## forced circulation 
+### forced circulation 
 
 - mesh refinement study for heater transient using Zweibaum's expt data (roughly using graph reader)
 - validation for natural circulation 
 - frequency response testing using (De Wet's Bode Plots)
+
+### Natural circulation and startup
+
+Need to analyse Zweibaum's experimental data around the loop for best 
+results.
 
 
 # For the future 
