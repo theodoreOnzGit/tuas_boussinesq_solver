@@ -53,6 +53,7 @@ log = "0.4"
 # You only need serde if you want app persistence:
 serde = { version = "1", features = ["derive"] }
 egui_extras = { version = "*", features = ["all_loaders"] }
+egui_plot = "0.29.0"
 image = { version = "0.25", features = ["jpeg", "png"] } # Add the types you want support for
 uom = "0.36.0"
 

@@ -1,4 +1,5 @@
 
+use egui_plot::{Legend, Line, Plot, PlotPoints};
 use std::f32::consts::TAU;
 
 use egui::{include_image, vec2, Color32, Frame, Painter, Pos2, Rect, Sense, Stroke, TextStyle, Ui, Vec2};
