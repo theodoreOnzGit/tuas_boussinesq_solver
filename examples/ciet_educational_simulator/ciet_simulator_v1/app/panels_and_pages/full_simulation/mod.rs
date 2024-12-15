@@ -1568,6 +1568,15 @@ pub fn educational_ciet_loop_version_3(
         let overall_simulation_in_realtime_or_faster: bool = 
             simulation_time_seconds > elapsed_time_seconds;
 
+        // also if fast fwd button is on, i want the simulation to be at 
+        // least a number of times the real speed. here is 1.3 for 
+        // example 
+
+        let fast_fwd_button_speedup_factor: f64 = 1.3;
+
+        let overall_simulation_has_min_fast_fwd_speed = 
+            simulation_time_seconds > (fast_fwd_button_speedup_factor * elapsed_time_seconds);
+
         // now update the ciet state 
         let loop_time_end = loop_time.elapsed().unwrap();
         let time_taken_for_calculation_loop_milliseconds: f64 = 
@@ -1591,6 +1600,8 @@ pub fn educational_ciet_loop_version_3(
         let real_time_in_current_timestep: bool = 
             time_to_sleep_milliseconds > 1;
 
+        
+
 
         global_ciet_state_ptr.lock().unwrap().overwrite_state(
             local_ciet_state);
@@ -1607,15 +1618,15 @@ pub fn educational_ciet_loop_version_3(
         if real_time_in_current_timestep && overall_simulation_in_realtime_or_faster
             && !fast_forward_button_on {
             thread::sleep(time_to_sleep);
-        } else if real_time_in_current_timestep && overall_simulation_in_realtime_or_faster 
+        } else if real_time_in_current_timestep && overall_simulation_has_min_fast_fwd_speed 
             && fast_forward_button_on {
             // though with fast forward on, it can be very hard 
             // to toggle off the fast forward setting due to 
             // the shared state issue 
             // I won't sleep so much in this case
-            // just maybe 30 ms max
+            // just maybe 40 ms max
                 let time_to_sleep: Duration = 
-                    Duration::from_millis(10);
+                    Duration::from_millis(50);
                 thread::sleep(time_to_sleep);
 
         }
