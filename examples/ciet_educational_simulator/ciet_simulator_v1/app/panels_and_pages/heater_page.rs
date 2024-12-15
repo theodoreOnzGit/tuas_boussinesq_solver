@@ -11,55 +11,68 @@ impl CIETApp {
 
     pub fn ciet_sim_heater_page(&mut self, ui: &mut Ui){
 
-
-
-        Frame::canvas(ui.style()).show(ui, |ui| {
-            self.ui_content(ui);
+        ui.horizontal(|ui| {
+            ui.label("Heater Page");
         });
+        ui.separator();
+        ui.separator();
 
-        // painting image over whatever is in the ui
-        let rect: Rect = Rect {
-            // top left
-            min: Pos2 { x: 350.5, y: 350.5 },
-            // bottom right
-            max: Pos2 { x: 550.5, y: 500.5 },
-        };
-        //let rect = egui::Rect::from_min_size(Default::default(), egui::Vec2::splat(100.0));
-        //let _ferris = egui::Image::new(include_image!("../../ferris.png"))
-        //    .rounding(5.0)
-        //    .paint_at(ui, rect);
-        // now I'd like to paint widgets too, at specific spots, so as to show values of 
-        // the temperature values in and out next to the picture of the 
-        // heater
-        let _ferris2 = egui::Image::new(include_image!("../../ferris.png"))
-            .rounding(5.0);
+        // first, get local ciet state for reading only 
 
-        ui.add(
-            egui::Slider::new(&mut self.value, 0.0..=100.0)
+        let local_ciet_state = self.ciet_state.lock().unwrap().clone();
+
+
+        egui::ScrollArea::both().show(ui, |ui| {
+
+
+            Frame::canvas(ui.style()).show(ui, |ui| {
+                self.semicircle_drawing(ui);
+            });
+
+            // painting image over whatever is in the ui
+            let rect: Rect = Rect {
+                // top left
+                min: Pos2 { x: 350.5, y: 350.5 },
+                // bottom right
+                max: Pos2 { x: 550.5, y: 500.5 },
+            };
+            //let rect = egui::Rect::from_min_size(Default::default(), egui::Vec2::splat(100.0));
+            //let _ferris = egui::Image::new(include_image!("../../ferris.png"))
+            //    .rounding(5.0)
+            //    .paint_at(ui, rect);
+            // now I'd like to paint widgets too, at specific spots, so as to show values of 
+            // the temperature values in and out next to the picture of the 
+            // heater
+            let _ferris2 = egui::Image::new(include_image!("../../ferris.png"))
+                .rounding(5.0);
+
+            ui.add(
+                egui::Slider::new(&mut self.value, 0.0..=100.0)
             );
 
-        let rect_two: Rect = Rect {
-            // top left
-            min: Pos2 { x: 300.5, y: 350.5 },
-            // bottom right
-            max: Pos2 { x: 550.5, y: 500.5 },
-        };
+            let rect_two: Rect = Rect {
+                // top left
+                min: Pos2 { x: 300.5, y: 350.5 },
+                // bottom right
+                max: Pos2 { x: 550.5, y: 500.5 },
+            };
 
-        let slider_vert = egui::Slider::new(
-            &mut self.value, 0.0..=100.0)
-            .vertical();
+            let slider_vert = egui::Slider::new(
+                &mut self.value, 0.0..=100.0)
+                .vertical();
 
-        ui.put(rect_two, slider_vert);
-        
-        // it seems images can also be widgets
-        // it may be easier/more consistent to do things like that
-        let _ferris2 = egui::Image::new(include_image!("../../ferris.png"))
-            .rounding(5.0);
+            ui.put(rect_two, slider_vert);
 
-        ui.put(rect, _ferris2);
+            // it seems images can also be widgets
+            // it may be easier/more consistent to do things like that
+            let _ferris2 = egui::Image::new(include_image!("../../ferris.png"))
+                .rounding(5.0);
+
+            ui.put(rect, _ferris2);
+        });
     }
 
-    fn ui_content(&mut self,ui: &mut Ui,) -> egui::Response {
+    fn semicircle_drawing(&mut self,ui: &mut Ui,) -> egui::Response {
 
         let size = Vec2::splat(160.0);
         //let (mut response, painter) =
