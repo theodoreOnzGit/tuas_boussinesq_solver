@@ -1,6 +1,6 @@
 use std::{ops::{Deref, DerefMut}, sync::{Arc, Mutex}, thread, time::{Duration, SystemTime}};
 
-use tuas_boussinesq_solver::{boussinesq_thermophysical_properties::LiquidMaterial, pre_built_components::ciet_three_branch_plus_dracs::{components::{new_active_ctah_horizontal, new_active_ctah_vertical}, solver_functions::{ciet_pri_loop_three_branch_link_up_components, pri_loop_three_branch_advance_timestep_except_dhx, three_branch_pri_loop_flowrates}}, prelude::beta_testing::HeatTransferEntity, single_control_vol::SingleCVNode};
+use tuas_boussinesq_solver::{boussinesq_thermophysical_properties::LiquidMaterial, pre_built_components::ciet_three_branch_plus_dracs::{components::{new_active_ctah_horizontal, new_active_ctah_vertical}, solver_functions::{ciet_pri_loop_three_branch_link_up_components, pri_loop_three_branch_advance_timestep_except_dhx, three_branch_pri_loop_flowrates, three_branch_pri_loop_flowrates_parallel}}, prelude::beta_testing::HeatTransferEntity, single_control_vol::SingleCVNode};
 use uom::si::{mass_rate::kilogram_per_second, power::kilowatt, pressure::{atmosphere, pascal}};
 
 use super::ciet_data::CIETState;
@@ -728,7 +728,7 @@ pub fn educational_ciet_loop_version_3(
             // flow should go from up to down
             // this was tested ok
             let (dhx_flow, heater_flow, ctah_flow) = 
-                three_branch_pri_loop_flowrates(
+                three_branch_pri_loop_flowrates_parallel(
                     pump_pressure, 
                     ctah_branch_blocked, 
                     dhx_branch_blocked, 

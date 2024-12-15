@@ -25,7 +25,7 @@ parallel
 the thread not to sleep too long so that the simulation can speed up. 
 So that means if elapsed time is more than simulation time, do not allow 
 thread sleep so that the simulation can be in real-time. This makes it 
-more palatable for slower computers. (done, but needs testing)
+more palatable for slower computers. (done, fast fwd button does reasonably well)
 
 
 
@@ -52,9 +52,9 @@ This should change to be able to simulate negative flowrates.
 
 ## User Interface and User Experience (UI and UX)
 
-- Pipe 5b is not crossing well with the top mixing node. adjust please
-
 - fast forward button, toggle on and off (done)
+
+- Pipe 5b is not crossing well with the top mixing node. adjust please
 
 - branch blocking should be on the main page. perhaps it makes it easier?
 use a radio button rather than a toggle button
