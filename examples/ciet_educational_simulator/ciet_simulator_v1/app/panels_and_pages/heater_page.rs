@@ -34,7 +34,6 @@ impl CIETApp {
 
             // get a text button first
             // have a horizontal ui portion
-            ui.label("Time (s), Heater Power (kW), BT-11 Inlet (degC), BT-12 Outlet (degC)");
             ui.horizontal(|ui|{
                 // get a button called obtain ciet data
                 if ui.button("Update CIET Heater CSV Data").clicked(){
@@ -52,6 +51,8 @@ impl CIETApp {
 
             });
             ui.vertical(|ui|{
+
+                ui.label("Time (s), Heater Power (kW), BT-11 Inlet (degC), BT-12 Outlet (degC)");
                 latest_heater_data.map(|data_tuple|{
                     let (time, power, bt11, bt12) = 
                         data_tuple;
@@ -67,13 +68,17 @@ impl CIETApp {
                     let bt12_degc: f64 = 
                         (bt12.get::<degree_celsius>()*1000.0).round()/1000.0;
 
+                    
                     let heater_data_row: String = 
                         time_seconds.to_string() + ","
                         + &power_kw.to_string() + ","
                         + &bt11_degc.to_string() + ","
                         + &bt12_degc.to_string() + "," ;
 
-                    ui.label(heater_data_row);
+                    // only add the label if heater time is not equal zero 
+                    if time_seconds.round() as u32 != 0 {
+                        ui.label(heater_data_row);
+                    }
 
 
                 });
