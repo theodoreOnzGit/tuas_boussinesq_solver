@@ -177,8 +177,8 @@ pub fn update_ciet_plot_from_ciet_state(
         *ciet_plot_ptr.lock().unwrap().deref_mut()
             = local_ciet_plot;
 
-        // historian records every 400ms 
-        std::thread::sleep(Duration::from_millis(400));
+        // historian records every 220ms 
+        std::thread::sleep(Duration::from_millis(220));
     }
 
 }
