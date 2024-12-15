@@ -18,7 +18,7 @@
 it is basically check the three branch flow version first. If the 
 mass flowrate in DHX branch is in opposite direction, then recalculate 
 the two branch version. Done serially, it's kind of slow. Do it in 
-parallel 
+parallel (implemented, and doesn't look wrong at least from the GUI)
 
 
 - Should solution time be too slow for certain timesteps, then I want 
