@@ -78,6 +78,9 @@ should have a csv file generator, so that I can take perhaps the last
 500s worth of data. (at least) Can improve in future to make it user 
 customisable
 
+(part done, have 200s worth of data every 400 ms collected, text 
+is not really copy-able though, not user friendly)
+
 - CTAH pump page 
 
 Just inlet and outlet temperatures (pipe 12 and 13) nothing too interesting 
