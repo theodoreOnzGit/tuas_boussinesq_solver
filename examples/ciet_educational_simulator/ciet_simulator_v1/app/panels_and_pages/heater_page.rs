@@ -24,7 +24,7 @@ impl CIETApp {
         // first, get local plot page for reading only 
 
         let local_ciet_plot: PagePlotData = 
-            self.ciet_plot_data.lock().unwrap().clone();
+            self.ciet_plot_data;
 
         let mut latest_heater_data: [(Time,Power,ThermodynamicTemperature,ThermodynamicTemperature); 500] = 
             local_ciet_plot.heater_plot_data;
@@ -37,12 +37,14 @@ impl CIETApp {
             ui.label("Time (s), Heater Power (kW), BT-11 Inlet (degC), BT-12 Outlet (degC)");
             ui.horizontal(|ui|{
                 // get a button called obtain ciet data
-                if ui.button("Get CIET Heater CSV Data").clicked(){
+                if ui.button("Update CIET Heater CSV Data").clicked(){
                     // spawn a new window with csv data
-                    let local_ciet_plot: PagePlotData = 
-                        self.ciet_plot_data.lock().unwrap().clone();
+                    let latest_ciet_plot_data: PagePlotData = 
+                        self.ciet_plot_data_mutex_ptr_for_parallel_data_transfer.lock().unwrap().clone();
 
-                    latest_heater_data = local_ciet_plot.heater_plot_data;
+                    self.ciet_plot_data = latest_ciet_plot_data;
+                    latest_heater_data = latest_ciet_plot_data.heater_plot_data;
+
 
 
                 };

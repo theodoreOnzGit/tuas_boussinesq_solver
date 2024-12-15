@@ -20,8 +20,14 @@ pub struct CIETApp {
     ciet_state: Arc<Mutex<CIETState>>,
 
     // we also need plot data here 
+    // this is for the data to be transferred between threads
     #[serde(skip)]
-    ciet_plot_data: Arc<Mutex<PagePlotData>>,
+    ciet_plot_data_mutex_ptr_for_parallel_data_transfer: Arc<Mutex<PagePlotData>>,
+
+    // this is for direct use in plots 
+    #[serde(skip)]
+    ciet_plot_data: PagePlotData,
+
 }
 
 pub mod panels_and_pages;
@@ -40,7 +46,9 @@ impl Default for CIETApp {
             value: 3.6,
             open_panel: Panel::MainPage,
             ciet_state,
-            ciet_plot_data
+            ciet_plot_data_mutex_ptr_for_parallel_data_transfer: ciet_plot_data,
+            ciet_plot_data: PagePlotData::default(),
+
         }
     }
 }
@@ -72,7 +80,7 @@ impl CIETApp {
         // I'll also clone the pointer and start a thread
         // this contains arrays with historical data
         let ciet_plot_ptr: Arc<Mutex<PagePlotData>> = 
-            new_ciet_app.ciet_plot_data.clone();
+            new_ciet_app.ciet_plot_data_mutex_ptr_for_parallel_data_transfer.clone();
 
         // now spawn a thread moving in the pointer 
         //
