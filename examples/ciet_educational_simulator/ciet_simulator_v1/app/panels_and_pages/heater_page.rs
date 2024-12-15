@@ -1,10 +1,8 @@
 
 use egui_plot::{Legend, Line, Plot, PlotPoints};
 use uom::si::{f64::*, power::kilowatt, thermodynamic_temperature::{degree_celsius, kelvin}, time::second};
-use std::f32::consts::TAU;
 
-use egui::{include_image, vec2, Color32, Frame, Painter, Pos2, Rect, Sense, Stroke, TextStyle, Ui, Vec2};
-use egui_extras::{Size, StripBuilder};
+use egui::{vec2, Color32, Sense, Stroke, Ui, Vec2};
 
 
 use crate::ciet_simulator_v1::CIETApp;
@@ -20,7 +18,7 @@ impl CIETApp {
         let local_ciet_plot: PagePlotData = 
             self.ciet_plot_data;
 
-        let mut latest_heater_data: [(Time,Power,ThermodynamicTemperature,ThermodynamicTemperature); 500] = 
+        let latest_heater_data: [(Time,Power,ThermodynamicTemperature,ThermodynamicTemperature); 500] = 
             local_ciet_plot.heater_plot_data;
 
         // left panel
@@ -96,8 +94,8 @@ impl CIETApp {
 
             // sets the aspect for plot 
             bt11_bt12_temp_plot = bt11_bt12_temp_plot.width(800.0);
-            bt11_bt12_temp_plot = bt11_bt12_temp_plot.view_aspect(16.0/9.0);
-            bt11_bt12_temp_plot = bt11_bt12_temp_plot.data_aspect(2.5);
+            //bt11_bt12_temp_plot = bt11_bt12_temp_plot.view_aspect(16.0/9.0);
+            //bt11_bt12_temp_plot = bt11_bt12_temp_plot.data_aspect(2.5);
             // deprecated methods
             //bt11_bt12_temp_plot = bt11_bt12_temp_plot.auto_bounds_x();
             //bt11_bt12_temp_plot = bt11_bt12_temp_plot.auto_bounds_y();
@@ -153,10 +151,45 @@ impl CIETApp {
                 //            time_simulated_reactor_feedback_outlet_temp_vec.clone()
                 //)).name("simulated reactivity bt12 (heater outlet) temperature deg C"));
             });
+
+
+            let time_heater_power_vec: Vec<[f64;2]> = latest_heater_data.iter().map(
+                |tuple|{
+                    let (time,power,bt11,_bt12) = *tuple;
+
+                    if bt11.get::<kelvin>() > 0.0 {
+                        [time.get::<second>(),power.get::<kilowatt>()]
+                    } else {
+                        // don't return anything, a default 0.0 will do 
+                        // this is the initial condition
+                        [0.0,0.0]
+                    }
+
+                }
+            ).collect();
+
+            ui.separator();
+            let mut power_plot = Plot::new("heater power plot").legend(Legend::default());
+
+            // sets the aspect for plot 
+            power_plot = power_plot.width(800.0);
+            //power_plot = power_plot.view_aspect(16.0/9.0);
+            //power_plot = power_plot.data_aspect(2.5);
+
+            power_plot = power_plot.x_axis_label(
+                "time (seconds)");
+            power_plot = power_plot.y_axis_label(
+                "heater power (kW)".to_owned());
+            power_plot.show(ui, |plot_ui| {
+                plot_ui.line(Line::new(PlotPoints::from(
+                            time_heater_power_vec
+                )).name("Heater Power (kW)"));
+            });
+
         });
 
 
-
+ 
 
 
     }
