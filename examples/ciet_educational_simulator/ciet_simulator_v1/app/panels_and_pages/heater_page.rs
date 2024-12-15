@@ -94,7 +94,7 @@ impl CIETApp {
 
             // sets the aspect for plot 
             bt11_bt12_temp_plot = bt11_bt12_temp_plot.width(800.0);
-            //bt11_bt12_temp_plot = bt11_bt12_temp_plot.view_aspect(16.0/9.0);
+            bt11_bt12_temp_plot = bt11_bt12_temp_plot.view_aspect(16.0/9.0);
             //bt11_bt12_temp_plot = bt11_bt12_temp_plot.data_aspect(2.5);
             // deprecated methods
             //bt11_bt12_temp_plot = bt11_bt12_temp_plot.auto_bounds_x();
@@ -173,7 +173,7 @@ impl CIETApp {
 
             // sets the aspect for plot 
             power_plot = power_plot.width(800.0);
-            //power_plot = power_plot.view_aspect(16.0/9.0);
+            power_plot = power_plot.view_aspect(16.0/9.0);
             //power_plot = power_plot.data_aspect(2.5);
 
             power_plot = power_plot.x_axis_label(
