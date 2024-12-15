@@ -18,7 +18,7 @@
 it is basically check the three branch flow version first. If the 
 mass flowrate in DHX branch is in opposite direction, then recalculate 
 the two branch version. Done serially, it's kind of slow. Do it in 
-parallel (implemented, and doesn't look wrong at least from the GUI)
+parallel (done, and at least doesn't look wrong at least from the GUI)
 
 
 - Should solution time be too slow for certain timesteps, then I want 
@@ -43,7 +43,7 @@ has this capability. Or has this research been done? Perhaps can show novelty?
 cooling response is rather slow. I suspect the thermal resistance due 
 to the Nusselt numbers within the pipe representing CTAH or TCHX is 
 partly to blame. Hence, need to increase nusselt numbers within the CTAH/TCHX 
-pipings, and readjust PID controllers.
+pipings, and readjust PID controllers. (Done)
 
 - DRACS loop flowrates currently can only be simulated one way because 
 I used absolute flowrates. This is a simplification that made coding easier.
@@ -65,6 +65,7 @@ This is because, the simulator won't work for resolutions other than
 
 - spelling error in title "Ciet Simualtorv1"
 
+- colour scheme legend. Also, cool colours can be not cyan, maybe more blue
 
 ## Features
 

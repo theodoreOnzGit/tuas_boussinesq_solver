@@ -101,7 +101,7 @@ impl eframe::App for CIETApp {
                     ui.selectable_value(&mut self.open_panel, Panel::Heater, "Heater"); 
                     ui.selectable_value(&mut self.open_panel, Panel::CTAH, "CTAH"); 
                     ui.selectable_value(&mut self.open_panel, Panel::CTAHPump, "CTAH Pump"); 
-                    ui.selectable_value(&mut self.open_panel, Panel::TCHX, "TCHX"); 
+                    ui.selectable_value(&mut self.open_panel, Panel::TCHX, "TCHX and DRACS Loop"); 
                     ui.selectable_value(&mut self.open_panel, Panel::DHX, "DHX Branch"); 
                     ui.selectable_value(&mut self.open_panel, Panel::SchematicDiagram, "CIET Schematic Diagram"); 
                     ui.selectable_value(&mut self.open_panel, Panel::NodalisedDiagram, "CIET NodalisedDiagram Diagram"); 
@@ -151,8 +151,8 @@ impl eframe::App for CIETApp {
 
 
             ui.add(egui::github_link_file!(
-                "https://github.com/theodoreOnzGit/outram-park-backend/blob/develop/",
-                "outram-park-backend Github Repo (develop)"
+                "https://github.com/theodoreOnzGit/tuas_boussinesq_solver/blob/develop/",
+                "TUAS Github Repo (develop)"
             ));
 
             ui.with_layout(egui::Layout::bottom_up(egui::Align::LEFT), |ui| {
