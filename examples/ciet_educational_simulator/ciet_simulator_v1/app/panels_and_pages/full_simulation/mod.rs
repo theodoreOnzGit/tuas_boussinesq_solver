@@ -286,6 +286,8 @@ pub fn educational_ciet_loop_version_3(
     tchx_35b_2.calibrate_nusselt_correlation_for_fluid_within_pipe(
         ideal_nusselt_number_for_coolers);
 
+    ctah_vertical_label_7a.calibrate_nusselt_correlation_for_fluid_within_pipe(
+        ideal_nusselt_number_for_coolers);
     ctah_horizontal_label_7b.calibrate_nusselt_correlation_for_fluid_within_pipe(
         ideal_nusselt_number_for_coolers);
 
