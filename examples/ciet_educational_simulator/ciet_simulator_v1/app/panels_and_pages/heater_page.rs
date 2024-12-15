@@ -26,17 +26,6 @@ impl CIETApp {
         // left panel
         egui::ScrollArea::both().show(ui, |ui| {
 
-            if ui.button("Update CIET Heater CSV Data").clicked(){
-                // spawn a new window with csv data
-                let latest_ciet_plot_data: PagePlotData = 
-                    self.ciet_plot_data_mutex_ptr_for_parallel_data_transfer.lock().unwrap().clone();
-
-                self.ciet_plot_data = latest_ciet_plot_data;
-                latest_heater_data = latest_ciet_plot_data.heater_plot_data;
-
-
-
-            };
 
 
             ui.label("Time (s), Heater Power (kW), BT-11 Inlet (degC), BT-12 Outlet (degC)");
@@ -79,6 +68,14 @@ impl CIETApp {
 
         ui.horizontal(|ui| {
             ui.label("Heater Page");
+            if ui.button("Update CIET Heater CSV Data").clicked(){
+                // spawn a new window with csv data
+                let latest_ciet_plot_data: PagePlotData = 
+                    self.ciet_plot_data_mutex_ptr_for_parallel_data_transfer.lock().unwrap().clone();
+
+                self.ciet_plot_data = latest_ciet_plot_data;
+
+            };
         });
         ui.separator();
         ui.separator();
