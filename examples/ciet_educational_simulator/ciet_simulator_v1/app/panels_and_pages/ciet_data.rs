@@ -338,3 +338,85 @@ impl CIETState {
 
 }
 
+use uom::{si::f64::*, ConstZero};
+
+/// this is the struct used to store data for graph plotting and 
+/// csv extraction
+/// have to lock this in an Arc Mutex pointer for parallelism
+#[derive(Debug,Clone,Copy)]
+pub struct PagePlotData {
+    /// the heater data here is a tuple, 
+    ///
+    /// simulation time, heater power, inlet temp and outlet temp
+    pub heater_plot_data: [(Time,Power,ThermodynamicTemperature,ThermodynamicTemperature); 500],
+}
+
+
+impl PagePlotData {
+
+    /// inserts a data point, most recent being on top 
+    pub fn insert_heater_data(&mut self, 
+        simulation_time: Time,
+        heater_power: Power,
+        inlet_temp_bt11: ThermodynamicTemperature,
+        outlet_temp_bt12: ThermodynamicTemperature){
+
+        // first convert into a tuple,
+
+        let data_tuple = 
+            (simulation_time,heater_power,
+             inlet_temp_bt11,outlet_temp_bt12);
+
+        // now insert this into the heater
+        // how?
+        // map the vectors out first 
+        let mut current_heater_data_vec: Vec< (Time,Power,
+            ThermodynamicTemperature,ThermodynamicTemperature)>;
+
+        current_heater_data_vec = self.heater_plot_data.iter().map(|&values|{
+            values
+        }).collect();
+
+        // now, insert the latest data at the top
+        current_heater_data_vec.insert(0, data_tuple);
+
+        // take the first 500 pieces as a fixed size array 
+        // which is basically the array size
+
+        let mut new_array_to_be_put_back: [(Time,Power,
+            ThermodynamicTemperature,ThermodynamicTemperature); 500] = 
+            [ (Time::ZERO, Power::ZERO, 
+             ThermodynamicTemperature::ZERO,
+             ThermodynamicTemperature::ZERO); 500
+            ];
+
+        // map the first 500 values of the current heater data vec
+        
+        for n in 0..500 {
+            new_array_to_be_put_back[n] = current_heater_data_vec[n];
+        }
+
+        self.heater_plot_data = new_array_to_be_put_back;
+
+    }
+}
+
+impl Default for PagePlotData {
+    fn default() -> Self {
+
+        // basically a whole array of dimensioned zeroes
+        let heater_data_default = 
+            [ (Time::ZERO, Power::ZERO, 
+             ThermodynamicTemperature::ZERO,
+             ThermodynamicTemperature::ZERO); 500
+            ];
+
+
+        Self { 
+            // first, a blank dataset
+            heater_plot_data: heater_data_default,
+
+        }
+    }
+}
+
