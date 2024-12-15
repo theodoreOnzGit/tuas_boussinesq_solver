@@ -43,7 +43,8 @@ has this capability. Or has this research been done? Perhaps can show novelty?
 cooling response is rather slow. I suspect the thermal resistance due 
 to the Nusselt numbers within the pipe representing CTAH or TCHX is 
 partly to blame. Hence, need to increase nusselt numbers within the CTAH/TCHX 
-pipings, and readjust PID controllers. (Done)
+pipings, and readjust PID controllers. (Done, but CTAH needs debugging, 
+needs to look more)
 
 - DRACS loop flowrates currently can only be simulated one way because 
 I used absolute flowrates. This is a simplification that made coding easier.
