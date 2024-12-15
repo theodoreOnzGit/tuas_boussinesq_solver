@@ -279,17 +279,21 @@ pub fn educational_ciet_loop_version_3(
     // calibrate nusselt correlation within TCHX, CTAH to high values 
     // eg 10k.
 
-    let ideal_nusselt_number_for_coolers: NusseltCorrelation = 
+    let ideal_nusselt_number_for_tchx: NusseltCorrelation = 
         NusseltCorrelation::FixedNusselt(
             Ratio::new::<ratio>(500.0));
 
+    let ideal_nusselt_number_for_ctah: NusseltCorrelation = 
+        NusseltCorrelation::FixedNusselt(
+            Ratio::new::<ratio>(100.0));
+
     tchx_35b_2.calibrate_nusselt_correlation_for_fluid_within_pipe(
-        ideal_nusselt_number_for_coolers);
+        ideal_nusselt_number_for_tchx);
 
     ctah_vertical_label_7a.calibrate_nusselt_correlation_for_fluid_within_pipe(
-        ideal_nusselt_number_for_coolers);
+        ideal_nusselt_number_for_ctah);
     ctah_horizontal_label_7b.calibrate_nusselt_correlation_for_fluid_within_pipe(
-        ideal_nusselt_number_for_coolers);
+        ideal_nusselt_number_for_ctah);
 
 
     // for the heater, i also calibrate the Nusselt correlation by 5 times,
@@ -597,7 +601,7 @@ pub fn educational_ciet_loop_version_3(
             // make sure it cannot be less than a certain amount 
             let ctah_minimum_heat_transfer = 
                 HeatTransfer::new::<watt_per_square_meter_kelvin>(
-                    1.0);
+                    5.0);
 
             // this makes it physically realistic
             if ctah_heat_trf_output < ctah_minimum_heat_transfer {
