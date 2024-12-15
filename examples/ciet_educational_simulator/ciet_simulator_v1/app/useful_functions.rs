@@ -1,4 +1,4 @@
-use std::{sync::{Arc, Mutex}, time::Duration};
+use std::{ops::DerefMut, sync::{Arc, Mutex}, time::Duration};
 
 use super::{panels_and_pages::ciet_data::{CIETState, PagePlotData}, CIETApp};
 
@@ -139,40 +139,46 @@ pub fn update_ciet_plot_from_ciet_state(
     ciet_plot_ptr: Arc<Mutex<PagePlotData>>){
 
     // get current ciet state first 
+    loop {
 
-    let local_ciet_state: CIETState = 
-        ciet_state_ptr.lock().unwrap().clone();
+        let local_ciet_state: CIETState = 
+            ciet_state_ptr.lock().unwrap().clone();
 
-    // get the current plot object
-    let mut local_ciet_plot: PagePlotData = 
-        ciet_plot_ptr.lock().unwrap().clone();
+        // get the current plot object
+        let mut local_ciet_plot: PagePlotData = 
+            ciet_plot_ptr.lock().unwrap().clone();
 
-    // let's get the heater data 
+        // let's get the heater data 
 
-    {
-        let current_time: Time = Time::new::<second>(
+        {
+            let current_time: Time = Time::new::<second>(
                 local_ciet_state.simulation_time_seconds);
 
-        let heater_power: Power = 
-            Power::new::<kilowatt>(
-                local_ciet_state.heater_power_kilowatts);
+            let heater_power: Power = 
+                Power::new::<kilowatt>(
+                    local_ciet_state.heater_power_kilowatts);
 
-        let inlet_temp_bt11: ThermodynamicTemperature = 
-            ThermodynamicTemperature::new::<degree_celsius>(
-                local_ciet_state.get_heater_inlet_temp_degc()
-            );
-        let outlet_temp_bt12: ThermodynamicTemperature = 
-            ThermodynamicTemperature::new::<degree_celsius>(
-                local_ciet_state.get_heater_outlet_temp_degc()
-            );
+            let inlet_temp_bt11: ThermodynamicTemperature = 
+                ThermodynamicTemperature::new::<degree_celsius>(
+                    local_ciet_state.get_heater_inlet_temp_degc()
+                );
+            let outlet_temp_bt12: ThermodynamicTemperature = 
+                ThermodynamicTemperature::new::<degree_celsius>(
+                    local_ciet_state.get_heater_outlet_temp_degc()
+                );
 
-        local_ciet_plot.insert_heater_data(
-            current_time, heater_power, 
-            inlet_temp_bt11, 
-            outlet_temp_bt12);
+            local_ciet_plot.insert_heater_data(
+                current_time, heater_power, 
+                inlet_temp_bt11, 
+                outlet_temp_bt12);
+        }
+
+        // update the plot
+        *ciet_plot_ptr.lock().unwrap().deref_mut()
+            = local_ciet_plot;
+
+        // historian records every 400ms 
+        std::thread::sleep(Duration::from_millis(400));
     }
-
-    // historian records every 400ms 
-    std::thread::sleep(Duration::from_millis(400));
 
 }

@@ -1,9 +1,11 @@
 
 use egui_plot::{Legend, Line, Plot, PlotPoints};
+use uom::si::{f64::*, power::kilowatt, thermodynamic_temperature::degree_celsius, time::second};
 use std::f32::consts::TAU;
 
 use egui::{include_image, vec2, Color32, Frame, Painter, Pos2, Rect, Sense, Stroke, TextStyle, Ui, Vec2};
 use egui_extras::{Size, StripBuilder};
+
 
 use crate::ciet_simulator_v1::CIETApp;
 
@@ -24,63 +26,57 @@ impl CIETApp {
         let local_ciet_plot: PagePlotData = 
             self.ciet_plot_data.lock().unwrap().clone();
 
+        let mut latest_heater_data: [(Time,Power,ThermodynamicTemperature,ThermodynamicTemperature); 500] = 
+            local_ciet_plot.heater_plot_data;
+
 
         egui::ScrollArea::both().show(ui, |ui| {
 
+            // get a text button first
             // have a horizontal ui portion
+            ui.label("Time (s), Heater Power (kW), BT-11 Inlet (degC), BT-12 Outlet (degC)");
             ui.horizontal(|ui|{
                 // get a button called obtain ciet data
                 if ui.button("Get CIET Heater CSV Data").clicked(){
                     // spawn a new window with csv data
-                    // or just display the current updated data
+                    let local_ciet_plot: PagePlotData = 
+                        self.ciet_plot_data.lock().unwrap().clone();
 
-                }
+                    latest_heater_data = local_ciet_plot.heater_plot_data;
+
+
+                };
+
+
+            });
+            ui.vertical(|ui|{
+                latest_heater_data.map(|data_tuple|{
+                    let (time, power, bt11, bt12) = 
+                        data_tuple;
+
+                    let time_seconds: f64 = 
+                        (time.get::<second>()*1000.0).round()/1000.0;
+
+                    let power_kw: f64 = 
+                        (power.get::<kilowatt>()*1000.0).round()/1000.0;
+                    let bt11_degc: f64 = 
+                        (bt11.get::<degree_celsius>()*1000.0).round()/1000.0;
+
+                    let bt12_degc: f64 = 
+                        (bt12.get::<degree_celsius>()*1000.0).round()/1000.0;
+
+                    let heater_data_row: String = 
+                        time_seconds.to_string() + ","
+                        + &power_kw.to_string() + ","
+                        + &bt11_degc.to_string() + ","
+                        + &bt12_degc.to_string() + "," ;
+
+                    ui.label(heater_data_row);
+
+
+                });
             });
 
-            Frame::canvas(ui.style()).show(ui, |ui| {
-                self.semicircle_drawing(ui);
-            });
-
-            // painting image over whatever is in the ui
-            let rect: Rect = Rect {
-                // top left
-                min: Pos2 { x: 350.5, y: 350.5 },
-                // bottom right
-                max: Pos2 { x: 550.5, y: 500.5 },
-            };
-            //let rect = egui::Rect::from_min_size(Default::default(), egui::Vec2::splat(100.0));
-            //let _ferris = egui::Image::new(include_image!("../../ferris.png"))
-            //    .rounding(5.0)
-            //    .paint_at(ui, rect);
-            // now I'd like to paint widgets too, at specific spots, so as to show values of 
-            // the temperature values in and out next to the picture of the 
-            // heater
-            let _ferris2 = egui::Image::new(include_image!("../../ferris.png"))
-                .rounding(5.0);
-
-            ui.add(
-                egui::Slider::new(&mut self.value, 0.0..=100.0)
-            );
-
-            let rect_two: Rect = Rect {
-                // top left
-                min: Pos2 { x: 300.5, y: 350.5 },
-                // bottom right
-                max: Pos2 { x: 550.5, y: 500.5 },
-            };
-
-            let slider_vert = egui::Slider::new(
-                &mut self.value, 0.0..=100.0)
-                .vertical();
-
-            ui.put(rect_two, slider_vert);
-
-            // it seems images can also be widgets
-            // it may be easier/more consistent to do things like that
-            let _ferris2 = egui::Image::new(include_image!("../../ferris.png"))
-                .rounding(5.0);
-
-            ui.put(rect, _ferris2);
         });
     }
 
