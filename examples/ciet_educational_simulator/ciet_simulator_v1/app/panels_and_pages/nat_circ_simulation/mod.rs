@@ -1004,9 +1004,16 @@ pub fn coupled_dracs_loop_version_7(
         let simulation_time_seconds = current_simulation_time.get::<second>();
         local_ciet_state.simulation_time_seconds = (simulation_time_seconds * 10.0).round()/10.0;
 
+        // conditions for thread sleeping 
+        let fast_forward_button_on: bool = 
+            local_ciet_state.is_fast_fwd_on();
+
         let elapsed_time_seconds = 
             (loop_time.elapsed().unwrap().as_secs_f64() * 100.0).round()/100.0;
         local_ciet_state.elapsed_time_seconds = elapsed_time_seconds;
+
+        let overall_simulation_in_realtime_or_faster: bool = 
+            simulation_time_seconds > elapsed_time_seconds;
 
         // now update the ciet state 
         let loop_time_end = loop_time.elapsed().unwrap();
@@ -1016,6 +1023,8 @@ pub fn coupled_dracs_loop_version_7(
         local_ciet_state.calc_time_ms = 
             time_taken_for_calculation_loop_milliseconds;
 
+        
+
         let time_to_sleep_milliseconds: u64 = 
             (timestep.get::<millisecond>() - 
             time_taken_for_calculation_loop_milliseconds)
@@ -1024,10 +1033,49 @@ pub fn coupled_dracs_loop_version_7(
         let time_to_sleep: Duration = 
             Duration::from_millis(time_to_sleep_milliseconds - 1);
 
+
+        // last condition for sleeping
+        let real_time_in_current_timestep: bool = 
+            time_to_sleep_milliseconds > 1;
+
+
         global_ciet_state_ptr.lock().unwrap().overwrite_state(
             local_ciet_state);
 
-        thread::sleep(time_to_sleep);
+        // only sleep if simulation time is greater or equal to elapsed time 
+        // or if the fast fwd button is off
+        // if the current timestep took longer to calculate than real-time 
+        // then don't sleep either
+
+
+        // only sleep if real_time_in_current_timestep 
+        // and global simulation is in real-time and fast fwd button is off 
+        //
+        if real_time_in_current_timestep && overall_simulation_in_realtime_or_faster
+            && !fast_forward_button_on {
+            thread::sleep(time_to_sleep);
+        } else if real_time_in_current_timestep && overall_simulation_in_realtime_or_faster 
+            && fast_forward_button_on {
+            // though with fast forward on, it can be very hard 
+            // to toggle off the fast forward setting due to 
+            // the shared state issue 
+            // I won't sleep so much in this case
+            // just maybe 30 ms max
+                let time_to_sleep: Duration = 
+                    Duration::from_millis(30);
+                thread::sleep(time_to_sleep);
+
+        }
+
+        else {
+            // don't sleep otherwise
+            //
+            //
+            // 
+
+        }
+        
+
 
 
 

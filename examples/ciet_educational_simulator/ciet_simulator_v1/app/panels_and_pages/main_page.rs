@@ -60,7 +60,11 @@ impl CIETApp {
             + " ;  Calc Time (ms): "
             + &calc_time_ms.to_string();
         let time_display_label = egui::Label::new(time_display_text);
-        ui.add(time_display_label);
+        ui.horizontal(|ui|{
+            ui.checkbox(&mut ciet_state_local.fast_forward_settings_turned_on, 
+                "Fast Fowrard");
+            ui.add(time_display_label);
+        });
 
         ui.separator();
 

@@ -92,7 +92,7 @@ pub struct CIETState {
 
     // timestep settings are user settable 
     timestep_seconds: f32,
-    fast_forward_settings_turned_on: bool,
+    pub fast_forward_settings_turned_on: bool,
 
     // pump pressure (loop pressure drop) across ctah pump 
     // is also user settable 
@@ -283,8 +283,8 @@ impl CIETState {
         return self.timestep_seconds;
     }
 
-    // toggles the fast forward settings
-    pub fn toggle_fast_fwd_settings(&mut self){
+    // toggles the fast forward settings and returns the current state
+    pub fn toggle_fast_fwd_settings_and_return_current_state(&mut self) -> bool{
 
         // basically, the user has a switch to turn on and off 
         // the fast forward button for simulation.
@@ -293,6 +293,7 @@ impl CIETState {
         } else {
             self.fast_forward_settings_turned_on = true;
         }
+        return self.fast_forward_settings_turned_on;
     }
 
     // gets the fast fwd settings 
