@@ -57,7 +57,7 @@ pub fn educational_ciet_loop_version_3(
     // controller for tchx 
 
     let tchx_controller_gain = Ratio::new::<ratio>(9.75);
-    let tchx_integral_time: Time = tchx_controller_gain / Frequency::new::<hertz>(5.0);
+    let tchx_integral_time: Time = tchx_controller_gain / Frequency::new::<hertz>(1.0);
     let tchx_derivative_time: Time = Time::new::<second>(1.0);
     // derivative time ratio
     let tchx_alpha: Ratio = Ratio::new::<ratio>(1.0);
@@ -76,7 +76,7 @@ pub fn educational_ciet_loop_version_3(
 
     // controller for ctah
     let ctah_controller_gain = Ratio::new::<ratio>(9.75);
-    let ctah_integral_time: Time = ctah_controller_gain / Frequency::new::<hertz>(5.0);
+    let ctah_integral_time: Time = ctah_controller_gain / Frequency::new::<hertz>(1.0);
     let ctah_derivative_time: Time = Time::new::<second>(1.0);
     // derivative time ratio
     let ctah_alpha: Ratio = Ratio::new::<ratio>(1.0);
