@@ -1615,7 +1615,7 @@ pub fn educational_ciet_loop_version_3(
             // I won't sleep so much in this case
             // just maybe 30 ms max
                 let time_to_sleep: Duration = 
-                    Duration::from_millis(30);
+                    Duration::from_millis(10);
                 thread::sleep(time_to_sleep);
 
         }
