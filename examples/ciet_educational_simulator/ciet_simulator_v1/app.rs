@@ -1,6 +1,7 @@
 use std::{sync::{Arc,Mutex}, thread, time::Duration};
 
-use panels_and_pages::{ciet_data::CIETState, full_simulation::educational_ciet_loop_version_3, Panel};
+use panels_and_pages::{ciet_data::{CIETState, PagePlotData}, full_simulation::educational_ciet_loop_version_3, Panel};
+use useful_functions::update_ciet_plot_from_ciet_state;
 
 
 
@@ -17,6 +18,10 @@ pub struct CIETApp {
     open_panel: Panel,
     #[serde(skip)]
     ciet_state: Arc<Mutex<CIETState>>,
+
+    // we also need plot data here 
+    #[serde(skip)]
+    ciet_plot_data: Arc<Mutex<PagePlotData>>,
 }
 
 pub mod panels_and_pages;
@@ -27,6 +32,7 @@ impl Default for CIETApp {
     fn default() -> Self {
 
         let ciet_state = Arc::new(Mutex::new(CIETState::default()));
+        let ciet_plot_data = Arc::new(Mutex::new(PagePlotData::default()));
 
         Self {
             // Example stuff:
@@ -34,6 +40,7 @@ impl Default for CIETApp {
             value: 3.6,
             open_panel: Panel::MainPage,
             ciet_state,
+            ciet_plot_data
         }
     }
 }
@@ -57,10 +64,27 @@ impl CIETApp {
         let ciet_state_ptr: Arc<Mutex<CIETState>> = 
             new_ciet_app.ciet_state.clone();
 
+        // this is the current state of ciet for plotting
+        // like the instantaneous temperature and such
+        let ciet_state_ptr_for_plotting: Arc<Mutex<CIETState>> = 
+            new_ciet_app.ciet_state.clone();
+        // for data recording, 
+        // I'll also clone the pointer and start a thread
+        // this contains arrays with historical data
+        let ciet_plot_ptr: Arc<Mutex<PagePlotData>> = 
+            new_ciet_app.ciet_plot_data.clone();
+
         // now spawn a thread moving in the pointer 
         //
         thread::spawn(move ||{
             educational_ciet_loop_version_3(ciet_state_ptr);
+        });
+
+        // spawn a thread to update the plotting bits
+        thread::spawn(move ||{
+            update_ciet_plot_from_ciet_state(
+                ciet_state_ptr_for_plotting, 
+                ciet_plot_ptr);
         });
 
         new_ciet_app

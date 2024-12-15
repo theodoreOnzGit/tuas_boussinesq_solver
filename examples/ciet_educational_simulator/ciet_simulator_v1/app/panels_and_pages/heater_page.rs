@@ -7,6 +7,8 @@ use egui_extras::{Size, StripBuilder};
 
 use crate::ciet_simulator_v1::CIETApp;
 
+use super::ciet_data::PagePlotData;
+
 impl CIETApp {
 
     pub fn ciet_sim_heater_page(&mut self, ui: &mut Ui){
@@ -17,13 +19,23 @@ impl CIETApp {
         ui.separator();
         ui.separator();
 
-        // first, get local ciet state for reading only 
+        // first, get local plot page for reading only 
 
-        let local_ciet_state = self.ciet_state.lock().unwrap().clone();
+        let local_ciet_plot: PagePlotData = 
+            self.ciet_plot_data.lock().unwrap().clone();
 
 
         egui::ScrollArea::both().show(ui, |ui| {
 
+            // have a horizontal ui portion
+            ui.horizontal(|ui|{
+                // get a button called obtain ciet data
+                if ui.button("Get CIET Heater CSV Data").clicked(){
+                    // spawn a new window with csv data
+                    // or just display the current updated data
+
+                }
+            });
 
             Frame::canvas(ui.style()).show(ui, |ui| {
                 self.semicircle_drawing(ui);

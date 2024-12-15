@@ -1,4 +1,6 @@
-use super::CIETApp;
+use std::{sync::{Arc, Mutex}, time::Duration};
+
+use super::{panels_and_pages::ciet_data::{CIETState, PagePlotData}, CIETApp};
 
 use egui::{Color32, Pos2, Rect, Ui, Widget};
 
@@ -79,7 +81,11 @@ impl CIETApp {
             x_width_pixels, 
             y_width_pixels);
     }
+
+    
 }
+
+
 
 pub fn new_temp_sensitive_button(
     min_temp_degc: f32, 
@@ -98,6 +104,8 @@ pub fn new_temp_sensitive_button(
     temp_sensitive_button
 
 }
+
+
 
 /// From ChatGPT
 /// Steps:
@@ -121,4 +129,50 @@ pub fn hot_to_cold_colour(hotness: f32) -> Color32 {
         red as u8, 
         green as u8, 
         blue as u8);
+}
+
+
+/// this is for updating plots within ciet 
+use uom::si::{f64::*, power::kilowatt, thermodynamic_temperature::degree_celsius, time::second};
+pub fn update_ciet_plot_from_ciet_state(
+    ciet_state_ptr: Arc<Mutex<CIETState>>,
+    ciet_plot_ptr: Arc<Mutex<PagePlotData>>){
+
+    // get current ciet state first 
+
+    let local_ciet_state: CIETState = 
+        ciet_state_ptr.lock().unwrap().clone();
+
+    // get the current plot object
+    let mut local_ciet_plot: PagePlotData = 
+        ciet_plot_ptr.lock().unwrap().clone();
+
+    // let's get the heater data 
+
+    {
+        let current_time: Time = Time::new::<second>(
+                local_ciet_state.simulation_time_seconds);
+
+        let heater_power: Power = 
+            Power::new::<kilowatt>(
+                local_ciet_state.heater_power_kilowatts);
+
+        let inlet_temp_bt11: ThermodynamicTemperature = 
+            ThermodynamicTemperature::new::<degree_celsius>(
+                local_ciet_state.get_heater_inlet_temp_degc()
+            );
+        let outlet_temp_bt12: ThermodynamicTemperature = 
+            ThermodynamicTemperature::new::<degree_celsius>(
+                local_ciet_state.get_heater_outlet_temp_degc()
+            );
+
+        local_ciet_plot.insert_heater_data(
+            current_time, heater_power, 
+            inlet_temp_bt11, 
+            outlet_temp_bt12);
+    }
+
+    // historian records every 400ms 
+    std::thread::sleep(Duration::from_millis(400));
+
 }
