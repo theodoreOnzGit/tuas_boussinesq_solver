@@ -118,13 +118,9 @@ impl eframe::App for CIETApp {
 
                 egui::widgets::global_theme_preference_buttons(ui);
             });
-        });
-
-        egui::CentralPanel::default().show(ctx, |ui| {
-            // The central panel the region left after adding TopPanel's and SidePanel's
-            ui.heading("ciet simualtor v1");
 
 
+            ui.heading("ciet simulator v1");
             ui.separator();
             // allow user to select which panel is open
             ui.horizontal( 
@@ -140,6 +136,30 @@ impl eframe::App for CIETApp {
             }
             );
             ui.separator();
+        });
+
+        egui::SidePanel::right("Supplementary Info").show(ctx, |ui|{
+            match self.open_panel {
+                Panel::MainPage => {},
+                Panel::CTAHPump => {},
+                Panel::CTAH => {},
+                Panel::Heater => {
+                    
+                    // display csv file on side panel when heater page 
+                    // is open
+                    self.ciet_sim_heater_page_csv(ui);
+                },
+                Panel::DHX => {},
+                Panel::TCHX => {},
+                Panel::SchematicDiagram => {},
+                Panel::NodalisedDiagram => {},
+            }
+        });
+
+        egui::CentralPanel::default().show(ctx, |ui| {
+            // The central panel the region left after adding TopPanel's and SidePanel's
+
+
 
 
 
@@ -163,7 +183,7 @@ impl eframe::App for CIETApp {
                     self.ciet_sim_ctah_page(ui);
                 },
                 Panel::Heater => {
-                    self.ciet_sim_heater_page(ui);
+                    self.ciet_sim_heater_page_graph(ui);
                 },
                 Panel::DHX => {
                     self.ciet_sim_dhx_branch_page(ui);
@@ -179,19 +199,22 @@ impl eframe::App for CIETApp {
                 },
             }
 
-            ui.separator();
-
-
             ui.add(egui::github_link_file!(
-                "https://github.com/theodoreOnzGit/tuas_boussinesq_solver/blob/develop/",
-                "TUAS Github Repo (develop)"
+                    "https://github.com/theodoreOnzGit/tuas_boussinesq_solver/blob/develop/",
+                    "TUAS Github Repo (develop)"
             ));
+
+
+
+
+        });
+
+        egui::TopBottomPanel::bottom("github").show(ctx, |ui|{
 
             ui.with_layout(egui::Layout::bottom_up(egui::Align::LEFT), |ui| {
                 powered_by_egui_and_eframe(ui);
                 egui::warn_if_debug_build(ui);
             });
-
 
         });
 
