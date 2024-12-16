@@ -54,7 +54,7 @@ pub fn educational_ciet_loop_version_3(
 
     // controller for tchx 
 
-    let tchx_controller_gain = Ratio::new::<ratio>(9.75);
+    let tchx_controller_gain = Ratio::new::<ratio>(40.75);
     let tchx_integral_time: Time = tchx_controller_gain / Frequency::new::<hertz>(1.0);
     let tchx_derivative_time: Time = Time::new::<second>(1.0);
     // derivative time ratio
@@ -75,8 +75,8 @@ pub fn educational_ciet_loop_version_3(
     tchx_measurement_delay_block.set_dead_time(tchx_measurement_delay);
 
     // controller for ctah
-    let ctah_controller_gain = Ratio::new::<ratio>(9.75);
-    let ctah_integral_time: Time = ctah_controller_gain / Frequency::new::<hertz>(1.0);
+    let ctah_controller_gain = Ratio::new::<ratio>(70.75);
+    let ctah_integral_time: Time = ctah_controller_gain / Frequency::new::<hertz>(5.0);
     let ctah_derivative_time: Time = Time::new::<second>(1.0);
     // derivative time ratio
     let ctah_alpha: Ratio = Ratio::new::<ratio>(1.0);
@@ -287,7 +287,7 @@ pub fn educational_ciet_loop_version_3(
 
     let ideal_nusselt_number_for_ctah: NusseltCorrelation = 
         NusseltCorrelation::FixedNusselt(
-            Ratio::new::<ratio>(800.0));
+            Ratio::new::<ratio>(80000.0));
 
     tchx_35b_2.calibrate_nusselt_correlation_for_fluid_within_pipe(
         ideal_nusselt_number_for_tchx);
