@@ -558,6 +558,7 @@ pub fn educational_ciet_loop_version_3(
 
         };
 
+
         // now let's caluculate the ctah heat trf coeff
         // first get the ctah outlet temperature at around 
         // pipe 8a
@@ -1284,6 +1285,10 @@ pub fn educational_ciet_loop_version_3(
 
             local_ciet_state.bt_65_tchx_inlet_deg_c = 
                 ((local_ciet_state.pipe_34_temp_degc * 100.0).round() as f64)/100.0_f64;
+            // tchx htc update
+            local_ciet_state.tchx_htc_watt_per_m2_kelvin = 
+                (tchx_heat_transfer_coeff.get::<watt_per_square_meter_kelvin>()
+                 * 100.0).round()/100.0;
 
 
             let pipe_36a_temp = 

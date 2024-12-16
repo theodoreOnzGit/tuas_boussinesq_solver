@@ -2,7 +2,7 @@ use egui::Ui;
 
 use crate::ciet_simulator_v1::CIETApp;
 
-use uom::si::{f64::*, heat_transfer::watt_per_square_meter_kelvin, power::kilowatt, thermodynamic_temperature::degree_celsius, time::second};
+use uom::si::{f64::*, heat_transfer::watt_per_square_meter_kelvin, thermodynamic_temperature::degree_celsius, time::second};
 use egui_plot::{Legend, Line, Plot, PlotPoints};
 
 
@@ -163,7 +163,7 @@ impl CIETApp {
         });
 
 
- 
+
 
 
 

@@ -199,6 +199,31 @@ pub fn update_ciet_plot_from_ciet_state(
                 outlet_temp_set_pt);
 
         }
+        // tchx data
+        {
+            let tchx_heat_transfer_coeff: HeatTransfer = 
+                HeatTransfer::new::<watt_per_square_meter_kelvin>(
+                    local_ciet_state.tchx_htc_watt_per_m2_kelvin);
+
+            let inlet_temp_bt43: ThermodynamicTemperature = 
+                ThermodynamicTemperature::new::<degree_celsius>(
+                    local_ciet_state.get_tchx_inlet_temp_degc());
+
+            let outlet_temp_bt41: ThermodynamicTemperature = 
+                ThermodynamicTemperature::new::<degree_celsius>(
+                    local_ciet_state.get_tchx_outlet_temp_degc());
+
+            let outlet_temp_set_pt: ThermodynamicTemperature = 
+                ThermodynamicTemperature::new::<degree_celsius>(
+                    local_ciet_state.bt_66_tchx_outlet_set_pt_deg_c);
+
+            local_ciet_plot.insert_tchx_data(
+                current_time, 
+                tchx_heat_transfer_coeff, 
+                inlet_temp_bt43, outlet_temp_bt41, 
+                outlet_temp_set_pt);
+
+        }
 
         // update the plot
         *ciet_plot_ptr.lock().unwrap().deref_mut()

@@ -152,7 +152,9 @@ impl eframe::App for CIETApp {
                     self.ciet_sim_heater_page_csv(ui);
                 },
                 Panel::DHX => {},
-                Panel::TCHX => {},
+                Panel::TCHX => {
+                    self.ciet_sim_tchx_page_csv(ui);
+                },
                 Panel::SchematicDiagram => {},
                 Panel::NodalisedDiagram => {},
             }
@@ -191,7 +193,7 @@ impl eframe::App for CIETApp {
                     self.ciet_sim_dhx_branch_page(ui);
                 },
                 Panel::TCHX => {
-                    self.ciet_sim_tchx_page(ui);
+                    self.ciet_sim_tchx_page_graph(ui);
                 },
                 Panel::NodalisedDiagram => {
                     // enables scrolling within the image
