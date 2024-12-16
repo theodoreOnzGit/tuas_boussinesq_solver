@@ -78,11 +78,6 @@ impl CIETApp {
         ui.separator();
         ui.separator();
 
-        let local_ciet_plot: PagePlotData = 
-            self.ciet_plot_data;
-
-        let mut latest_heater_data: [(Time,Power,ThermodynamicTemperature,ThermodynamicTemperature); NUM_DATA_PTS_IN_PLOTS] = 
-            local_ciet_plot.heater_plot_data;
 
 
         // panel for graphs
@@ -108,37 +103,13 @@ impl CIETApp {
             let latest_ciet_plot_data: PagePlotData = 
                 self.ciet_plot_data_mutex_ptr_for_parallel_data_transfer.lock().unwrap().clone();
 
-            latest_heater_data = latest_ciet_plot_data.heater_plot_data;
 
             // let's make the time and bt11 vector
-            let time_bt11_vec: Vec<[f64;2]> = latest_heater_data.iter().map(
-                |tuple|{
-                    let (time,_power,bt11,_bt12) = *tuple;
+            let time_bt11_vec: Vec<[f64;2]> = 
+                latest_ciet_plot_data.get_bt_11_degc_vs_time_secs_vec();
 
-                    if bt11.get::<kelvin>() > 0.0 {
-                        [time.get::<second>(), bt11.get::<degree_celsius>()]
-                    } else {
-                        // don't return anything, a default 20.0 will do 
-                        // this is the initial condition
-                        [0.0,20.0]
-                    }
-
-                }
-            ).collect();
-            let time_bt12_vec: Vec<[f64;2]> = latest_heater_data.iter().map(
-                |tuple|{
-                    let (time,_power,_bt11,bt12) = *tuple;
-
-                    if bt12.get::<kelvin>() > 0.0 {
-                        [time.get::<second>(), bt12.get::<degree_celsius>()]
-                    } else {
-                        // don't return anything, a 20.0 will do 
-                        // this is the initial condition
-                        [0.0,20.0]
-                    }
-
-                }
-            ).collect();
+            let time_bt12_vec: Vec<[f64;2]> = 
+                latest_ciet_plot_data.get_bt_12_degc_vs_time_secs_vec();
 
             bt11_bt12_temp_plot.show(ui, |plot_ui| {
                 plot_ui.line(Line::new(PlotPoints::from(
@@ -153,20 +124,8 @@ impl CIETApp {
             });
 
 
-            let time_heater_power_vec: Vec<[f64;2]> = latest_heater_data.iter().map(
-                |tuple|{
-                    let (time,power,bt11,_bt12) = *tuple;
-
-                    if bt11.get::<kelvin>() > 0.0 {
-                        [time.get::<second>(),power.get::<kilowatt>()]
-                    } else {
-                        // don't return anything, a default 0.0 will do 
-                        // this is the initial condition
-                        [0.0,0.0]
-                    }
-
-                }
-            ).collect();
+            let time_heater_power_vec: Vec<[f64;2]> = 
+                latest_ciet_plot_data.get_heater_power_kw_vs_time_secs_vec();
 
             ui.separator();
             let mut power_plot = Plot::new("heater power plot").legend(Legend::default());
@@ -195,7 +154,7 @@ impl CIETApp {
     }
 
 
-    fn semicircle_drawing(&mut self,ui: &mut Ui,) -> egui::Response {
+    fn _semicircle_drawing(&mut self,ui: &mut Ui,) -> egui::Response {
 
         let size = Vec2::splat(160.0);
         //let (mut response, painter) =

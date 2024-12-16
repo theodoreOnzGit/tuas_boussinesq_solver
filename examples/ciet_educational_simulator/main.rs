@@ -1,5 +1,5 @@
 pub fn main(){
-    println!("Hello, world!");
+    println!("Starting CIET Educational Simulator...");
     ciet_simulator_v1::ciet_simulator_v1().unwrap();
 }
 

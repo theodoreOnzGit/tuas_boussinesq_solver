@@ -338,7 +338,7 @@ impl CIETState {
 
 }
 
-use uom::{si::f64::*, ConstZero};
+use uom::{si::{f64::*, power::kilowatt, thermodynamic_temperature::{degree_celsius, kelvin}, time::second}, ConstZero};
 
 /// this is the struct used to store data for graph plotting and 
 /// csv extraction
@@ -399,6 +399,73 @@ impl PagePlotData {
 
         self.heater_plot_data = new_array_to_be_put_back;
 
+    }
+
+
+    /// gets bt 11 data over time
+    /// time in second, temp in degc
+    pub fn get_bt_11_degc_vs_time_secs_vec(&self) -> Vec<[f64;2]> {
+
+        let time_bt11_vec: Vec<[f64;2]> = self.heater_plot_data.iter().map(
+            |tuple|{
+                let (time,_power,bt11,_bt12) = *tuple;
+
+                if bt11.get::<kelvin>() > 0.0 {
+                    [time.get::<second>(), bt11.get::<degree_celsius>()]
+                } else {
+                    // don't return anything, a default 20.0 will do 
+                    // this is the initial condition
+                    [0.0,20.0]
+                }
+
+            }
+        ).collect();
+
+        return time_bt11_vec;
+    }
+
+
+    /// time in second, temp in degc
+    pub fn get_bt_12_degc_vs_time_secs_vec(&self) -> Vec<[f64;2]> {
+
+        let time_bt12_vec: Vec<[f64;2]> = self.heater_plot_data.iter().map(
+            |tuple|{
+                let (time,_power,_bt11,bt12) = *tuple;
+
+                if bt12.get::<kelvin>() > 0.0 {
+                    [time.get::<second>(), bt12.get::<degree_celsius>()]
+                } else {
+                    // don't return anything, a 20.0 will do 
+                    // this is the initial condition
+                    [0.0,20.0]
+                }
+
+            }
+        ).collect();
+
+        return time_bt12_vec;
+    }
+
+
+    /// heater power in kw, time in seconds
+    pub fn get_heater_power_kw_vs_time_secs_vec(&self) -> Vec<[f64;2]> {
+
+        let time_heater_power_vec: Vec<[f64;2]> = self.heater_plot_data.iter().map(
+            |tuple|{
+                let (time,power,bt11,_bt12) = *tuple;
+
+                if bt11.get::<kelvin>() > 0.0 {
+                    [time.get::<second>(),power.get::<kilowatt>()]
+                } else {
+                    // don't return anything, a default 0.0 will do 
+                    // this is the initial condition
+                    [0.0,0.0]
+                }
+
+            }
+        ).collect();
+
+        return time_heater_power_vec;
     }
 }
 
