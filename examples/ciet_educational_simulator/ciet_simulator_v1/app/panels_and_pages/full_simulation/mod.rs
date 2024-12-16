@@ -39,8 +39,6 @@ pub fn educational_ciet_loop_version_3(
     let tchx_outlet_temperature_set_point = 
         ThermodynamicTemperature::new::<degree_celsius>(
             tchx_outlet_temperature_set_point_degc);
-    let ctah_outlet_temperature_set_point_degc = 
-        local_ciet_state.bt_41_ctah_outlet_set_pt_deg_c;
 
     // timestep settings are user set 
 
@@ -453,6 +451,9 @@ pub fn educational_ciet_loop_version_3(
         let tchx_outlet_temperature_set_point = 
             ThermodynamicTemperature::new::<degree_celsius>(
                 tchx_outlet_temperature_set_point_degc);
+
+        let ctah_outlet_temperature_set_point_degc = 
+            local_ciet_state.bt_41_ctah_outlet_set_pt_deg_c;
 
 
         // set initial mass flowrate pointers for parallelism first 
