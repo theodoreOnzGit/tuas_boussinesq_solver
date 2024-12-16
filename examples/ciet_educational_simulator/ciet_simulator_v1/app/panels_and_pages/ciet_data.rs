@@ -348,9 +348,16 @@ pub struct PagePlotData {
     /// the heater data here is a tuple, 
     ///
     /// simulation time, heater power, inlet temp and outlet temp
-    pub heater_plot_data: [(Time,Power,ThermodynamicTemperature,ThermodynamicTemperature); NUM_DATA_PTS_IN_PLOTS],
+    pub heater_plot_data: [(Time,Power,ThermodynamicTemperature,
+        ThermodynamicTemperature); NUM_DATA_PTS_IN_PLOTS],
 
-    // the CTAH data in a tuple, I want it 
+    // the CTAH data in a tuple, I want it to have the 
+    // Time 
+    // heat transfer coeff, 
+    // Inlet Temperature 
+    // Outlet Temperature 
+    pub ctah_plot_data: [(Time, HeatTransfer,ThermodynamicTemperature,
+        ThermodynamicTemperature); NUM_DATA_PTS_IN_PLOTS],
 }
 
 pub const NUM_DATA_PTS_IN_PLOTS: usize = 2000;
@@ -402,6 +409,49 @@ impl PagePlotData {
         self.heater_plot_data = new_array_to_be_put_back;
 
     }
+
+    pub fn insert_ctah_data(&mut self,
+        simulation_time: Time,
+        ctah_heat_transfer_coeff: HeatTransfer,
+        inlet_temp_bt43: ThermodynamicTemperature,
+        outlet_temp_bt41: ThermodynamicTemperature){
+        let data_tuple = 
+            (simulation_time,ctah_heat_transfer_coeff,
+             inlet_temp_bt43,outlet_temp_bt41);
+
+        // now insert this into the heater
+        // how?
+        // map the vectors out first 
+        let mut current_ctah_data_vec: Vec< (Time,HeatTransfer,
+            ThermodynamicTemperature,ThermodynamicTemperature)>;
+
+        current_ctah_data_vec = self.ctah_plot_data.iter().map(
+            |&values|{
+            values
+        }).collect();
+
+        // now, insert the latest data at the top
+        current_ctah_data_vec.insert(0, data_tuple);
+
+        // take the first NUM_DATA_PTS_IN_PLOTS pieces as a fixed size array 
+        // which is basically the array size
+
+        let mut new_array_to_be_put_back: [(Time,HeatTransfer,
+            ThermodynamicTemperature,ThermodynamicTemperature); NUM_DATA_PTS_IN_PLOTS] = 
+            [ (Time::ZERO, HeatTransfer::ZERO, 
+             ThermodynamicTemperature::ZERO,
+             ThermodynamicTemperature::ZERO); NUM_DATA_PTS_IN_PLOTS
+            ];
+
+        // map the first NUM_DATA_PTS_IN_PLOTS values of the current heater data vec
+        
+        for n in 0..NUM_DATA_PTS_IN_PLOTS {
+            new_array_to_be_put_back[n] = current_ctah_data_vec[n];
+        }
+
+        self.ctah_plot_data = new_array_to_be_put_back;
+    }
+
 
 
     /// gets bt 11 data over time
@@ -484,12 +534,19 @@ impl Default for PagePlotData {
              ThermodynamicTemperature::ZERO); NUM_DATA_PTS_IN_PLOTS
             ];
 
+        let ctah_data_default = 
+            [ (Time::ZERO, HeatTransfer::ZERO, 
+             ThermodynamicTemperature::ZERO,
+             ThermodynamicTemperature::ZERO); NUM_DATA_PTS_IN_PLOTS
+            ];
 
 
 
         Self { 
             // first, a blank dataset
             heater_plot_data: heater_data_default,
+            ctah_plot_data: ctah_data_default,
+
 
         }
     }

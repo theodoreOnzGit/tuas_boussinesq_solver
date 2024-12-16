@@ -281,11 +281,11 @@ pub fn educational_ciet_loop_version_3(
 
     let ideal_nusselt_number_for_tchx: NusseltCorrelation = 
         NusseltCorrelation::FixedNusselt(
-            Ratio::new::<ratio>(500.0));
+            Ratio::new::<ratio>(800.0));
 
     let ideal_nusselt_number_for_ctah: NusseltCorrelation = 
         NusseltCorrelation::FixedNusselt(
-            Ratio::new::<ratio>(250.0));
+            Ratio::new::<ratio>(800.0));
 
     tchx_35b_2.calibrate_nusselt_correlation_for_fluid_within_pipe(
         ideal_nusselt_number_for_tchx);
@@ -517,8 +517,8 @@ pub fn educational_ciet_loop_version_3(
 
             // error = y_sp - y_measured
             let set_point_abs_error_deg_celsius = 
-                - tchx_outlet_temperature_set_point.get::<kelvin>()
-                + tchx_outlet_temperature.get::<kelvin>();
+                -tchx_outlet_temperature_set_point.get::<kelvin>()
+                +tchx_outlet_temperature.get::<kelvin>();
 
             let nondimensional_error: Ratio = 
                 (set_point_abs_error_deg_celsius/
@@ -546,7 +546,7 @@ pub fn educational_ciet_loop_version_3(
             // make sure it cannot be less than a certain amount 
             let tchx_minimum_heat_transfer = 
                 HeatTransfer::new::<watt_per_square_meter_kelvin>(
-                    5.0);
+                    0.0);
 
             // this makes it physically realistic
             if tchx_heat_trf_output < tchx_minimum_heat_transfer {
@@ -573,7 +573,7 @@ pub fn educational_ciet_loop_version_3(
 
             // error = y_sp - y_measured
             let set_point_abs_error_deg_celsius = 
-                - ctah_outlet_temperature_set_point_degc
+                -ctah_outlet_temperature_set_point_degc
                 + ctah_outlet_temp_degc;
 
             let nondimensional_error: Ratio = 
@@ -601,7 +601,7 @@ pub fn educational_ciet_loop_version_3(
             // make sure it cannot be less than a certain amount 
             let ctah_minimum_heat_transfer = 
                 HeatTransfer::new::<watt_per_square_meter_kelvin>(
-                    5.0);
+                    0.0);
 
             // this makes it physically realistic
             if ctah_heat_trf_output < ctah_minimum_heat_transfer {
