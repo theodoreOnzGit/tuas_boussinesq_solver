@@ -58,6 +58,7 @@ pub struct CIETState {
     pub bt_65_tchx_inlet_deg_c: f64,
     // dracs loop (cold branch)
     pub bt_66_tchx_outlet_deg_c: f64,
+    pub tchx_htc_watt_per_m2_kelvin: f64,
     pub pipe_36a_temp_degc: f32,
     pub pipe_36_temp_degc: f32,
     pub pipe_37_temp_degc: f32,
@@ -193,6 +194,9 @@ impl Default for CIETState {
             ctah_pump_pressure_pascals: 0.0,
             is_ctah_branch_blocked: false,
             is_dhx_branch_blocked: false,
+
+            // tchx settings
+            tchx_htc_watt_per_m2_kelvin: 0.0,
         }
     }
 }
@@ -526,6 +530,90 @@ impl PagePlotData {
         }
 
         self.tchx_plot_data = new_array_to_be_put_back;
+    }
+    /// gets bt 65 data over time
+    /// time in second, temp in degc
+    pub fn get_bt_65_degc_vs_time_secs_vec(&self) -> Vec<[f64;2]> {
+
+        let time_bt65_vec: Vec<[f64;2]> = self.tchx_plot_data.iter().map(
+            |tuple|{
+                let (time,_tchx_htc,bt65,_bt66,_bt66_setpt) = *tuple;
+
+                if bt65.get::<kelvin>() > 0.0 {
+                    [time.get::<second>(), bt65.get::<degree_celsius>()]
+                } else {
+                    // don't return anything, a default 20.0 will do 
+                    // this is the initial condition
+                    [0.0,20.0]
+                }
+
+            }
+        ).collect();
+
+        return time_bt65_vec;
+    }
+    /// gets bt 66 data over time
+    /// time in second, temp in degc
+    pub fn get_bt_66_degc_vs_time_secs_vec(&self) -> Vec<[f64;2]> {
+
+        let time_bt66_vec: Vec<[f64;2]> = self.tchx_plot_data.iter().map(
+            |tuple|{
+                let (time,_tchx_htc,_bt65,bt66,_bt66_setpt) = *tuple;
+
+                if bt66.get::<kelvin>() > 0.0 {
+                    [time.get::<second>(), bt66.get::<degree_celsius>()]
+                } else {
+                    // don't return anything, a default 20.0 will do 
+                    // this is the initial condition
+                    [0.0,20.0]
+                }
+
+            }
+        ).collect();
+
+        return time_bt66_vec;
+    }
+    /// gets bt 66 set point data over time
+    /// time in second, temp in degc
+    pub fn get_bt_66_setpt_degc_vs_time_secs_vec(&self) -> Vec<[f64;2]> {
+
+        let time_bt66_vec: Vec<[f64;2]> = self.tchx_plot_data.iter().map(
+            |tuple|{
+                let (time,_tchx_htc,_bt65,bt66,bt66_setpt) = *tuple;
+
+                if bt66.get::<kelvin>() > 0.0 {
+                    [time.get::<second>(), bt66_setpt.get::<degree_celsius>()]
+                } else {
+                    // don't return anything, a default 20.0 will do 
+                    // this is the initial condition
+                    [0.0,20.0]
+                }
+
+            }
+        ).collect();
+
+        return time_bt66_vec;
+    }
+
+    /// get tchx htc data vs time
+    pub fn get_tchx_htc_watts_per_m2_kelvin_vs_time_secs_vec(&self) -> Vec<[f64;2]> {
+
+        let time_tchx_htc_vec: Vec<[f64;2]> = self.ctah_plot_data.iter().map(
+            |tuple|{
+                let (time,tchx_htc,_bt65,bt66,_bt66_setpt) = *tuple;
+
+                if bt66.get::<kelvin>() > 0.0 {
+                    [time.get::<second>(), tchx_htc.get::<watt_per_square_meter_kelvin>()]
+                } else {
+                    // don't return anything, a default 20.0 will do 
+                    // this is the initial condition
+                    [0.0,20.0]
+                }
+
+            }
+        ).collect();
+
+        return time_tchx_htc_vec;
     }
 
 
