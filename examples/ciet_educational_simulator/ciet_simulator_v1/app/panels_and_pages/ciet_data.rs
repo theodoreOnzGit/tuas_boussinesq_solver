@@ -338,7 +338,7 @@ impl CIETState {
 
 }
 
-use uom::{si::{f64::*, power::kilowatt, thermodynamic_temperature::{degree_celsius, kelvin}, time::second}, ConstZero};
+use uom::{si::{f64::*, heat_transfer::watt_per_square_meter_kelvin, power::kilowatt, thermodynamic_temperature::{degree_celsius, kelvin}, time::second}, ConstZero};
 
 /// this is the struct used to store data for graph plotting and 
 /// csv extraction
@@ -453,6 +453,70 @@ impl PagePlotData {
     }
 
 
+    /// gets bt 43 data over time
+    /// time in second, temp in degc
+    pub fn get_bt_43_degc_vs_time_secs_vec(&self) -> Vec<[f64;2]> {
+
+        let time_bt43_vec: Vec<[f64;2]> = self.ctah_plot_data.iter().map(
+            |tuple|{
+                let (time,_ctah_htc,bt43,_bt41) = *tuple;
+
+                if bt43.get::<kelvin>() > 0.0 {
+                    [time.get::<second>(), bt43.get::<degree_celsius>()]
+                } else {
+                    // don't return anything, a default 20.0 will do 
+                    // this is the initial condition
+                    [0.0,20.0]
+                }
+
+            }
+        ).collect();
+
+        return time_bt43_vec;
+    }
+    /// gets bt 41 data over time
+    /// time in second, temp in degc
+    pub fn get_bt_41_degc_vs_time_secs_vec(&self) -> Vec<[f64;2]> {
+
+        let time_bt41_vec: Vec<[f64;2]> = self.ctah_plot_data.iter().map(
+            |tuple|{
+                let (time,_ctah_htc,_bt43,bt41) = *tuple;
+
+                if bt41.get::<kelvin>() > 0.0 {
+                    [time.get::<second>(), bt41.get::<degree_celsius>()]
+                } else {
+                    // don't return anything, a default 20.0 will do 
+                    // this is the initial condition
+                    [0.0,20.0]
+                }
+
+            }
+        ).collect();
+
+        return time_bt41_vec;
+    }
+
+    /// get ctah htc data vs time
+    pub fn get_ctah_htc_watts_per_m2_kelvin_vs_time_secs_vec(&self) -> Vec<[f64;2]> {
+
+        let time_ctah_htc_vec: Vec<[f64;2]> = self.ctah_plot_data.iter().map(
+            |tuple|{
+                let (time,ctah_htc,_bt43,bt41) = *tuple;
+
+                if bt41.get::<kelvin>() > 0.0 {
+                    [time.get::<second>(), ctah_htc.get::<watt_per_square_meter_kelvin>()]
+                } else {
+                    // don't return anything, a default 20.0 will do 
+                    // this is the initial condition
+                    [0.0,20.0]
+                }
+
+            }
+        ).collect();
+
+        return time_ctah_htc_vec;
+    }
+    
 
     /// gets bt 11 data over time
     /// time in second, temp in degc
