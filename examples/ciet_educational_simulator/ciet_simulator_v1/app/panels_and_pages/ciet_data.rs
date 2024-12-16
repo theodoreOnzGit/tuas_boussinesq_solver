@@ -73,6 +73,7 @@ pub struct CIETState {
     pub pipe_6_temp_degc: f32,
     pub bt_43_ctah_inlet_deg_c: f64,
     pub bt_41_ctah_outlet_deg_c: f64,
+    pub ctah_htc_watt_per_m2_kelvin: f64,
     pub pipe_8a_temp_degc: f32,
     pub pipe_8_temp_degc: f32,
     pub pipe_9_temp_degc: f32,
@@ -115,6 +116,7 @@ impl Default for CIETState {
             bt_43_ctah_inlet_deg_c: 21.0,
             bt_41_ctah_outlet_deg_c: 21.0,
             bt_41_ctah_outlet_set_pt_deg_c: 21.0,
+            ctah_htc_watt_per_m2_kelvin: 0.0,
             bt_60_dhx_tube_inlet_deg_c: 21.0,
             bt_21_dhx_tube_outlet_deg_c: 21.0,
             bt_65_tchx_inlet_deg_c: 21.0,
@@ -349,18 +351,23 @@ pub struct PagePlotData {
     ///
     /// simulation time, heater power, inlet temp and outlet temp
     pub heater_plot_data: [(Time,Power,ThermodynamicTemperature,
-        ThermodynamicTemperature); NUM_DATA_PTS_IN_PLOTS],
+        ThermodynamicTemperature); NUM_DATA_PTS_IN_PLOTS
+    ],
 
     // the CTAH data in a tuple, I want it to have the 
     // Time 
     // heat transfer coeff, 
     // Inlet Temperature 
     // Outlet Temperature 
+    // Outlet Temperature Set pt
+    //
     pub ctah_plot_data: [(Time, HeatTransfer,ThermodynamicTemperature,
-        ThermodynamicTemperature); NUM_DATA_PTS_IN_PLOTS],
+        ThermodynamicTemperature,
+        ThermodynamicTemperature); NUM_DATA_PTS_IN_PLOTS
+    ],
 }
 
-pub const NUM_DATA_PTS_IN_PLOTS: usize = 2000;
+    pub const NUM_DATA_PTS_IN_PLOTS: usize = 2000;
 
 impl PagePlotData {
 
@@ -414,16 +421,19 @@ impl PagePlotData {
         simulation_time: Time,
         ctah_heat_transfer_coeff: HeatTransfer,
         inlet_temp_bt43: ThermodynamicTemperature,
-        outlet_temp_bt41: ThermodynamicTemperature){
+        outlet_temp_bt41: ThermodynamicTemperature,
+        outlet_temp_set_pt: ThermodynamicTemperature){
         let data_tuple = 
             (simulation_time,ctah_heat_transfer_coeff,
-             inlet_temp_bt43,outlet_temp_bt41);
+             inlet_temp_bt43,outlet_temp_bt41,
+             outlet_temp_set_pt);
 
         // now insert this into the heater
         // how?
         // map the vectors out first 
         let mut current_ctah_data_vec: Vec< (Time,HeatTransfer,
-            ThermodynamicTemperature,ThermodynamicTemperature)>;
+            ThermodynamicTemperature,ThermodynamicTemperature,
+            ThermodynamicTemperature)>;
 
         current_ctah_data_vec = self.ctah_plot_data.iter().map(
             |&values|{
@@ -437,8 +447,10 @@ impl PagePlotData {
         // which is basically the array size
 
         let mut new_array_to_be_put_back: [(Time,HeatTransfer,
-            ThermodynamicTemperature,ThermodynamicTemperature); NUM_DATA_PTS_IN_PLOTS] = 
+            ThermodynamicTemperature,ThermodynamicTemperature,
+            ThermodynamicTemperature); NUM_DATA_PTS_IN_PLOTS] = 
             [ (Time::ZERO, HeatTransfer::ZERO, 
+             ThermodynamicTemperature::ZERO,
              ThermodynamicTemperature::ZERO,
              ThermodynamicTemperature::ZERO); NUM_DATA_PTS_IN_PLOTS
             ];
@@ -459,7 +471,7 @@ impl PagePlotData {
 
         let time_bt43_vec: Vec<[f64;2]> = self.ctah_plot_data.iter().map(
             |tuple|{
-                let (time,_ctah_htc,bt43,_bt41) = *tuple;
+                let (time,_ctah_htc,bt43,_bt41,_bt41_setpt) = *tuple;
 
                 if bt43.get::<kelvin>() > 0.0 {
                     [time.get::<second>(), bt43.get::<degree_celsius>()]
@@ -480,10 +492,31 @@ impl PagePlotData {
 
         let time_bt41_vec: Vec<[f64;2]> = self.ctah_plot_data.iter().map(
             |tuple|{
-                let (time,_ctah_htc,_bt43,bt41) = *tuple;
+                let (time,_ctah_htc,_bt43,bt41,_bt41_setpt) = *tuple;
 
                 if bt41.get::<kelvin>() > 0.0 {
                     [time.get::<second>(), bt41.get::<degree_celsius>()]
+                } else {
+                    // don't return anything, a default 20.0 will do 
+                    // this is the initial condition
+                    [0.0,20.0]
+                }
+
+            }
+        ).collect();
+
+        return time_bt41_vec;
+    }
+    /// gets bt 41 set point data over time
+    /// time in second, temp in degc
+    pub fn get_bt_41_setpt_degc_vs_time_secs_vec(&self) -> Vec<[f64;2]> {
+
+        let time_bt41_vec: Vec<[f64;2]> = self.ctah_plot_data.iter().map(
+            |tuple|{
+                let (time,_ctah_htc,_bt43,bt41,bt41_setpt) = *tuple;
+
+                if bt41.get::<kelvin>() > 0.0 {
+                    [time.get::<second>(), bt41_setpt.get::<degree_celsius>()]
                 } else {
                     // don't return anything, a default 20.0 will do 
                     // this is the initial condition
@@ -501,7 +534,7 @@ impl PagePlotData {
 
         let time_ctah_htc_vec: Vec<[f64;2]> = self.ctah_plot_data.iter().map(
             |tuple|{
-                let (time,ctah_htc,_bt43,bt41) = *tuple;
+                let (time,ctah_htc,_bt43,bt41,_bt41_setpt) = *tuple;
 
                 if bt41.get::<kelvin>() > 0.0 {
                     [time.get::<second>(), ctah_htc.get::<watt_per_square_meter_kelvin>()]
@@ -600,6 +633,7 @@ impl Default for PagePlotData {
 
         let ctah_data_default = 
             [ (Time::ZERO, HeatTransfer::ZERO, 
+             ThermodynamicTemperature::ZERO,
              ThermodynamicTemperature::ZERO,
              ThermodynamicTemperature::ZERO); NUM_DATA_PTS_IN_PLOTS
             ];

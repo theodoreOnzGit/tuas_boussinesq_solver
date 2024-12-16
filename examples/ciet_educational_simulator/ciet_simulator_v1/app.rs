@@ -142,7 +142,9 @@ impl eframe::App for CIETApp {
             match self.open_panel {
                 Panel::MainPage => {},
                 Panel::CTAHPump => {},
-                Panel::CTAH => {},
+                Panel::CTAH => {
+                    self.ciet_sim_ctah_page_csv(ui);
+                },
                 Panel::Heater => {
                     
                     // display csv file on side panel when heater page 
@@ -180,7 +182,7 @@ impl eframe::App for CIETApp {
                     self.ciet_sim_ctah_pump_page(ui);
                 },
                 Panel::CTAH => {
-                    self.ciet_sim_ctah_page(ui);
+                    self.ciet_sim_ctah_page_graph(ui);
                 },
                 Panel::Heater => {
                     self.ciet_sim_heater_page_graph(ui);

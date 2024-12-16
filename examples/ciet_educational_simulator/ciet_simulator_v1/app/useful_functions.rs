@@ -133,7 +133,7 @@ pub fn hot_to_cold_colour(hotness: f32) -> Color32 {
 
 
 /// this is for updating plots within ciet 
-use uom::si::{f64::*, power::kilowatt, thermodynamic_temperature::degree_celsius, time::second};
+use uom::si::{f64::*, heat_transfer::watt_per_square_meter_kelvin, power::kilowatt, thermodynamic_temperature::degree_celsius, time::second};
 pub fn update_ciet_plot_from_ciet_state(
     ciet_state_ptr: Arc<Mutex<CIETState>>,
     ciet_plot_ptr: Arc<Mutex<PagePlotData>>){
@@ -150,9 +150,9 @@ pub fn update_ciet_plot_from_ciet_state(
 
         // let's get the heater data 
 
+        let current_time: Time = Time::new::<second>(
+            local_ciet_state.simulation_time_seconds);
         {
-            let current_time: Time = Time::new::<second>(
-                local_ciet_state.simulation_time_seconds);
 
             let heater_power: Power = 
                 Power::new::<kilowatt>(
@@ -171,6 +171,33 @@ pub fn update_ciet_plot_from_ciet_state(
                 current_time, heater_power, 
                 inlet_temp_bt11, 
                 outlet_temp_bt12);
+        }
+
+        // now let's get ctah data 
+
+        {
+            let ctah_heat_transfer_coeff: HeatTransfer = 
+                HeatTransfer::new::<watt_per_square_meter_kelvin>(
+                    local_ciet_state.ctah_htc_watt_per_m2_kelvin);
+
+            let inlet_temp_bt43: ThermodynamicTemperature = 
+                ThermodynamicTemperature::new::<degree_celsius>(
+                    local_ciet_state.get_ctah_inlet_temp_degc());
+
+            let outlet_temp_bt41: ThermodynamicTemperature = 
+                ThermodynamicTemperature::new::<degree_celsius>(
+                    local_ciet_state.get_ctah_outlet_temp_degc());
+
+            let outlet_temp_set_pt: ThermodynamicTemperature = 
+                ThermodynamicTemperature::new::<degree_celsius>(
+                    local_ciet_state.bt_41_ctah_outlet_set_pt_deg_c);
+
+            local_ciet_plot.insert_ctah_data(
+                current_time, 
+                ctah_heat_transfer_coeff, 
+                inlet_temp_bt43, outlet_temp_bt41, 
+                outlet_temp_set_pt);
+
         }
 
         // update the plot
