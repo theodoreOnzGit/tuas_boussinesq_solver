@@ -66,7 +66,7 @@ impl CIETApp {
 
         ui.horizontal(|ui| {
             ui.label("Heater Page");
-            if ui.button("Update CIET Heater CSV Data").clicked(){
+            if ui.button("Update CSV Data").clicked(){
                 // spawn a new window with csv data
                 let latest_ciet_plot_data: PagePlotData = 
                     self.ciet_plot_data_mutex_ptr_for_parallel_data_transfer.lock().unwrap().clone();
