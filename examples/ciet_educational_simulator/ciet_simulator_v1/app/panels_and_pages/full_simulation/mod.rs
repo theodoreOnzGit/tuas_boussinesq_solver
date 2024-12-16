@@ -70,6 +70,8 @@ pub fn educational_ciet_loop_version_3(
     let mut tchx_measurement_delay_block: AnalogController = 
         ProportionalController::new(Ratio::new::<ratio>(1.0)).unwrap().into();
 
+    let fresh_tchx_pid_controller = tchx_pid_controller.clone();
+
     tchx_measurement_delay_block.set_dead_time(tchx_measurement_delay);
 
     // controller for ctah
@@ -85,6 +87,8 @@ pub fn educational_ciet_loop_version_3(
             ctah_derivative_time,
             ctah_alpha).unwrap();
     let ctah_measurement_delay = Time::new::<millisecond>(0.1);
+
+    let fresh_ctah_pid_controller = ctah_pid_controller.clone();
 
     let mut ctah_measurement_delay_block: AnalogController = 
         ProportionalController::new(Ratio::new::<ratio>(1.0)).unwrap().into();
@@ -552,6 +556,13 @@ pub fn educational_ciet_loop_version_3(
             // this makes it physically realistic
             if tchx_heat_trf_output < tchx_minimum_heat_transfer {
                 tchx_heat_trf_output = tchx_minimum_heat_transfer;
+                
+                // if the controller goes too long below the min heat 
+                // transfer, the integral reset time tends to respond very slowly 
+                // hence, i'd rather reset the controller if it goes below 
+                // the min heat transfer
+                // so in this regard, it behaves like a ProportionalController
+                tchx_pid_controller = fresh_tchx_pid_controller.clone();
             }
 
             tchx_heat_trf_output
@@ -609,6 +620,12 @@ pub fn educational_ciet_loop_version_3(
             // this makes it physically realistic
             if ctah_heat_trf_output < ctah_minimum_heat_transfer {
                 ctah_heat_trf_output = ctah_minimum_heat_transfer;
+                // if the controller goes too long below the min heat 
+                // transfer, the integral reset time tends to respond very slowly 
+                // hence, i'd rather reset the controller if it goes below 
+                // the min heat transfer
+                // so in this regard, it behaves like a ProportionalController
+                ctah_pid_controller = fresh_ctah_pid_controller.clone();
             }
 
             ctah_heat_trf_output
