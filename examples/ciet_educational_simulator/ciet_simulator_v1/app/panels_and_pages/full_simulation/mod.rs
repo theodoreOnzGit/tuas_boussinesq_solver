@@ -561,6 +561,7 @@ pub fn educational_ciet_loop_version_3(
         // first get the ctah outlet temperature at around 
         // pipe 8a
 
+        // this is buggy, got to find out why
         let ctah_heat_transfer_coeff: HeatTransfer = {
             let ctah_outlet_temp_degc = pipe_8a
                 .pipe_fluid_array
@@ -1387,7 +1388,11 @@ pub fn educational_ciet_loop_version_3(
                 .unwrap()
                 .first()
                 .unwrap();
+            // update ctah htc 
 
+            local_ciet_state.ctah_htc_watt_per_m2_kelvin = 
+                (ctah_heat_transfer_coeff.get::<watt_per_square_meter_kelvin>()
+                 *100.0).round()/100.0;
                 
 
             local_ciet_state.pipe_6_temp_degc = 
