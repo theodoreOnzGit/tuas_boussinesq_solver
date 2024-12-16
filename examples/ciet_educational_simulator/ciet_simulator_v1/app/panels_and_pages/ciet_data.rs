@@ -340,7 +340,12 @@ impl CIETState {
 
 }
 
-use uom::{si::{f64::*, heat_transfer::watt_per_square_meter_kelvin, power::kilowatt, thermodynamic_temperature::{degree_celsius, kelvin}, time::second}, ConstZero};
+use uom::ConstZero;
+use uom::si::time::second;
+use uom::si::heat_transfer::watt_per_square_meter_kelvin;
+use uom::si::f64::*;
+use uom::si::thermodynamic_temperature::{degree_celsius, kelvin};
+use uom::si::power::kilowatt;
 
 /// this is the struct used to store data for graph plotting and 
 /// csv extraction
@@ -354,14 +359,25 @@ pub struct PagePlotData {
         ThermodynamicTemperature); NUM_DATA_PTS_IN_PLOTS
     ],
 
-    // the CTAH data in a tuple, I want it to have the 
-    // Time 
-    // heat transfer coeff, 
-    // Inlet Temperature 
-    // Outlet Temperature 
-    // Outlet Temperature Set pt
-    //
+    /// the CTAH data in a tuple, I want it to have the 
+    /// Time 
+    /// heat transfer coeff, 
+    /// Inlet Temperature 
+    /// Outlet Temperature 
+    /// Outlet Temperature Set pt
+    ///
     pub ctah_plot_data: [(Time, HeatTransfer,ThermodynamicTemperature,
+        ThermodynamicTemperature,
+        ThermodynamicTemperature); NUM_DATA_PTS_IN_PLOTS
+    ],
+
+    /// the TCHX data in a tuple
+    /// Time 
+    /// heat transfer coeff, 
+    /// Inlet Temperature 
+    /// Outlet Temperature 
+    /// Outlet Temperature Set pt
+    pub tchx_plot_data: [(Time, HeatTransfer,ThermodynamicTemperature,
         ThermodynamicTemperature,
         ThermodynamicTemperature); NUM_DATA_PTS_IN_PLOTS
     ],
@@ -462,6 +478,54 @@ impl PagePlotData {
         }
 
         self.ctah_plot_data = new_array_to_be_put_back;
+    }
+
+
+    pub fn insert_tchx_data(&mut self,
+        simulation_time: Time,
+        tchx_heat_transfer_coeff: HeatTransfer,
+        inlet_temp_bt65: ThermodynamicTemperature,
+        outlet_temp_bt66: ThermodynamicTemperature,
+        outlet_temp_set_pt: ThermodynamicTemperature){
+        let data_tuple = 
+            (simulation_time,tchx_heat_transfer_coeff,
+             inlet_temp_bt65,outlet_temp_bt66,
+             outlet_temp_set_pt);
+
+        // now insert this into the heater
+        // how?
+        // map the vectors out first 
+        let mut current_tchx_data_vec: Vec< (Time,HeatTransfer,
+            ThermodynamicTemperature,ThermodynamicTemperature,
+            ThermodynamicTemperature)>;
+
+        current_tchx_data_vec = self.ctah_plot_data.iter().map(
+            |&values|{
+            values
+        }).collect();
+
+        // now, insert the latest data at the top
+        current_tchx_data_vec.insert(0, data_tuple);
+
+        // take the first NUM_DATA_PTS_IN_PLOTS pieces as a fixed size array 
+        // which is basically the array size
+
+        let mut new_array_to_be_put_back: [(Time,HeatTransfer,
+            ThermodynamicTemperature,ThermodynamicTemperature,
+            ThermodynamicTemperature); NUM_DATA_PTS_IN_PLOTS] = 
+            [ (Time::ZERO, HeatTransfer::ZERO, 
+             ThermodynamicTemperature::ZERO,
+             ThermodynamicTemperature::ZERO,
+             ThermodynamicTemperature::ZERO); NUM_DATA_PTS_IN_PLOTS
+            ];
+
+        // map the first NUM_DATA_PTS_IN_PLOTS values of the current heater data vec
+        
+        for n in 0..NUM_DATA_PTS_IN_PLOTS {
+            new_array_to_be_put_back[n] = current_tchx_data_vec[n];
+        }
+
+        self.tchx_plot_data = new_array_to_be_put_back;
     }
 
 
@@ -638,13 +702,21 @@ impl Default for PagePlotData {
              ThermodynamicTemperature::ZERO); NUM_DATA_PTS_IN_PLOTS
             ];
 
+        // tchx data default 
+
+        let tchx_data_default = 
+            [ (Time::ZERO, HeatTransfer::ZERO, 
+             ThermodynamicTemperature::ZERO,
+             ThermodynamicTemperature::ZERO,
+             ThermodynamicTemperature::ZERO); NUM_DATA_PTS_IN_PLOTS
+            ];
 
 
         Self { 
             // first, a blank dataset
             heater_plot_data: heater_data_default,
             ctah_plot_data: ctah_data_default,
-
+            tchx_plot_data: tchx_data_default,
 
         }
     }
