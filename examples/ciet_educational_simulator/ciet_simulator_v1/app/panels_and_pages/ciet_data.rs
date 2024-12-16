@@ -503,7 +503,7 @@ impl PagePlotData {
             ThermodynamicTemperature,ThermodynamicTemperature,
             ThermodynamicTemperature)>;
 
-        current_tchx_data_vec = self.ctah_plot_data.iter().map(
+        current_tchx_data_vec = self.tchx_plot_data.iter().map(
             |&values|{
             values
         }).collect();
