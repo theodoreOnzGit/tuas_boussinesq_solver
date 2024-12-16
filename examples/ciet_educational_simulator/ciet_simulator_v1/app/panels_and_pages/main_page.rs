@@ -588,9 +588,9 @@ impl CIETApp {
         self.place_horizontal_widget_with_length(
             ui, 
             pipe_5b, 
-            heater_x + 120.0, 
+            heater_x + 130.0, 
             heater_y - 270.0, 
-            240.0, 
+            220.0, 
             10.0);
 
         let button_temp_degc = ciet_state_local.pipe_6_temp_degc;

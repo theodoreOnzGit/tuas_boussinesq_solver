@@ -285,7 +285,7 @@ pub fn educational_ciet_loop_version_3(
 
     let ideal_nusselt_number_for_ctah: NusseltCorrelation = 
         NusseltCorrelation::FixedNusselt(
-            Ratio::new::<ratio>(100.0));
+            Ratio::new::<ratio>(250.0));
 
     tchx_35b_2.calibrate_nusselt_correlation_for_fluid_within_pipe(
         ideal_nusselt_number_for_tchx);

@@ -1,6 +1,6 @@
 
 use egui_plot::{Legend, Line, Plot, PlotPoints};
-use uom::si::{f64::*, power::kilowatt, thermodynamic_temperature::{degree_celsius, kelvin}, time::second};
+use uom::si::{f64::*, power::kilowatt, thermodynamic_temperature::degree_celsius, time::second};
 
 use egui::{vec2, Color32, Sense, Stroke, Ui, Vec2};
 

@@ -349,6 +349,8 @@ pub struct PagePlotData {
     ///
     /// simulation time, heater power, inlet temp and outlet temp
     pub heater_plot_data: [(Time,Power,ThermodynamicTemperature,ThermodynamicTemperature); NUM_DATA_PTS_IN_PLOTS],
+
+    // the CTAH data in a tuple, I want it 
 }
 
 pub const NUM_DATA_PTS_IN_PLOTS: usize = 2000;
@@ -467,6 +469,9 @@ impl PagePlotData {
 
         return time_heater_power_vec;
     }
+
+
+    // now for the ctah
 }
 
 impl Default for PagePlotData {
@@ -478,6 +483,8 @@ impl Default for PagePlotData {
              ThermodynamicTemperature::ZERO,
              ThermodynamicTemperature::ZERO); NUM_DATA_PTS_IN_PLOTS
             ];
+
+
 
 
         Self { 
