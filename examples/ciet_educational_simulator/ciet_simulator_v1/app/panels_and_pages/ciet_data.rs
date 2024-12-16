@@ -348,9 +348,10 @@ pub struct PagePlotData {
     /// the heater data here is a tuple, 
     ///
     /// simulation time, heater power, inlet temp and outlet temp
-    pub heater_plot_data: [(Time,Power,ThermodynamicTemperature,ThermodynamicTemperature); 500],
+    pub heater_plot_data: [(Time,Power,ThermodynamicTemperature,ThermodynamicTemperature); NUM_DATA_PTS_IN_PLOTS],
 }
 
+pub const NUM_DATA_PTS_IN_PLOTS: usize = 2000;
 
 impl PagePlotData {
 
@@ -380,19 +381,19 @@ impl PagePlotData {
         // now, insert the latest data at the top
         current_heater_data_vec.insert(0, data_tuple);
 
-        // take the first 500 pieces as a fixed size array 
+        // take the first NUM_DATA_PTS_IN_PLOTS pieces as a fixed size array 
         // which is basically the array size
 
         let mut new_array_to_be_put_back: [(Time,Power,
-            ThermodynamicTemperature,ThermodynamicTemperature); 500] = 
+            ThermodynamicTemperature,ThermodynamicTemperature); NUM_DATA_PTS_IN_PLOTS] = 
             [ (Time::ZERO, Power::ZERO, 
              ThermodynamicTemperature::ZERO,
-             ThermodynamicTemperature::ZERO); 500
+             ThermodynamicTemperature::ZERO); NUM_DATA_PTS_IN_PLOTS
             ];
 
-        // map the first 500 values of the current heater data vec
+        // map the first NUM_DATA_PTS_IN_PLOTS values of the current heater data vec
         
-        for n in 0..500 {
+        for n in 0..NUM_DATA_PTS_IN_PLOTS {
             new_array_to_be_put_back[n] = current_heater_data_vec[n];
         }
 
@@ -408,7 +409,7 @@ impl Default for PagePlotData {
         let heater_data_default = 
             [ (Time::ZERO, Power::ZERO, 
              ThermodynamicTemperature::ZERO,
-             ThermodynamicTemperature::ZERO); 500
+             ThermodynamicTemperature::ZERO); NUM_DATA_PTS_IN_PLOTS
             ];
 
 

@@ -7,7 +7,7 @@ use egui::{vec2, Color32, Sense, Stroke, Ui, Vec2};
 
 use crate::ciet_simulator_v1::CIETApp;
 
-use super::ciet_data::PagePlotData;
+use super::ciet_data::{PagePlotData, NUM_DATA_PTS_IN_PLOTS};
 
 impl CIETApp {
 
@@ -18,7 +18,7 @@ impl CIETApp {
         let local_ciet_plot: PagePlotData = 
             self.ciet_plot_data;
 
-        let latest_heater_data: [(Time,Power,ThermodynamicTemperature,ThermodynamicTemperature); 500] = 
+        let latest_heater_data: [(Time,Power,ThermodynamicTemperature,ThermodynamicTemperature); NUM_DATA_PTS_IN_PLOTS] = 
             local_ciet_plot.heater_plot_data;
 
         // left panel
@@ -81,7 +81,7 @@ impl CIETApp {
         let local_ciet_plot: PagePlotData = 
             self.ciet_plot_data;
 
-        let mut latest_heater_data: [(Time,Power,ThermodynamicTemperature,ThermodynamicTemperature); 500] = 
+        let mut latest_heater_data: [(Time,Power,ThermodynamicTemperature,ThermodynamicTemperature); NUM_DATA_PTS_IN_PLOTS] = 
             local_ciet_plot.heater_plot_data;
 
 
