@@ -1123,7 +1123,7 @@ pub fn three_branch_pri_loop_flowrates_parallel(
 
     pri_loop_branches.set_orientation_to_parallel();
 
-    if ctah_branch_blocked {
+    if ctah_branch_blocked && !dhx_branch_blocked {
 
         pri_loop_branches.fluid_component_super_vector.push(dhx_branch);
         pri_loop_branches.fluid_component_super_vector.push(heater_branch);
@@ -1134,7 +1134,7 @@ pub fn three_branch_pri_loop_flowrates_parallel(
 
         return (dhx_flow, heater_flow, MassRate::ZERO);
 
-    } else if dhx_branch_blocked {
+    } else if dhx_branch_blocked && !ctah_branch_blocked {
 
         pri_loop_branches.fluid_component_super_vector.push(heater_branch);
         pri_loop_branches.fluid_component_super_vector.push(ctah_branch);
@@ -1205,10 +1205,6 @@ pub fn three_branch_pri_loop_flowrates_parallel(
 
         if flow_diode_block_flow {
 
-            // recursively calling the function is kind 
-            // of computationally wasteful.
-            //
-            // dont do this
 
             let dhx_flow = MassRate::ZERO;
             let heater_flow: MassRate = *heater_br_flow_two_br_scenario.lock().unwrap().deref();
