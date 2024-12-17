@@ -22,7 +22,7 @@ impl CIETApp {
 
 
 
-            ui.label("Time (s), CTAH htc (watts per m2 kelvin), BT-65 Inlet (degC), BT-66 Outlet (degC), BT-66 setpt (degC)");
+            ui.label("Time (s), TCHX htc (watts per m2 kelvin), BT-65 Inlet (degC), BT-66 Outlet (degC), BT-66 setpt (degC)");
             latest_tchx_data.map(|data_tuple|{
                 let (time, tchx_htc, bt65, bt66,bt66_setpt) = 
                     data_tuple;

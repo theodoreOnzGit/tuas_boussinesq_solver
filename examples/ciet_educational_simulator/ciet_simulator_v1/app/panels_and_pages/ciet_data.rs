@@ -598,7 +598,7 @@ impl PagePlotData {
     /// get tchx htc data vs time
     pub fn get_tchx_htc_watts_per_m2_kelvin_vs_time_secs_vec(&self) -> Vec<[f64;2]> {
 
-        let time_tchx_htc_vec: Vec<[f64;2]> = self.ctah_plot_data.iter().map(
+        let time_tchx_htc_vec: Vec<[f64;2]> = self.tchx_plot_data.iter().map(
             |tuple|{
                 let (time,tchx_htc,_bt65,bt66,_bt66_setpt) = *tuple;
 
