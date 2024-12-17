@@ -470,6 +470,23 @@ pub fn educational_ciet_loop_version_3(
             }
         }
 
+        // killswitch if any heated pipe cv exceeds 550C
+
+        let heater_surf_temp_vec_degc: Vec<f64> = 
+            heater_ver_1.pipe_shell_temperature()
+            .unwrap()
+            .iter()
+            .map(|temp|{
+                temp.get::<degree_celsius>()
+            }).collect();
+
+        for heater_cv_temperature_degc in heater_surf_temp_vec_degc.iter() {
+            if *heater_cv_temperature_degc > 550.0 {
+                heat_rate_through_heater = Power::ZERO;
+                local_ciet_state.set_heater_power_kilowatts(0.0);
+            }
+        }
+
         let tchx_outlet_temperature_set_point_degc = 
             local_ciet_state.bt_66_tchx_outlet_set_pt_deg_c;
 
