@@ -183,7 +183,7 @@ impl eframe::App for CIETApp {
 
                 },
                 Panel::CTAHPump => {
-                    self.ciet_sim_ctah_pump_page(ui);
+                    self.ciet_sim_ctah_pump_page_and_graphs(ui);
                 },
                 Panel::CTAH => {
                     self.ciet_sim_ctah_page_graph(ui);
