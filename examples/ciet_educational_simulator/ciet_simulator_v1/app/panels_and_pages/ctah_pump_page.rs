@@ -1,6 +1,6 @@
 
 use egui_plot::{Legend, Line, Plot, PlotPoints};
-use uom::si::{f64::*, power::kilowatt, thermodynamic_temperature::degree_celsius, time::second};
+use uom::si::{f64::*, mass_rate::kilogram_per_second, power::kilowatt, pressure::pascal, thermodynamic_temperature::degree_celsius, time::second};
 
 use egui::{vec2, Color32, Sense, Stroke, Ui, Vec2};
 
@@ -11,6 +11,56 @@ use super::ciet_data::{PagePlotData, NUM_DATA_PTS_IN_PLOTS};
 
 impl CIETApp {
 
+    pub fn ciet_sim_ctah_pump_page_csv(&mut self, ui: &mut Ui,){
+        // first, get local plot page for reading only 
+        // show this on the side panel
+
+        let local_ciet_plot: PagePlotData = 
+            self.ciet_plot_data;
+
+        let latest_ctah_pump_data: [(Time,Pressure,MassRate,ThermodynamicTemperature); NUM_DATA_PTS_IN_PLOTS] = 
+            local_ciet_plot.ctah_pump_plot_data;
+
+        // left panel
+        egui::ScrollArea::both().show(ui, |ui| {
+
+
+
+            ui.label("Time (s), CTAH Pump Pressure loop pressure drop (Pa), CTAH Branch Mass Flowrate (kg/s), CTAH Pump Temp (degC)");
+            latest_ctah_pump_data.map(|data_tuple|{
+                let (time, pump_pressure, ctah_br_mass_flowrate, ctah_pump_temp) = 
+                    data_tuple;
+
+                let time_seconds: f64 = 
+                    (time.get::<second>()*1000.0).round()/1000.0;
+
+                let pump_pressure_pascal: f64 = 
+                    (pump_pressure.get::<pascal>()*1000.0).round()/1000.0;
+                let ctah_branch_mass_flowrate_kg_per_s: f64 = 
+                    (ctah_br_mass_flowrate.get::<kilogram_per_second>()*1000.0).round()/1000.0;
+
+                let ctah_pump_temp_degc: f64 = 
+                    (ctah_pump_temp.get::<degree_celsius>()*1000.0).round()/1000.0;
+
+
+                let heater_data_row: String = 
+                    time_seconds.to_string() + ","
+                    + &pump_pressure_pascal.to_string() + ","
+                    + &ctah_branch_mass_flowrate_kg_per_s.to_string() + ","
+                    + &ctah_pump_temp_degc.to_string() + "," ;
+
+                // only add the label if heater time is not equal zero 
+                if time_seconds.round() as u32 != 0 {
+                    ui.label(heater_data_row);
+                }
+
+
+            });
+
+
+        });
+
+    }
     pub fn ciet_sim_ctah_pump_page_and_graphs(&mut self, ui: &mut Ui){
         // headings 
 
