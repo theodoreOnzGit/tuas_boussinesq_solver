@@ -29,25 +29,6 @@ impl CIETApp {
         let mut ciet_state_local: CIETState 
             = self.ciet_state.lock().unwrap().clone();
 
-        // manually set coordinates
-        let (tchx_x, tchx_y): (f32, f32) = (150.0, 260.0);
-        let (tchx_x_width, tchx_y_width): (f32, f32) = (150.0, 150.0);
-        let dhx_x = tchx_x + 250.0;
-        let dhx_y = tchx_y + 250.0;
-        let dhx_x_width = tchx_x_width;
-        let dhx_y_width = tchx_y_width;
-        let heater_x = dhx_x + 350.0;
-        let heater_y = dhx_y + 50.0;
-        let heater_x_width = dhx_x_width;
-        let heater_y_width = dhx_y_width;
-        let ctah_x = heater_x + 750.0;
-        let ctah_y = tchx_y;
-        let ctah_x_width = dhx_x_width;
-        let ctah_y_width = dhx_y_width;
-        let ctah_pump_x = ctah_x - 50.0;
-        let ctah_pump_y = heater_y + 270.0;
-        let ctah_pump_x_width = dhx_x_width;
-        let ctah_pump_y_width = dhx_y_width;
 
         // time display 
         let sim_time_seconds = ciet_state_local.simulation_time_seconds;
@@ -79,6 +60,37 @@ impl CIETApp {
         //ui.add_enabled(false, coloured_button);
 
         ui.separator();
+
+        
+        //let size = egui::Vec2 { x: 150.0, y: 150.0 };
+
+        //let tchx_pic = Image::new(
+        //    include_image!("../../cooler.png")
+        //    ).rounding(5.0).max_size(size);
+        //ui.add(tchx_pic);
+
+        // i want the UI top left... 
+
+
+        // manually set coordinates
+        let (tchx_x, tchx_y): (f32, f32) = (150.0, 260.0);
+        let (tchx_x_width, tchx_y_width): (f32, f32) = (150.0, 150.0);
+        let dhx_x = tchx_x + 250.0;
+        let dhx_y = tchx_y + 250.0;
+        let dhx_x_width = tchx_x_width;
+        let dhx_y_width = tchx_y_width;
+        let heater_x = dhx_x + 350.0;
+        let heater_y = dhx_y + 50.0;
+        let heater_x_width = dhx_x_width;
+        let heater_y_width = dhx_y_width;
+        let ctah_x = heater_x + 750.0;
+        let ctah_y = tchx_y;
+        let ctah_x_width = dhx_x_width;
+        let ctah_y_width = dhx_y_width;
+        let ctah_pump_x = ctah_x - 50.0;
+        let ctah_pump_y = heater_y + 270.0;
+        let ctah_pump_x_width = dhx_x_width;
+        let ctah_pump_y_width = dhx_y_width;
 
         // for user to set heater power
         let heater_set_pt_slider_kw = egui::Slider::new(
