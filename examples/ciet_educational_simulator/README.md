@@ -36,23 +36,6 @@ run on native windows though, but WSL is problematic.
 
 ## Performance
 
-- Mass balances during flow diode situation is not exactly good, 
-it is basically check the three branch flow version first. If the 
-mass flowrate in DHX branch is in opposite direction, then recalculate 
-the two branch version. Done serially, it's kind of slow. Do it in 
-parallel (done, and at least doesn't look wrong at least from the GUI)
-
-
-- Should solution time be too slow for certain timesteps, then I want 
-the thread not to sleep too long so that the simulation can speed up. 
-So that means if elapsed time is more than simulation time, do not allow 
-thread sleep so that the simulation can be in real-time. This makes it 
-more palatable for slower computers. (done, fast fwd button does reasonably well)
-
-
-
-### Very low priority
-
 - Potentially, one could solve mass balances and energy balances on 
 two different timesteps. This could help with simulation stability and 
 performance. However, this technique needs to be tested. I wonder if Modelica 
@@ -61,12 +44,6 @@ has this capability. Or has this research been done? Perhaps can show novelty?
 
 ## Engineering 
 
-- The CTAH and TCHX coolers don't function well with their PID, the 
-cooling response is rather slow. I suspect the thermal resistance due 
-to the Nusselt numbers within the pipe representing CTAH or TCHX is 
-partly to blame. Hence, need to increase nusselt numbers within the CTAH/TCHX 
-pipings, and readjust PID controllers. (Done, but CTAH needs debugging, 
-needs to look more)
 
 - DRACS loop flowrates currently can only be simulated one way because 
 I used absolute flowrates. This is a simplification that made coding easier.
@@ -75,9 +52,6 @@ This should change to be able to simulate negative flowrates.
 
 ## User Interface and User Experience (UI and UX)
 
-- fast forward button, toggle on and off (done)
-
-- Pipe 5b is not crossing well with the top mixing node. adjust please
 
 - branch blocking should be on the main page. perhaps it makes it easier?
 use a radio button rather than a toggle button
@@ -86,49 +60,13 @@ use a radio button rather than a toggle button
 This is because, the simulator won't work for resolutions other than 
 1920 x 1080.
 
-- spelling error in title "Ciet Simualtorv1"
-
-- colour scheme legend. Also, cool colours can be not cyan, maybe more blue
 
 ## Features
 
-- Heater page, 
-
-should have graph of heater power, BT11 and BT12 overlaid on the same 
-graph or two different graphs.
-
-should have a csv file generator, so that I can take perhaps the last 
-500s worth of data. (at least) Can improve in future to make it user 
-customisable
-
-(part done, have 200s worth of data every 400 ms collected, text 
-is not really copy-able though, not user friendly)
-
-- CTAH pump page 
-
-Just inlet and outlet temperatures (pipe 12 and 13) nothing too interesting 
-to display here. 
-
-add a graph
-
-- CTAH page 
-
-inlet and outlet temperatures on a graph, 
-csv generator 
-
-also, display current heat transfer coefficient at the surface
-
-- DHX Branch 
-
-DHX should have inlet and outlet temperatures. Plus a full schematic 
-diagram on all its individual temperatures.
-
-Also show flowrates in both loops on a graph
-
-- Dracs loop
-also, display current heat transfer coefficient at the surface
 
 ## Regression, Testing, Validation and Verification
+
+- V&V yet to be done properly
 
 
 ### forced circulation 
@@ -136,6 +74,7 @@ also, display current heat transfer coefficient at the surface
 - mesh refinement study for heater transient using Zweibaum's expt data (roughly using graph reader)
 - validation for natural circulation 
 - frequency response testing using (De Wet's Bode Plots)
+- frequency response testing using (Poresky's Bode and Time Domain Plots)
 
 ### Natural circulation and startup
 
