@@ -554,6 +554,10 @@ pub fn educational_ciet_loop_version_3(
                 HeatTransfer::new::<watt_per_square_meter_kelvin>(
                     5.0);
 
+            let tchx_max_heat_transfer = 
+                HeatTransfer::new::<watt_per_square_meter_kelvin>(
+                    3000.0);
+
             // this makes it physically realistic
             if tchx_heat_trf_output < tchx_minimum_heat_transfer {
                 tchx_heat_trf_output = tchx_minimum_heat_transfer;
@@ -563,6 +567,11 @@ pub fn educational_ciet_loop_version_3(
                 // hence, i'd rather reset the controller if it goes below 
                 // the min heat transfer
                 // so in this regard, it behaves like a ProportionalController
+                tchx_pid_controller = fresh_tchx_pid_controller.clone();
+            } else if tchx_heat_trf_output > tchx_max_heat_transfer {
+
+                // also do same reset behaviour if it gets too high
+                tchx_heat_trf_output = tchx_max_heat_transfer;
                 tchx_pid_controller = fresh_tchx_pid_controller.clone();
             }
 
@@ -617,6 +626,9 @@ pub fn educational_ciet_loop_version_3(
             let ctah_minimum_heat_transfer = 
                 HeatTransfer::new::<watt_per_square_meter_kelvin>(
                     5.0);
+            let ctah_max_heat_transfer = 
+                HeatTransfer::new::<watt_per_square_meter_kelvin>(
+                    5000.0);
 
             // this makes it physically realistic
             if ctah_heat_trf_output < ctah_minimum_heat_transfer {
@@ -626,6 +638,9 @@ pub fn educational_ciet_loop_version_3(
                 // hence, i'd rather reset the controller if it goes below 
                 // the min heat transfer
                 // so in this regard, it behaves like a ProportionalController
+                ctah_pid_controller = fresh_ctah_pid_controller.clone();
+            } else if ctah_heat_trf_output > ctah_max_heat_transfer {
+                ctah_heat_trf_output = ctah_max_heat_transfer;
                 ctah_pid_controller = fresh_ctah_pid_controller.clone();
             }
 
