@@ -433,13 +433,14 @@ pub fn educational_ciet_loop_version_3(
         let heater_inlet_temp_degc = 
             local_ciet_state.get_heater_inlet_temp_degc();
 
-        let heater_bulk_temp_degc = 
-            heater_ver_1.pipe_fluid_array.try_get_bulk_temperature()
-            .unwrap()
-            .get::<degree_celsius>();
+        // from legacy killswitch
+        //let heater_bulk_temp_degc = 
+        //    heater_ver_1.pipe_fluid_array.try_get_bulk_temperature()
+        //    .unwrap()
+        //    .get::<degree_celsius>();
 
 
-        let heat_rate_through_heater;
+        let mut heat_rate_through_heater;
 
         if heater_outlet_temp_degc > 150.0 {
             heat_rate_through_heater = Power::ZERO;
@@ -447,13 +448,26 @@ pub fn educational_ciet_loop_version_3(
         } else if heater_inlet_temp_degc > 150.0 {
             heat_rate_through_heater = Power::ZERO;
             local_ciet_state.set_heater_power_kilowatts(0.0);
-        } else if heater_bulk_temp_degc > 150.0 {
-            // if heater bulk temp exceeds 150.0c,
-            // then kill heater also 
-            heat_rate_through_heater = Power::ZERO;
-            local_ciet_state.set_heater_power_kilowatts(0.0);
         } else {
             heat_rate_through_heater = input_power;
+        }
+
+        // I'm going to check all arrays in the heater as well
+
+        let heater_temp_vec_degc: Vec<f64> = 
+            heater_ver_1.pipe_shell_temperature()
+            .unwrap()
+            .iter()
+            .map(|temp|{
+                temp.get::<degree_celsius>()
+            }).collect();
+
+        // killswitch if any heater cv exceeds 170.0 C
+        for heater_cv_temperature_degc in heater_temp_vec_degc.iter() {
+            if *heater_cv_temperature_degc > 170.0 {
+                heat_rate_through_heater = Power::ZERO;
+                local_ciet_state.set_heater_power_kilowatts(0.0);
+            }
         }
 
         let tchx_outlet_temperature_set_point_degc = 
