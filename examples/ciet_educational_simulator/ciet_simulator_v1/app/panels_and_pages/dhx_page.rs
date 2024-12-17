@@ -154,7 +154,7 @@ impl CIETApp {
             let time_tube_outlet_vec: Vec<[f64;2]> = 
                 latest_ciet_plot_data.get_dhx_tube_outlet_temp_degc_vs_time_secs_vec();
 
-            ui.heading("CTAH Inlet and Outlet Temperature vs Time");
+            ui.heading("DHX Shell and Tube Heat Exchanger (STHE) Inlet and Outlet Temperature vs Time");
             dhx_temp_plot.show(ui, |plot_ui| {
                 plot_ui.line(Line::new(PlotPoints::from(
                             time_shell_inlet_vec.clone()
