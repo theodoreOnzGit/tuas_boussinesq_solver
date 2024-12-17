@@ -95,6 +95,8 @@ pub struct CIETState {
     // timestep settings are user settable 
     timestep_seconds: f32,
     pub fast_forward_settings_turned_on: bool,
+    
+    pub slow_motion_settings_turned_on: bool,
 
     // pump pressure (loop pressure drop) across ctah pump 
     // is also user settable 
@@ -189,6 +191,7 @@ impl Default for CIETState {
             // timestep settings are user settable as well
             timestep_seconds: 0.1,
             fast_forward_settings_turned_on: false,
+            slow_motion_settings_turned_on: false,
             // valve and pump settings 
             //
             ctah_pump_pressure_pascals: 0.0,
