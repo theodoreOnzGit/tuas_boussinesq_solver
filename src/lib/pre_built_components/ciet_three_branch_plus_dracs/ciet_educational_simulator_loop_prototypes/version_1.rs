@@ -2,7 +2,7 @@
 #[cfg(test)]
 #[test] 
 pub fn ciet_coupled_nat_circ_set_a1_for_three_branch(){
-    use crate::pre_built_components::ciet_three_branch_plus_dracs::ciet_educational_simulator_loop::three_branch_ciet_ver1;
+    use crate::pre_built_components::ciet_three_branch_plus_dracs::ciet_educational_simulator_loop_prototypes::three_branch_ciet_ver1;
 
 
     let max_simulation_time_seconds: f64 = 6300.0;
@@ -82,7 +82,7 @@ pub fn ciet_coupled_nat_circ_set_a1_for_three_branch(){
 #[cfg(test)]
 #[test] 
 pub fn zero_flow_for_three_branch_ver_1(){
-    use crate::pre_built_components::ciet_three_branch_plus_dracs::ciet_educational_simulator_loop::three_branch_ciet_ver1;
+    use crate::pre_built_components::ciet_three_branch_plus_dracs::ciet_educational_simulator_loop_prototypes::three_branch_ciet_ver1;
 
 
     let max_simulation_time_seconds: f64 = 30.0;
@@ -165,7 +165,7 @@ pub fn zero_flow_for_three_branch_ver_1(){
 #[cfg(test)]
 #[test] 
 pub fn flow_diode_reverse_flow_for_three_branch_ver1(){
-    use crate::pre_built_components::ciet_three_branch_plus_dracs::ciet_educational_simulator_loop::three_branch_ciet_ver1;
+    use crate::pre_built_components::ciet_three_branch_plus_dracs::ciet_educational_simulator_loop_prototypes::three_branch_ciet_ver1;
 
 
     let max_simulation_time_seconds: f64 = 30.0;
@@ -247,7 +247,7 @@ pub fn flow_diode_reverse_flow_for_three_branch_ver1(){
 #[cfg(test)]
 #[test] 
 pub fn flow_diode_fwd_flow_for_three_branch_ver1(){
-    use crate::pre_built_components::ciet_three_branch_plus_dracs::ciet_educational_simulator_loop::three_branch_ciet_ver1;
+    use crate::pre_built_components::ciet_three_branch_plus_dracs::ciet_educational_simulator_loop_prototypes::three_branch_ciet_ver1;
 
 
     let max_simulation_time_seconds: f64 = 30.0;
@@ -396,32 +396,6 @@ pub fn three_branch_ciet_ver1(
         use chem_eng_real_time_process_control_simulator::alpha_nightly::controllers::ProportionalController;
         use chem_eng_real_time_process_control_simulator::alpha_nightly::controllers::AnalogController;
 
-        // max error is 0.5% according to SAM 
-        // is okay, because typical flowmeter measurement error is 2% anyway
-        // set timestep to lower values for set b9
-        // as compared to the rest
-        //
-        // setting to 0.01s didn't work, so my second candidate for change is 
-        // to change the controller, but set timestep at 0.5s
-        //
-        // This is because this dataset b9, has the highest heater power 
-        // but lowest TCHX outlet temperature of all datasets. And therefore, 
-        // the highest cooling loads are placed on the TCHX 
-        //
-        // It is understandable at this extreme then, for the controller 
-        // to be unstable if we don't change settings
-        //
-        // let timestep = Time::new::<second>(0.1);
-        // for this timestep, the simulation fails around 181s of simulated time
-        //
-        //
-        // let timestep = Time::new::<second>(0.01);
-        // for this timestep, the simulation fails around 181s of simulated time
-        //
-        // let timestep = Time::new::<second>(0.5);
-        // for this timestep, the simulation fails around 185s of simulated time
-        //
-        // the conclusion is that this instability is almost independent of timestep
         let timestep = Time::new::<second>(0.2);
         let heat_rate_through_heater = input_power;
         let mut tchx_heat_transfer_coeff: HeatTransfer;

@@ -8,6 +8,36 @@ in development and not fully featured yet.
 The crate contains many useful traits and examples of how to use 
 those traits for your own projects.
 
+## CIET Educational Simulator Demo Example
+
+Being written in Rust, TUAS is readily integrable with GUI libraries 
+such as egui (https://github.com/emilk/egui). This can be used 
+to build real-time educational simulators of integral effects tests such 
+as the compact integral effects test (CIET).
+
+Note: This simulator is for educational purposes and demonstration of 
+the TUAS library only. It is usable under GPLv3 and without warranty. 
+USE AT YOUR OWN RISK.
+
+To run the simulator, clone the repository first and change directory 
+into the simulator folder
+
+```bash 
+git clone https://github.com/theodoreOnzGit/tuas_boussinesq_solver
+cd tuas_boussinesq_solver
+```
+Once inside the simulator folder, run:
+```bash 
+cargo run --example ciet_educational_simulator --release
+```
+
+If you want to run it continuously using cargo-watch:
+```bash 
+cargo watch -x "run --example ciet_educational_simulator --release"
+```
+Note that you must install cargo watch first.
+
+
 ## Adding to Cargo
 
 An easy way to start is to use cargo to add the fluid mechanics rust

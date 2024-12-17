@@ -1,3 +1,11 @@
+## v 0.0.5 
+
+For this version, the key thing is the addition of the CIET educational
+simulator example. It showcases three loops in a GUI with heater controlled 
+by user, valves that can be toggled for CTAH and DHX branch and a CTAH 
+and TCHX with set point controllable by the user.
+
+
 ## v 0.0.4 
 
 The main thing is demonstration of a full educational simulator backend 

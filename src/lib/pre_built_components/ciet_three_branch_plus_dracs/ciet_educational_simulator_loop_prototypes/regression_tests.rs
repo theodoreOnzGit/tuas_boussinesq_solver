@@ -2,7 +2,7 @@
 #[cfg(test)]
 #[test] 
 pub fn ciet_coupled_nat_circ_set_a1_for_three_branch(){
-    use crate::pre_built_components::ciet_three_branch_plus_dracs::ciet_educational_simulator_loop::three_branch_ciet_ver1;
+    use crate::pre_built_components::ciet_three_branch_plus_dracs::ciet_educational_simulator_loop_prototypes::three_branch_ciet_ver1;
 
 
     let max_simulation_time_seconds: f64 = 6300.0;
@@ -82,7 +82,7 @@ pub fn ciet_coupled_nat_circ_set_a1_for_three_branch(){
 #[cfg(test)]
 #[test] 
 pub fn zero_flow_for_three_branch_ver_1(){
-    use crate::pre_built_components::ciet_three_branch_plus_dracs::ciet_educational_simulator_loop::three_branch_ciet_ver1;
+    use crate::pre_built_components::ciet_three_branch_plus_dracs::ciet_educational_simulator_loop_prototypes::three_branch_ciet_ver1;
 
 
     let max_simulation_time_seconds: f64 = 30.0;
@@ -165,7 +165,7 @@ pub fn zero_flow_for_three_branch_ver_1(){
 #[cfg(test)]
 #[test] 
 pub fn flow_diode_reverse_flow_for_three_branch_ver1(){
-    use crate::pre_built_components::ciet_three_branch_plus_dracs::ciet_educational_simulator_loop::three_branch_ciet_ver1;
+    use crate::pre_built_components::ciet_three_branch_plus_dracs::ciet_educational_simulator_loop_prototypes::three_branch_ciet_ver1;
 
 
     let max_simulation_time_seconds: f64 = 30.0;
@@ -247,7 +247,7 @@ pub fn flow_diode_reverse_flow_for_three_branch_ver1(){
 #[cfg(test)]
 #[test] 
 pub fn flow_diode_fwd_flow_for_three_branch_ver1(){
-    use crate::pre_built_components::ciet_three_branch_plus_dracs::ciet_educational_simulator_loop::three_branch_ciet_ver1;
+    use crate::pre_built_components::ciet_three_branch_plus_dracs::ciet_educational_simulator_loop_prototypes::three_branch_ciet_ver1;
 
 
     let max_simulation_time_seconds: f64 = 30.0;

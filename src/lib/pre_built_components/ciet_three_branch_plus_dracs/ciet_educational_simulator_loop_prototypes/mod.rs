@@ -11,8 +11,20 @@ pub mod regression_tests;
 /// mass flowrates are calculated serially
 /// for simplicity
 ///
-/// it works well enough, but the CTAH branch is not configured yet
+/// it works well enough, but the CTAH branch controller 
+/// is not configured yet
 pub mod version_1;
 
 #[cfg(test)]
 pub use version_1::*;
+
+/// version 2 adds CTAH control capabilities 
+/// to the simulator 
+///
+/// It runs in a single threaded manner. 
+///
+pub mod version_2;
+
+/// version 3 adds parallelism to version 2,
+/// hopefully to get it faster
+pub mod version_3;

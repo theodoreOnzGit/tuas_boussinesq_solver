@@ -1,6 +1,6 @@
 [package]
 name = "tuas_boussinesq_solver"
-version = "0.0.4"
+version = "0.0.5"
 edition = "2021"
 license = "GPL-3.0"
 description = "Thermo-hydraulic Uniphase Solver for Advection and Convection in Salt Flows (TUAS)"
@@ -33,7 +33,30 @@ ndarray-linalg = { version = "0.16.0", features = ["openblas-system"] }
 name = "tuas_boussinesq_solver"
 path = "src/lib/lib.rs"
 
+[[example]]
+name = "ciet_educational_simulator"
+
 
 [dev-dependencies]
 # the natural circulation loop requires a PID controller
 chem-eng-real-time-process-control-simulator = "0.0.5"
+
+egui = "0.29.1"
+eframe = { version = "0.29.1", default-features = false, features = [
+    "accesskit",     # Make egui comptaible with screen readers. NOTE: adds a lot of dependencies.
+    "default_fonts", # Embed the default egui fonts.
+    "glow",          # Use the glow rendering backend. Alternative: "wgpu".
+    "persistence",   # Enable restoring app state when restarting the app.
+] }
+log = "0.4"
+
+# You only need serde if you want app persistence:
+serde = { version = "1", features = ["derive"] }
+egui_extras = { version = "*", features = ["all_loaders"] }
+egui_plot = "0.29.0"
+image = { version = "0.25", features = ["jpeg", "png"] } # Add the types you want support for
+uom = "0.36.0"
+
+# native:
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+env_logger = "0.10"
