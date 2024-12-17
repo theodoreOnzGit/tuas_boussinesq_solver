@@ -1,5 +1,4 @@
-use egui::{include_image, Color32, Image, TextStyle, Ui, Widget};
-use egui_extras::{Size, StripBuilder};
+use egui::{include_image, Image, Ui};
 
 use crate::ciet_simulator_v1::{app::useful_functions::new_temp_sensitive_button, CIETApp};
 

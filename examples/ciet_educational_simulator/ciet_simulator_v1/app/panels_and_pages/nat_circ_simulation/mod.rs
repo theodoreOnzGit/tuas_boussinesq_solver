@@ -624,7 +624,7 @@ pub fn _coupled_dracs_loop_version_7(
         let heater_avg_surf_temp: ThermodynamicTemperature = 
             heater_ver_1.pipe_shell.try_get_bulk_temperature().unwrap();
 
-        let simulated_heater_avg_surf_temp_degc: f64 = 
+        let _simulated_heater_avg_surf_temp_degc: f64 = 
             heater_avg_surf_temp.get::<degree_celsius>();
 
         // update the local ciet state 

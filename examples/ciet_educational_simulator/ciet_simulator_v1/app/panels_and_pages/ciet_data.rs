@@ -272,7 +272,7 @@ impl CIETState {
     }
 
     // timestep settings 
-    pub fn set_timestep_seconds(&mut self, timestep_seconds: f64){
+    pub fn _set_timestep_seconds(&mut self, timestep_seconds: f64){
         let mut user_timestep = timestep_seconds;
 
         // have a minimum of 1e-5s 
@@ -293,7 +293,7 @@ impl CIETState {
     }
 
     // toggles the fast forward settings and returns the current state
-    pub fn toggle_fast_fwd_settings_and_return_current_state(&mut self) -> bool{
+    pub fn _toggle_fast_fwd_settings_and_return_current_state(&mut self) -> bool{
 
         // basically, the user has a switch to turn on and off 
         // the fast forward button for simulation.
@@ -312,7 +312,7 @@ impl CIETState {
 
     // 
 
-    pub fn set_ctah_pump_pressure(&mut self,
+    pub fn _set_ctah_pump_pressure(&mut self,
         ctah_pump_pressure_pascals: f64){
 
         let mut user_set_ctah_pump_pressure_pascals = 
