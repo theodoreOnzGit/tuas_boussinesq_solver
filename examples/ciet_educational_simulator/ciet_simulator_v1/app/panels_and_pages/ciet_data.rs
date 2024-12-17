@@ -912,6 +912,74 @@ impl PagePlotData {
 
         return time_ctah_pump_massrate_vec;
     }
+
+
+    pub fn insert_dhx_data(&mut self,
+        simulation_time: Time,
+        shell_side_mass_rate_dhx_br: MassRate,
+        tube_side_mass_rate_dracs_loop: MassRate,
+        dhx_shell_side_inlet_temp: ThermodynamicTemperature,
+        dhx_shell_side_outlet_temp: ThermodynamicTemperature,
+        dhx_tube_side_inlet_temp: ThermodynamicTemperature,
+        dhx_tube_side_outlet_temp: ThermodynamicTemperature
+        ){
+        let data_tuple = 
+            (simulation_time,
+             shell_side_mass_rate_dhx_br,
+             tube_side_mass_rate_dracs_loop,
+             dhx_shell_side_inlet_temp,
+             dhx_shell_side_outlet_temp,
+             dhx_tube_side_inlet_temp,
+             dhx_tube_side_outlet_temp,
+             );
+
+        // now insert this into the heater
+        // how?
+        // map the vectors out first 
+        let mut current_tchx_data_vec: Vec< (Time,
+            MassRate,
+            MassRate,
+            ThermodynamicTemperature,
+            ThermodynamicTemperature,
+            ThermodynamicTemperature,
+            ThermodynamicTemperature)>;
+
+        current_tchx_data_vec = self.dhx_plot_data.iter().map(
+            |&values|{
+            values
+        }).collect();
+
+        // now, insert the latest data at the top
+        current_tchx_data_vec.insert(0, data_tuple);
+
+        // take the first NUM_DATA_PTS_IN_PLOTS pieces as a fixed size array 
+        // which is basically the array size
+
+        let mut new_array_to_be_put_back: [(Time,
+            MassRate,
+            MassRate,
+            ThermodynamicTemperature,
+            ThermodynamicTemperature,
+            ThermodynamicTemperature,
+            ThermodynamicTemperature); NUM_DATA_PTS_IN_PLOTS] = 
+            [ (Time::ZERO, 
+                MassRate::ZERO, 
+                MassRate::ZERO, 
+                ThermodynamicTemperature::ZERO,
+                ThermodynamicTemperature::ZERO,
+                ThermodynamicTemperature::ZERO,
+                ThermodynamicTemperature::ZERO); NUM_DATA_PTS_IN_PLOTS
+            ];
+
+        // map the first NUM_DATA_PTS_IN_PLOTS values of the current heater data vec
+        
+        for n in 0..NUM_DATA_PTS_IN_PLOTS {
+            new_array_to_be_put_back[n] = current_tchx_data_vec[n];
+        }
+
+        self.dhx_plot_data = new_array_to_be_put_back;
+    }
+
 }
 
 impl Default for PagePlotData {

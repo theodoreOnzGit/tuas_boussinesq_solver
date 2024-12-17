@@ -221,6 +221,46 @@ pub fn update_ciet_plot_from_ciet_state(
                 ctah_pump_temperature);
 
         }
+
+        // dhx data 
+        {
+            let dhx_shell_side_mass_flowrate = 
+                MassRate::new::<kilogram_per_second>(
+                    local_ciet_state.fm20_dhx_branch_kg_per_s as f64
+                );
+            let dhx_tube_side_mass_flowrate = 
+                MassRate::new::<kilogram_per_second>(
+                    local_ciet_state.fm_60_dracs_kg_per_s
+                );
+            let dhx_shell_side_inlet_temp = 
+                ThermodynamicTemperature::new::<degree_celsius>(
+                    local_ciet_state.get_dhx_shell_inlet_temp_degc()
+                );
+            let dhx_shell_side_outlet_temp = 
+                ThermodynamicTemperature::new::<degree_celsius>(
+                    local_ciet_state.get_dhx_shell_outlet_temp_degc()
+                );
+            let dhx_tube_side_inlet_temp = 
+                ThermodynamicTemperature::new::<degree_celsius>(
+                    local_ciet_state.get_dhx_tube_inlet_temp_degc()
+                );
+            let dhx_tube_side_outlet_temp = 
+                ThermodynamicTemperature::new::<degree_celsius>(
+                    local_ciet_state.get_dhx_tube_outlet_temp_degc()
+                );
+
+            
+            local_ciet_plot.insert_dhx_data(
+                current_time, 
+                dhx_shell_side_mass_flowrate, 
+                dhx_tube_side_mass_flowrate, 
+                dhx_shell_side_inlet_temp, 
+                dhx_shell_side_outlet_temp, 
+                dhx_tube_side_inlet_temp, 
+                dhx_tube_side_outlet_temp);
+        }
+
+
         // tchx data
         {
             let tchx_heat_transfer_coeff: HeatTransfer = 
@@ -246,6 +286,7 @@ pub fn update_ciet_plot_from_ciet_state(
                 outlet_temp_set_pt);
 
         }
+
         
 
         // update the plot

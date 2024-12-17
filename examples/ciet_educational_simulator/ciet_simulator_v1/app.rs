@@ -155,7 +155,9 @@ impl eframe::App for CIETApp {
                     // is open
                     self.ciet_sim_heater_page_csv(ui);
                 },
-                Panel::DHX => {},
+                Panel::DHX => {
+                    self.ciet_sim_dhx_page_csv(ui);
+                },
                 Panel::TCHX => {
                     self.ciet_sim_tchx_page_csv(ui);
                 },

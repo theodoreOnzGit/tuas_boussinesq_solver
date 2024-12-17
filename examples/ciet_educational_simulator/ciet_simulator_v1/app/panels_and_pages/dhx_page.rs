@@ -30,13 +30,7 @@ impl CIETApp {
 
 
 
-            ui.label("Time (s), dhx shell side flowrate (kg/s),
-            dhx tube side flowrate (kg/s),
-            dhx shell inlet temp (degC),
-            dhx shell outlet temp (degC),
-            dhx tube inlet temp (degC),
-            dhx tube outlet temp (degC),
-            ");
+            ui.label("Time (s), dhx shell side flowrate (kg/s), dhx tube side flowrate (kg/s), dhx shell inlet temp (degC), dhx shell outlet temp (degC), dhx tube inlet temp (degC), dhx tube outlet temp (degC), ");
             latest_dhx_sthe_data.map(|data_tuple|{
                 let (time, dhx_shell_side_mass_flowrate,
                     dhx_tube_side_mass_flowrate,
