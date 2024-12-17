@@ -797,7 +797,54 @@ impl PagePlotData {
     }
 
 
-    // now for the ctah
+    // now for the ctah pump
+
+    pub fn insert_ctah_pump_data(&mut self,
+        simulation_time: Time,
+        ctah_pump_pressure_or_loop_pressure_drop: Pressure,
+        ctah_branch_mass_flowrate: MassRate,
+        ctah_pump_temperature: ThermodynamicTemperature,){
+
+        let data_tuple = 
+            (simulation_time,ctah_pump_pressure_or_loop_pressure_drop,
+             ctah_branch_mass_flowrate,
+             ctah_pump_temperature
+             );
+
+        // now insert this into the heater
+        // how?
+        // map the vectors out first 
+        let mut current_ctah_pump_vec: Vec< (Time,Pressure,
+            MassRate,
+            ThermodynamicTemperature)>;
+
+        current_ctah_pump_vec = self.ctah_pump_plot_data.iter().map(
+            |&values|{
+            values
+        }).collect();
+
+        // now, insert the latest data at the top
+        current_ctah_pump_vec.insert(0, data_tuple);
+
+        // take the first NUM_DATA_PTS_IN_PLOTS pieces as a fixed size array 
+        // which is basically the array size
+
+        let mut new_array_to_be_put_back: [(Time,Pressure,
+            MassRate,
+            ThermodynamicTemperature); NUM_DATA_PTS_IN_PLOTS] = 
+            [ (Time::ZERO, Pressure::ZERO, 
+             MassRate::ZERO,
+             ThermodynamicTemperature::ZERO); NUM_DATA_PTS_IN_PLOTS
+            ];
+
+        // map the first NUM_DATA_PTS_IN_PLOTS values of the current heater data vec
+        
+        for n in 0..NUM_DATA_PTS_IN_PLOTS {
+            new_array_to_be_put_back[n] = current_ctah_pump_vec[n];
+        }
+
+        self.ctah_pump_plot_data = new_array_to_be_put_back;
+    }
 }
 
 impl Default for PagePlotData {
