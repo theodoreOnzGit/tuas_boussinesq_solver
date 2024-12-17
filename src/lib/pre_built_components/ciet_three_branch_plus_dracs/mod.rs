@@ -4,7 +4,7 @@
 ///
 /// Also included here is some csv data for ciet's ctah loop forced circulation 
 /// transients
-pub mod ciet_educational_simulator_loop;
+pub mod ciet_educational_simulator_loop_prototypes;
 
 /// CIET needs Thermo-hydraulic equations solved in TUAS 
 ///
