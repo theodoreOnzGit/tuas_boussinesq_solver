@@ -122,7 +122,7 @@ pub fn hot_to_cold_colour(hotness: f32) -> Color32 {
     }
 
     let red: f32 = 255.0 * hotness_clone;
-    let green: f32 = 155.0 * (1.0 - hotness_clone);
+    let green: f32 = 135.0 * (1.0 - hotness_clone);
     let blue: f32 = 255.0 * (1.0 - hotness_clone);
 
     return Color32::from_rgb(
