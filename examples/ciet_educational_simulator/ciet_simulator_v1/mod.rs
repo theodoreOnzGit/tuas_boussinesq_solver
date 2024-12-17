@@ -6,7 +6,7 @@ pub fn ciet_simulator_v1() -> eframe::Result<()> {
         ..Default::default()
     };
     eframe::run_native(
-        "CIET Simulator V1",
+        "CIET Simulator V1 Powered by TUAS",
         native_options,
         Box::new(|cc| {
             // image support,

@@ -15,6 +15,10 @@ such as egui (https://github.com/emilk/egui). This can be used
 to build real-time educational simulators of integral effects tests such 
 as the compact integral effects test (CIET).
 
+Note: This simulator is for educational purposes and demonstration of 
+the TUAS library only. It is usable under GPLv3 and without warranty. 
+USE AT YOUR OWN RISK.
+
 To run the simulator, clone the repository first and change directory 
 into the simulator folder
 
