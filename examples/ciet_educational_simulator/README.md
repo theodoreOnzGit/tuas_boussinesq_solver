@@ -27,7 +27,7 @@ sudo apt install gcc libssl-dev pkg-config
 
 # Todo List 
 
-## dependency bugs on WSL
+## dependency bugs on Windows Subsystem for Linux (WSL)
 
 I'm running into some conflicting dependency issues with 
 egui on WSL, but not on my Linux Mint and Arch Linux 

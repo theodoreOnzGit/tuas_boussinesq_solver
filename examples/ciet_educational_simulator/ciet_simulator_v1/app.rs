@@ -140,7 +140,9 @@ impl eframe::App for CIETApp {
 
         egui::SidePanel::right("Supplementary Info").show(ctx, |ui|{
             match self.open_panel {
-                Panel::MainPage => {},
+                Panel::MainPage => {
+                    self.ciet_main_page_side_panel(ui);
+                },
                 Panel::CTAHPump => {},
                 Panel::CTAH => {
                     self.ciet_sim_ctah_page_csv(ui);
@@ -177,7 +179,7 @@ impl eframe::App for CIETApp {
                     });
                 },
                 Panel::MainPage => {
-                    self.ciet_sim_main_page(ui);
+                    self.ciet_sim_main_page_central_panel(ui);
 
                 },
                 Panel::CTAHPump => {

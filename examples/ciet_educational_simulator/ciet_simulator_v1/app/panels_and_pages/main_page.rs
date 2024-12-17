@@ -1,13 +1,15 @@
 use egui::{include_image, Color32, Image, TextStyle, Ui};
 use egui_extras::{Size, StripBuilder};
 
-use crate::ciet_simulator_v1::{app::useful_functions::{hot_to_cold_colour, new_temp_sensitive_button}, CIETApp};
+use crate::ciet_simulator_v1::{app::useful_functions::new_temp_sensitive_button, CIETApp};
 
 use super::ciet_data::CIETState;
 
 impl CIETApp {
 
-    pub fn ciet_sim_main_page(&mut self, ui: &mut Ui){
+    
+
+    pub fn ciet_sim_main_page_central_panel(&mut self, ui: &mut Ui){
 
         // obtain a lock first to display the information 
         
@@ -1155,5 +1157,119 @@ impl CIETApp {
             ctah_pump_y_width);
 
         ui.separator();
+    }
+
+
+    pub fn ciet_main_page_side_panel(&mut self,ui: &mut Ui,){
+
+        // now I need colour legend
+        let min_temp_degc = 20.0;
+        let max_temp_degc = 100.0;
+        // max temp
+        ui.label("Colour to Temperature Legend");
+        let button_temp_degc = 100.0;
+        let max_temp_string: String = 
+            button_temp_degc.to_string()+" degC or more";
+        let max_temp = new_temp_sensitive_button(
+            min_temp_degc, 
+            max_temp_degc, 
+            button_temp_degc, 
+            &max_temp_string
+            );
+        
+       ui.add(max_temp);
+
+       // 90.0
+       let button_temp_degc = 90.0;
+       let button_temp_string: String = 
+           button_temp_degc.to_string()+" degrees celsius";
+       let temp_90_degc = new_temp_sensitive_button(
+           min_temp_degc, 
+           max_temp_degc, 
+           button_temp_degc, 
+           &button_temp_string
+       );
+       ui.add(temp_90_degc);
+
+       // 80.0
+       let button_temp_degc = 80.0;
+       let button_temp_string: String = 
+           button_temp_degc.to_string()+" degrees celsius";
+       let temp_80_degc = new_temp_sensitive_button(
+           min_temp_degc, 
+           max_temp_degc, 
+           button_temp_degc, 
+           &button_temp_string
+       );
+       ui.add(temp_80_degc);
+       // 70.0
+       let button_temp_degc = 70.0;
+       let button_temp_string: String = 
+           button_temp_degc.to_string()+" degrees celsius";
+       let temp_70_degc = new_temp_sensitive_button(
+           min_temp_degc, 
+           max_temp_degc, 
+           button_temp_degc, 
+           &button_temp_string
+       );
+       ui.add(temp_70_degc);
+       // 60.0
+       let button_temp_degc = 60.0;
+       let button_temp_string: String = 
+           button_temp_degc.to_string()+" degrees celsius";
+       let temp_60_degc = new_temp_sensitive_button(
+           min_temp_degc, 
+           max_temp_degc, 
+           button_temp_degc, 
+           &button_temp_string
+       );
+       ui.add(temp_60_degc);
+       // 50.0
+       let button_temp_degc = 50.0;
+       let button_temp_string: String = 
+           button_temp_degc.to_string()+" degrees celsius";
+       let temp_50_degc = new_temp_sensitive_button(
+           min_temp_degc, 
+           max_temp_degc, 
+           button_temp_degc, 
+           &button_temp_string
+       );
+       ui.add(temp_50_degc);
+       // 40.0
+       let button_temp_degc = 40.0;
+       let button_temp_string: String = 
+           button_temp_degc.to_string()+" degrees celsius";
+       let temp_40_degc = new_temp_sensitive_button(
+           min_temp_degc, 
+           max_temp_degc, 
+           button_temp_degc, 
+           &button_temp_string
+       );
+       ui.add(temp_40_degc);
+
+       // 30.0
+       let button_temp_degc = 30.0;
+       let button_temp_string: String = 
+           button_temp_degc.to_string()+" degrees celsius";
+       let temp_30_degc = new_temp_sensitive_button(
+           min_temp_degc, 
+           max_temp_degc, 
+           button_temp_degc, 
+           &button_temp_string
+       );
+       ui.add(temp_30_degc);
+
+       // 20.0
+       let button_temp_degc = 20.0;
+       let button_temp_string: String = 
+           button_temp_degc.to_string()+" degrees celsius";
+       let temp_20_degc = new_temp_sensitive_button(
+           min_temp_degc, 
+           max_temp_degc, 
+           button_temp_degc, 
+           &button_temp_string
+       );
+       ui.add(temp_20_degc);
+
     }
 }
