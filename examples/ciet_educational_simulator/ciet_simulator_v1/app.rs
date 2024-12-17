@@ -196,7 +196,7 @@ impl eframe::App for CIETApp {
                     self.ciet_sim_heater_page_graph(ui);
                 },
                 Panel::DHX => {
-                    self.ciet_sim_dhx_branch_page(ui);
+                    self.ciet_sim_dhx_branch_page_graph(ui);
                 },
                 Panel::TCHX => {
                     self.ciet_sim_tchx_page_graph(ui);
