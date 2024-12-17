@@ -1,9 +1,18 @@
 use std::{ops::{Deref, DerefMut}, sync::{Arc, Mutex}, thread, time::{Duration, SystemTime}};
 
 use tuas_boussinesq_solver::{boussinesq_thermophysical_properties::LiquidMaterial, pre_built_components::ciet_three_branch_plus_dracs::{components::{new_active_ctah_horizontal, new_active_ctah_vertical}, solver_functions::{ciet_pri_loop_three_branch_link_up_components, pri_loop_three_branch_advance_timestep_except_dhx, three_branch_pri_loop_flowrates_parallel}}, prelude::beta_testing::HeatTransferEntity, single_control_vol::SingleCVNode};
-use uom::si::{mass_rate::kilogram_per_second, power::kilowatt, pressure::{atmosphere, pascal}, temperature_interval::degree_celsius};
+use uom::si::{mass_rate::kilogram_per_second, power::kilowatt, pressure::{atmosphere, pascal}};
 
 use super::ciet_data::CIETState;
+/// controller has been roughly validated using set A1 of the coupled nat circ 
+/// and a constant forced circulation flow of about 0.18 kg/s.
+/// At this flowrate, the heater temperature in is 80C, heater temp out is 
+/// 110C 
+///
+/// The CTAH cools DowthermA/Therminol VP1 to 80C, 
+///
+/// Parasitic heat losses for forced circulation NOT calibrated or validated
+///
 pub fn educational_ciet_loop_version_3(
     global_ciet_state_ptr:Arc<Mutex<CIETState>>){
 
@@ -23,7 +32,7 @@ pub fn educational_ciet_loop_version_3(
     use tuas_boussinesq_solver::pre_built_components::ciet_steady_state_natural_circulation_test_components::coupled_dracs_loop_tests::pri_loop_calc_functions::{pri_loop_dhx_shell_temperature_diagnostics, pri_loop_heater_temperature_diagnostics};
     use tuas_boussinesq_solver::pre_built_components::
         ciet_steady_state_natural_circulation_test_components::dracs_loop_components::*;
-    use uom::si::thermodynamic_temperature::{degree_celsius, kelvin};
+    use uom::si::thermodynamic_temperature::degree_celsius;
     use uom::si::heat_transfer::watt_per_square_meter_kelvin;
     use uom::si::time::second;
     use chem_eng_real_time_process_control_simulator::alpha_nightly::transfer_fn_wrapper_and_enums::TransferFnTraits;
