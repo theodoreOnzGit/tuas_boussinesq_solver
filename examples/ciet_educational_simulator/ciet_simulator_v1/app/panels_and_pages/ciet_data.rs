@@ -275,8 +275,8 @@ impl CIETState {
     pub fn set_timestep_seconds(&mut self, timestep_seconds: f64){
         let mut user_timestep = timestep_seconds;
 
-        // have a minimum of 0.04s 
-        let min_timestep_seconds = 0.04;
+        // have a minimum of 1e-5s 
+        let min_timestep_seconds = 1e-5;
 
         if user_timestep < min_timestep_seconds {
             user_timestep = min_timestep_seconds;
