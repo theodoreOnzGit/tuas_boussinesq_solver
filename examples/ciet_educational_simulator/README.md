@@ -10,6 +10,20 @@
 - a fast enough CPU to run in real-time (i7-10875H was good)
 - 1920 x 1080 screen resolution (otherwise the full main page won't show properly)
 
+# Basic installs before you run cargo run 
+
+before
+```bash
+cargo run --release --example ciet_educational_simulator
+```
+
+you need, on ubuntu, basic dependencies besides the GUI
+
+```bash
+sudo apt install gcc libssl-dev pkg-config
+```
+
+
 # Todo List 
 
 ## Performance
