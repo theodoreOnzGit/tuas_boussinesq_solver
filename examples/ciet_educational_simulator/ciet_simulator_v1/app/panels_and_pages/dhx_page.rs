@@ -87,7 +87,7 @@ impl CIETApp {
     }
     pub fn ciet_sim_dhx_branch_page_graph(&mut self, ui: &mut Ui){
         ui.horizontal(|ui| {
-            ui.label("DHX Page");
+            ui.label("DHX STHE Page");
             if ui.button("Update CSV Data").clicked(){
                 // spawn a new window with csv data
                 let latest_ciet_plot_data: PagePlotData = 

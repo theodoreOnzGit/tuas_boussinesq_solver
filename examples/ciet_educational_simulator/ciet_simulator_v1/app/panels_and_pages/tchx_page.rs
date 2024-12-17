@@ -71,7 +71,7 @@ impl CIETApp {
     pub fn ciet_sim_tchx_page_graph(&mut self, ui: &mut Ui,){
 
         ui.horizontal(|ui| {
-            ui.label("CTAH Page");
+            ui.label("TCHX Page");
             if ui.button("Update CSV Data").clicked(){
                 // spawn a new window with csv data
                 let latest_ciet_plot_data: PagePlotData = 
