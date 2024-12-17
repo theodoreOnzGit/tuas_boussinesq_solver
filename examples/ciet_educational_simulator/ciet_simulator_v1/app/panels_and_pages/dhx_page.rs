@@ -164,10 +164,10 @@ impl CIETApp {
                 )).name("Pri Loop DHX Branch (dhx shell outlet) temperature deg C"));
                 plot_ui.line(Line::new(PlotPoints::from(
                             time_tube_inlet_vec.clone()
-                )).name("DRACS Loop (dhx tube inlet) set pt deg C"));
+                )).name("DRACS Loop (dhx tube inlet) temperature deg C"));
                 plot_ui.line(Line::new(PlotPoints::from(
                             time_tube_outlet_vec.clone()
-                )).name("DRACS Loop (dhx tube outlet) set pt deg C"));
+                )).name("DRACS Loop (dhx tube outlet) temperature deg C"));
                 //plot_ui.line(Line::new(PlotPoints::from(
                 //            time_simulated_reactor_feedback_outlet_temp_vec.clone()
                 //)).name("simulated reactivity bt12 (heater outlet) temperature deg C"));
