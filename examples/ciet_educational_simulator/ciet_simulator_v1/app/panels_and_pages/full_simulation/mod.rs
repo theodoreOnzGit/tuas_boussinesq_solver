@@ -462,9 +462,9 @@ pub fn educational_ciet_loop_version_3(
                 temp.get::<degree_celsius>()
             }).collect();
 
-        // killswitch if any heater cv exceeds 175.0 C
+        // killswitch if any heater cv exceeds 165.0 C
         for heater_cv_temperature_degc in heater_temp_vec_degc.iter() {
-            if *heater_cv_temperature_degc > 175.0 {
+            if *heater_cv_temperature_degc > 165.0 {
                 heat_rate_through_heater = Power::ZERO;
                 local_ciet_state.set_heater_power_kilowatts(0.0);
             }
