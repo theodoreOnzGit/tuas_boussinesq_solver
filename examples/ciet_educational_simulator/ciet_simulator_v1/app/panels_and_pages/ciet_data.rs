@@ -980,6 +980,113 @@ impl PagePlotData {
         self.dhx_plot_data = new_array_to_be_put_back;
     }
 
+
+    pub fn get_dhx_tube_inlet_temp_degc_vs_time_secs_vec(&self) -> Vec<[f64;2]> {
+
+        let time_dhx_tube_inlet_vec: Vec<[f64;2]> = self.dhx_plot_data.iter().map(
+            |tuple|{
+                let (time,
+                    _dhx_shell_dhx_br_mass_flowrate,
+                    _dhx_tube_dracs_loop_mass_flowrate,
+                    dhx_shell_inlet_temp,
+                    _dhx_shell_outlet_temp,
+                    dhx_tube_inlet_temp,
+                    _dhx_tube_outlet_temp,
+                    ) = *tuple;
+
+                if dhx_shell_inlet_temp.get::<kelvin>() > 0.0 {
+                    [time.get::<second>(), dhx_tube_inlet_temp.get::<degree_celsius>()]
+                } else {
+                    // don't return anything, a default 20.0 will do 
+                    // this is the initial condition
+                    [0.0,20.0]
+                }
+
+            }
+        ).collect();
+
+        return time_dhx_tube_inlet_vec;
+    }
+
+    pub fn get_dhx_tube_outlet_temp_degc_vs_time_secs_vec(&self) -> Vec<[f64;2]> {
+
+        let time_dhx_tube_outlet_vec: Vec<[f64;2]> = self.dhx_plot_data.iter().map(
+            |tuple|{
+                let (time,
+                    _dhx_shell_dhx_br_mass_flowrate,
+                    _dhx_tube_dracs_loop_mass_flowrate,
+                    dhx_shell_inlet_temp,
+                    _dhx_shell_outlet_temp,
+                    _dhx_tube_inlet_temp,
+                    dhx_tube_outlet_temp,
+                    ) = *tuple;
+
+                if dhx_shell_inlet_temp.get::<kelvin>() > 0.0 {
+                    [time.get::<second>(), dhx_tube_outlet_temp.get::<degree_celsius>()]
+                } else {
+                    // don't return anything, a default 20.0 will do 
+                    // this is the initial condition
+                    [0.0,20.0]
+                }
+
+            }
+        ).collect();
+
+        return time_dhx_tube_outlet_vec;
+    }
+    pub fn get_dhx_shell_inlet_temp_degc_vs_time_secs_vec(&self) -> Vec<[f64;2]> {
+
+        let time_dhx_shell_inlet_vec: Vec<[f64;2]> = self.dhx_plot_data.iter().map(
+            |tuple|{
+                let (time,
+                    _dhx_shell_dhx_br_mass_flowrate,
+                    _dhx_tube_dracs_loop_mass_flowrate,
+                    dhx_shell_inlet_temp,
+                    _dhx_shell_outlet_temp,
+                    _dhx_tube_inlet_temp,
+                    _dhx_tube_outlet_temp,
+                    ) = *tuple;
+
+                if dhx_shell_inlet_temp.get::<kelvin>() > 0.0 {
+                    [time.get::<second>(), dhx_shell_inlet_temp.get::<degree_celsius>()]
+                } else {
+                    // don't return anything, a default 20.0 will do 
+                    // this is the initial condition
+                    [0.0,20.0]
+                }
+
+            }
+        ).collect();
+
+        return time_dhx_shell_inlet_vec;
+    }
+    pub fn get_dhx_shell_outlet_temp_degc_vs_time_secs_vec(&self) -> Vec<[f64;2]> {
+
+        let time_dhx_shell_outlet_vec: Vec<[f64;2]> = self.dhx_plot_data.iter().map(
+            |tuple|{
+                let (time,
+                    _dhx_shell_dhx_br_mass_flowrate,
+                    _dhx_tube_dracs_loop_mass_flowrate,
+                    dhx_shell_inlet_temp,
+                    dhx_shell_outlet_temp,
+                    _dhx_tube_inlet_temp,
+                    _dhx_tube_outlet_temp,
+                    ) = *tuple;
+
+                if dhx_shell_inlet_temp.get::<kelvin>() > 0.0 {
+                    [time.get::<second>(), dhx_shell_outlet_temp.get::<degree_celsius>()]
+                } else {
+                    // don't return anything, a default 20.0 will do 
+                    // this is the initial condition
+                    [0.0,20.0]
+                }
+
+            }
+        ).collect();
+
+        return time_dhx_shell_outlet_vec;
+    }
+
 }
 
 impl Default for PagePlotData {
