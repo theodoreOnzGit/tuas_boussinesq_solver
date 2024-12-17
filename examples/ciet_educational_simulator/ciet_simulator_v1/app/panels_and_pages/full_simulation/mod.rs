@@ -565,7 +565,7 @@ pub fn educational_ciet_loop_version_3(
 
             let tchx_max_heat_transfer = 
                 HeatTransfer::new::<watt_per_square_meter_kelvin>(
-                    3000.0);
+                    10000.0);
 
             // this makes it physically realistic
             if tchx_heat_trf_output < tchx_minimum_heat_transfer {
@@ -637,7 +637,7 @@ pub fn educational_ciet_loop_version_3(
                     5.0);
             let ctah_max_heat_transfer = 
                 HeatTransfer::new::<watt_per_square_meter_kelvin>(
-                    5000.0);
+                    10000.0);
 
             // this makes it physically realistic
             if ctah_heat_trf_output < ctah_minimum_heat_transfer {
