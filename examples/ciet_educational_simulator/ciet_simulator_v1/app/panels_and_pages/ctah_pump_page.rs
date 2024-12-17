@@ -1,8 +1,8 @@
 
 use egui_plot::{Legend, Line, Plot, PlotPoints};
-use uom::si::{f64::*, mass_rate::kilogram_per_second, power::kilowatt, pressure::pascal, thermodynamic_temperature::degree_celsius, time::second};
+use uom::si::{f64::*, mass_rate::kilogram_per_second, pressure::pascal, thermodynamic_temperature::degree_celsius, time::second};
 
-use egui::{vec2, Color32, Sense, Stroke, Ui, Vec2};
+use egui::Ui;
 
 
 use crate::ciet_simulator_v1::CIETApp;
@@ -60,7 +60,14 @@ impl CIETApp {
 
         });
 
+        // adding the return here because there are too many closing 
+        // parantheses
+        // just demarcates the end
+        return ();
+
     }
+
+
     pub fn ciet_sim_ctah_pump_page_and_graphs(&mut self, ui: &mut Ui){
         // headings 
 
