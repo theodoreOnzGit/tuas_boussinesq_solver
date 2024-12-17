@@ -1,6 +1,7 @@
 use std::thread::JoinHandle;
 use std::thread;
 
+use uom::si::ratio::ratio;
 use uom::ConstZero;
 use uom::si::pressure::atmosphere;
 use uom::si::f64::*;
@@ -455,7 +456,7 @@ impl InsulatedFluidComponent {
         let mut fluid_array: FluidArray 
             = self.pipe_fluid_array.clone().try_into()?;
 
-        let nusselt_estimate: Ratio;
+        let mut nusselt_estimate: Ratio;
 
         if !correct_prandtl_for_wall_temperatures {
             // nusselt estimate is gotten straight from fluid array
@@ -496,6 +497,18 @@ impl InsulatedFluidComponent {
                 reynolds_number, 
                 bulk_prandtl_number, 
                 wall_prandtl_number)?;
+
+            // for no flow or creeping flow, the Nusselt number should be 
+            // equivalent to the conduction , otherwise nusselt is zero
+            //
+            // Nu = hL/k
+            // L is the diameter 
+            //
+            // I'm going to set nusselt at 3.66 at bare minimum
+
+            if nusselt_estimate == Ratio::ZERO {
+                nusselt_estimate = Ratio::new::<ratio>(3.66);
+            }
 
         }
 
