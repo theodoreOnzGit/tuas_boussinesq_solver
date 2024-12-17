@@ -150,6 +150,7 @@ impl eframe::App for CIETApp {
             match self.open_panel {
                 Panel::MainPage => {
                     self.ciet_main_page_side_panel(ui);
+                    self.citation_disclaimer_and_acknowledgements(ui);
                 },
                 Panel::CTAHPump => {
                     self.ciet_sim_ctah_pump_page_csv(ui);

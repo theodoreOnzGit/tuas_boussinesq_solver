@@ -30,7 +30,7 @@ impl CIETApp {
             = self.ciet_state.lock().unwrap().clone();
 
 
-        // time display 
+        // time display and timestep settings
         let sim_time_seconds = ciet_state_local.simulation_time_seconds;
         let elapsed_time_seconds = ciet_state_local.elapsed_time_seconds;
         let calc_time_ms = ciet_state_local.calc_time_ms;
@@ -43,11 +43,36 @@ impl CIETApp {
             + " ;  Calc Time (ms): "
             + &calc_time_ms.to_string();
         let time_display_label = egui::Label::new(time_display_text);
+
         ui.horizontal(|ui|{
             // this method sort of has a bug where toggling fast fwd off 
             // is kind of annoying, but doable
             ui.checkbox(&mut ciet_state_local.fast_forward_settings_turned_on, 
                 "Fast Fowrard");
+            ui.checkbox(&mut ciet_state_local.slow_motion_settings_turned_on, 
+                "Slow Motion");
+            // if slow motion settings turned on, cannot fast fwd and 
+            // vice vera
+            // BUT, both can be turned off at the same time
+            if ciet_state_local.slow_motion_settings_turned_on {
+                ciet_state_local.fast_forward_settings_turned_on = false;
+                // when slowmo settings turned on, can slow down timestep
+
+                let mut local_timestep = ciet_state_local.get_timestep_seconds();
+                let timestep_slider_seconds = egui::Slider::new(
+                    &mut local_timestep, 
+                    0.00001..=0.1)
+                    .logarithmic(true)
+                    .text("Timestep Control (s)")
+                    .drag_value_speed(0.001);
+
+                ui.add(timestep_slider_seconds);
+                ciet_state_local.set_timestep_seconds(local_timestep as f64);
+
+            } else if ciet_state_local.fast_forward_settings_turned_on {
+                ciet_state_local.slow_motion_settings_turned_on = false;
+            }
+
             ui.add(time_display_label);
         });
 
@@ -1199,8 +1224,8 @@ impl CIETApp {
         let min_temp_degc = 20.0;
         let max_temp_degc = 100.0;
         // max temp
-        ui.label("Colour to Temperature Legend");
-        let button_temp_degc = 100.0;
+        ui.heading("Colour to Temperature Legend");
+        let button_temp_degc = 150.0;
         let max_temp_string: String = 
             button_temp_degc.to_string()+" degC or more";
         let max_temp = new_temp_sensitive_button(
@@ -1211,6 +1236,61 @@ impl CIETApp {
             );
         
        ui.add(max_temp);
+       // 140.0
+       let button_temp_degc = 140.0;
+       let button_temp_string: String = 
+           button_temp_degc.to_string()+" degrees celsius";
+       let temp_140_degc = new_temp_sensitive_button(
+           min_temp_degc, 
+           max_temp_degc, 
+           button_temp_degc, 
+           &button_temp_string
+       );
+       ui.add(temp_140_degc);
+       // 130.0
+       let button_temp_degc = 130.0;
+       let button_temp_string: String = 
+           button_temp_degc.to_string()+" degrees celsius";
+       let temp_130_degc = new_temp_sensitive_button(
+           min_temp_degc, 
+           max_temp_degc, 
+           button_temp_degc, 
+           &button_temp_string
+       );
+       ui.add(temp_130_degc);
+       // 120.0
+       let button_temp_degc = 120.0;
+       let button_temp_string: String = 
+           button_temp_degc.to_string()+" degrees celsius";
+       let temp_120_degc = new_temp_sensitive_button(
+           min_temp_degc, 
+           max_temp_degc, 
+           button_temp_degc, 
+           &button_temp_string
+       );
+       ui.add(temp_120_degc);
+       // 110.0
+       let button_temp_degc = 110.0;
+       let button_temp_string: String = 
+           button_temp_degc.to_string()+" degrees celsius";
+       let temp_110_degc = new_temp_sensitive_button(
+           min_temp_degc, 
+           max_temp_degc, 
+           button_temp_degc, 
+           &button_temp_string
+       );
+       ui.add(temp_110_degc);
+       // 100.0
+       let button_temp_degc = 100.0;
+       let button_temp_string: String = 
+           button_temp_degc.to_string()+" degrees celsius";
+       let temp_100_degc = new_temp_sensitive_button(
+           min_temp_degc, 
+           max_temp_degc, 
+           button_temp_degc, 
+           &button_temp_string
+       );
+       ui.add(temp_100_degc);
 
        // 90.0
        let button_temp_degc = 90.0;
