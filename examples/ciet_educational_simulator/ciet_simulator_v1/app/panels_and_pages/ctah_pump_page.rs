@@ -138,6 +138,46 @@ impl CIETApp {
             let time_ctah_mass_flowrate_vec: Vec<[f64;2]> = 
                 latest_ciet_plot_data.get_ctah_br_mass_kg_per_s_vs_time_secs_vec();
 
+            ui.heading("CTAH Pump Pressure vs Time");
+            let mut ctah_pump_temp_plot = Plot::new("CTAH Pump Pressure Pascals").legend(Legend::default());
+            ctah_pump_temp_plot = ctah_pump_temp_plot.width(800.0);
+            ctah_pump_temp_plot = ctah_pump_temp_plot.view_aspect(16.0/9.0);
+            ctah_pump_temp_plot = ctah_pump_temp_plot.x_axis_label(
+                "time (seconds), current time (seconds): ".to_owned() 
+            );
+            ctah_pump_temp_plot = ctah_pump_temp_plot.y_axis_label(
+                "Pressure (Pa)".to_owned());
+
+            ctah_pump_temp_plot.show(ui, |plot_ui| {
+                plot_ui.line(Line::new(PlotPoints::from(
+                            time_ctah_pump_pressure_pascals_vec.clone()
+                )).name("CTAH Pump Pressure Pascals"));
+                //plot_ui.line(Line::new(PlotPoints::from(
+                //            time_simulated_reactor_feedback_outlet_temp_vec.clone()
+                //)).name("simulated reactivity bt12 (heater outlet) temperature deg C"));
+            });
+
+            ui.heading("CTAH Branch Mass Flowrate vs Time");
+            let mut ctah_pump_temp_plot = Plot::new("CTAH Pump Mass Flowrate kg/s").legend(Legend::default());
+            ctah_pump_temp_plot = ctah_pump_temp_plot.width(800.0);
+            ctah_pump_temp_plot = ctah_pump_temp_plot.view_aspect(16.0/9.0);
+            ctah_pump_temp_plot = ctah_pump_temp_plot.x_axis_label(
+                "time (seconds), current time (seconds): ".to_owned() 
+            );
+            ctah_pump_temp_plot = ctah_pump_temp_plot.y_axis_label(
+                "Mass Flowrate (kg/s)".to_owned());
+
+            ctah_pump_temp_plot.show(ui, |plot_ui| {
+                plot_ui.line(Line::new(PlotPoints::from(
+                            time_ctah_mass_flowrate_vec.clone()
+                )).name("CTAH Branch Mass Flowrate"));
+                //plot_ui.line(Line::new(PlotPoints::from(
+                //            time_simulated_reactor_feedback_outlet_temp_vec.clone()
+                //)).name("simulated reactivity bt12 (heater outlet) temperature deg C"));
+            });
+
+            self.citation_disclaimer_and_acknowledgements(ui);
+
         });
 
         // ends everything, 
