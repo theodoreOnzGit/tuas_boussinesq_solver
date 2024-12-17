@@ -1,7 +1,9 @@
 use std::{sync::{Arc,Mutex}, thread, time::Duration};
 
 use panels_and_pages::{ciet_data::{CIETState, PagePlotData}, full_simulation::educational_ciet_loop_version_3, heater_ctrl_and_frequency_response::FreqResponseSettings, Panel};
+use uom::si::{power::kilowatt, time::second};
 use useful_functions::update_ciet_plot_from_ciet_state;
+use uom::si::f64::*;
 
 
 
@@ -101,6 +103,8 @@ impl CIETApp {
 
         new_ciet_app
     }
+
+    
 }
 
 impl eframe::App for CIETApp {
@@ -237,10 +241,33 @@ impl eframe::App for CIETApp {
             });
 
         });
+        
+        // frequency response controls
+        // first get current state
+        let mut ciet_state_local: CIETState 
+            = self.ciet_state.lock().unwrap().clone();
+        let current_sim_time = 
+            Time::new::<second>(
+                ciet_state_local.simulation_time_seconds
+            );
+
+        let total_heater_power_kw = 
+            self.frequency_response_settings
+            .get_frequency_response_signal(current_sim_time)
+            .get::<kilowatt>();
+        ciet_state_local.heater_power_kilowatts = 
+            total_heater_power_kw;
+        // update frequency response back into state 
+        self.ciet_state.lock().unwrap().overwrite_state(ciet_state_local);
 
         // request update every 0.1 s 
 
         ctx.request_repaint_after(Duration::from_millis(50));
+
+        // adding the return here because there are too many closing 
+        // parantheses
+        // just demarcates the end
+        return ();
     }
 }
 
