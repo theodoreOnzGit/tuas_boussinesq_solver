@@ -174,11 +174,13 @@ impl CIETApp {
             });
 
 
-            let time_ctah_htc_vec: Vec<[f64;2]> = 
-                latest_ciet_plot_data.get_ctah_htc_watts_per_m2_kelvin_vs_time_secs_vec();
+            let time_dhx_br_flowrate_dhx_shell: Vec<[f64;2]> = 
+                latest_ciet_plot_data.get_dhx_shell_mass_rate_kg_per_s_vs_time_secs_vec();
+            let time_dracs_loop_flowrate_dhx_tube: Vec<[f64;2]> = 
+                latest_ciet_plot_data.get_dhx_tube_mass_rate_kg_per_s_vs_time_secs_vec();
 
             ui.separator();
-            let mut power_plot = Plot::new("CTAH heat trf coeff plot").legend(Legend::default());
+            let mut power_plot = Plot::new("DHX STHE mass flowrates ").legend(Legend::default());
 
             // sets the aspect for plot 
             power_plot = power_plot.width(800.0);
@@ -188,13 +190,16 @@ impl CIETApp {
             power_plot = power_plot.x_axis_label(
                 "time (seconds)");
             power_plot = power_plot.y_axis_label(
-                "htc (watts per m2 kelvin)".to_owned());
+                "mass flowrate (kg/s)".to_owned());
 
-            ui.heading("CTAH Heat Transfer Coefficient (HTC) vs Time");
+            ui.heading("DHX STHE mass flowrate  vs Time");
             power_plot.show(ui, |plot_ui| {
                 plot_ui.line(Line::new(PlotPoints::from(
-                            time_ctah_htc_vec
-                )));
+                            time_dhx_br_flowrate_dhx_shell
+                )).name("Shell Side (Pri loop DHX Branch)"));
+                plot_ui.line(Line::new(PlotPoints::from(
+                            time_dracs_loop_flowrate_dhx_tube
+                )).name("Tube Side (DRACS Loop)"));
             });
 
 

@@ -1220,7 +1220,7 @@ pub fn educational_ciet_loop_version_3(
 
             local_ciet_state.fm20_dhx_branch_kg_per_s = 
                 ((mass_flowrate_dhx_br.clone()
-                  .get::<kilogram_per_second>() *1000.0).round()/1000.0
+                  .get::<kilogram_per_second>() *10000.0).round()/10000.0
                 ) as f32 ;
 
             let pipe_22_temp = 
@@ -1419,9 +1419,10 @@ pub fn educational_ciet_loop_version_3(
             local_ciet_state.fm60_label_37a_temp_degc = 
                 pipe_21a_temp.get::<degree_celsius>() as f32;
 
+            // 4dp preferred
             local_ciet_state.fm_60_dracs_kg_per_s = 
                 (mass_flowrate_dracs_loop_abs
-                 .get::<kilogram_per_second>() *1000.0).round()/1000.0 ;
+                 .get::<kilogram_per_second>() *10000.0).round()/10000.0 ;
 
             let pipe_38_temp = 
                 *pipe_38
@@ -1599,7 +1600,7 @@ pub fn educational_ciet_loop_version_3(
 
             local_ciet_state.fm40_ctah_branch_kg_per_s = 
                 (mass_flowrate_ctah_br.clone()
-                 .get::<kilogram_per_second>() *1000.0).round()/1000.0;
+                 .get::<kilogram_per_second>() *10000.0).round()/10000.0;
 
             let pipe_15_temp = 
                 *pipe_15

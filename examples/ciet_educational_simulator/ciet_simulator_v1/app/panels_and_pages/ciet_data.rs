@@ -1086,6 +1086,60 @@ impl PagePlotData {
 
         return time_dhx_shell_outlet_vec;
     }
+    pub fn get_dhx_shell_mass_rate_kg_per_s_vs_time_secs_vec(&self) -> Vec<[f64;2]> {
+
+        let time_dhx_br_massrate_vec: Vec<[f64;2]> = self.dhx_plot_data.iter().map(
+            |tuple|{
+                let (time,
+                    dhx_shell_dhx_br_mass_flowrate,
+                    _dhx_tube_dracs_loop_mass_flowrate,
+                    dhx_shell_inlet_temp,
+                    _dhx_shell_outlet_temp,
+                    _dhx_tube_inlet_temp,
+                    _dhx_tube_outlet_temp,
+                    ) = *tuple;
+
+                if dhx_shell_inlet_temp.get::<kelvin>() > 0.0 {
+                    [time.get::<second>(), 
+                    dhx_shell_dhx_br_mass_flowrate.get::<kilogram_per_second>()]
+                } else {
+                    // don't return anything, a default 0.0 will do 
+                    // this is the initial condition
+                    [0.0,0.0]
+                }
+
+            }
+        ).collect();
+
+        return time_dhx_br_massrate_vec;
+    }
+    pub fn get_dhx_tube_mass_rate_kg_per_s_vs_time_secs_vec(&self) -> Vec<[f64;2]> {
+
+        let time_dracs_loop_massrate_vec: Vec<[f64;2]> = self.dhx_plot_data.iter().map(
+            |tuple|{
+                let (time,
+                    _dhx_shell_dhx_br_mass_flowrate,
+                    dhx_tube_dracs_loop_mass_flowrate,
+                    dhx_shell_inlet_temp,
+                    _dhx_shell_outlet_temp,
+                    _dhx_tube_inlet_temp,
+                    _dhx_tube_outlet_temp,
+                    ) = *tuple;
+
+                if dhx_shell_inlet_temp.get::<kelvin>() > 0.0 {
+                    [time.get::<second>(), 
+                    dhx_tube_dracs_loop_mass_flowrate.get::<kilogram_per_second>()]
+                } else {
+                    // don't return anything, a default 0.0 will do 
+                    // this is the initial condition
+                    [0.0,0.0]
+                }
+
+            }
+        ).collect();
+
+        return time_dracs_loop_massrate_vec;
+    }
 
 }
 
