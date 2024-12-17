@@ -18,7 +18,7 @@ pub struct CIETState {
     pub calc_time_ms: f64,
     // user inputs
     pub heater_power_kilowatts: f64,
-    pub ctah_pump_massrate_set_point: f64,
+    pub ctah_pump_temp_degc: f64,
     pub bt_41_ctah_outlet_set_pt_deg_c: f64,
     pub bt_66_tchx_outlet_set_pt_deg_c: f64,
     // heater branch
@@ -111,7 +111,7 @@ impl Default for CIETState {
     fn default() -> Self {
         CIETState {
             heater_power_kilowatts: 0.0,
-            ctah_pump_massrate_set_point: 0.0,
+            ctah_pump_temp_degc: 21.0,
             bt_11_heater_inlet_deg_c: 21.0,
             bt_12_heater_outlet_deg_c: 21.0,
             bt_43_ctah_inlet_deg_c: 21.0,

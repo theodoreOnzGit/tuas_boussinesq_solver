@@ -1511,6 +1511,19 @@ pub fn educational_ciet_loop_version_3(
             local_ciet_state.pipe_12_temp_degc = 
                 pipe_12_temp.get::<degree_celsius>() as f32;
 
+            // ctah pump temp 
+
+            let ctah_pump_temp = 
+                *ctah_pump
+                .pipe_fluid_array_temperature()
+                .unwrap()
+                .first()
+                .unwrap();
+
+            local_ciet_state.ctah_pump_temp_degc = 
+                ctah_pump_temp.get::<degree_celsius>();
+
+
             let pipe_13_temp = 
                 *pipe_13
                 .pipe_fluid_array_temperature()

@@ -210,18 +210,15 @@ pub fn update_ciet_plot_from_ciet_state(
                     local_ciet_state.fm40_ctah_branch_kg_per_s
                 );
 
-            let ctah_pump_temperature_estimate: ThermodynamicTemperature = 
+            let ctah_pump_temperature: ThermodynamicTemperature = 
                 ThermodynamicTemperature::new::<degree_celsius>(
-                    0.5*(
-                        local_ciet_state.pipe_12_temp_degc + 
-                        local_ciet_state.pipe_13_temp_degc
-                    ) as f64);
+                    local_ciet_state.ctah_pump_temp_degc);
 
             local_ciet_plot.insert_ctah_pump_data(
                 current_time, 
                 ctah_pump_pressure, 
                 ctah_br_mass_flowrate, 
-                ctah_pump_temperature_estimate);
+                ctah_pump_temperature);
 
         }
         // tchx data
