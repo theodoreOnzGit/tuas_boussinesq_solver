@@ -1,7 +1,7 @@
 use std::{ops::{Deref, DerefMut}, sync::{Arc, Mutex}, thread, time::{Duration, SystemTime}};
 
 use tuas_boussinesq_solver::{boussinesq_thermophysical_properties::LiquidMaterial, pre_built_components::ciet_three_branch_plus_dracs::{components::{new_active_ctah_horizontal, new_active_ctah_vertical}, solver_functions::{ciet_pri_loop_three_branch_link_up_components, pri_loop_three_branch_advance_timestep_except_dhx, three_branch_pri_loop_flowrates_parallel}}, prelude::beta_testing::HeatTransferEntity, single_control_vol::SingleCVNode};
-use uom::si::{mass_rate::kilogram_per_second, power::kilowatt, pressure::{atmosphere, pascal}};
+use uom::si::{mass_rate::kilogram_per_second, power::kilowatt, pressure::{atmosphere, pascal}, temperature_interval::degree_celsius};
 
 use super::ciet_data::CIETState;
 pub fn educational_ciet_loop_version_3(
@@ -54,7 +54,7 @@ pub fn educational_ciet_loop_version_3(
 
     // controller for tchx 
 
-    let tchx_controller_gain = Ratio::new::<ratio>(40.75);
+    let tchx_controller_gain = Ratio::new::<ratio>(70.75);
     let tchx_integral_time: Time = tchx_controller_gain / Frequency::new::<hertz>(1.0);
     let tchx_derivative_time: Time = Time::new::<second>(1.0);
     // derivative time ratio
@@ -282,8 +282,7 @@ pub fn educational_ciet_loop_version_3(
     // eg 10k.
 
     let ideal_nusselt_number_for_tchx: NusseltCorrelation = 
-        NusseltCorrelation::FixedNusselt(
-            Ratio::new::<ratio>(800.0));
+        NusseltCorrelation::IdealNusseltOneBillion;
 
     let ideal_nusselt_number_for_ctah: NusseltCorrelation = 
         NusseltCorrelation::IdealNusseltOneBillion;
@@ -518,11 +517,14 @@ pub fn educational_ciet_loop_version_3(
             // first, calculate the set point error 
 
             let reference_temperature_interval_deg_celsius = 80.0;
+            // tchx outlet temperature 
+            let tchx_outlet_temperature_degc = 
+                local_ciet_state.get_tchx_outlet_temp_degc();
 
             // error = y_sp - y_measured
             let set_point_abs_error_deg_celsius = 
-                -tchx_outlet_temperature_set_point.get::<kelvin>()
-                +tchx_outlet_temperature.get::<kelvin>();
+                -tchx_outlet_temperature_set_point.get::<degree_celsius>()
+                +tchx_outlet_temperature_degc;
 
             let nondimensional_error: Ratio = 
                 (set_point_abs_error_deg_celsius/
