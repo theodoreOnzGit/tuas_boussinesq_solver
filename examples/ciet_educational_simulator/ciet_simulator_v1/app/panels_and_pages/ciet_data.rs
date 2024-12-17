@@ -247,7 +247,7 @@ impl CIETState {
         return self.bt_66_tchx_outlet_deg_c;
     }
 
-    pub fn set_tchx_outlet_setpt_degc(&mut self, tchx_out_degc: f64){
+    pub fn _set_tchx_outlet_setpt_degc(&mut self, tchx_out_degc: f64){
         self.bt_66_tchx_outlet_set_pt_deg_c = tchx_out_degc;
     }
 
@@ -260,7 +260,7 @@ impl CIETState {
         return self.bt_41_ctah_outlet_deg_c;
     }
 
-    pub fn set_ctah_outlet_setpt_degc(&mut self, ctah_out_degc: f64){
+    pub fn _set_ctah_outlet_setpt_degc(&mut self, ctah_out_degc: f64){
         self.bt_41_ctah_outlet_set_pt_deg_c = ctah_out_degc;
     }
 
@@ -385,6 +385,33 @@ pub struct PagePlotData {
         ThermodynamicTemperature,
         ThermodynamicTemperature); NUM_DATA_PTS_IN_PLOTS
     ],
+
+    // time, 
+    // pump pressure
+    // tube mass flowrate,
+    // ctah pump temperature 
+    pub ctah_pump_plot_data: [
+        (Time, Pressure, MassRate,
+         ThermodynamicTemperature,) ; NUM_DATA_PTS_IN_PLOTS
+    ],
+
+    // time, 
+    // shell mass flowrate ,
+    // tube mass flowrate,
+    // dhx shell inlet temp
+    // dhx shell outlet temp 
+    // dhx tube inlet temp 
+    // dhx tube outlet temp
+    pub dhx_plot_data: 
+        [
+        (Time, MassRate, MassRate,
+            ThermodynamicTemperature,
+            ThermodynamicTemperature,
+            ThermodynamicTemperature,
+            ThermodynamicTemperature,
+        ) ; NUM_DATA_PTS_IN_PLOTS],
+
+
 }
 
     pub const NUM_DATA_PTS_IN_PLOTS: usize = 2000;
@@ -799,12 +826,43 @@ impl Default for PagePlotData {
              ThermodynamicTemperature::ZERO); NUM_DATA_PTS_IN_PLOTS
             ];
 
+        // ctah pump data default 
+
+        let ctah_pump_data_default = 
+            [ (Time::ZERO, Pressure::ZERO, 
+             MassRate::ZERO,
+             ThermodynamicTemperature::ZERO
+             ); NUM_DATA_PTS_IN_PLOTS
+            ];
+        // dhx data default 
+        //
+        // time, 
+        // shell mass flowrate ,
+        // tube mass flowrate,
+        // dhx shell inlet temp
+        // dhx shell outlet temp 
+        // dhx tube inlet temp 
+        // dhx tube outlet temp
+        let dhx_data_default = 
+            [
+            (Time::ZERO, MassRate::ZERO, 
+             MassRate::ZERO,
+             ThermodynamicTemperature::ZERO,
+             ThermodynamicTemperature::ZERO,
+             ThermodynamicTemperature::ZERO,
+             ThermodynamicTemperature::ZERO,
+            ); NUM_DATA_PTS_IN_PLOTS
+            ];
+
+
 
         Self { 
             // first, a blank dataset
             heater_plot_data: heater_data_default,
             ctah_plot_data: ctah_data_default,
             tchx_plot_data: tchx_data_default,
+            ctah_pump_plot_data: ctah_pump_data_default,
+            dhx_plot_data: dhx_data_default,
 
         }
     }

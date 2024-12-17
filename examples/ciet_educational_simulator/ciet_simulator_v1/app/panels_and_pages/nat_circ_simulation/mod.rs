@@ -5,7 +5,7 @@ use uom::si::{mass_rate::kilogram_per_second, power::kilowatt};
 use super::ciet_data::CIETState;
 
 
-pub fn coupled_dracs_loop_version_7(
+pub fn _coupled_dracs_loop_version_7(
     global_ciet_state_ptr: Arc<Mutex<CIETState>>){
     use uom::si::length::centimeter;
     use uom::si::f64::*;

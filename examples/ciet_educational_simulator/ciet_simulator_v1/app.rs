@@ -120,7 +120,7 @@ impl eframe::App for CIETApp {
             });
 
 
-            ui.heading("ciet simulator v1");
+            ui.heading("CIET Educational Simulator v1");
             ui.separator();
             // allow user to select which panel is open
             ui.horizontal( 
