@@ -1296,6 +1296,10 @@ pub fn educational_ciet_loop_version_3(
             local_ciet_state.pipe_30a_temp_degc = 
                 pipe_30a_temp.get::<degree_celsius>() as f32;
 
+            local_ciet_state.bt_60_dhx_tube_inlet_deg_c = 
+                pipe_30a_temp.get::<degree_celsius>();
+
+
 
             let pipe_30b_temp = 
                 *dhx_tube_side_30b
@@ -1306,6 +1310,9 @@ pub fn educational_ciet_loop_version_3(
 
             local_ciet_state.pipe_30b_temp_degc = 
                 pipe_30b_temp.get::<degree_celsius>() as f32;
+
+            local_ciet_state.bt_21_dhx_tube_outlet_deg_c = 
+                pipe_30b_temp.get::<degree_celsius>();
 
             let pipe_31_temp = 
                 *static_mixer_61_label_31
