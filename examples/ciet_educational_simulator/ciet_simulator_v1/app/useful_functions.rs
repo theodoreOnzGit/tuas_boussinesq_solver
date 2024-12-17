@@ -133,7 +133,7 @@ pub fn hot_to_cold_colour(hotness: f32) -> Color32 {
 
 
 /// this is for updating plots within ciet 
-use uom::si::{f64::*, heat_transfer::watt_per_square_meter_kelvin, power::kilowatt, thermodynamic_temperature::degree_celsius, time::second};
+use uom::si::{f64::*, heat_transfer::watt_per_square_meter_kelvin, mass_rate::kilogram_per_second, power::kilowatt, pressure::pascal, thermodynamic_temperature::degree_celsius, time::second};
 pub fn update_ciet_plot_from_ciet_state(
     ciet_state_ptr: Arc<Mutex<CIETState>>,
     ciet_plot_ptr: Arc<Mutex<PagePlotData>>){
@@ -199,6 +199,31 @@ pub fn update_ciet_plot_from_ciet_state(
                 outlet_temp_set_pt);
 
         }
+        // ctah pump data 
+        {
+            let ctah_pump_pressure: Pressure = 
+                Pressure::new::<pascal>(
+                    local_ciet_state.get_ctah_pump_pressure_f64());
+
+            let ctah_br_mass_flowrate: MassRate = 
+                MassRate::new::<kilogram_per_second>(
+                    local_ciet_state.fm40_ctah_branch_kg_per_s
+                );
+
+            let ctah_pump_temperature_estimate: ThermodynamicTemperature = 
+                ThermodynamicTemperature::new::<degree_celsius>(
+                    0.5*(
+                        local_ciet_state.pipe_12_temp_degc + 
+                        local_ciet_state.pipe_13_temp_degc
+                    ) as f64);
+
+            local_ciet_plot.insert_ctah_pump_data(
+                current_time, 
+                ctah_pump_pressure, 
+                ctah_br_mass_flowrate, 
+                ctah_pump_temperature_estimate);
+
+        }
         // tchx data
         {
             let tchx_heat_transfer_coeff: HeatTransfer = 
@@ -224,6 +249,7 @@ pub fn update_ciet_plot_from_ciet_state(
                 outlet_temp_set_pt);
 
         }
+        
 
         // update the plot
         *ciet_plot_ptr.lock().unwrap().deref_mut()
