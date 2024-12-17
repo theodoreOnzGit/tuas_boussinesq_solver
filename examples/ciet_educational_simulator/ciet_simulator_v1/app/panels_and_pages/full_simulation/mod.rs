@@ -470,7 +470,11 @@ pub fn educational_ciet_loop_version_3(
             }
         }
 
-        // killswitch if any heated pipe cv exceeds 550C
+        // killswitch if any heated pipe cv exceeds 350C
+        //
+        // this tends to happen when you reverse the pump in the 
+        // the heater fluid gets too hot and simulation crashes
+        // forced circ loop such that you have opposing mixed convection
 
         let heater_surf_temp_vec_degc: Vec<f64> = 
             heater_ver_1.pipe_shell_temperature()
@@ -481,7 +485,7 @@ pub fn educational_ciet_loop_version_3(
             }).collect();
 
         for heater_cv_temperature_degc in heater_surf_temp_vec_degc.iter() {
-            if *heater_cv_temperature_degc > 550.0 {
+            if *heater_cv_temperature_degc > 350.0 {
                 heat_rate_through_heater = Power::ZERO;
                 local_ciet_state.set_heater_power_kilowatts(0.0);
             }
