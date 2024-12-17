@@ -24,7 +24,15 @@ sudo apt install gcc libssl-dev pkg-config
 ```
 
 
+
 # Todo List 
+
+## dependency bugs on WSL
+
+I'm running into some conflicting dependency issues with 
+egui on WSL, but not on my Linux Mint and Arch Linux 
+machine... not sure why. It can 
+run on native windows though, but WSL is problematic.
 
 ## Performance
 
