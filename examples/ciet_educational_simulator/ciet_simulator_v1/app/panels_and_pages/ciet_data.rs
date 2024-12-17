@@ -344,6 +344,8 @@ impl CIETState {
 
 }
 
+use uom::si::mass_rate::kilogram_per_second;
+use uom::si::pressure::pascal;
 use uom::ConstZero;
 use uom::si::time::second;
 use uom::si::heat_transfer::watt_per_square_meter_kelvin;
@@ -844,6 +846,71 @@ impl PagePlotData {
         }
 
         self.ctah_pump_plot_data = new_array_to_be_put_back;
+    }
+
+    // ctah pump 
+
+    /// get ctah pump pressure data vs time
+    pub fn get_ctah_pump_pressure_pascals_vs_time_secs_vec(&self) -> Vec<[f64;2]> {
+
+        let time_ctah_pump_pressure_vec: Vec<[f64;2]> = self.ctah_pump_plot_data.iter().map(
+            |tuple|{
+                let (time,ctah_pump_pressure,_ctah_br_flowrate,ctah_pump_temp) = *tuple;
+
+                if ctah_pump_temp.get::<kelvin>() > 0.0 {
+                    [time.get::<second>(), ctah_pump_pressure.get::<pascal>()]
+                } else {
+                    // don't return anything, a default 0.0 will do 
+                    // this is the initial condition
+                    [0.0,0.0]
+                }
+
+            }
+        ).collect();
+
+        return time_ctah_pump_pressure_vec;
+    }
+
+
+    pub fn get_ctah_br_mass_kg_per_s_vs_time_secs_vec(&self) -> Vec<[f64;2]> {
+
+        let time_ctah_pump_massrate_vec: Vec<[f64;2]> = self.ctah_pump_plot_data.iter().map(
+            |tuple|{
+                let (time,_ctah_pump_pressure,ctah_br_flowrate,ctah_pump_temp) = *tuple;
+
+                if ctah_pump_temp.get::<kelvin>() > 0.0 {
+                    [time.get::<second>(), ctah_br_flowrate.get::<kilogram_per_second>()]
+                } else {
+                    // don't return anything, a default 0.0 will do 
+                    // this is the initial condition
+                    [0.0,0.0]
+                }
+
+            }
+        ).collect();
+
+        return time_ctah_pump_massrate_vec;
+    }
+
+
+    pub fn get_ctah_pump_temp_degc_vs_time_secs_vec(&self) -> Vec<[f64;2]> {
+
+        let time_ctah_pump_massrate_vec: Vec<[f64;2]> = self.ctah_pump_plot_data.iter().map(
+            |tuple|{
+                let (time,_ctah_pump_pressure,_ctah_br_flowrate,ctah_pump_temp) = *tuple;
+
+                if ctah_pump_temp.get::<kelvin>() > 0.0 {
+                    [time.get::<second>(), ctah_pump_temp.get::<degree_celsius>()]
+                } else {
+                    // don't return anything, a default 20.0 will do 
+                    // this is the initial condition
+                    [0.0,20.0]
+                }
+
+            }
+        ).collect();
+
+        return time_ctah_pump_massrate_vec;
     }
 }
 
