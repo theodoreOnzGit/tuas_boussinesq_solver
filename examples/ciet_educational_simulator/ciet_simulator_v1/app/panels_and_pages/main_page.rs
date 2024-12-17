@@ -107,7 +107,7 @@ impl CIETApp {
         let heater_slider_y_width = heater_y_width;
 
         // if frequency response mode is not switched on
-        if !self.frequency_response_settings.frequency_response_switched_on {
+        if !self.frequency_response_settings.advanced_heater_control_switched_on {
             self.put_widget_with_size_and_centre(
                 ui, 
                 heater_set_pt_slider_kw, 
