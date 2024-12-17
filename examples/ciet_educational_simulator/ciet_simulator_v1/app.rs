@@ -129,7 +129,7 @@ impl eframe::App for CIETApp {
                     ui.selectable_value(&mut self.open_panel, Panel::Heater, "Heater"); 
                     ui.selectable_value(&mut self.open_panel, Panel::CTAH, "CTAH"); 
                     ui.selectable_value(&mut self.open_panel, Panel::CTAHPump, "CTAH Pump"); 
-                    ui.selectable_value(&mut self.open_panel, Panel::TCHX, "TCHX and DRACS Loop"); 
+                    ui.selectable_value(&mut self.open_panel, Panel::TCHX, "TCHX"); 
                     ui.selectable_value(&mut self.open_panel, Panel::DHX, "DHX Branch"); 
                     ui.selectable_value(&mut self.open_panel, Panel::SchematicDiagram, "CIET Schematic Diagram"); 
                     ui.selectable_value(&mut self.open_panel, Panel::NodalisedDiagram, "CIET NodalisedDiagram Diagram"); 

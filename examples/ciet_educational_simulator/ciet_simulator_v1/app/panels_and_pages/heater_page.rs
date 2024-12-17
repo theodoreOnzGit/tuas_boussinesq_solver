@@ -111,6 +111,7 @@ impl CIETApp {
             let time_bt12_vec: Vec<[f64;2]> = 
                 latest_ciet_plot_data.get_bt_12_degc_vs_time_secs_vec();
 
+            ui.heading("Heater Inlet and Outlet Temperature vs Time");
             bt11_bt12_temp_plot.show(ui, |plot_ui| {
                 plot_ui.line(Line::new(PlotPoints::from(
                             time_bt11_vec.clone()
@@ -139,6 +140,9 @@ impl CIETApp {
                 "time (seconds)");
             power_plot = power_plot.y_axis_label(
                 "heater power (kW)".to_owned());
+
+
+            ui.heading("Heater Power vs Time");
             power_plot.show(ui, |plot_ui| {
                 plot_ui.line(Line::new(PlotPoints::from(
                             time_heater_power_vec

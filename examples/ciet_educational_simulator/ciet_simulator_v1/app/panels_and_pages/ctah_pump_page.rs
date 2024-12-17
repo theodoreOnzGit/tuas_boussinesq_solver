@@ -106,6 +106,7 @@ impl CIETApp {
         // graphs
         egui::ScrollArea::both().show(ui, |ui| {
 
+            ui.heading("CTAH Pump Temperature vs Time");
             let mut ctah_pump_temp_plot = Plot::new("CTAH Pump temp degC").legend(Legend::default());
             ctah_pump_temp_plot = ctah_pump_temp_plot.width(800.0);
             ctah_pump_temp_plot = ctah_pump_temp_plot.view_aspect(16.0/9.0);
@@ -128,6 +129,14 @@ impl CIETApp {
                 //)).name("simulated reactivity bt12 (heater outlet) temperature deg C"));
             });
 
+            // 
+
+
+            // to be completed
+            let time_ctah_pump_pressure_pascals_vec: Vec<[f64;2]> = 
+                latest_ciet_plot_data.get_ctah_pump_pressure_pascals_vs_time_secs_vec();
+            let time_ctah_mass_flowrate_vec: Vec<[f64;2]> = 
+                latest_ciet_plot_data.get_ctah_br_mass_kg_per_s_vs_time_secs_vec();
 
         });
 

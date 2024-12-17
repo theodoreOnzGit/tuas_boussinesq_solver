@@ -119,6 +119,7 @@ impl CIETApp {
             let time_bt66_setpt_vec: Vec<[f64;2]> = 
                 latest_ciet_plot_data.get_bt_66_setpt_degc_vs_time_secs_vec();
 
+            ui.heading("TCHX Inlet and Outlet Temperature vs Time");
             bt65_bt66_temp_plot.show(ui, |plot_ui| {
                 plot_ui.line(Line::new(PlotPoints::from(
                             time_bt65_vec.clone()
@@ -152,6 +153,9 @@ impl CIETApp {
                 "time (seconds)");
             power_plot = power_plot.y_axis_label(
                 "htc (watts per m2 kelvin)".to_owned());
+
+
+            ui.heading("TCHX Heat Transfer Coefficient (HTC) vs Time");
             power_plot.show(ui, |plot_ui| {
                 plot_ui.line(Line::new(PlotPoints::from(
                             time_tchx_htc_vec
