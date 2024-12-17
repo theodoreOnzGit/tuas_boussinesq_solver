@@ -416,7 +416,7 @@ pub struct PagePlotData {
 
 }
 
-    pub const NUM_DATA_PTS_IN_PLOTS: usize = 2000;
+pub const NUM_DATA_PTS_IN_PLOTS: usize = 4000;
 
 impl PagePlotData {
 

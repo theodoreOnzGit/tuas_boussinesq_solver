@@ -1,6 +1,6 @@
 use std::{sync::{Arc,Mutex}, thread, time::Duration};
 
-use panels_and_pages::{ciet_data::{CIETState, PagePlotData}, full_simulation::educational_ciet_loop_version_3, Panel};
+use panels_and_pages::{ciet_data::{CIETState, PagePlotData}, full_simulation::educational_ciet_loop_version_3, heater_ctrl_and_frequency_response::FreqResponseSettings, Panel};
 use useful_functions::update_ciet_plot_from_ciet_state;
 
 
@@ -28,6 +28,9 @@ pub struct CIETApp {
     #[serde(skip)]
     ciet_plot_data: PagePlotData,
 
+    #[serde(skip)]
+    frequency_response_settings: FreqResponseSettings,
+
 }
 
 pub mod panels_and_pages;
@@ -48,6 +51,7 @@ impl Default for CIETApp {
             ciet_state,
             ciet_plot_data_mutex_ptr_for_parallel_data_transfer: ciet_plot_data,
             ciet_plot_data: PagePlotData::default(),
+            frequency_response_settings: FreqResponseSettings::default(),
 
         }
     }
@@ -131,7 +135,7 @@ impl eframe::App for CIETApp {
                     ui.selectable_value(&mut self.open_panel, Panel::CTAHPump, "CTAH Pump"); 
                     ui.selectable_value(&mut self.open_panel, Panel::TCHX, "TCHX"); 
                     ui.selectable_value(&mut self.open_panel, Panel::DHX, "DHX STHE"); 
-                    ui.selectable_value(&mut self.open_panel, Panel::SchematicDiagram, "CIET Schematic Diagram"); 
+                    ui.selectable_value(&mut self.open_panel, Panel::HeaterAndFrequencyResponse, "Frequency Response"); 
                     ui.selectable_value(&mut self.open_panel, Panel::NodalisedDiagram, "CIET NodalisedDiagram Diagram"); 
             }
             );
@@ -161,7 +165,10 @@ impl eframe::App for CIETApp {
                 Panel::TCHX => {
                     self.ciet_sim_tchx_page_csv(ui);
                 },
-                Panel::SchematicDiagram => {},
+                Panel::HeaterAndFrequencyResponse => {
+
+                    self.ciet_sim_heater_page_csv(ui);
+                },
                 Panel::NodalisedDiagram => {},
             }
         });
@@ -176,11 +183,14 @@ impl eframe::App for CIETApp {
             // show correct panel or page based on user selection
 
             match self.open_panel {
-                Panel::SchematicDiagram => {
+                Panel::HeaterAndFrequencyResponse => {
                     // enables scrolling within the image
-                    egui::ScrollArea::both().show(ui, |ui| {
-                        ui.image(egui::include_image!("ciet_gui_schematics.png"));
-                    });
+                    //egui::ScrollArea::both().show(ui, |ui| {
+                    //    ui.image(egui::include_image!("ciet_gui_schematics.png"));
+                    //});
+                    self.ciet_sim_freq_response_page(ui);
+
+                    
                 },
                 Panel::MainPage => {
                     self.ciet_sim_main_page_central_panel(ui);

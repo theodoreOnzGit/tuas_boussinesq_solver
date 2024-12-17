@@ -1,6 +1,6 @@
 
 use egui_plot::{Legend, Line, Plot, PlotPoints};
-use uom::si::{f64::*, mass_rate::kilogram_per_second, pressure::pascal, thermodynamic_temperature::degree_celsius, time::second};
+use uom::si::{f64::*, mass_rate::kilogram_per_second, thermodynamic_temperature::degree_celsius, time::second};
 
 use egui::Ui;
 

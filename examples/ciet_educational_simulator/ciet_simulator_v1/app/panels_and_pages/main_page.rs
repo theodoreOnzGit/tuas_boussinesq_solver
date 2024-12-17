@@ -1,4 +1,4 @@
-use egui::{include_image, Color32, Image, TextStyle, Ui};
+use egui::{include_image, Color32, Image, TextStyle, Ui, Widget};
 use egui_extras::{Size, StripBuilder};
 
 use crate::ciet_simulator_v1::{app::useful_functions::new_temp_sensitive_button, CIETApp};
@@ -93,23 +93,44 @@ impl CIETApp {
         let ctah_pump_y_width = dhx_y_width;
 
         // for user to set heater power
+        // if frequency response mode is not switched on
+        //
         let heater_set_pt_slider_kw = egui::Slider::new(
             &mut ciet_state_local.heater_power_kilowatts, 0.0..=10.0)
             .vertical()
             .text("Heater Power (kW)");
+
 
         let heater_slider_x = heater_x + 0.7 * heater_x_width;
         let heater_slider_y = heater_y + 10.0;
         let heater_slider_x_width = 30.0;
         let heater_slider_y_width = heater_y_width;
 
-        self.put_widget_with_size_and_centre(
-            ui, 
-            heater_set_pt_slider_kw, 
-            heater_slider_x, 
-            heater_slider_y, 
-            heater_slider_x_width, 
-            heater_slider_y_width);
+        // if frequency response mode is not switched on
+        if !self.frequency_response_settings.frequency_response_switched_on {
+            self.put_widget_with_size_and_centre(
+                ui, 
+                heater_set_pt_slider_kw, 
+                heater_slider_x, 
+                heater_slider_y, 
+                heater_slider_x_width, 
+                heater_slider_y_width);
+        } else {
+            // if heater frequency response settings are not switched on 
+            //
+            let frequency_response_label = egui::Button::new(
+                "Pls Control Heater from Frequency Response Page"
+            );
+            self.put_widget_with_size_and_centre(
+                ui, 
+                frequency_response_label, 
+                heater_slider_x + 50.0, 
+                heater_slider_y, 
+                heater_slider_x_width*3.0, 
+                heater_slider_y_width*1.0
+                );
+            drop(heater_set_pt_slider_kw);
+        }
 
         // heater outlet temp and inlet temp
         let heater_out_temp_degc: f64 = 

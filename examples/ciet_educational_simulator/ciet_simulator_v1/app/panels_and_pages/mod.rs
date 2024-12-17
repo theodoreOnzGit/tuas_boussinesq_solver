@@ -7,7 +7,7 @@ pub(crate) enum Panel {
     Heater,
     DHX,
     TCHX,
-    SchematicDiagram,
+    HeaterAndFrequencyResponse,
     NodalisedDiagram,
 }
 
@@ -35,6 +35,9 @@ pub mod tchx_page;
 /// contains code for the full educational simulator of CIET 
 /// both forced and natural circulation
 pub mod full_simulation;
+
+/// contains code for fine control, step and frequency response 
+pub mod heater_ctrl_and_frequency_response;
 
 /// citation and disclaimer page code
 pub mod citations_and_disclaimers;
