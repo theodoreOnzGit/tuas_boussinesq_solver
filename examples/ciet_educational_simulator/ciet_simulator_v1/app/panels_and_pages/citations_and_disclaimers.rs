@@ -34,7 +34,7 @@ impl CIETApp {
         ui.label("@article{ong4998548open,");
         ui.label("title={An Open Source Thermo-Hydraulic Uniphase Solver for Advection and Convection in Salt Flows (Tuas)},");
         ui.label("author={Ong, Theodore Kay Chen and Xiao, Sicong and Peterson, Per F},");
-        ui.label("journal={Available at SSRN 4998548}");
-        ui.label("}");
+        ui.label("journal={Available at SSRN 4998548}}");
+        ui.label(" ");
     }
 }
