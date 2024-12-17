@@ -160,11 +160,18 @@ impl CIETApp {
                 )));
             });
 
+
+            self.citation_disclaimer_and_acknowledgements(ui);
+
         });
 
 
 
 
+        // i added this return to show the end of the function
+        // just for readability 
+        // because there are too many closing parantheses
+        return ();
 
 
     }

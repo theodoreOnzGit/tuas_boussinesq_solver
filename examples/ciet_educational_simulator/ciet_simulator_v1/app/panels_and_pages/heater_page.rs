@@ -145,6 +145,8 @@ impl CIETApp {
                 )).name("Heater Power (kW)"));
             });
 
+            self.citation_disclaimer_and_acknowledgements(ui);
+
         });
 
 
