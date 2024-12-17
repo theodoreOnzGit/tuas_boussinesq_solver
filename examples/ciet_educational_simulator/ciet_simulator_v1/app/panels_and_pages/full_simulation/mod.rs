@@ -455,7 +455,7 @@ pub fn educational_ciet_loop_version_3(
         // I'm going to check all arrays in the heater as well
 
         let heater_temp_vec_degc: Vec<f64> = 
-            heater_ver_1.pipe_shell_temperature()
+            heater_ver_1.pipe_fluid_array_temperature()
             .unwrap()
             .iter()
             .map(|temp|{
