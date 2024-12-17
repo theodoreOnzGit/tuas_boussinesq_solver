@@ -93,7 +93,7 @@ pub struct CIETState {
     pub bottom_mixing_node_17a_17b_18_temp_degc: f32,
 
     // timestep settings are user settable 
-    timestep_seconds: f32,
+    pub timestep_seconds: f32,
     pub fast_forward_settings_turned_on: bool,
     
     pub slow_motion_settings_turned_on: bool,

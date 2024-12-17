@@ -42,9 +42,9 @@ pub fn educational_ciet_loop_version_3(
 
     // obtain local ciet state for reading and writing
 
-    let local_ciet_state: CIETState = global_ciet_state_ptr.lock().unwrap().clone();
+    let local_ciet_state_initial: CIETState = global_ciet_state_ptr.lock().unwrap().clone();
     let tchx_outlet_temperature_set_point_degc = 
-        local_ciet_state.bt_66_tchx_outlet_set_pt_deg_c;
+        local_ciet_state_initial.bt_66_tchx_outlet_set_pt_deg_c;
     let tchx_outlet_temperature_set_point = 
         ThermodynamicTemperature::new::<degree_celsius>(
             tchx_outlet_temperature_set_point_degc);
@@ -53,7 +53,7 @@ pub fn educational_ciet_loop_version_3(
     // are on
 
     let mut timestep = Time::new::<second>(
-        local_ciet_state.get_timestep_seconds() as f64);
+        local_ciet_state_initial.get_timestep_seconds() as f64);
 
     // max timestep is for stability due to courant number and such
     let max_timestep = Time::new::<second>(0.1);
@@ -424,21 +424,22 @@ pub fn educational_ciet_loop_version_3(
         let loop_time_start = loop_time.elapsed().unwrap();
         // obtain local ciet state for reading and writing
 
-        let mut ciet_state_local: CIETState = global_ciet_state_ptr.lock().unwrap().clone();
+        let mut local_ciet_state: CIETState = global_ciet_state_ptr.lock().unwrap().clone();
 
-        let input_power_kilowatts = ciet_state_local.get_heater_power_kilowatts();
+        let input_power_kilowatts = local_ciet_state.get_heater_power_kilowatts();
         let input_power = Power::new::<kilowatt>(input_power_kilowatts);
 
         // set timestep from local ciet state, it is user set 
         let slow_motion_settings_turned_on: bool = 
-            ciet_state_local.slow_motion_settings_turned_on;
+            local_ciet_state.slow_motion_settings_turned_on;
+
         if slow_motion_settings_turned_on {
             timestep = Time::new::<second>(
                 local_ciet_state.get_timestep_seconds() as f64);
             // as a safety precaution, never let the user set 
             // timestep exceed the max timestep  
             // for stability issues with Courant number and such
-            if timestep < max_timestep {
+            if timestep > max_timestep {
                 timestep = max_timestep;
             }
         }
@@ -446,10 +447,10 @@ pub fn educational_ciet_loop_version_3(
         // this is a safety killswitch 
 
         let heater_outlet_temp_degc = 
-            ciet_state_local.get_heater_outlet_temp_degc();
+            local_ciet_state.get_heater_outlet_temp_degc();
 
         let heater_inlet_temp_degc = 
-            ciet_state_local.get_heater_inlet_temp_degc();
+            local_ciet_state.get_heater_inlet_temp_degc();
 
         // from legacy killswitch
         //let heater_bulk_temp_degc = 
@@ -462,10 +463,10 @@ pub fn educational_ciet_loop_version_3(
 
         if heater_outlet_temp_degc > 150.0 {
             heat_rate_through_heater = Power::ZERO;
-            ciet_state_local.set_heater_power_kilowatts(0.0);
+            local_ciet_state.set_heater_power_kilowatts(0.0);
         } else if heater_inlet_temp_degc > 150.0 {
             heat_rate_through_heater = Power::ZERO;
-            ciet_state_local.set_heater_power_kilowatts(0.0);
+            local_ciet_state.set_heater_power_kilowatts(0.0);
         } else {
             heat_rate_through_heater = input_power;
         }
@@ -484,7 +485,7 @@ pub fn educational_ciet_loop_version_3(
         for heater_cv_temperature_degc in heater_temp_vec_degc.iter() {
             if *heater_cv_temperature_degc > 160.0 {
                 heat_rate_through_heater = Power::ZERO;
-                ciet_state_local.set_heater_power_kilowatts(0.0);
+                local_ciet_state.set_heater_power_kilowatts(0.0);
             }
         }
 
@@ -505,19 +506,19 @@ pub fn educational_ciet_loop_version_3(
         for heater_cv_temperature_degc in heater_surf_temp_vec_degc.iter() {
             if *heater_cv_temperature_degc > 350.0 {
                 heat_rate_through_heater = Power::ZERO;
-                ciet_state_local.set_heater_power_kilowatts(0.0);
+                local_ciet_state.set_heater_power_kilowatts(0.0);
             }
         }
 
         let tchx_outlet_temperature_set_point_degc = 
-            ciet_state_local.bt_66_tchx_outlet_set_pt_deg_c;
+            local_ciet_state.bt_66_tchx_outlet_set_pt_deg_c;
 
         let tchx_outlet_temperature_set_point = 
             ThermodynamicTemperature::new::<degree_celsius>(
                 tchx_outlet_temperature_set_point_degc);
 
         let ctah_outlet_temperature_set_point_degc = 
-            ciet_state_local.bt_41_ctah_outlet_set_pt_deg_c;
+            local_ciet_state.bt_41_ctah_outlet_set_pt_deg_c;
 
 
         // set initial mass flowrate pointers for parallelism first 
@@ -581,7 +582,7 @@ pub fn educational_ciet_loop_version_3(
             let reference_temperature_interval_deg_celsius = 80.0;
             // tchx outlet temperature 
             let tchx_outlet_temperature_degc = 
-                ciet_state_local.get_tchx_outlet_temp_degc();
+                local_ciet_state.get_tchx_outlet_temp_degc();
 
             // error = y_sp - y_measured
             let set_point_abs_error_deg_celsius = 
@@ -816,10 +817,10 @@ pub fn educational_ciet_loop_version_3(
         // pump pressure and valve settings, read from ciet state 
         // place holder first
         let pump_pressure = Pressure::new::<pascal>(
-            ciet_state_local.get_ctah_pump_pressure_f64()
+            local_ciet_state.get_ctah_pump_pressure_f64()
         );
-        let ctah_branch_blocked = ciet_state_local.is_ctah_branch_blocked;
-        let dhx_branch_blocked = ciet_state_local.is_dhx_branch_blocked;
+        let ctah_branch_blocked = local_ciet_state.is_ctah_branch_blocked;
+        let dhx_branch_blocked = local_ciet_state.is_dhx_branch_blocked;
 
 
         let pri_flowrate_join_handle = thread::spawn(move || {
@@ -1093,15 +1094,15 @@ pub fn educational_ciet_loop_version_3(
         // update the local ciet state 
         // update to 2dp
 
-        ciet_state_local.bt_66_tchx_outlet_deg_c =
+        local_ciet_state.bt_66_tchx_outlet_deg_c =
             (tchx_outlet_temperature.get::<degree_celsius>()*100.0)
             .round()/100.0;
 
-        ciet_state_local.bt_11_heater_inlet_deg_c = 
+        local_ciet_state.bt_11_heater_inlet_deg_c = 
             (bt_11.get::<degree_celsius>()*100.0)
             .round()/100.0;
 
-        ciet_state_local.bt_12_heater_outlet_deg_c = 
+        local_ciet_state.bt_12_heater_outlet_deg_c = 
             (bt_12.get::<degree_celsius>()*100.0)
             .round()/100.0;
 
@@ -1114,7 +1115,7 @@ pub fn educational_ciet_loop_version_3(
                 .first()
                 .unwrap();
 
-            ciet_state_local.pipe_1a_temp_degc = 
+            local_ciet_state.pipe_1a_temp_degc = 
                 pipe_1a_temp.get::<degree_celsius>() as f32;
 
             let pipe_1b_temp = 
@@ -1124,7 +1125,7 @@ pub fn educational_ciet_loop_version_3(
                 .first()
                 .unwrap();
 
-            ciet_state_local.pipe_1b_temp_degc = 
+            local_ciet_state.pipe_1b_temp_degc = 
                 pipe_1b_temp.get::<degree_celsius>() as f32;
 
             let pipe_2a_temp = 
@@ -1134,7 +1135,7 @@ pub fn educational_ciet_loop_version_3(
                 .first()
                 .unwrap();
 
-            ciet_state_local.pipe_2a_temp_degc = 
+            local_ciet_state.pipe_2a_temp_degc = 
                 pipe_2a_temp.get::<degree_celsius>() as f32;
 
             let pipe_2_temp = 
@@ -1144,7 +1145,7 @@ pub fn educational_ciet_loop_version_3(
                 .first()
                 .unwrap();
 
-            ciet_state_local.pipe_2_temp_degc = 
+            local_ciet_state.pipe_2_temp_degc = 
                 pipe_2_temp.get::<degree_celsius>() as f32;
 
             let pipe_3_temp = 
@@ -1154,7 +1155,7 @@ pub fn educational_ciet_loop_version_3(
                 .first()
                 .unwrap();
 
-            ciet_state_local.pipe_3_temp_degc = 
+            local_ciet_state.pipe_3_temp_degc = 
                 pipe_3_temp.get::<degree_celsius>() as f32;
 
             let pipe_4_temp = 
@@ -1164,7 +1165,7 @@ pub fn educational_ciet_loop_version_3(
                 .first()
                 .unwrap();
 
-            ciet_state_local.pipe_4_temp_degc = 
+            local_ciet_state.pipe_4_temp_degc = 
                 pipe_4_temp.get::<degree_celsius>() as f32;
 
             let pipe_18_temp = 
@@ -1174,7 +1175,7 @@ pub fn educational_ciet_loop_version_3(
                 .first()
                 .unwrap();
 
-            ciet_state_local.pipe_18_temp_degc = 
+            local_ciet_state.pipe_18_temp_degc = 
                 pipe_18_temp.get::<degree_celsius>() as f32;
 
             // dhx branch 
@@ -1189,7 +1190,7 @@ pub fn educational_ciet_loop_version_3(
                 .first()
                 .unwrap();
 
-            ciet_state_local.pipe_17b_temp_degc = 
+            local_ciet_state.pipe_17b_temp_degc = 
                 pipe_17b_temp.get::<degree_celsius>() as f32;
 
             let pipe_19_temp = 
@@ -1199,7 +1200,7 @@ pub fn educational_ciet_loop_version_3(
                 .first()
                 .unwrap();
 
-            ciet_state_local.pipe_19_temp_degc = 
+            local_ciet_state.pipe_19_temp_degc = 
                 pipe_19_temp.get::<degree_celsius>() as f32;
 
             let pipe_20_temp = 
@@ -1209,7 +1210,7 @@ pub fn educational_ciet_loop_version_3(
                 .first()
                 .unwrap();
 
-            ciet_state_local.pipe_20_temp_degc = 
+            local_ciet_state.pipe_20_temp_degc = 
                 pipe_20_temp.get::<degree_celsius>() as f32;
 
             let pipe_21_temp = 
@@ -1219,7 +1220,7 @@ pub fn educational_ciet_loop_version_3(
                 .first()
                 .unwrap();
 
-            ciet_state_local.pipe_21_temp_degc = 
+            local_ciet_state.pipe_21_temp_degc = 
                 pipe_21_temp.get::<degree_celsius>() as f32;
 
             // fm20 (21a)
@@ -1232,11 +1233,11 @@ pub fn educational_ciet_loop_version_3(
                 .first()
                 .unwrap();
 
-            ciet_state_local.fm20_label_21a_temp_degc = 
+            local_ciet_state.fm20_label_21a_temp_degc = 
                 pipe_21a_temp.get::<degree_celsius>() as f32;
 
 
-            ciet_state_local.fm20_dhx_branch_kg_per_s = 
+            local_ciet_state.fm20_dhx_branch_kg_per_s = 
                 ((mass_flowrate_dhx_br.clone()
                   .get::<kilogram_per_second>() *10000.0).round()/10000.0
                 ) as f32 ;
@@ -1248,7 +1249,7 @@ pub fn educational_ciet_loop_version_3(
                 .first()
                 .unwrap();
 
-            ciet_state_local.pipe_22_temp_degc = 
+            local_ciet_state.pipe_22_temp_degc = 
                 pipe_22_temp.get::<degree_celsius>() as f32;
 
             let pipe_23a_temp = 
@@ -1258,19 +1259,19 @@ pub fn educational_ciet_loop_version_3(
                 .first()
                 .unwrap();
 
-            ciet_state_local.pipe_23a_temp_degc = 
+            local_ciet_state.pipe_23a_temp_degc = 
                 pipe_23a_temp.get::<degree_celsius>() as f32;
 
 
-            ciet_state_local.bt_21_dhx_shell_inlet_deg_c = 
+            local_ciet_state.bt_21_dhx_shell_inlet_deg_c = 
                 bt_21.get::<degree_celsius>();
-            ciet_state_local.pipe_25a_temp_degc = 
-                ciet_state_local.bt_21_dhx_shell_inlet_deg_c as f32;
+            local_ciet_state.pipe_25a_temp_degc = 
+                local_ciet_state.bt_21_dhx_shell_inlet_deg_c as f32;
 
-            ciet_state_local.bt_27_dhx_shell_outlet_deg_c = 
+            local_ciet_state.bt_27_dhx_shell_outlet_deg_c = 
                 bt_27.get::<degree_celsius>();
-            ciet_state_local.pipe_23_temp_degc = 
-                ciet_state_local.bt_27_dhx_shell_outlet_deg_c as f32;
+            local_ciet_state.pipe_23_temp_degc = 
+                local_ciet_state.bt_27_dhx_shell_outlet_deg_c as f32;
 
             let pipe_25_temp = 
                 *static_mixer_21_label_25
@@ -1279,7 +1280,7 @@ pub fn educational_ciet_loop_version_3(
                 .first()
                 .unwrap();
 
-            ciet_state_local.pipe_25_temp_degc = 
+            local_ciet_state.pipe_25_temp_degc = 
                 pipe_25_temp.get::<degree_celsius>() as f32;
 
             let pipe_26_temp = 
@@ -1289,7 +1290,7 @@ pub fn educational_ciet_loop_version_3(
                 .first()
                 .unwrap();
 
-            ciet_state_local.pipe_26_temp_degc = 
+            local_ciet_state.pipe_26_temp_degc = 
                 pipe_26_temp.get::<degree_celsius>() as f32;
 
             let pipe_5a_temp = 
@@ -1299,7 +1300,7 @@ pub fn educational_ciet_loop_version_3(
                 .first()
                 .unwrap();
 
-            ciet_state_local.pipe_5a_temp_degc = 
+            local_ciet_state.pipe_5a_temp_degc = 
                 pipe_5a_temp.get::<degree_celsius>() as f32;
         }
         // DRACS loop update
@@ -1311,10 +1312,10 @@ pub fn educational_ciet_loop_version_3(
                 .first()
                 .unwrap();
 
-            ciet_state_local.pipe_30a_temp_degc = 
+            local_ciet_state.pipe_30a_temp_degc = 
                 pipe_30a_temp.get::<degree_celsius>() as f32;
 
-            ciet_state_local.bt_60_dhx_tube_inlet_deg_c = 
+            local_ciet_state.bt_60_dhx_tube_inlet_deg_c = 
                 pipe_30a_temp.get::<degree_celsius>();
 
 
@@ -1326,10 +1327,10 @@ pub fn educational_ciet_loop_version_3(
                 .first()
                 .unwrap();
 
-            ciet_state_local.pipe_30b_temp_degc = 
+            local_ciet_state.pipe_30b_temp_degc = 
                 pipe_30b_temp.get::<degree_celsius>() as f32;
 
-            ciet_state_local.bt_21_dhx_tube_outlet_deg_c = 
+            local_ciet_state.bt_21_dhx_tube_outlet_deg_c = 
                 pipe_30b_temp.get::<degree_celsius>();
 
             let pipe_31_temp = 
@@ -1339,7 +1340,7 @@ pub fn educational_ciet_loop_version_3(
                 .first()
                 .unwrap();
 
-            ciet_state_local.pipe_31_temp_degc = 
+            local_ciet_state.pipe_31_temp_degc = 
                 pipe_31_temp.get::<degree_celsius>() as f32;
 
             let pipe_31a_temp = 
@@ -1349,7 +1350,7 @@ pub fn educational_ciet_loop_version_3(
                 .first()
                 .unwrap();
 
-            ciet_state_local.pipe_31a_temp_degc = 
+            local_ciet_state.pipe_31a_temp_degc = 
                 pipe_31a_temp.get::<degree_celsius>() as f32;
 
 
@@ -1361,7 +1362,7 @@ pub fn educational_ciet_loop_version_3(
                 .first()
                 .unwrap();
 
-            ciet_state_local.pipe_32_temp_degc = 
+            local_ciet_state.pipe_32_temp_degc = 
                 pipe_32_temp.get::<degree_celsius>() as f32;
 
 
@@ -1372,7 +1373,7 @@ pub fn educational_ciet_loop_version_3(
                 .first()
                 .unwrap();
 
-            ciet_state_local.pipe_33_temp_degc = 
+            local_ciet_state.pipe_33_temp_degc = 
                 pipe_33_temp.get::<degree_celsius>() as f32;
 
             let pipe_34_temp = 
@@ -1382,13 +1383,13 @@ pub fn educational_ciet_loop_version_3(
                 .first()
                 .unwrap();
 
-            ciet_state_local.pipe_34_temp_degc = 
+            local_ciet_state.pipe_34_temp_degc = 
                 pipe_34_temp.get::<degree_celsius>() as f32;
 
-            ciet_state_local.bt_65_tchx_inlet_deg_c = 
-                ((ciet_state_local.pipe_34_temp_degc * 100.0).round() as f64)/100.0_f64;
+            local_ciet_state.bt_65_tchx_inlet_deg_c = 
+                ((local_ciet_state.pipe_34_temp_degc * 100.0).round() as f64)/100.0_f64;
             // tchx htc update
-            ciet_state_local.tchx_htc_watt_per_m2_kelvin = 
+            local_ciet_state.tchx_htc_watt_per_m2_kelvin = 
                 (tchx_heat_transfer_coeff.get::<watt_per_square_meter_kelvin>()
                  * 100.0).round()/100.0;
 
@@ -1400,7 +1401,7 @@ pub fn educational_ciet_loop_version_3(
                 .first()
                 .unwrap();
 
-            ciet_state_local.pipe_36a_temp_degc = 
+            local_ciet_state.pipe_36a_temp_degc = 
                 pipe_36a_temp.get::<degree_celsius>() as f32;
 
             let pipe_36_temp = 
@@ -1410,7 +1411,7 @@ pub fn educational_ciet_loop_version_3(
                 .first()
                 .unwrap();
 
-            ciet_state_local.pipe_36_temp_degc = 
+            local_ciet_state.pipe_36_temp_degc = 
                 pipe_36_temp.get::<degree_celsius>() as f32;
 
             let pipe_37_temp = 
@@ -1420,7 +1421,7 @@ pub fn educational_ciet_loop_version_3(
                 .first()
                 .unwrap();
 
-            ciet_state_local.pipe_37_temp_degc = 
+            local_ciet_state.pipe_37_temp_degc = 
                 pipe_37_temp.get::<degree_celsius>() as f32;
 
 
@@ -1434,11 +1435,11 @@ pub fn educational_ciet_loop_version_3(
                 .first()
                 .unwrap();
 
-            ciet_state_local.fm60_label_37a_temp_degc = 
+            local_ciet_state.fm60_label_37a_temp_degc = 
                 pipe_21a_temp.get::<degree_celsius>() as f32;
 
             // 4dp preferred
-            ciet_state_local.fm_60_dracs_kg_per_s = 
+            local_ciet_state.fm_60_dracs_kg_per_s = 
                 (mass_flowrate_dracs_loop_abs
                  .get::<kilogram_per_second>() *10000.0).round()/10000.0 ;
 
@@ -1449,7 +1450,7 @@ pub fn educational_ciet_loop_version_3(
                 .first()
                 .unwrap();
 
-            ciet_state_local.pipe_38_temp_degc = 
+            local_ciet_state.pipe_38_temp_degc = 
                 pipe_38_temp.get::<degree_celsius>() as f32;
 
             let pipe_39_temp = 
@@ -1459,7 +1460,7 @@ pub fn educational_ciet_loop_version_3(
                 .first()
                 .unwrap();
 
-            ciet_state_local.pipe_39_temp_degc = 
+            local_ciet_state.pipe_39_temp_degc = 
                 pipe_39_temp.get::<degree_celsius>() as f32;
 
         }
@@ -1473,7 +1474,7 @@ pub fn educational_ciet_loop_version_3(
                 .first()
                 .unwrap();
 
-            ciet_state_local.pipe_5b_temp_degc = 
+            local_ciet_state.pipe_5b_temp_degc = 
                 pipe_5b_temp.get::<degree_celsius>() as f32;
 
             let pipe_6a_temp = 
@@ -1485,10 +1486,10 @@ pub fn educational_ciet_loop_version_3(
 
             // 6a and inlet bt-43 are about the same
 
-            ciet_state_local.pipe_6a_temp_degc = 
+            local_ciet_state.pipe_6a_temp_degc = 
                 pipe_6a_temp.get::<degree_celsius>() as f32;
 
-            ciet_state_local.bt_43_ctah_inlet_deg_c = 
+            local_ciet_state.bt_43_ctah_inlet_deg_c = 
                 (pipe_6a_temp.get::<degree_celsius>() *100.0).round()/100.0;
 
             let pipe_6_temp = 
@@ -1499,12 +1500,12 @@ pub fn educational_ciet_loop_version_3(
                 .unwrap();
             // update ctah htc 
 
-            ciet_state_local.ctah_htc_watt_per_m2_kelvin = 
+            local_ciet_state.ctah_htc_watt_per_m2_kelvin = 
                 (ctah_heat_transfer_coeff.get::<watt_per_square_meter_kelvin>()
                  *100.0).round()/100.0;
                 
 
-            ciet_state_local.pipe_6_temp_degc = 
+            local_ciet_state.pipe_6_temp_degc = 
                 pipe_6_temp.get::<degree_celsius>() as f32;
 
             let pipe_8a_temp = 
@@ -1515,10 +1516,10 @@ pub fn educational_ciet_loop_version_3(
                 .unwrap();
 
             // pipe 8a and bt41 are about the same
-            ciet_state_local.pipe_8a_temp_degc = 
+            local_ciet_state.pipe_8a_temp_degc = 
                 pipe_8a_temp.get::<degree_celsius>() as f32;
 
-            ciet_state_local.bt_41_ctah_outlet_deg_c = 
+            local_ciet_state.bt_41_ctah_outlet_deg_c = 
                 (pipe_8a_temp.get::<degree_celsius>() *100.0).round()/100.0;
 
             let pipe_8_temp = 
@@ -1528,7 +1529,7 @@ pub fn educational_ciet_loop_version_3(
                 .first()
                 .unwrap();
 
-            ciet_state_local.pipe_8_temp_degc = 
+            local_ciet_state.pipe_8_temp_degc = 
                 pipe_8_temp.get::<degree_celsius>() as f32;
 
             let pipe_9_temp = 
@@ -1538,7 +1539,7 @@ pub fn educational_ciet_loop_version_3(
                 .first()
                 .unwrap();
 
-            ciet_state_local.pipe_9_temp_degc = 
+            local_ciet_state.pipe_9_temp_degc = 
                 pipe_9_temp.get::<degree_celsius>() as f32;
 
             let pipe_10_temp = 
@@ -1548,7 +1549,7 @@ pub fn educational_ciet_loop_version_3(
                 .first()
                 .unwrap();
 
-            ciet_state_local.pipe_10_temp_degc = 
+            local_ciet_state.pipe_10_temp_degc = 
                 pipe_10_temp.get::<degree_celsius>() as f32;
 
 
@@ -1559,7 +1560,7 @@ pub fn educational_ciet_loop_version_3(
                 .first()
                 .unwrap();
 
-            ciet_state_local.pipe_11_temp_degc = 
+            local_ciet_state.pipe_11_temp_degc = 
                 pipe_11_temp.get::<degree_celsius>() as f32;
 
             let pipe_12_temp = 
@@ -1569,7 +1570,7 @@ pub fn educational_ciet_loop_version_3(
                 .first()
                 .unwrap();
 
-            ciet_state_local.pipe_12_temp_degc = 
+            local_ciet_state.pipe_12_temp_degc = 
                 pipe_12_temp.get::<degree_celsius>() as f32;
 
             // ctah pump temp 
@@ -1581,7 +1582,7 @@ pub fn educational_ciet_loop_version_3(
                 .first()
                 .unwrap();
 
-            ciet_state_local.ctah_pump_temp_degc = 
+            local_ciet_state.ctah_pump_temp_degc = 
                 ctah_pump_temp.get::<degree_celsius>();
 
 
@@ -1592,7 +1593,7 @@ pub fn educational_ciet_loop_version_3(
                 .first()
                 .unwrap();
 
-            ciet_state_local.pipe_13_temp_degc = 
+            local_ciet_state.pipe_13_temp_degc = 
                 pipe_13_temp.get::<degree_celsius>() as f32;
 
             let pipe_14_temp = 
@@ -1602,7 +1603,7 @@ pub fn educational_ciet_loop_version_3(
                 .first()
                 .unwrap();
 
-            ciet_state_local.pipe_14_temp_degc = 
+            local_ciet_state.pipe_14_temp_degc = 
                 pipe_14_temp.get::<degree_celsius>() as f32;
 
             let pipe_14a_temp = 
@@ -1612,11 +1613,11 @@ pub fn educational_ciet_loop_version_3(
                 .first()
                 .unwrap();
 
-            ciet_state_local.fm40_label_14a_temp_degc = 
+            local_ciet_state.fm40_label_14a_temp_degc = 
                 pipe_14a_temp.get::<degree_celsius>() as f32;
 
 
-            ciet_state_local.fm40_ctah_branch_kg_per_s = 
+            local_ciet_state.fm40_ctah_branch_kg_per_s = 
                 (mass_flowrate_ctah_br.clone()
                  .get::<kilogram_per_second>() *10000.0).round()/10000.0;
 
@@ -1627,7 +1628,7 @@ pub fn educational_ciet_loop_version_3(
                 .first()
                 .unwrap();
 
-            ciet_state_local.pipe_15_temp_degc = 
+            local_ciet_state.pipe_15_temp_degc = 
                 pipe_15_temp.get::<degree_celsius>() as f32;
 
 
@@ -1638,7 +1639,7 @@ pub fn educational_ciet_loop_version_3(
                 .first()
                 .unwrap();
 
-            ciet_state_local.pipe_16_temp_degc = 
+            local_ciet_state.pipe_16_temp_degc = 
                 pipe_16_temp.get::<degree_celsius>() as f32;
 
             let pipe_17a_temp = 
@@ -1648,7 +1649,7 @@ pub fn educational_ciet_loop_version_3(
                 .first()
                 .unwrap();
 
-            ciet_state_local.pipe_17a_temp_degc = 
+            local_ciet_state.pipe_17a_temp_degc = 
                 pipe_17a_temp.get::<degree_celsius>() as f32;
 
         }
@@ -1661,7 +1662,7 @@ pub fn educational_ciet_loop_version_3(
                 .try_get_bulk_temperature()
                 .unwrap();
 
-            ciet_state_local.top_mixing_node_5a_5b_4_temp_degc = 
+            local_ciet_state.top_mixing_node_5a_5b_4_temp_degc = 
                 top_mixing_node_5a_5b_4_temp.get::<degree_celsius>() as f32;
 
             let bottom_mixing_node_17a_17b_18_temp = 
@@ -1669,7 +1670,7 @@ pub fn educational_ciet_loop_version_3(
                 .try_get_bulk_temperature()
                 .unwrap();
 
-            ciet_state_local.bottom_mixing_node_17a_17b_18_temp_degc = 
+            local_ciet_state.bottom_mixing_node_17a_17b_18_temp_degc = 
                 bottom_mixing_node_17a_17b_18_temp.get::<degree_celsius>() as f32;
 
         }
@@ -1686,15 +1687,15 @@ pub fn educational_ciet_loop_version_3(
 
 
         let simulation_time_seconds = current_simulation_time.get::<second>();
-        ciet_state_local.simulation_time_seconds = (simulation_time_seconds * 10.0).round()/10.0;
+        local_ciet_state.simulation_time_seconds = (simulation_time_seconds * 10.0).round()/10.0;
 
         // conditions for thread sleeping 
         let fast_forward_button_on: bool = 
-            ciet_state_local.is_fast_fwd_on();
+            local_ciet_state.is_fast_fwd_on();
 
         let elapsed_time_seconds = 
             (loop_time.elapsed().unwrap().as_secs_f64() * 100.0).round()/100.0;
-        ciet_state_local.elapsed_time_seconds = elapsed_time_seconds;
+        local_ciet_state.elapsed_time_seconds = elapsed_time_seconds;
 
         let overall_simulation_in_realtime_or_faster: bool = 
             simulation_time_seconds > elapsed_time_seconds;
@@ -1713,7 +1714,7 @@ pub fn educational_ciet_loop_version_3(
         let time_taken_for_calculation_loop_milliseconds: f64 = 
             (loop_time_end - loop_time_start)
             .as_millis() as f64;
-        ciet_state_local.calc_time_ms = 
+        local_ciet_state.calc_time_ms = 
             time_taken_for_calculation_loop_milliseconds;
 
         
@@ -1736,7 +1737,7 @@ pub fn educational_ciet_loop_version_3(
 
 
         global_ciet_state_ptr.lock().unwrap().overwrite_state(
-            ciet_state_local);
+            local_ciet_state);
 
         // only sleep if simulation time is greater or equal to elapsed time 
         // or if the fast fwd button is off

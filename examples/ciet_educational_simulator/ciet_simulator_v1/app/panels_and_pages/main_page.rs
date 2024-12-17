@@ -58,22 +58,24 @@ impl CIETApp {
                 ciet_state_local.fast_forward_settings_turned_on = false;
                 // when slowmo settings turned on, can slow down timestep
 
-                let mut local_timestep = ciet_state_local.get_timestep_seconds();
                 let timestep_slider_seconds = egui::Slider::new(
-                    &mut local_timestep, 
+                    &mut ciet_state_local.timestep_seconds, 
                     0.00001..=0.1)
                     .logarithmic(true)
                     .text("Timestep Control (s)")
                     .drag_value_speed(0.001);
 
                 ui.add(timestep_slider_seconds);
-                ciet_state_local.set_timestep_seconds(local_timestep as f64);
+
+                self.ciet_state.lock().unwrap().overwrite_state(
+                    ciet_state_local);
 
             } else if ciet_state_local.fast_forward_settings_turned_on {
                 ciet_state_local.slow_motion_settings_turned_on = false;
             }
 
             ui.add(time_display_label);
+            // then adjust the ciet state 
         });
 
         ui.separator();
