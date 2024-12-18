@@ -66,15 +66,18 @@ impl CIETApp {
 
                 ui.add(timestep_slider_seconds);
 
-                self.ciet_state.lock().unwrap().overwrite_state(
-                    ciet_state_local);
 
-            } else if ciet_state_local.fast_forward_settings_turned_on {
-                ciet_state_local.slow_motion_settings_turned_on = false;
+            } else if !ciet_state_local.slow_motion_settings_turned_on {
+
                 // return timestep to 0.1 s
                 ciet_state_local.timestep_seconds = 0.1;
             }
+            else if ciet_state_local.fast_forward_settings_turned_on {
+                ciet_state_local.slow_motion_settings_turned_on = false;
+            }
 
+            self.ciet_state.lock().unwrap().overwrite_state(
+                ciet_state_local);
             ui.add(time_display_label);
             // then adjust the ciet state 
         });
