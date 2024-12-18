@@ -127,6 +127,7 @@ impl CIETApp {
             .text("Heater Power (kW)");
 
 
+
         let heater_slider_x = heater_x + 0.7 * heater_x_width;
         let heater_slider_y = heater_y + 10.0;
         let heater_slider_x_width = 30.0;
@@ -141,8 +142,11 @@ impl CIETApp {
                 heater_slider_y, 
                 heater_slider_x_width, 
                 heater_slider_y_width);
+
+            self.frequency_response_settings.steady_state_power_kw = 
+                ciet_state_local.heater_power_kilowatts;
         } else {
-            // if heater frequency response settings are not switched on 
+            // if heater frequency response settings are switched on 
             //
             let frequency_response_label = egui::Button::new(
                 "Pls Control Heater from Frequency Response Page"

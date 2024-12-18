@@ -6,7 +6,7 @@
 
 # Min Requirements 
 
-- Rust 1.79
+- Rust 1.81
 - a fast enough CPU to run in real-time (i7-10875H was good)
 - 1920 x 1080 screen resolution (otherwise the full main page won't show properly)
 
@@ -27,12 +27,19 @@ sudo apt install gcc libssl-dev pkg-config
 
 # Todo List 
 
-## dependency bugs on Windows Subsystem for Linux (WSL)
+## dependency bugs on some Windows Subsystem for Linux (WSL)
 
 I'm running into some conflicting dependency issues with 
-egui on WSL, but not on my Linux Mint and Arch Linux 
-machine... not sure why. It can 
-run on native windows though, but WSL is problematic.
+egui on WSL (), but not on my Linux Mint and Arch Linux 
+machine... not sure why. I think it's just 
+my pc, some WSL versions don't have this 
+problem It can run on native windows though, but WSL is problematic.
+
+## stack overflow on native windows
+
+Native windows cannot really run this due to stack overflow problems.
+Your best bet on a windows machine is via a virtual machine or WSL
+(which is also a virtual machine as of WSL 2).
 
 ## Performance
 

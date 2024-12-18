@@ -10,7 +10,7 @@ impl CIETApp {
         
         ui.label(" ");
 
-        ui.label("This is an educational simulator");
+        ui.label("This is an educational simulator under testing and development");
         ui.label("Validation is still work in progress");
         ui.label("This is given under GPLv3 without ANY WARRANY");
         ui.label("Results are not guaranteed to be physically accurate");
