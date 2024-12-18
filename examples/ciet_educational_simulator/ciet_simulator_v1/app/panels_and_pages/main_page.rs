@@ -126,8 +126,6 @@ impl CIETApp {
             .vertical()
             .text("Heater Power (kW)");
 
-        self.frequency_response_settings.steady_state_power_kw = 
-            ciet_state_local.heater_power_kilowatts;
 
 
         let heater_slider_x = heater_x + 0.7 * heater_x_width;
@@ -144,6 +142,9 @@ impl CIETApp {
                 heater_slider_y, 
                 heater_slider_x_width, 
                 heater_slider_y_width);
+
+            self.frequency_response_settings.steady_state_power_kw = 
+                ciet_state_local.heater_power_kilowatts;
         } else {
             // if heater frequency response settings are switched on 
             //
