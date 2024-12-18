@@ -1735,9 +1735,9 @@ pub fn educational_ciet_loop_version_3(
         
         // check if slow mo settings turned on
 
-
         global_ciet_state_ptr.lock().unwrap().overwrite_state(
             local_ciet_state);
+
 
         // only sleep if simulation time is greater or equal to elapsed time 
         // or if the fast fwd button is off
@@ -1771,15 +1771,15 @@ pub fn educational_ciet_loop_version_3(
                 thread::sleep(time_to_sleep);
 
 
-        }
-
-        else {
+        } else {
             // don't sleep otherwise
             //
-            //
-            // 
+            // timestep also needs to be adjusted back to max timestep 
+            timestep = max_timestep;
+
 
         }
+
 
     }
 
