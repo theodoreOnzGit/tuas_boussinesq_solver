@@ -71,6 +71,8 @@ impl CIETApp {
 
             } else if ciet_state_local.fast_forward_settings_turned_on {
                 ciet_state_local.slow_motion_settings_turned_on = false;
+                // return timestep to 0.1 s
+                ciet_state_local.timestep_seconds = 0.1;
             }
 
             ui.add(time_display_label);
