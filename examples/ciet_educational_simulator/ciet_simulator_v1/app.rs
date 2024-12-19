@@ -33,6 +33,11 @@ pub struct CIETApp {
     #[serde(skip)]
     frequency_response_settings: FreqResponseSettings,
 
+    // checks whether user wants fast fwd or slow motion
+    user_wants_fast_fwd_on: bool,
+    // checks whether user wants fast fwd or slow motion
+    user_wants_slow_motion_on: bool,
+
 }
 
 pub mod panels_and_pages;
@@ -54,6 +59,8 @@ impl Default for CIETApp {
             ciet_plot_data_mutex_ptr_for_parallel_data_transfer: ciet_plot_data,
             ciet_plot_data: PagePlotData::default(),
             frequency_response_settings: FreqResponseSettings::default(),
+            user_wants_fast_fwd_on: false,
+            user_wants_slow_motion_on: false,
 
         }
     }

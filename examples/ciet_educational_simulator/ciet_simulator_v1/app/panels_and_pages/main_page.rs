@@ -52,15 +52,20 @@ impl CIETApp {
         ui.horizontal(|ui|{
             // this method sort of has a bug where toggling fast fwd off 
             // is kind of annoying, but doable
-            ui.checkbox(&mut ciet_state_local.fast_forward_settings_turned_on, 
+
+
+            ui.checkbox(&mut self.user_wants_fast_fwd_on, 
                 "Fast Fowrard");
-            ui.checkbox(&mut ciet_state_local.slow_motion_settings_turned_on, 
+            ui.checkbox(&mut self.user_wants_slow_motion_on, 
                 "Slow Motion");
-            // if slow motion settings turned on, cannot fast fwd and 
-            // vice vera
-            // BUT, both can be turned off at the same time
-            if ciet_state_local.slow_motion_settings_turned_on {
+            if self.user_wants_slow_motion_on && !self.user_wants_fast_fwd_on {
+
+                // if slow motion settings turned on, cannot fast fwd and 
+                // vice vera
+                // BUT, both can be turned off at the same time
+                self.user_wants_fast_fwd_on = false;
                 ciet_state_local.fast_forward_settings_turned_on = false;
+                ciet_state_local.slow_motion_settings_turned_on = true;
                 // when slowmo settings turned on, can slow down timestep
 
                 let timestep_slider_seconds = egui::Slider::new(
@@ -71,22 +76,38 @@ impl CIETApp {
                     .drag_value_speed(0.001);
 
                 ui.add(timestep_slider_seconds);
-                self.ciet_state.lock().unwrap().overwrite_state(
-                    ciet_state_local);
 
 
-            } else if !ciet_state_local.slow_motion_settings_turned_on {
+            } else if !self.user_wants_slow_motion_on && !self.user_wants_fast_fwd_on {
+                // if user switched off BOTH slow motion and fast fwd
 
                 // return timestep to 0.1 s
                 ciet_state_local.timestep_seconds = 0.1;
-                self.ciet_state.lock().unwrap().overwrite_state(
-                    ciet_state_local);
-            }
-            else if ciet_state_local.fast_forward_settings_turned_on {
+                // switch off both fast fwd and slow mo
                 ciet_state_local.slow_motion_settings_turned_on = false;
-                self.ciet_state.lock().unwrap().overwrite_state(
-                    ciet_state_local);
+                ciet_state_local.fast_forward_settings_turned_on = false;
+
+            } else if self.user_wants_fast_fwd_on && self.user_wants_slow_motion_on {
+                // if both switches happen to be on and the same time, 
+                // turn off both
+
+                self.user_wants_slow_motion_on = false;
+                self.user_wants_fast_fwd_on = false;
+
+                // return timestep to 0.1 s
+                ciet_state_local.timestep_seconds = 0.1;
+                // switch off both fast fwd and slow mo
+                ciet_state_local.slow_motion_settings_turned_on = false;
+                ciet_state_local.fast_forward_settings_turned_on = false;
+
             }
+            else if self.user_wants_fast_fwd_on {
+                ciet_state_local.fast_forward_settings_turned_on = true;
+                ciet_state_local.slow_motion_settings_turned_on = false;
+                self.user_wants_slow_motion_on = false;
+            }
+            self.ciet_state.lock().unwrap().overwrite_state(
+                ciet_state_local);
 
             ui.add(time_display_label);
             // then adjust the ciet state 
