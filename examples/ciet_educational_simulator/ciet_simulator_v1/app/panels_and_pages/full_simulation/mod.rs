@@ -90,7 +90,7 @@ pub fn educational_ciet_loop_version_3(
     // controller for ctah
     let ctah_controller_gain = Ratio::new::<ratio>(70.75);
     let ctah_integral_time: Time = ctah_controller_gain / Frequency::new::<hertz>(50.0);
-    let ctah_derivative_time: Time = Time::new::<second>(1.0);
+    let ctah_derivative_time: Time = Time::new::<second>(1e-2);
     // derivative time ratio
     let ctah_alpha: Ratio = Ratio::new::<ratio>(1.0);
 
