@@ -13,7 +13,11 @@ impl CIETApp {
 
         // obtain a lock first to display the information 
 
-        egui::ScrollArea::both().show(ui, |ui| {
+        egui::ScrollArea::both()
+            .scroll_bar_visibility(egui::scroll_area::ScrollBarVisibility::AlwaysVisible)
+            .show(ui, |ui| {
+
+
             self.insert_read_and_update_widgets(ui);
 
             self.insert_pictures(ui);
