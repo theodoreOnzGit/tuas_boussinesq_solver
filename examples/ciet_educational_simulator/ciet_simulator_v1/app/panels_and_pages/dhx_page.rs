@@ -28,6 +28,51 @@ impl CIETApp {
         // left panel
         egui::ScrollArea::both().show(ui, |ui| {
 
+            // obtain a lock for the ciet data 
+            // ptr 
+            let mut ciet_data_global_ptr_lock = 
+                self.ciet_plot_data_mutex_ptr_for_parallel_data_transfer
+                .lock().unwrap();
+            
+            // allows user to control recording interval
+            let record_interval_seconds_slider = egui::Slider::new(
+                &mut ciet_data_global_ptr_lock.graph_data_record_interval_seconds, 
+                0.05..=1000.0)
+                .logarithmic(true)
+                .text("Graph Data Recording Interval (Seconds)")
+                .drag_value_speed(0.001);
+
+            ui.add(record_interval_seconds_slider);
+
+            // allows user to control csv display interval 
+
+            let csv_display_interval_seconds_slider = egui::Slider::new(
+                &mut ciet_data_global_ptr_lock.csv_display_interval_seconds, 
+                0.1..=1000.0)
+                .logarithmic(true)
+                .text("CSV Display Interval (Seconds)")
+                .drag_value_speed(0.001);
+
+            ui.add(csv_display_interval_seconds_slider);
+
+            let csv_display_interval_seconds = 
+                ciet_data_global_ptr_lock.csv_display_interval_seconds;
+            let graph_data_record_interval_seconds = 
+                ciet_data_global_ptr_lock.graph_data_record_interval_seconds;
+
+            // now, we filter data every x number of rows based on the ratio 
+            // of these two 
+
+            let csv_data_display_interval: i32 = 
+                (csv_display_interval_seconds/graph_data_record_interval_seconds)
+                .ceil() as i32;
+
+
+            // now we display rows every 
+            // csv_display_interval_seconds 
+            // rows
+
+            let mut display_counter: i32 = 0;
 
 
             ui.label("Time (s), dhx shell side flowrate (kg/s), dhx tube side flowrate (kg/s), dhx shell inlet temp (degC), dhx shell outlet temp (degC), dhx tube inlet temp (degC), dhx tube outlet temp (degC), ");
@@ -68,10 +113,26 @@ impl CIETApp {
                     + &dhx_tube_side_inlet_temp_degc.to_string() + ","
                     + &dhx_tube_side_outlet_temp_degc.to_string() + "," ;
 
+                let data_display_remainder = 
+                    display_counter.rem_euclid(csv_data_display_interval);
+
+                let data_display_modulus_zero: bool = 
+                    data_display_remainder == 0;
+
+                let blank_data_row = 
+                    time_seconds.round() as u32 != 0;
+
+
+
                 // only add the label if heater time is not equal zero 
-                if time_seconds.round() as u32 != 0 {
+                // AND the data display remainder is = 0
+                if blank_data_row && data_display_modulus_zero {
                     ui.label(dhx_data_row);
                 }
+
+                display_counter += 1;
+                // if the remainder of the display counter is zero 
+                // then we show data 
 
 
             });
