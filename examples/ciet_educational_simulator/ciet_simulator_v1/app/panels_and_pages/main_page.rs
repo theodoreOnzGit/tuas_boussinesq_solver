@@ -15,6 +15,7 @@ impl CIETApp {
 
         egui::ScrollArea::both()
             .scroll_bar_visibility(egui::scroll_area::ScrollBarVisibility::AlwaysVisible)
+            .drag_to_scroll(true)
             .show(ui, |ui| {
 
 
@@ -111,10 +112,13 @@ impl CIETApp {
 
         // i want the UI top left... 
 
-        let ui_rectangle: Rect = ui.clip_rect();
+        let ui_rectangle: Rect = ui.min_rect();
 
         let left_most_side = ui_rectangle.left();
         let top_most_side = ui_rectangle.top();
+
+        // how about i have the fast forward checkbox and find that coordinate 
+
 
 
 
@@ -1192,7 +1196,7 @@ impl CIETApp {
             include_image!("../../cooler.png")
         ).rounding(5.0);
 
-        let ui_rectangle: Rect = ui.clip_rect();
+        let ui_rectangle: Rect = ui.min_rect();
 
         let left_most_side = ui_rectangle.left();
         let top_most_side = ui_rectangle.top();
