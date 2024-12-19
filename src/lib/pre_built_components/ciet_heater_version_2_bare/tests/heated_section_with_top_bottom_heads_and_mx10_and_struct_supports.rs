@@ -73,13 +73,13 @@ pub fn heater_plus_mx_10_with_supports(){
             );
     }
 
-    let mut static_mixer_mx_10_object: StaticMixers 
-    = StaticMixers::new_static_mixer_2_mx10(
+    let mut static_mixer_mx_10_object: InsulatedPorousMediaFluidComponent 
+    = InsulatedPorousMediaFluidComponent::new_static_mixer_2_mx10(
         initial_temperature,
         ambient_air_temp);
 
-    let mut static_mixer_mx_10_pipe: StaticMixers 
-    = StaticMixers::new_static_mixer_pipe_2a_mx10(
+    let mut static_mixer_mx_10_pipe: InsulatedPorousMediaFluidComponent 
+    = InsulatedPorousMediaFluidComponent::new_static_mixer_pipe_2a_mx10(
         initial_temperature,
         ambient_air_temp);
 
@@ -170,14 +170,14 @@ pub fn heater_plus_mx_10_with_supports(){
                 .unwrap().into_iter().last().unwrap();
 
             let static_mixer_therminol_clone: FluidArray = 
-            static_mixer_mx_10_object.therminol_array.clone().try_into().unwrap();
+            static_mixer_mx_10_object.pipe_fluid_array.clone().try_into().unwrap();
 
             let _static_mixer_exit_temperature: ThermodynamicTemperature
             = static_mixer_therminol_clone.get_temperature_vector().unwrap()
                 .into_iter().last().unwrap();
 
             let static_mixer_pipe_therminol_clone: FluidArray = 
-            static_mixer_mx_10_pipe.therminol_array.clone().try_into().unwrap();
+            static_mixer_mx_10_pipe.pipe_fluid_array.clone().try_into().unwrap();
 
 
             let heater_therminol_avg_density: MassDensity = 
@@ -248,16 +248,16 @@ pub fn heater_plus_mx_10_with_supports(){
 
 
             heater_top_head_bare.therminol_array.link_to_front(
-                &mut static_mixer_mx_10_object.therminol_array,
+                &mut static_mixer_mx_10_object.pipe_fluid_array,
                 generic_advection_interaction
             ).unwrap();
 
-            static_mixer_mx_10_object.therminol_array.link_to_front(
-                &mut static_mixer_mx_10_pipe.therminol_array,
+            static_mixer_mx_10_object.pipe_fluid_array.link_to_front(
+                &mut static_mixer_mx_10_pipe.pipe_fluid_array,
                 generic_advection_interaction
             ).unwrap();
 
-            static_mixer_mx_10_pipe.therminol_array.link_to_front(
+            static_mixer_mx_10_pipe.pipe_fluid_array.link_to_front(
                 &mut outlet_bc,
                 generic_advection_interaction
             ).unwrap();
@@ -342,7 +342,7 @@ pub fn heater_plus_mx_10_with_supports(){
                         ).unwrap();
 
                     structural_support_mx_10.support_array.link_to_back(
-                        &mut static_mixer_mx_10_pipe.steel_shell,
+                        &mut static_mixer_mx_10_pipe.pipe_shell,
                         support_conductance_interaction
                     ).unwrap();
 

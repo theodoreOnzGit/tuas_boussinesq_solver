@@ -5,17 +5,17 @@ use std::thread::JoinHandle;
 use std::ops::DerefMut;
 
 use uom::si::f64::*;
-use super::StaticMixers;
+use super::InsulatedPorousMediaFluidComponent;
 
 
-impl StaticMixers {
+impl InsulatedPorousMediaFluidComponent {
     /// advances timestep for each HeatTransferEntity within the 
     /// HeaterVersion2Bare
     pub fn _advance_timestepp(&mut self, 
     timestep: Time) {
 
-        self.therminol_array.advance_timestep_mut_self(timestep).unwrap();
-        self.steel_shell.advance_timestep_mut_self(timestep).unwrap();
+        self.pipe_fluid_array.advance_timestep_mut_self(timestep).unwrap();
+        self.pipe_shell.advance_timestep_mut_self(timestep).unwrap();
         self.insulation_array.advance_timestep_mut_self(timestep).unwrap();
     }
 
@@ -34,8 +34,8 @@ impl StaticMixers {
 
 
                 // carry out the connection calculations
-                component_clone.therminol_array.advance_timestep_mut_self(timestep).unwrap();
-                component_clone.steel_shell.advance_timestep_mut_self(timestep).unwrap();
+                component_clone.pipe_fluid_array.advance_timestep_mut_self(timestep).unwrap();
+                component_clone.pipe_shell.advance_timestep_mut_self(timestep).unwrap();
                 component_clone.insulation_array.advance_timestep_mut_self(timestep).unwrap();
                 
                 component_clone
@@ -60,10 +60,10 @@ impl StaticMixers {
         // advances timestep in parallel, 
         // but must clone first
         let therminol_array_mutex = 
-        Arc::new(Mutex::new(self.therminol_array.clone()));
+        Arc::new(Mutex::new(self.pipe_fluid_array.clone()));
 
         let steel_shell_mutex = 
-        Arc::new(Mutex::new(self.steel_shell.clone()));
+        Arc::new(Mutex::new(self.pipe_shell.clone()));
 
         let twisted_tape_mutex =
         Arc::new(Mutex::new(self.insulation_array.clone()));
@@ -123,11 +123,11 @@ impl StaticMixers {
         // To advance timestep, one must then clone what is inside 
         // the mutex locks and override the data within the object
 
-        self.therminol_array.set(
+        self.pipe_fluid_array.set(
         therminol_array_mutex.lock().as_deref_mut()
         .unwrap().clone()).unwrap();
 
-        self.steel_shell.set(
+        self.pipe_shell.set(
         steel_shell_mutex.lock().as_deref_mut()
         .unwrap().clone()).unwrap();
 

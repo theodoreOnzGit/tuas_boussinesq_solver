@@ -77,7 +77,7 @@ pub mod ciet_heater_top_and_bottom_head_bare;
 /// Ong, T. K. C. (2024). Digital Twins as 
 /// Testbeds for Iterative Simulated Neutronics Feedback 
 /// Controller Development (Doctoral dissertation, UC Berkeley).
-pub mod ciet_static_mixers;
+pub mod insulated_porous_media_pipes;
 
 /// ciet components for pipes and valves for use in the isothermal test
 ///

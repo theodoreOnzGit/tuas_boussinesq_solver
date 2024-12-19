@@ -1,7 +1,7 @@
 use std::f64::consts::PI;
 use std::thread::{self, JoinHandle};
 
-use super::StaticMixers;
+use super::InsulatedPorousMediaFluidComponent;
 use uom::si::length::meter;
 use uom::ConstZero;
 use uom::si::pressure::atmosphere;
@@ -20,7 +20,7 @@ use crate::boundary_conditions::BCType;
 use crate::array_control_vol_and_fluid_component_collections::one_d_solid_array_with_lateral_coupling::SolidColumn;
 use crate::array_control_vol_and_fluid_component_collections::one_d_fluid_array_with_lateral_coupling::FluidArray;
 
-impl StaticMixers {
+impl InsulatedPorousMediaFluidComponent {
 
 
     /// used to connect the arrays laterally 
@@ -40,10 +40,10 @@ impl StaticMixers {
         // clone each array and set them later
 
         let mut steel_shell_clone: SolidColumn = 
-        self.steel_shell.clone().try_into() .unwrap();
+        self.pipe_shell.clone().try_into() .unwrap();
 
         let mut therminol_array_clone: FluidArray = 
-        self.therminol_array.clone().try_into().unwrap();
+        self.pipe_fluid_array.clone().try_into().unwrap();
 
         let mut insulation_array_clone: SolidColumn = 
         self.insulation_array.clone().try_into().unwrap();
@@ -149,9 +149,9 @@ impl StaticMixers {
         // now that lateral connections are done, 
         // modify the heat transfer entity 
 
-        self.therminol_array.set(therminol_array_clone.into()).unwrap();
+        self.pipe_fluid_array.set(therminol_array_clone.into()).unwrap();
 
-        self.steel_shell.set(steel_shell_clone.into()).unwrap();
+        self.pipe_shell.set(steel_shell_clone.into()).unwrap();
 
         self.insulation_array.set(insulation_array_clone.into()
         ).unwrap();
@@ -192,16 +192,16 @@ impl StaticMixers {
         self.insulation_array.link_to_front(&mut zero_power_bc,
             interaction).unwrap();
 
-        self.therminol_array.link_to_front(&mut zero_power_bc,
+        self.pipe_fluid_array.link_to_front(&mut zero_power_bc,
             interaction).unwrap();
 
-        self.therminol_array.link_to_back(&mut zero_power_bc,
+        self.pipe_fluid_array.link_to_back(&mut zero_power_bc,
             interaction).unwrap();
 
-        self.steel_shell.link_to_front(&mut zero_power_bc,
+        self.pipe_shell.link_to_front(&mut zero_power_bc,
             interaction).unwrap();
 
-        self.steel_shell.link_to_back(&mut zero_power_bc,
+        self.pipe_shell.link_to_back(&mut zero_power_bc,
             interaction).unwrap();
     }
 
@@ -220,7 +220,7 @@ impl StaticMixers {
         self.insulation_array.clone().try_into().unwrap();
 
         let mut therminol_clone: FluidArray = 
-        self.therminol_array.clone().try_into().unwrap();
+        self.pipe_fluid_array.clone().try_into().unwrap();
 
         // find parameters for fiberglass conductance
 
@@ -282,10 +282,10 @@ impl StaticMixers {
         // before any calculations, I will first need a clone of 
         // the therminol fluid array and twisted tape array
         let mut therminol_fluid_array_clone: FluidArray = 
-        self.therminol_array.clone().try_into().unwrap();
+        self.pipe_fluid_array.clone().try_into().unwrap();
 
         let mut steel_shell_clone: SolidColumn = 
-        self.steel_shell.clone().try_into().unwrap();
+        self.pipe_shell.clone().try_into().unwrap();
 
         // also need to get basic tmeperatures and mass flowrates 
         // only do this once because some of these methods involve 
@@ -466,10 +466,10 @@ impl StaticMixers {
         self.insulation_array.clone().try_into().unwrap();
 
         let mut steel_clone: SolidColumn = 
-        self.steel_shell.clone().try_into().unwrap();
+        self.pipe_shell.clone().try_into().unwrap();
 
         let mut therminol_clone: FluidArray = 
-        self.therminol_array.clone().try_into().unwrap();
+        self.pipe_fluid_array.clone().try_into().unwrap();
 
         // find the length of the array and node length
 

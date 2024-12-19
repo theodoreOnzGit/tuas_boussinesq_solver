@@ -11,23 +11,33 @@ use uom::si::heat_transfer::watt_per_square_meter_kelvin;
 use uom::si::length::meter;
 use uom::si::ratio::ratio;
 use uom::si::pressure::atmosphere;
-/// represents mx 10 and its pipes
+/// Fluid Components with Internals 
+/// 
+/// This could be an insulated pipe with some twisted tape inside 
+/// For example, a static mixer
+/// 
+/// StaticMixer MX-10 is a classic example of what this class is meant for 
+/// 
+/// However, it could also be used for CIET Heater v1.0 where it was insulated
+/// and had an annular pipe inside it
+/// 
 #[derive(Debug,Clone,PartialEq)]
-pub struct StaticMixers {
+pub struct InsulatedPorousMediaFluidComponent {
 
     inner_nodes: usize,
 
     /// heat transfer entity representing control volumes 
-    /// for the insulation around MX-10
+    /// for the insulation around the Insulated Porous media component 
+    /// such as MX-10
     pub insulation_array: HeatTransferEntity,
 
     /// heat transfer entity representing control volumes 
     /// for the steel piping in MX-10
-    pub steel_shell: HeatTransferEntity,
+    pub pipe_shell: HeatTransferEntity,
 
     /// heat transfer entity representing control volumes 
     /// for the therminol fluid in MX-10
-    pub therminol_array: HeatTransferEntity,
+    pub pipe_fluid_array: HeatTransferEntity,
 
     /// ambient temperature of air used to calculate heat loss
     pub ambient_temperature: ThermodynamicTemperature,
@@ -49,7 +59,7 @@ pub struct StaticMixers {
     darcy_loss_correlation: DimensionlessDarcyLossCorrelations,
 }
 
-impl StaticMixers {
+impl InsulatedPorousMediaFluidComponent {
     /// constructs the static mixer using the RELAP/SAM model 
     /// as a basis 
     ///
@@ -163,8 +173,8 @@ impl StaticMixers {
 
         return Self { inner_nodes: user_specified_inner_nodes,
             insulation_array: insulation.into(),
-            steel_shell: steel_shell_array.into(),
-            therminol_array: therminol_array.into(),
+            pipe_shell: steel_shell_array.into(),
+            pipe_fluid_array: therminol_array.into(),
             ambient_temperature,
             heat_transfer_to_air: h_to_air,
             tube_inner_diameter: steel_id,
@@ -286,8 +296,8 @@ impl StaticMixers {
 
         return Self { inner_nodes: user_specified_inner_nodes,
             insulation_array: insulation.into(),
-            steel_shell: steel_shell_array.into(),
-            therminol_array: therminol_array.into(),
+            pipe_shell: steel_shell_array.into(),
+            pipe_fluid_array: therminol_array.into(),
             ambient_temperature,
             heat_transfer_to_air: h_to_air,
             tube_inner_diameter: steel_id,
@@ -402,8 +412,8 @@ impl StaticMixers {
 
         return Self { inner_nodes: user_specified_inner_nodes,
             insulation_array: insulation.into(),
-            steel_shell: steel_shell_array.into(),
-            therminol_array: therminol_array.into(),
+            pipe_shell: steel_shell_array.into(),
+            pipe_fluid_array: therminol_array.into(),
             ambient_temperature,
             heat_transfer_to_air: h_to_air,
             tube_inner_diameter: steel_id,
@@ -517,8 +527,8 @@ impl StaticMixers {
 
         return Self { inner_nodes: user_specified_inner_nodes,
             insulation_array: insulation.into(),
-            steel_shell: steel_shell_array.into(),
-            therminol_array: therminol_array.into(),
+            pipe_shell: steel_shell_array.into(),
+            pipe_fluid_array: therminol_array.into(),
             ambient_temperature,
             heat_transfer_to_air: h_to_air,
             tube_inner_diameter: steel_id,
@@ -629,8 +639,8 @@ impl StaticMixers {
 
         return Self { inner_nodes: user_specified_inner_nodes,
             insulation_array: insulation.into(),
-            steel_shell: steel_shell_array.into(),
-            therminol_array: therminol_array.into(),
+            pipe_shell: steel_shell_array.into(),
+            pipe_fluid_array: therminol_array.into(),
             ambient_temperature,
             heat_transfer_to_air: h_to_air,
             tube_inner_diameter: steel_id,
@@ -741,8 +751,8 @@ impl StaticMixers {
 
         return Self { inner_nodes: user_specified_inner_nodes,
             insulation_array: insulation.into(),
-            steel_shell: steel_shell_array.into(),
-            therminol_array: therminol_array.into(),
+            pipe_shell: steel_shell_array.into(),
+            pipe_fluid_array: therminol_array.into(),
             ambient_temperature,
             heat_transfer_to_air: h_to_air,
             tube_inner_diameter: steel_id,
