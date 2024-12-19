@@ -288,13 +288,19 @@ pub fn update_ciet_plot_from_ciet_state(
         }
 
         
+        let data_record_interval_seconds = 
+            local_ciet_plot.data_record_interval_seconds;
+
+        let data_record_interval_ms = 
+            data_record_interval_seconds * 1000.0 ;
 
         // update the plot
         *ciet_plot_ptr.lock().unwrap().deref_mut()
             = local_ciet_plot;
 
         // historian records every 100ms 
-        std::thread::sleep(Duration::from_millis(100));
+        // or rather, how often the user decides (in intervals)
+        std::thread::sleep(Duration::from_millis(data_record_interval_ms as u64));
     }
 
 }

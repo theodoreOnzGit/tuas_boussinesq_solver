@@ -24,6 +24,20 @@ impl CIETApp {
         // left panel
         egui::ScrollArea::both().show(ui, |ui| {
 
+            // obtain a lock for the ciet data 
+            // ptr 
+            let mut ciet_data_global_ptr_lock = 
+                self.ciet_plot_data_mutex_ptr_for_parallel_data_transfer
+                .lock().unwrap();
+            
+            let record_interval_seconds = egui::Slider::new(
+                &mut ciet_data_global_ptr_lock.data_record_interval_seconds, 
+                0.01..=1000.0)
+                .logarithmic(true)
+                .text("Recording Interval (Seconds)")
+                .drag_value_speed(0.001);
+
+            ui.add(record_interval_seconds);
 
 
             ui.label("Time (s), Heater Power (kW), BT-11 Inlet (degC), BT-12 Outlet (degC)");
@@ -58,7 +72,13 @@ impl CIETApp {
             });
 
 
+
         });
+
+
+        // am placing this here because it is kind of hard to 
+        // make sense of all the parantheses
+        return ();
 
     }
 
@@ -69,7 +89,8 @@ impl CIETApp {
             if ui.button("Update CSV Data").clicked(){
                 // spawn a new window with csv data
                 let latest_ciet_plot_data: PagePlotData = 
-                    self.ciet_plot_data_mutex_ptr_for_parallel_data_transfer.lock().unwrap().clone();
+                    self.ciet_plot_data_mutex_ptr_for_parallel_data_transfer
+                    .lock().unwrap().clone();
 
                 self.ciet_plot_data = latest_ciet_plot_data;
 

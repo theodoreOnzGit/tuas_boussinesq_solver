@@ -364,8 +364,8 @@ pub struct PagePlotData {
     /// the heater data here is a tuple, 
     ///
     /// simulation time, heater power, inlet temp and outlet temp
-    pub heater_plot_data: Vec<(Time,Power,ThermodynamicTemperature,
-        ThermodynamicTemperature)>,
+    pub heater_plot_data: Vec<(Time,Power,ThermodynamicTemperature, ThermodynamicTemperature)>,
+
 
     /// the CTAH data in a tuple, I want it to have the 
     /// Time 
@@ -374,9 +374,7 @@ pub struct PagePlotData {
     /// Outlet Temperature 
     /// Outlet Temperature Set pt
     ///
-    pub ctah_plot_data: Vec<(Time, HeatTransfer,ThermodynamicTemperature,
-        ThermodynamicTemperature,
-        ThermodynamicTemperature)>,
+    pub ctah_plot_data: Vec<(Time, HeatTransfer,ThermodynamicTemperature, ThermodynamicTemperature, ThermodynamicTemperature)>,
 
     /// the TCHX data in a tuple
     /// Time 
@@ -384,17 +382,12 @@ pub struct PagePlotData {
     /// Inlet Temperature 
     /// Outlet Temperature 
     /// Outlet Temperature Set pt
-    pub tchx_plot_data: Vec<(Time, HeatTransfer,ThermodynamicTemperature,
-        ThermodynamicTemperature,
-        ThermodynamicTemperature)>,
-
+    pub tchx_plot_data: Vec<(Time, HeatTransfer,ThermodynamicTemperature, ThermodynamicTemperature, ThermodynamicTemperature)>,
     // time, 
     // pump pressure
     // tube mass flowrate,
     // ctah pump temperature 
-    pub ctah_pump_plot_data: Vec< 
-        (Time, Pressure, MassRate,
-         ThermodynamicTemperature,)>,
+    pub ctah_pump_plot_data: Vec< (Time, Pressure, MassRate, ThermodynamicTemperature,)> ,
 
     // time, 
     // shell mass flowrate ,
@@ -403,12 +396,16 @@ pub struct PagePlotData {
     // dhx shell outlet temp 
     // dhx tube inlet temp 
     // dhx tube outlet temp
-    pub dhx_plot_data: 
-    Vec<(Time, MassRate, MassRate,
-            ThermodynamicTemperature,
-            ThermodynamicTemperature,
-            ThermodynamicTemperature,
-            ThermodynamicTemperature,)>,
+    pub dhx_plot_data: Vec<(Time, MassRate, MassRate, ThermodynamicTemperature, ThermodynamicTemperature, ThermodynamicTemperature, ThermodynamicTemperature,)> ,
+
+
+
+    // recording interval
+
+
+    pub data_record_interval_seconds: f64,
+
+
 
 
 }
@@ -1138,6 +1135,13 @@ impl PagePlotData {
         return time_dracs_loop_massrate_vec;
     }
 
+    // this is usually meant for overwriting the 
+    // recording interval settings
+    pub fn overwrite(&mut self, user_set_page_plot_data: PagePlotData){
+
+        *self = user_set_page_plot_data;
+    }
+
 }
 
 impl Default for PagePlotData {
@@ -1194,6 +1198,8 @@ impl Default for PagePlotData {
             ); NUM_DATA_PTS_IN_PLOTS
             ];
 
+        // by default, record every 0.1s
+        let data_record_interval_seconds = 0.1;
 
 
         Self { 
@@ -1203,7 +1209,7 @@ impl Default for PagePlotData {
             tchx_plot_data: tchx_data_default,
             ctah_pump_plot_data: ctah_pump_data_default,
             dhx_plot_data: dhx_data_default,
-
+            data_record_interval_seconds,
         }
     }
 }

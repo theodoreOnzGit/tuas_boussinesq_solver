@@ -8,6 +8,7 @@
 
 - Rust 1.81
 - a fast enough CPU to run in real-time (i7-10875H was good)
+- 8 GB RAM, which is kind of the minimum for laptops in 2024
 - 1920 x 1080 screen resolution (otherwise the full main page won't show properly)
 
 # Basic installs before you run cargo run 
