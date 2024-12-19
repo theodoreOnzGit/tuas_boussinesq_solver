@@ -1,9 +1,9 @@
 
-use egui::{include_image, Image, Ui};
+use egui::{include_image, Image, Pos2, Rect, Ui};
 
 use crate::ciet_simulator_v1::{app::useful_functions::new_temp_sensitive_button, CIETApp};
 
-use super::ciet_data::CIETState;
+use super::{ciet_data::CIETState, Panel};
 
 impl CIETApp {
 
@@ -161,14 +161,32 @@ impl CIETApp {
             let frequency_response_label = egui::Button::new(
                 "Pls Control Heater from Frequency Response Page"
             );
-            self.put_widget_with_size_and_centre(
-                ui, 
-                frequency_response_label, 
-                heater_slider_x + 50.0, 
-                heater_slider_y, 
-                heater_slider_x_width*3.0, 
-                heater_slider_y_width*1.0
-                );
+
+            
+            // make interactive button
+            let centre_x_pixels = heater_slider_x + 50.0;
+            let centre_y_pixels = heater_slider_y;
+            let x_width_pixels = heater_slider_x_width*3.0;
+            let y_width_pixels = heater_slider_y_width*1.0;
+
+
+            let top_left_x: f32 = centre_x_pixels - 0.5 * x_width_pixels;
+            let top_left_y: f32 = centre_y_pixels - 0.5 * y_width_pixels;
+            let bottom_right_x: f32 = centre_x_pixels + 0.5 * x_width_pixels;
+            let bottom_right_y: f32 = centre_y_pixels + 0.5 * y_width_pixels;
+
+            let rect: Rect = Rect {
+                // top left
+                min: Pos2 { x: top_left_x, y: top_left_y },
+                // bottom right
+                max: Pos2 { x: bottom_right_x, y: bottom_right_y },
+            };
+
+            // allow the user to go straight to frequency response page
+            if ui.put(rect, frequency_response_label).clicked() {
+                self.open_panel = Panel::HeaterAndFrequencyResponse;
+            }
+
             drop(heater_set_pt_slider_kw);
         }
 
@@ -332,8 +350,8 @@ impl CIETApp {
             ui, 
             pipe_2a, 
             heater_x , 
-            heater_y - 140.0, 
-            50.0, 
+            heater_y - 130.0, 
+            30.0, 
             4.0);
 
         let button_temp_degc = ciet_state_local.pipe_2_temp_degc;
@@ -347,8 +365,8 @@ impl CIETApp {
             ui, 
             pipe_2, 
             heater_x , 
-            heater_y - 190.0, 
-            50.0, 
+            heater_y - 160.0, 
+            30.0, 
             4.0);
 
         let button_temp_degc = ciet_state_local.pipe_3_temp_degc;
@@ -363,7 +381,7 @@ impl CIETApp {
             pipe_3, 
             heater_x , 
             heater_y - 190.0, 
-            50.0, 
+            40.0, 
             4.0);
 
         let button_temp_degc = ciet_state_local.pipe_4_temp_degc;

@@ -1,4 +1,4 @@
-# tuas
+# TUAS
 Thermo-hydraulic Uniphase Advection and Convection Solver for Salt Flows
 
 It contains traits for fluid mechanics and heat transfer 
