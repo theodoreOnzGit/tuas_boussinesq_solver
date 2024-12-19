@@ -3,7 +3,7 @@ use crate::array_control_vol_and_fluid_component_collections::one_d_solid_array_
 use crate::boundary_conditions::BCType;
 use crate::boussinesq_thermophysical_properties::LiquidMaterial;
 use crate::heat_transfer_correlations::heat_transfer_interactions::heat_transfer_interaction_enums::HeatTransferInteractionType;
-use crate::pre_built_components::ciet_heater_version_2_bare::HeaterVersion2Bare;
+use crate::pre_built_components::non_insulated_porous_media_fluid_components::NonInsulatedPorousMediaFluidComponent;
 use crate::pre_built_components::heat_transfer_entities::HeatTransferEntity;
 #[test]
 pub fn example_heated_section_test(){
@@ -26,7 +26,7 @@ pub fn example_heated_section_test(){
 
     let number_of_temperature_nodes: usize = 8;
     
-    let mut heater_v2_bare = HeaterVersion2Bare::new_dewet_model(
+    let mut heater_v2_bare = NonInsulatedPorousMediaFluidComponent::new_dewet_model(
         initial_temperature,
         ambient_air_temp,
         number_of_temperature_nodes
@@ -127,7 +127,7 @@ pub fn example_heated_section_test(){
 
         // make other connections by spawning a new thread 
         // this is the parallel version
-        let heater_2_join_handle: JoinHandle<HeaterVersion2Bare> 
+        let heater_2_join_handle: JoinHandle<NonInsulatedPorousMediaFluidComponent> 
         = heater_v2_bare.
             lateral_connection_thread_spawn(
                 mass_flowrate,
@@ -140,7 +140,7 @@ pub fn example_heated_section_test(){
         //    timestep);
 
         // calculate timestep (thread spawn method, parallel) 
-        let heater_2_join_handle: JoinHandle<HeaterVersion2Bare> 
+        let heater_2_join_handle: JoinHandle<NonInsulatedPorousMediaFluidComponent> 
         = heater_v2_bare.advance_timestep_thread_spawn(
             timestep);
 

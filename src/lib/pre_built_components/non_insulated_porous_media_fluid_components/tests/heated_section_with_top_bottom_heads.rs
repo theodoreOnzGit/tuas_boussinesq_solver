@@ -21,7 +21,7 @@ pub fn test_inclusive_heater_top_bottom_head(){
 
     let number_of_temperature_nodes: usize = 8;
     
-    let mut heater_v2_bare = HeaterVersion2Bare::new_dewet_model(
+    let mut heater_v2_bare = NonInsulatedPorousMediaFluidComponent::new_dewet_model(
         initial_temperature,
         ambient_air_temp,
         number_of_temperature_nodes
@@ -155,7 +155,7 @@ pub fn test_inclusive_heater_top_bottom_head(){
             } else {
                 // make other connections by spawning a new thread 
                 // this is the parallel version
-                let heater_2_join_handle: JoinHandle<HeaterVersion2Bare> 
+                let heater_2_join_handle: JoinHandle<NonInsulatedPorousMediaFluidComponent> 
                 = heater_v2_bare.
                     lateral_connection_thread_spawn(
                         mass_flowrate,
@@ -178,7 +178,7 @@ pub fn test_inclusive_heater_top_bottom_head(){
 
                 // calculate timestep (thread spawn method, parallel) 
 
-                let heater_2_join_handle: JoinHandle<HeaterVersion2Bare> 
+                let heater_2_join_handle: JoinHandle<NonInsulatedPorousMediaFluidComponent> 
                 = heater_v2_bare.advance_timestep_thread_spawn(
                     timestep);
 

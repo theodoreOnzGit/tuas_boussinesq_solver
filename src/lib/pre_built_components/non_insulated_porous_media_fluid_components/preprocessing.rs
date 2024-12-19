@@ -13,7 +13,7 @@ use crate::boundary_conditions::BCType;
 use crate::array_control_vol_and_fluid_component_collections::one_d_solid_array_with_lateral_coupling::SolidColumn;
 use crate::array_control_vol_and_fluid_component_collections::one_d_fluid_array_with_lateral_coupling::FluidArray;
 
-use super::HeaterVersion2Bare;
+use super::NonInsulatedPorousMediaFluidComponent;
 use uom::si::area::square_inch;
 use uom::si::length::inch;
 use uom::si::length::meter;
@@ -22,7 +22,7 @@ use uom::si::pressure::atmosphere;
 use uom::si::f64::*;
 use ndarray::*;
 
-impl HeaterVersion2Bare {
+impl NonInsulatedPorousMediaFluidComponent {
 
 
     /// used to connect the arrays laterally 
@@ -304,7 +304,7 @@ impl HeaterVersion2Bare {
         // firstly, reynolds 
 
         let reynolds_number: Ratio = 
-        HeaterVersion2Bare::heater_v2_hydraulic_diameter_reynolds(
+        NonInsulatedPorousMediaFluidComponent::heater_v2_hydraulic_diameter_reynolds(
             mass_flowrate,
             fluid_temperature,
         );

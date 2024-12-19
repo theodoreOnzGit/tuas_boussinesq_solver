@@ -28,7 +28,7 @@ use uom::si::pressure::atmosphere;
 /// so it behaves like a pipe in terms of pressure drop
 /// For now, I did not do anything special with it
 #[derive(Debug,Clone,PartialEq)]
-pub struct HeaterVersion2Bare {
+pub struct NonInsulatedPorousMediaFluidComponent {
 
     inner_nodes: usize,
 
@@ -56,7 +56,7 @@ pub struct HeaterVersion2Bare {
 }
 
 
-impl HeaterVersion2Bare {
+impl NonInsulatedPorousMediaFluidComponent {
 
     /// traditional callibrated heater constructor 
     /// with 20 W/(m^2 K) of heat loss  to air

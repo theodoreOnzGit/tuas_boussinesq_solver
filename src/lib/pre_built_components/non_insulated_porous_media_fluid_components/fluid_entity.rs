@@ -2,10 +2,10 @@ use crate::array_control_vol_and_fluid_component_collections::one_d_fluid_array_
 use crate::array_control_vol_and_fluid_component_collections::fluid_component_collection::fluid_component_traits::FluidComponentTrait;
 use uom::si::f64::*;
 
-use super::HeaterVersion2Bare;
+use super::NonInsulatedPorousMediaFluidComponent;
 
 
-impl FluidComponentTrait for HeaterVersion2Bare {
+impl FluidComponentTrait for NonInsulatedPorousMediaFluidComponent {
     fn get_mass_flowrate(&mut self) -> MassRate  {
         let mut therminol_array: FluidArray = 
         self.therminol_array.clone().try_into().unwrap();

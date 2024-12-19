@@ -1,8 +1,8 @@
 use uom::si::f64::*;
 
-use super::HeaterVersion2Bare;
+use super::NonInsulatedPorousMediaFluidComponent;
 
-impl HeaterVersion2Bare {
+impl NonInsulatedPorousMediaFluidComponent {
     /// provides an array of temperatures representing 
     /// the steel piping within the heater top or bottom head
     pub fn steel_shell_temperature(&mut self) -> Vec<ThermodynamicTemperature>{

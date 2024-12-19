@@ -6,10 +6,10 @@ use std::sync::Mutex;
 
 use uom::si::f64::*;
 
-use super::HeaterVersion2Bare;
+use super::NonInsulatedPorousMediaFluidComponent;
 
 
-impl HeaterVersion2Bare {
+impl NonInsulatedPorousMediaFluidComponent {
     /// advances timestep for each HeatTransferEntity within the 
     /// HeaterVersion2Bare
     #[inline]

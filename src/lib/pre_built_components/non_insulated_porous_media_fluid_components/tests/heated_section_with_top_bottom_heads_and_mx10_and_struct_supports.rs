@@ -27,7 +27,7 @@ pub fn heater_plus_mx_10_with_supports(){
 
     let number_of_inner_temperature_nodes: usize = 6;
     
-    let mut heater_v2_bare = HeaterVersion2Bare::new_dewet_model(
+    let mut heater_v2_bare = NonInsulatedPorousMediaFluidComponent::new_dewet_model(
         initial_temperature,
         ambient_air_temp,
         number_of_inner_temperature_nodes
@@ -52,7 +52,7 @@ pub fn heater_plus_mx_10_with_supports(){
 
         let h_to_air = HeatTransfer::new::<watt_per_square_meter_kelvin>
             (20.0);
-        heater_v2_bare = HeaterVersion2Bare::_user_callibrated_htc_to_air_model(
+        heater_v2_bare = NonInsulatedPorousMediaFluidComponent::_user_callibrated_htc_to_air_model(
             initial_temperature,
             ambient_air_temp,
             number_of_inner_temperature_nodes,
@@ -274,7 +274,7 @@ pub fn heater_plus_mx_10_with_supports(){
             } else {
                 // make other connections by spawning a new thread 
                 // this is the parallel version
-                let heater_2_join_handle: JoinHandle<HeaterVersion2Bare> 
+                let heater_2_join_handle: JoinHandle<NonInsulatedPorousMediaFluidComponent> 
                 = heater_v2_bare.
                     lateral_connection_thread_spawn(
                         mass_flowrate,
@@ -395,7 +395,7 @@ pub fn heater_plus_mx_10_with_supports(){
 
                 // calculate timestep (thread spawn method, parallel) 
 
-                let heater_2_join_handle: JoinHandle<HeaterVersion2Bare> 
+                let heater_2_join_handle: JoinHandle<NonInsulatedPorousMediaFluidComponent> 
                 = heater_v2_bare.advance_timestep_thread_spawn(
                     timestep);
 
