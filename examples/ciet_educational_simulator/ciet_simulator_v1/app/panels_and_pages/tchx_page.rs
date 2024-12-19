@@ -4,18 +4,18 @@ use crate::ciet_simulator_v1::CIETApp;
 
 use uom::si::{f64::*, heat_transfer::watt_per_square_meter_kelvin, thermodynamic_temperature::degree_celsius, time::second};
 use egui_plot::{Legend, Line, Plot, PlotPoints};
-use super::ciet_data::{PagePlotData, NUM_DATA_PTS_IN_PLOTS};
+use super::ciet_data::PagePlotData;
 
 impl CIETApp {
     pub fn ciet_sim_tchx_page_csv(&mut self, ui: &mut Ui){
         // show this on the side panel
 
         let local_ciet_plot: PagePlotData = 
-            self.ciet_plot_data;
+            self.ciet_plot_data.clone();
 
-        let latest_tchx_data: [(Time,HeatTransfer,ThermodynamicTemperature,ThermodynamicTemperature
-            ,ThermodynamicTemperature); NUM_DATA_PTS_IN_PLOTS] = 
-            local_ciet_plot.tchx_plot_data;
+        let latest_tchx_data: Vec<(Time, HeatTransfer,
+        ThermodynamicTemperature,ThermodynamicTemperature,ThermodynamicTemperature)> 
+        = local_ciet_plot.tchx_plot_data;
 
         // left panel
         egui::ScrollArea::both().show(ui, |ui| {
@@ -23,7 +23,7 @@ impl CIETApp {
 
 
             ui.label("Time (s), TCHX htc (watts per m2 kelvin), BT-65 Inlet (degC), BT-66 Outlet (degC), BT-66 setpt (degC)");
-            latest_tchx_data.map(|data_tuple|{
+            latest_tchx_data.iter().for_each(|data_tuple|{
                 let (time, tchx_htc, bt65, bt66,bt66_setpt) = 
                     data_tuple;
 

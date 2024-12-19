@@ -7,7 +7,7 @@ use egui::Ui;
 
 use crate::ciet_simulator_v1::CIETApp;
 
-use super::ciet_data::{PagePlotData, NUM_DATA_PTS_IN_PLOTS};
+use super::ciet_data::PagePlotData;
 impl CIETApp {
 
     pub fn ciet_sim_dhx_page_csv(&mut self, ui: &mut Ui,){
@@ -15,14 +15,14 @@ impl CIETApp {
         // show this on the side panel
 
         let local_ciet_plot: PagePlotData = 
-            self.ciet_plot_data;
+            self.ciet_plot_data.clone();
 
-        let latest_dhx_sthe_data: [(Time,MassRate,MassRate,
+        let latest_dhx_sthe_data: Vec<(Time,MassRate,MassRate,
             ThermodynamicTemperature,
             ThermodynamicTemperature,
             ThermodynamicTemperature,
             ThermodynamicTemperature,
-            ); NUM_DATA_PTS_IN_PLOTS] = 
+            )> = 
             local_ciet_plot.dhx_plot_data;
 
         // left panel
@@ -31,7 +31,7 @@ impl CIETApp {
 
 
             ui.label("Time (s), dhx shell side flowrate (kg/s), dhx tube side flowrate (kg/s), dhx shell inlet temp (degC), dhx shell outlet temp (degC), dhx tube inlet temp (degC), dhx tube outlet temp (degC), ");
-            latest_dhx_sthe_data.map(|data_tuple|{
+            latest_dhx_sthe_data.iter().for_each(|data_tuple|{
                 let (time, dhx_shell_side_mass_flowrate,
                     dhx_tube_side_mass_flowrate,
                     dhx_shell_inlet_temp,

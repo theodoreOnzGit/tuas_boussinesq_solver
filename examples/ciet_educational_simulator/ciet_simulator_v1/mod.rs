@@ -20,6 +20,5 @@ pub fn ciet_simulator_v1() -> eframe::Result<()> {
         ),
     )
 }
-
 mod app;
 pub use app::CIETApp;

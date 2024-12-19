@@ -6,17 +6,17 @@ use uom::si::{f64::*, heat_transfer::watt_per_square_meter_kelvin, thermodynamic
 use egui_plot::{Legend, Line, Plot, PlotPoints};
 
 
-use super::ciet_data::{PagePlotData, NUM_DATA_PTS_IN_PLOTS};
+use super::ciet_data::PagePlotData;
 impl CIETApp {
 
     pub fn ciet_sim_ctah_page_csv(&mut self, ui: &mut Ui){
         // show this on the side panel
 
         let local_ciet_plot: PagePlotData = 
-            self.ciet_plot_data;
+            self.ciet_plot_data.clone();
 
-        let latest_ctah_data: [(Time,HeatTransfer,ThermodynamicTemperature,ThermodynamicTemperature
-            ,ThermodynamicTemperature); NUM_DATA_PTS_IN_PLOTS] = 
+        let latest_ctah_data: Vec<(Time,HeatTransfer,ThermodynamicTemperature,ThermodynamicTemperature
+            ,ThermodynamicTemperature)> = 
             local_ciet_plot.ctah_plot_data;
 
         // left panel
@@ -25,7 +25,7 @@ impl CIETApp {
 
 
             ui.label("Time (s), CTAH htc (watts per m2 kelvin), BT-43 Inlet (degC), BT-41 Outlet (degC), BT-41 setpt (degC)");
-            latest_ctah_data.map(|data_tuple|{
+            latest_ctah_data.iter().for_each(|data_tuple|{
                 let (time, ctah_htc, bt43, bt41,bt41_setpt) = 
                     data_tuple;
 

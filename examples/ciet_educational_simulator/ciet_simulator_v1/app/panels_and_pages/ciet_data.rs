@@ -359,14 +359,13 @@ use uom::si::power::kilowatt;
 /// this is the struct used to store data for graph plotting and 
 /// csv extraction
 /// have to lock this in an Arc Mutex pointer for parallelism
-#[derive(Debug,Clone,Copy)]
+#[derive(Debug,Clone)]
 pub struct PagePlotData {
     /// the heater data here is a tuple, 
     ///
     /// simulation time, heater power, inlet temp and outlet temp
-    pub heater_plot_data: [(Time,Power,ThermodynamicTemperature,
-        ThermodynamicTemperature); NUM_DATA_PTS_IN_PLOTS
-    ],
+    pub heater_plot_data: Vec<(Time,Power,ThermodynamicTemperature,
+        ThermodynamicTemperature)>,
 
     /// the CTAH data in a tuple, I want it to have the 
     /// Time 
@@ -375,10 +374,9 @@ pub struct PagePlotData {
     /// Outlet Temperature 
     /// Outlet Temperature Set pt
     ///
-    pub ctah_plot_data: [(Time, HeatTransfer,ThermodynamicTemperature,
+    pub ctah_plot_data: Vec<(Time, HeatTransfer,ThermodynamicTemperature,
         ThermodynamicTemperature,
-        ThermodynamicTemperature); NUM_DATA_PTS_IN_PLOTS
-    ],
+        ThermodynamicTemperature)>,
 
     /// the TCHX data in a tuple
     /// Time 
@@ -386,19 +384,17 @@ pub struct PagePlotData {
     /// Inlet Temperature 
     /// Outlet Temperature 
     /// Outlet Temperature Set pt
-    pub tchx_plot_data: [(Time, HeatTransfer,ThermodynamicTemperature,
+    pub tchx_plot_data: Vec<(Time, HeatTransfer,ThermodynamicTemperature,
         ThermodynamicTemperature,
-        ThermodynamicTemperature); NUM_DATA_PTS_IN_PLOTS
-    ],
+        ThermodynamicTemperature)>,
 
     // time, 
     // pump pressure
     // tube mass flowrate,
     // ctah pump temperature 
-    pub ctah_pump_plot_data: [
+    pub ctah_pump_plot_data: Vec< 
         (Time, Pressure, MassRate,
-         ThermodynamicTemperature,) ; NUM_DATA_PTS_IN_PLOTS
-    ],
+         ThermodynamicTemperature,)>,
 
     // time, 
     // shell mass flowrate ,
@@ -408,13 +404,11 @@ pub struct PagePlotData {
     // dhx tube inlet temp 
     // dhx tube outlet temp
     pub dhx_plot_data: 
-        [
-        (Time, MassRate, MassRate,
+    Vec<(Time, MassRate, MassRate,
             ThermodynamicTemperature,
             ThermodynamicTemperature,
             ThermodynamicTemperature,
-            ThermodynamicTemperature,
-        ) ; NUM_DATA_PTS_IN_PLOTS],
+            ThermodynamicTemperature,)>,
 
 
 }
@@ -452,9 +446,9 @@ impl PagePlotData {
         // take the first NUM_DATA_PTS_IN_PLOTS pieces as a fixed size array 
         // which is basically the array size
 
-        let mut new_array_to_be_put_back: [(Time,Power,
-            ThermodynamicTemperature,ThermodynamicTemperature); NUM_DATA_PTS_IN_PLOTS] = 
-            [ (Time::ZERO, Power::ZERO, 
+        let mut new_array_to_be_put_back: Vec<(Time,Power,
+            ThermodynamicTemperature,ThermodynamicTemperature)> =
+            vec![ (Time::ZERO, Power::ZERO, 
              ThermodynamicTemperature::ZERO,
              ThermodynamicTemperature::ZERO); NUM_DATA_PTS_IN_PLOTS
             ];
@@ -498,10 +492,10 @@ impl PagePlotData {
         // take the first NUM_DATA_PTS_IN_PLOTS pieces as a fixed size array 
         // which is basically the array size
 
-        let mut new_array_to_be_put_back: [(Time,HeatTransfer,
+        let mut new_array_to_be_put_back: Vec<(Time,HeatTransfer,
             ThermodynamicTemperature,ThermodynamicTemperature,
-            ThermodynamicTemperature); NUM_DATA_PTS_IN_PLOTS] = 
-            [ (Time::ZERO, HeatTransfer::ZERO, 
+            ThermodynamicTemperature)> = 
+            vec![ (Time::ZERO, HeatTransfer::ZERO, 
              ThermodynamicTemperature::ZERO,
              ThermodynamicTemperature::ZERO,
              ThermodynamicTemperature::ZERO); NUM_DATA_PTS_IN_PLOTS
@@ -546,10 +540,10 @@ impl PagePlotData {
         // take the first NUM_DATA_PTS_IN_PLOTS pieces as a fixed size array 
         // which is basically the array size
 
-        let mut new_array_to_be_put_back: [(Time,HeatTransfer,
+        let mut new_array_to_be_put_back: Vec<(Time,HeatTransfer,
             ThermodynamicTemperature,ThermodynamicTemperature,
-            ThermodynamicTemperature); NUM_DATA_PTS_IN_PLOTS] = 
-            [ (Time::ZERO, HeatTransfer::ZERO, 
+            ThermodynamicTemperature)> = 
+            vec![ (Time::ZERO, HeatTransfer::ZERO, 
              ThermodynamicTemperature::ZERO,
              ThermodynamicTemperature::ZERO,
              ThermodynamicTemperature::ZERO); NUM_DATA_PTS_IN_PLOTS
@@ -834,10 +828,10 @@ impl PagePlotData {
         // take the first NUM_DATA_PTS_IN_PLOTS pieces as a fixed size array 
         // which is basically the array size
 
-        let mut new_array_to_be_put_back: [(Time,Pressure,
+        let mut new_array_to_be_put_back: Vec<(Time,Pressure,
             MassRate,
-            ThermodynamicTemperature); NUM_DATA_PTS_IN_PLOTS] = 
-            [ (Time::ZERO, Pressure::ZERO, 
+            ThermodynamicTemperature)>= 
+            vec![ (Time::ZERO, Pressure::ZERO, 
              MassRate::ZERO,
              ThermodynamicTemperature::ZERO); NUM_DATA_PTS_IN_PLOTS
             ];
@@ -958,14 +952,14 @@ impl PagePlotData {
         // take the first NUM_DATA_PTS_IN_PLOTS pieces as a fixed size array 
         // which is basically the array size
 
-        let mut new_array_to_be_put_back: [(Time,
+        let mut new_array_to_be_put_back: Vec<(Time,
             MassRate,
             MassRate,
             ThermodynamicTemperature,
             ThermodynamicTemperature,
             ThermodynamicTemperature,
-            ThermodynamicTemperature); NUM_DATA_PTS_IN_PLOTS] = 
-            [ (Time::ZERO, 
+            ThermodynamicTemperature)> = 
+            vec![ (Time::ZERO, 
                 MassRate::ZERO, 
                 MassRate::ZERO, 
                 ThermodynamicTemperature::ZERO,
@@ -1151,13 +1145,13 @@ impl Default for PagePlotData {
 
         // basically a whole array of dimensioned zeroes
         let heater_data_default = 
-            [ (Time::ZERO, Power::ZERO, 
+            vec![ (Time::ZERO, Power::ZERO, 
              ThermodynamicTemperature::ZERO,
              ThermodynamicTemperature::ZERO); NUM_DATA_PTS_IN_PLOTS
             ];
 
         let ctah_data_default = 
-            [ (Time::ZERO, HeatTransfer::ZERO, 
+            vec![ (Time::ZERO, HeatTransfer::ZERO, 
              ThermodynamicTemperature::ZERO,
              ThermodynamicTemperature::ZERO,
              ThermodynamicTemperature::ZERO); NUM_DATA_PTS_IN_PLOTS
@@ -1166,7 +1160,7 @@ impl Default for PagePlotData {
         // tchx data default 
 
         let tchx_data_default = 
-            [ (Time::ZERO, HeatTransfer::ZERO, 
+            vec![ (Time::ZERO, HeatTransfer::ZERO, 
              ThermodynamicTemperature::ZERO,
              ThermodynamicTemperature::ZERO,
              ThermodynamicTemperature::ZERO); NUM_DATA_PTS_IN_PLOTS
@@ -1175,7 +1169,7 @@ impl Default for PagePlotData {
         // ctah pump data default 
 
         let ctah_pump_data_default = 
-            [ (Time::ZERO, Pressure::ZERO, 
+            vec![ (Time::ZERO, Pressure::ZERO, 
              MassRate::ZERO,
              ThermodynamicTemperature::ZERO
              ); NUM_DATA_PTS_IN_PLOTS
@@ -1190,7 +1184,7 @@ impl Default for PagePlotData {
         // dhx tube inlet temp 
         // dhx tube outlet temp
         let dhx_data_default = 
-            [
+            vec![
             (Time::ZERO, MassRate::ZERO, 
              MassRate::ZERO,
              ThermodynamicTemperature::ZERO,

@@ -7,7 +7,7 @@ use egui::Ui;
 
 use crate::ciet_simulator_v1::CIETApp;
 
-use super::ciet_data::{PagePlotData, NUM_DATA_PTS_IN_PLOTS};
+use super::ciet_data::PagePlotData;
 
 impl CIETApp {
 
@@ -16,9 +16,9 @@ impl CIETApp {
         // show this on the side panel
 
         let local_ciet_plot: PagePlotData = 
-            self.ciet_plot_data;
+            self.ciet_plot_data.clone();
 
-        let latest_ctah_pump_data: [(Time,Pressure,MassRate,ThermodynamicTemperature); NUM_DATA_PTS_IN_PLOTS] = 
+        let latest_ctah_pump_data: Vec<(Time,Pressure,MassRate,ThermodynamicTemperature)> = 
             local_ciet_plot.ctah_pump_plot_data;
 
         // left panel
@@ -27,7 +27,7 @@ impl CIETApp {
 
 
             ui.label("Time (s), CTAH Pump Pressure loop pressure drop (Pa), CTAH Branch Mass Flowrate (kg/s), CTAH Pump Temp (degC)");
-            latest_ctah_pump_data.map(|data_tuple|{
+            latest_ctah_pump_data.iter().for_each(|data_tuple|{
                 let (time, pump_pressure, ctah_br_mass_flowrate, ctah_pump_temp) = 
                     data_tuple;
 
