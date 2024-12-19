@@ -7,12 +7,12 @@ use super::{ciet_data::CIETState, Panel};
 
 impl CIETApp {
 
-    
+
 
     pub fn ciet_sim_main_page_central_panel(&mut self, ui: &mut Ui){
 
         // obtain a lock first to display the information 
-        
+
         egui::ScrollArea::both().show(ui, |ui| {
             self.insert_read_and_update_widgets(ui);
 
@@ -97,7 +97,7 @@ impl CIETApp {
 
         ui.separator();
 
-        
+
         //let size = egui::Vec2 { x: 150.0, y: 150.0 };
 
         //let tchx_pic = Image::new(
@@ -107,9 +107,16 @@ impl CIETApp {
 
         // i want the UI top left... 
 
+        let ui_rectangle: Rect = ui.clip_rect();
+
+        let left_most_side = ui_rectangle.left();
+        let top_most_side = ui_rectangle.top();
+
+
 
         // manually set coordinates
-        let (tchx_x, tchx_y): (f32, f32) = (150.0, 260.0);
+        let (tchx_x, tchx_y): 
+            (f32, f32) = (left_most_side + 100.0, top_most_side + 150.0);
         let (tchx_x_width, tchx_y_width): (f32, f32) = (150.0, 150.0);
         let dhx_x = tchx_x + 250.0;
         let dhx_y = tchx_y + 250.0;
@@ -162,7 +169,7 @@ impl CIETApp {
                 "Pls Control Heater from Frequency Response Page"
             );
 
-            
+
             // make interactive button
             let centre_x_pixels = heater_slider_x + 50.0;
             let centre_y_pixels = heater_slider_y;
@@ -249,12 +256,12 @@ impl CIETApp {
         let tchx_top_label = egui::Label::new(
             "Inlet BT-65 (degC): ".to_string() 
             + &tchx_top_temp.to_string()
-            );
+        );
 
         let tchx_bottom_label = egui::Label::new(
             "Outlet BT-66 (degC): ".to_string() 
             + &tchx_bottom_temp.to_string()
-            );
+        );
 
         self.put_widget_with_size_and_centre(
             ui, 
@@ -296,12 +303,12 @@ impl CIETApp {
         let ctah_top_label = egui::Label::new(
             "Inlet BT-43 (degC): ".to_string() 
             + &ctah_top_temp.to_string()
-            );
+        );
 
         let ctah_bottom_label = egui::Label::new(
             "Outlet BT-41 (degC): ".to_string() 
             + &ctah_bottom_temp.to_string()
-            );
+        );
 
         self.put_widget_with_size_and_centre(
             ui, 
@@ -478,7 +485,7 @@ impl CIETApp {
             heater_y + 290.0, 
             40.0, 
             4.0);
-        
+
         let button_temp_degc = ciet_state_local.pipe_19_temp_degc;
         let pipe_19_horizontal = new_temp_sensitive_button(
             min_temp_degc, 
@@ -1163,25 +1170,31 @@ impl CIETApp {
 
         let tchx_pic = Image::new(
             include_image!("../../cooler.png")
-            ).rounding(5.0);
+        ).rounding(5.0);
 
         let dhx_pic = Image::new(
             include_image!("../../heat-exchanger.png")
-            ).rounding(5.0);
+        ).rounding(5.0);
 
         let heater_pic = Image::new(
             include_image!("../../heater.png")
-            ).rounding(5.0);
+        ).rounding(5.0);
 
         let ctah_pump_pic = Image::new(
             include_image!("../../pump.png")
-            ).rounding(5.0);
+        ).rounding(5.0);
 
         let ctah_pic = Image::new(
             include_image!("../../cooler.png")
-            ).rounding(5.0);
+        ).rounding(5.0);
 
-        let (tchx_x, tchx_y): (f32, f32) = (150.0, 260.0);
+        let ui_rectangle: Rect = ui.clip_rect();
+
+        let left_most_side = ui_rectangle.left();
+        let top_most_side = ui_rectangle.top();
+
+        let (tchx_x, tchx_y): (f32, f32) = (
+            left_most_side + 100.0, top_most_side + 150.0);
         let (tchx_x_width, tchx_y_width): (f32, f32) = (150.0, 150.0);
 
         // for tchx
@@ -1268,156 +1281,156 @@ impl CIETApp {
             max_temp_degc, 
             button_temp_degc, 
             &max_temp_string
-            );
-        
-       ui.add(max_temp);
-       // 140.0
-       let button_temp_degc = 140.0;
-       let button_temp_string: String = 
-           button_temp_degc.to_string()+" degrees celsius";
-       let temp_140_degc = new_temp_sensitive_button(
-           min_temp_degc, 
-           max_temp_degc, 
-           button_temp_degc, 
-           &button_temp_string
-       );
-       ui.add(temp_140_degc);
-       // 130.0
-       let button_temp_degc = 130.0;
-       let button_temp_string: String = 
-           button_temp_degc.to_string()+" degrees celsius";
-       let temp_130_degc = new_temp_sensitive_button(
-           min_temp_degc, 
-           max_temp_degc, 
-           button_temp_degc, 
-           &button_temp_string
-       );
-       ui.add(temp_130_degc);
-       // 120.0
-       let button_temp_degc = 120.0;
-       let button_temp_string: String = 
-           button_temp_degc.to_string()+" degrees celsius";
-       let temp_120_degc = new_temp_sensitive_button(
-           min_temp_degc, 
-           max_temp_degc, 
-           button_temp_degc, 
-           &button_temp_string
-       );
-       ui.add(temp_120_degc);
-       // 110.0
-       let button_temp_degc = 110.0;
-       let button_temp_string: String = 
-           button_temp_degc.to_string()+" degrees celsius";
-       let temp_110_degc = new_temp_sensitive_button(
-           min_temp_degc, 
-           max_temp_degc, 
-           button_temp_degc, 
-           &button_temp_string
-       );
-       ui.add(temp_110_degc);
-       // 100.0
-       let button_temp_degc = 100.0;
-       let button_temp_string: String = 
-           button_temp_degc.to_string()+" degrees celsius";
-       let temp_100_degc = new_temp_sensitive_button(
-           min_temp_degc, 
-           max_temp_degc, 
-           button_temp_degc, 
-           &button_temp_string
-       );
-       ui.add(temp_100_degc);
+        );
 
-       // 90.0
-       let button_temp_degc = 90.0;
-       let button_temp_string: String = 
-           button_temp_degc.to_string()+" degrees celsius";
-       let temp_90_degc = new_temp_sensitive_button(
-           min_temp_degc, 
-           max_temp_degc, 
-           button_temp_degc, 
-           &button_temp_string
-       );
-       ui.add(temp_90_degc);
+        ui.add(max_temp);
+        // 140.0
+        let button_temp_degc = 140.0;
+        let button_temp_string: String = 
+            button_temp_degc.to_string()+" degrees celsius";
+        let temp_140_degc = new_temp_sensitive_button(
+            min_temp_degc, 
+            max_temp_degc, 
+            button_temp_degc, 
+            &button_temp_string
+        );
+        ui.add(temp_140_degc);
+        // 130.0
+        let button_temp_degc = 130.0;
+        let button_temp_string: String = 
+            button_temp_degc.to_string()+" degrees celsius";
+        let temp_130_degc = new_temp_sensitive_button(
+            min_temp_degc, 
+            max_temp_degc, 
+            button_temp_degc, 
+            &button_temp_string
+        );
+        ui.add(temp_130_degc);
+        // 120.0
+        let button_temp_degc = 120.0;
+        let button_temp_string: String = 
+            button_temp_degc.to_string()+" degrees celsius";
+        let temp_120_degc = new_temp_sensitive_button(
+            min_temp_degc, 
+            max_temp_degc, 
+            button_temp_degc, 
+            &button_temp_string
+        );
+        ui.add(temp_120_degc);
+        // 110.0
+        let button_temp_degc = 110.0;
+        let button_temp_string: String = 
+            button_temp_degc.to_string()+" degrees celsius";
+        let temp_110_degc = new_temp_sensitive_button(
+            min_temp_degc, 
+            max_temp_degc, 
+            button_temp_degc, 
+            &button_temp_string
+        );
+        ui.add(temp_110_degc);
+        // 100.0
+        let button_temp_degc = 100.0;
+        let button_temp_string: String = 
+            button_temp_degc.to_string()+" degrees celsius";
+        let temp_100_degc = new_temp_sensitive_button(
+            min_temp_degc, 
+            max_temp_degc, 
+            button_temp_degc, 
+            &button_temp_string
+        );
+        ui.add(temp_100_degc);
 
-       // 80.0
-       let button_temp_degc = 80.0;
-       let button_temp_string: String = 
-           button_temp_degc.to_string()+" degrees celsius";
-       let temp_80_degc = new_temp_sensitive_button(
-           min_temp_degc, 
-           max_temp_degc, 
-           button_temp_degc, 
-           &button_temp_string
-       );
-       ui.add(temp_80_degc);
-       // 70.0
-       let button_temp_degc = 70.0;
-       let button_temp_string: String = 
-           button_temp_degc.to_string()+" degrees celsius";
-       let temp_70_degc = new_temp_sensitive_button(
-           min_temp_degc, 
-           max_temp_degc, 
-           button_temp_degc, 
-           &button_temp_string
-       );
-       ui.add(temp_70_degc);
-       // 60.0
-       let button_temp_degc = 60.0;
-       let button_temp_string: String = 
-           button_temp_degc.to_string()+" degrees celsius";
-       let temp_60_degc = new_temp_sensitive_button(
-           min_temp_degc, 
-           max_temp_degc, 
-           button_temp_degc, 
-           &button_temp_string
-       );
-       ui.add(temp_60_degc);
-       // 50.0
-       let button_temp_degc = 50.0;
-       let button_temp_string: String = 
-           button_temp_degc.to_string()+" degrees celsius";
-       let temp_50_degc = new_temp_sensitive_button(
-           min_temp_degc, 
-           max_temp_degc, 
-           button_temp_degc, 
-           &button_temp_string
-       );
-       ui.add(temp_50_degc);
-       // 40.0
-       let button_temp_degc = 40.0;
-       let button_temp_string: String = 
-           button_temp_degc.to_string()+" degrees celsius";
-       let temp_40_degc = new_temp_sensitive_button(
-           min_temp_degc, 
-           max_temp_degc, 
-           button_temp_degc, 
-           &button_temp_string
-       );
-       ui.add(temp_40_degc);
+        // 90.0
+        let button_temp_degc = 90.0;
+        let button_temp_string: String = 
+            button_temp_degc.to_string()+" degrees celsius";
+        let temp_90_degc = new_temp_sensitive_button(
+            min_temp_degc, 
+            max_temp_degc, 
+            button_temp_degc, 
+            &button_temp_string
+        );
+        ui.add(temp_90_degc);
 
-       // 30.0
-       let button_temp_degc = 30.0;
-       let button_temp_string: String = 
-           button_temp_degc.to_string()+" degrees celsius";
-       let temp_30_degc = new_temp_sensitive_button(
-           min_temp_degc, 
-           max_temp_degc, 
-           button_temp_degc, 
-           &button_temp_string
-       );
-       ui.add(temp_30_degc);
+        // 80.0
+        let button_temp_degc = 80.0;
+        let button_temp_string: String = 
+            button_temp_degc.to_string()+" degrees celsius";
+        let temp_80_degc = new_temp_sensitive_button(
+            min_temp_degc, 
+            max_temp_degc, 
+            button_temp_degc, 
+            &button_temp_string
+        );
+        ui.add(temp_80_degc);
+        // 70.0
+        let button_temp_degc = 70.0;
+        let button_temp_string: String = 
+            button_temp_degc.to_string()+" degrees celsius";
+        let temp_70_degc = new_temp_sensitive_button(
+            min_temp_degc, 
+            max_temp_degc, 
+            button_temp_degc, 
+            &button_temp_string
+        );
+        ui.add(temp_70_degc);
+        // 60.0
+        let button_temp_degc = 60.0;
+        let button_temp_string: String = 
+            button_temp_degc.to_string()+" degrees celsius";
+        let temp_60_degc = new_temp_sensitive_button(
+            min_temp_degc, 
+            max_temp_degc, 
+            button_temp_degc, 
+            &button_temp_string
+        );
+        ui.add(temp_60_degc);
+        // 50.0
+        let button_temp_degc = 50.0;
+        let button_temp_string: String = 
+            button_temp_degc.to_string()+" degrees celsius";
+        let temp_50_degc = new_temp_sensitive_button(
+            min_temp_degc, 
+            max_temp_degc, 
+            button_temp_degc, 
+            &button_temp_string
+        );
+        ui.add(temp_50_degc);
+        // 40.0
+        let button_temp_degc = 40.0;
+        let button_temp_string: String = 
+            button_temp_degc.to_string()+" degrees celsius";
+        let temp_40_degc = new_temp_sensitive_button(
+            min_temp_degc, 
+            max_temp_degc, 
+            button_temp_degc, 
+            &button_temp_string
+        );
+        ui.add(temp_40_degc);
 
-       // 20.0
-       let button_temp_degc = 20.0;
-       let button_temp_string: String = 
-           button_temp_degc.to_string()+" degrees celsius";
-       let temp_20_degc = new_temp_sensitive_button(
-           min_temp_degc, 
-           max_temp_degc, 
-           button_temp_degc, 
-           &button_temp_string
-       );
-       ui.add(temp_20_degc);
+        // 30.0
+        let button_temp_degc = 30.0;
+        let button_temp_string: String = 
+            button_temp_degc.to_string()+" degrees celsius";
+        let temp_30_degc = new_temp_sensitive_button(
+            min_temp_degc, 
+            max_temp_degc, 
+            button_temp_degc, 
+            &button_temp_string
+        );
+        ui.add(temp_30_degc);
+
+        // 20.0
+        let button_temp_degc = 20.0;
+        let button_temp_string: String = 
+            button_temp_degc.to_string()+" degrees celsius";
+        let temp_20_degc = new_temp_sensitive_button(
+            min_temp_degc, 
+            max_temp_degc, 
+            button_temp_degc, 
+            &button_temp_string
+        );
+        ui.add(temp_20_degc);
 
     }
 }
