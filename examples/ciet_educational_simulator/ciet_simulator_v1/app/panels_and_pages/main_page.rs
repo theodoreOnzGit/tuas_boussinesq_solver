@@ -340,19 +340,6 @@ impl CIETApp {
             4.0);
 
         let button_temp_degc = ciet_state_local.pipe_2a_temp_degc;
-        let pipe_2a = new_temp_sensitive_button(
-            min_temp_degc, 
-            max_temp_degc, 
-            button_temp_degc, 
-            "2a");
-
-        self.place_vertical_widget_with_length(
-            ui, 
-            pipe_2a, 
-            heater_x , 
-            heater_y - 130.0, 
-            30.0, 
-            4.0);
 
         let button_temp_degc = ciet_state_local.pipe_2_temp_degc;
         let pipe_2 = new_temp_sensitive_button(
@@ -365,9 +352,24 @@ impl CIETApp {
             ui, 
             pipe_2, 
             heater_x , 
+            heater_y - 130.0, 
+            30.0, 
+            4.0);
+
+        let pipe_2a = new_temp_sensitive_button(
+            min_temp_degc, 
+            max_temp_degc, 
+            button_temp_degc, 
+            "2a");
+
+        self.place_vertical_widget_with_length(
+            ui, 
+            pipe_2a, 
+            heater_x , 
             heater_y - 160.0, 
             30.0, 
             4.0);
+
 
         let button_temp_degc = ciet_state_local.pipe_3_temp_degc;
         let pipe_3 = new_temp_sensitive_button(
