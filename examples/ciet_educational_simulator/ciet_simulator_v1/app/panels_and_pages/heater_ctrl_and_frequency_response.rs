@@ -117,6 +117,13 @@ impl FreqResponseSettings {
             return Power::new::<kilowatt>(total_heater_power);
     }
 
+    pub fn get_steady_state_power_signal(&self) -> Power{
+
+            let total_heater_power = self.steady_state_power_kw;
+
+            return Power::new::<kilowatt>(total_heater_power);
+    }
+
     pub fn get_sin_wave_label(&self) -> String {
 
         let mut label: String = "".to_string();

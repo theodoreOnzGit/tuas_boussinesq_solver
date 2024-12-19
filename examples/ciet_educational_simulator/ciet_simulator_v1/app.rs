@@ -242,24 +242,53 @@ impl eframe::App for CIETApp {
             });
 
         });
-        
-        // frequency response controls
-        // first get current state
-        let mut ciet_state_local: CIETState 
-            = self.ciet_state.lock().unwrap().clone();
-        let current_sim_time = 
-            Time::new::<second>(
-                ciet_state_local.simulation_time_seconds
-            );
 
-        let total_heater_power_kw = 
-            self.frequency_response_settings
-            .get_frequency_response_signal(current_sim_time)
-            .get::<kilowatt>();
-        ciet_state_local.heater_power_kilowatts = 
-            total_heater_power_kw;
-        // update frequency response back into state 
-        self.ciet_state.lock().unwrap().overwrite_state(ciet_state_local);
+        
+
+        // frequency response should only switch on IF 
+        // both advanced heater control and frequency response are 
+        // switched on
+        if self.frequency_response_settings.advanced_heater_control_switched_on
+            && self.frequency_response_settings.frequency_response_switched_on {
+
+                // frequency response controls
+                // first get current state
+                let mut ciet_state_local: CIETState 
+                    = self.ciet_state.lock().unwrap().clone();
+                let current_sim_time = 
+                    Time::new::<second>(
+                        ciet_state_local.simulation_time_seconds
+                    );
+
+                let total_heater_power_kw = 
+                    self.frequency_response_settings
+                    .get_frequency_response_signal(current_sim_time)
+                    .get::<kilowatt>();
+                ciet_state_local.heater_power_kilowatts = 
+                    total_heater_power_kw;
+                // update frequency response back into state 
+                self.ciet_state.lock().unwrap().overwrite_state(ciet_state_local);
+        } else if self.frequency_response_settings.advanced_heater_control_switched_on
+            && !self.frequency_response_settings.frequency_response_switched_on {
+                // if advanced heater control is switched on and 
+                // frequency response off, only take steady 
+                // state power
+
+                // frequency response controls
+                // first get current state
+                let mut ciet_state_local: CIETState 
+                    = self.ciet_state.lock().unwrap().clone();
+
+                let total_heater_power_kw = 
+                    self.frequency_response_settings
+                    .get_steady_state_power_signal()
+                    .get::<kilowatt>();
+
+                ciet_state_local.heater_power_kilowatts = 
+                    total_heater_power_kw;
+                // update frequency response back into state 
+                self.ciet_state.lock().unwrap().overwrite_state(ciet_state_local);
+        }
 
         // request update every 0.1 s 
 
