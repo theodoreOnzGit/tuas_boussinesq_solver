@@ -1759,7 +1759,7 @@ pub fn educational_ciet_loop_version_3(
             // I won't sleep so much in this case
             // just maybe 40 ms max
                 let time_to_sleep: Duration = 
-                    Duration::from_millis(5);
+                    Duration::from_millis(15);
                 thread::sleep(time_to_sleep);
 
         } else if slow_motion_settings_turned_on {
