@@ -289,7 +289,7 @@ pub fn update_ciet_plot_from_ciet_state(
 
         
         let data_record_interval_seconds = 
-            local_ciet_plot.data_record_interval_seconds;
+            local_ciet_plot.graph_data_record_interval_seconds;
 
         let data_record_interval_ms = 
             data_record_interval_seconds * 1000.0 ;

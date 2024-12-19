@@ -400,10 +400,11 @@ pub struct PagePlotData {
 
 
 
-    // recording interval
+    // recording interval for graphs
+    pub graph_data_record_interval_seconds: f64,
 
-
-    pub data_record_interval_seconds: f64,
+    // recording interval for csv 
+    pub csv_display_interval_seconds: f64,
 
 
 
@@ -1135,12 +1136,6 @@ impl PagePlotData {
         return time_dracs_loop_massrate_vec;
     }
 
-    // this is usually meant for overwriting the 
-    // recording interval settings
-    pub fn overwrite(&mut self, user_set_page_plot_data: PagePlotData){
-
-        *self = user_set_page_plot_data;
-    }
 
 }
 
@@ -1199,7 +1194,8 @@ impl Default for PagePlotData {
             ];
 
         // by default, record every 0.1s
-        let data_record_interval_seconds = 0.1;
+        let graph_data_record_interval_seconds = 0.1;
+        let csv_display_interval_seconds = 0.1;
 
 
         Self { 
@@ -1209,7 +1205,9 @@ impl Default for PagePlotData {
             tchx_plot_data: tchx_data_default,
             ctah_pump_plot_data: ctah_pump_data_default,
             dhx_plot_data: dhx_data_default,
-            data_record_interval_seconds,
+            graph_data_record_interval_seconds,
+            csv_display_interval_seconds,
+
         }
     }
 }

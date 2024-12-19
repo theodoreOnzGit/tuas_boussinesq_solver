@@ -30,15 +30,45 @@ impl CIETApp {
                 self.ciet_plot_data_mutex_ptr_for_parallel_data_transfer
                 .lock().unwrap();
             
-            let record_interval_seconds = egui::Slider::new(
-                &mut ciet_data_global_ptr_lock.data_record_interval_seconds, 
-                0.01..=1000.0)
+            // allows user to control recording interval
+            let record_interval_seconds_slider = egui::Slider::new(
+                &mut ciet_data_global_ptr_lock.graph_data_record_interval_seconds, 
+                0.05..=1000.0)
                 .logarithmic(true)
-                .text("Recording Interval (Seconds)")
+                .text("Graph Data Recording Interval (Seconds)")
                 .drag_value_speed(0.001);
 
-            ui.add(record_interval_seconds);
+            ui.add(record_interval_seconds_slider);
 
+            // allows user to control csv display interval 
+
+            let csv_display_interval_seconds_slider = egui::Slider::new(
+                &mut ciet_data_global_ptr_lock.csv_display_interval_seconds, 
+                0.1..=1000.0)
+                .logarithmic(true)
+                .text("CSV Display Interval (Seconds)")
+                .drag_value_speed(0.001);
+
+            ui.add(csv_display_interval_seconds_slider);
+
+            let csv_display_interval_seconds = 
+                ciet_data_global_ptr_lock.csv_display_interval_seconds;
+            let graph_data_record_interval_seconds = 
+                ciet_data_global_ptr_lock.graph_data_record_interval_seconds;
+
+            // now, we filter data every x number of rows based on the ratio 
+            // of these two 
+
+            let csv_data_display_interval: i32 = 
+                (csv_display_interval_seconds/graph_data_record_interval_seconds)
+                .ceil() as i32;
+
+
+            // now we display rows every 
+            // csv_display_interval_seconds 
+            // rows
+
+            let mut display_counter: i32 = 0;
 
             ui.label("Time (s), Heater Power (kW), BT-11 Inlet (degC), BT-12 Outlet (degC)");
             latest_heater_data.iter().for_each(|data_tuple|{
@@ -63,10 +93,27 @@ impl CIETApp {
                     + &bt11_degc.to_string() + ","
                     + &bt12_degc.to_string() + "," ;
 
+                let data_display_remainder = 
+                    display_counter.rem_euclid(csv_data_display_interval);
+
+                let data_display_modulus_zero: bool = 
+                    data_display_remainder == 0;
+
+                let blank_data_row = 
+                    time_seconds.round() as u32 != 0;
+
+
+
                 // only add the label if heater time is not equal zero 
-                if time_seconds.round() as u32 != 0 {
+                // AND the data display remainder is = 0
+                if blank_data_row && data_display_modulus_zero {
                     ui.label(heater_data_row);
                 }
+
+                display_counter += 1;
+                // if the remainder of the display counter is zero 
+                // then we show data 
+
 
 
             });
