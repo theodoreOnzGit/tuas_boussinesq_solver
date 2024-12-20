@@ -72,6 +72,7 @@ pub struct NonInsulatedPorousMediaFluidComponent {
 
     /// loss correlations
     pub darcy_loss_correlation: DimensionlessDarcyLossCorrelations,
+
 }
 
 
@@ -136,6 +137,8 @@ impl NonInsulatedPorousMediaFluidComponent {
 
         let darcy_loss_correlation = 
             therminol_array.fluid_component_loss_properties.clone();
+        // the therminol arrays here use gnielinski correlation by 
+        // default
 
         // now the outer steel array
         let steel_shell_array = 
@@ -381,6 +384,9 @@ pub mod calculation;
 /// for postprocessing, one can obtain temperature profiles 
 /// of the component using the postprocessing modules
 pub mod postprocessing;
+
+/// for converting into fluid components 
+pub mod type_conversion;
 
 
 /// tests for all ciet's heaters in 
