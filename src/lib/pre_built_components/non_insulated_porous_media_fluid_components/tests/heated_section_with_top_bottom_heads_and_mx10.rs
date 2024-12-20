@@ -23,7 +23,7 @@ pub fn heater_plus_mx_10_without_supports(){
 
     let number_of_temperature_nodes: usize = 8;
     
-    let mut heater_v2_bare = NonInsulatedPorousMediaFluidComponent::new_dewet_model(
+    let mut heater_v2_bare = NonInsulatedPorousMediaFluidComponent::new_dewet_model_heater_v2(
         initial_temperature,
         ambient_air_temp,
         number_of_temperature_nodes
@@ -126,13 +126,13 @@ pub fn heater_plus_mx_10_without_supports(){
             let connect_static_mixer_10 = true; 
 
             let mut therminol_array_clone: FluidArray 
-            = heater_v2_bare.therminol_array.clone().try_into().unwrap();
+            = heater_v2_bare.pipe_fluid_array.clone().try_into().unwrap();
 
             let _therminol_array_temperature: Vec<ThermodynamicTemperature> = 
             therminol_array_clone.get_temperature_vector().unwrap();
 
             let heater_surface_array_clone: SolidColumn 
-            = heater_v2_bare.steel_shell.clone().try_into().unwrap();
+            = heater_v2_bare.pipe_shell.clone().try_into().unwrap();
 
             let heater_surface_array_temp: Vec<ThermodynamicTemperature> = 
             heater_surface_array_clone.get_temperature_vector().unwrap();
@@ -211,12 +211,12 @@ pub fn heater_plus_mx_10_without_supports(){
                 generic_advection_interaction
             ).unwrap();
 
-            heater_v2_bare.therminol_array.link_to_back(
+            heater_v2_bare.pipe_fluid_array.link_to_back(
                 &mut heater_bottom_head_bare.therminol_array,
                 generic_advection_interaction
             ).unwrap();
 
-            heater_v2_bare.therminol_array.link_to_front(
+            heater_v2_bare.pipe_fluid_array.link_to_front(
                 &mut heater_top_head_bare.therminol_array,
                 generic_advection_interaction
             ).unwrap();

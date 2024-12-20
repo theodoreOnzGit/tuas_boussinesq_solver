@@ -26,7 +26,7 @@ pub fn example_heated_section_test(){
 
     let number_of_temperature_nodes: usize = 8;
     
-    let mut heater_v2_bare = NonInsulatedPorousMediaFluidComponent::new_dewet_model(
+    let mut heater_v2_bare = NonInsulatedPorousMediaFluidComponent::new_dewet_model_heater_v2(
         initial_temperature,
         ambient_air_temp,
         number_of_temperature_nodes
@@ -63,13 +63,13 @@ pub fn example_heated_section_test(){
         // first node of heater fluid density 
 
         let therminol_array_clone: FluidArray 
-        = heater_v2_bare.therminol_array.clone().try_into().unwrap();
+        = heater_v2_bare.pipe_fluid_array.clone().try_into().unwrap();
 
         let therminol_array_temperature: Vec<ThermodynamicTemperature> = 
         therminol_array_clone.get_temperature_vector().unwrap();
 
         let steel_array_clone: SolidColumn 
-        = heater_v2_bare.steel_shell.clone().try_into().unwrap();
+        = heater_v2_bare.pipe_shell.clone().try_into().unwrap();
 
         let _steel_array_temperature: Vec<ThermodynamicTemperature> = 
         steel_array_clone.get_temperature_vector().unwrap();
@@ -107,12 +107,12 @@ pub fn example_heated_section_test(){
 
         // make axial connections to BCs 
 
-        heater_v2_bare.therminol_array.link_to_back(
+        heater_v2_bare.pipe_fluid_array.link_to_back(
             &mut inlet_bc,
             inlet_interaction
         ).unwrap();
 
-        heater_v2_bare.therminol_array.link_to_front(
+        heater_v2_bare.pipe_fluid_array.link_to_front(
             &mut outlet_bc,
             outlet_interaction
         ).unwrap();

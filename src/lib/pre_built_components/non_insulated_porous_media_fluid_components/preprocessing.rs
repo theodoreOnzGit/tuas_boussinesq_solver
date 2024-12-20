@@ -39,7 +39,7 @@ impl NonInsulatedPorousMediaFluidComponent {
 
 
         // first let's get all the conductances 
-        let heat_transfer_to_air = self.heat_transfer_to_air;
+        let heat_transfer_to_air = self.heat_transfer_to_ambient;
 
         let steel_to_air_nodal_conductance: ThermalConductance 
         = self.get_air_steel_nodal_shell_conductance(
@@ -81,10 +81,10 @@ impl NonInsulatedPorousMediaFluidComponent {
             // clone each array and set them later
 
             let mut steel_shell_clone: SolidColumn = 
-            self.steel_shell.clone().try_into().unwrap();
+            self.pipe_shell.clone().try_into().unwrap();
 
             let mut therminol_array_clone: FluidArray = 
-            self.therminol_array.clone().try_into().unwrap();
+            self.pipe_fluid_array.clone().try_into().unwrap();
 
 
             // note, must set mass flowrate first 
@@ -136,7 +136,7 @@ impl NonInsulatedPorousMediaFluidComponent {
 
             if connect_twisted_tape {
                 let mut twisted_tape_array_clone: SolidColumn = 
-                self.twisted_tape_interior.clone().try_into().unwrap();
+                self.interior_solid_array_for_porous_media.clone().try_into().unwrap();
 
                 let twisted_tape_temp_vector: Vec<ThermodynamicTemperature> 
                 = twisted_tape_array_clone.get_temperature_vector().unwrap();
@@ -151,7 +151,7 @@ impl NonInsulatedPorousMediaFluidComponent {
                         fluid_temp_vector).unwrap();
 
 
-                self.twisted_tape_interior.set(twisted_tape_array_clone.into()
+                self.interior_solid_array_for_porous_media.set(twisted_tape_array_clone.into()
                 ).unwrap();
 
             }
@@ -159,9 +159,9 @@ impl NonInsulatedPorousMediaFluidComponent {
             // now that lateral connections are done, 
             // modify the heat transfer entity 
 
-            self.therminol_array.set(therminol_array_clone.into()).unwrap();
+            self.pipe_fluid_array.set(therminol_array_clone.into()).unwrap();
 
-            self.steel_shell.set(steel_shell_clone.into()).unwrap();
+            self.pipe_shell.set(steel_shell_clone.into()).unwrap();
 
 
 
@@ -195,23 +195,23 @@ impl NonInsulatedPorousMediaFluidComponent {
 
         // now connect the twisted tape 
 
-        self.twisted_tape_interior.link_to_back(&mut zero_power_bc,
+        self.interior_solid_array_for_porous_media.link_to_back(&mut zero_power_bc,
             interaction).unwrap();
 
 
-        self.twisted_tape_interior.link_to_front(&mut zero_power_bc,
+        self.interior_solid_array_for_porous_media.link_to_front(&mut zero_power_bc,
             interaction).unwrap();
 
-        self.therminol_array.link_to_front(&mut zero_power_bc,
+        self.pipe_fluid_array.link_to_front(&mut zero_power_bc,
             interaction).unwrap();
 
-        self.therminol_array.link_to_back(&mut zero_power_bc,
+        self.pipe_fluid_array.link_to_back(&mut zero_power_bc,
             interaction).unwrap();
 
-        self.steel_shell.link_to_front(&mut zero_power_bc,
+        self.pipe_shell.link_to_front(&mut zero_power_bc,
             interaction).unwrap();
 
-        self.steel_shell.link_to_back(&mut zero_power_bc,
+        self.pipe_shell.link_to_back(&mut zero_power_bc,
             interaction).unwrap();
     }
 
@@ -225,7 +225,7 @@ impl NonInsulatedPorousMediaFluidComponent {
         -> ThermalConductance {
         // first, let's get a clone of the steel shell surface
         let mut steel_shell_clone: SolidColumn = 
-        self.steel_shell.clone().try_into().unwrap();
+        self.pipe_shell.clone().try_into().unwrap();
 
         let number_of_temperature_nodes = self.inner_nodes + 2;
         let heated_length = Length::new::<meter>(1.6383);
@@ -279,10 +279,10 @@ impl NonInsulatedPorousMediaFluidComponent {
         // before any calculations, I will first need a clone of 
         // the therminol fluid array and twisted tape array
         let mut therminol_fluid_array_clone: FluidArray = 
-        self.therminol_array.clone().try_into().unwrap();
+        self.pipe_fluid_array.clone().try_into().unwrap();
 
         let mut steel_shell_clone: SolidColumn = 
-        self.steel_shell.clone().try_into().unwrap();
+        self.pipe_shell.clone().try_into().unwrap();
 
         // also need to get basic tmeperatures and mass flowrates 
         // only do this once because some of these methods involve 
@@ -548,10 +548,10 @@ impl NonInsulatedPorousMediaFluidComponent {
         // before any calculations, I will first need a clone of 
         // the therminol fluid array and twisted tape array
         let mut therminol_fluid_array_clone: FluidArray = 
-        self.therminol_array.clone().try_into().unwrap();
+        self.pipe_fluid_array.clone().try_into().unwrap();
 
         let mut twisted_tape_array_clone: SolidColumn = 
-        self.twisted_tape_interior.clone().try_into().unwrap();
+        self.interior_solid_array_for_porous_media.clone().try_into().unwrap();
         // next, need the nusselt number based on Wakao Correlation 
         let mass_flowrate = therminol_fluid_array_clone.get_mass_flowrate();
         let flow_area: Area = self.get_cross_sectional_area_immutable();

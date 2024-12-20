@@ -1,4 +1,5 @@
 
+use crate::array_control_vol_and_fluid_component_collections::one_d_fluid_array_with_lateral_coupling::fluid_component_calculation::DimensionlessDarcyLossCorrelations;
 use crate::array_control_vol_and_fluid_component_collections::one_d_fluid_array_with_lateral_coupling::FluidArray;
 use crate::array_control_vol_and_fluid_component_collections::one_d_solid_array_with_lateral_coupling::SolidColumn;
 use crate::boussinesq_thermophysical_properties::SolidMaterial;
@@ -34,25 +35,43 @@ pub struct NonInsulatedPorousMediaFluidComponent {
 
 
     /// heat transfer entity representing control volumes 
-    /// for the twisted tape in the heated section of CIET's Heater
-    pub twisted_tape_interior: HeatTransferEntity,
+    /// of heat generating or 
+    /// non-heat generating components within the pipe 
+    /// or fluid component 
+    ///
+    /// for example,
+    /// the twisted tape in the heated section of CIET's Heater
+    pub interior_solid_array_for_porous_media: HeatTransferEntity,
 
     /// heat transfer entity representing control volumes 
     /// for the steel piping in the heated section of CIET's Heater
-    pub steel_shell: HeatTransferEntity,
+    pub pipe_shell: HeatTransferEntity,
 
+    /// this HeatTransferEntity represents the pipe fluid
+    /// which is coupled to the pipe shell via a Nusselt Number based
+    /// thermal resistance (usually Gnielinski correlation)
+    /// But it is up to you to specify
+    ///
     /// heat transfer entity representing control volumes 
     /// for the therminol fluid in the heated section of CIET's Heater
-    pub therminol_array: HeatTransferEntity,
+    pub pipe_fluid_array: HeatTransferEntity,
 
+    /// 
+    /// pipe heat transfer coefficient to ambient
+    /// eg.
     /// ambient temperature of air used to calculate heat loss
     pub ambient_temperature: ThermodynamicTemperature,
 
     /// heat transfer coefficient used to calculate heat loss 
-    /// to air
-    pub heat_transfer_to_air: HeatTransfer,
+    /// to ambient, such as air air
+    pub heat_transfer_to_ambient: HeatTransfer,
 
 
+    /// flow area
+    flow_area: Area,
+
+    /// loss correlations
+    pub darcy_loss_correlation: DimensionlessDarcyLossCorrelations,
 }
 
 
@@ -65,7 +84,7 @@ impl NonInsulatedPorousMediaFluidComponent {
     /// model as reference
     ///
     ///
-    pub fn new_dewet_model(initial_temperature: ThermodynamicTemperature,
+    pub fn new_dewet_model_heater_v2(initial_temperature: ThermodynamicTemperature,
         ambient_temperature: ThermodynamicTemperature,
         user_specified_inner_nodes: usize) -> Self {
 
@@ -114,6 +133,10 @@ impl NonInsulatedPorousMediaFluidComponent {
             user_specified_inner_nodes,
             pipe_incline_angle
         );
+
+        let darcy_loss_correlation = 
+            therminol_array.fluid_component_loss_properties.clone();
+
         // now the outer steel array
         let steel_shell_array = 
         SolidColumn::new_cylindrical_shell(
@@ -142,11 +165,13 @@ impl NonInsulatedPorousMediaFluidComponent {
         );
 
         return Self { inner_nodes: user_specified_inner_nodes,
-            twisted_tape_interior: twisted_tape.into(),
-            steel_shell: steel_shell_array.into(),
-            therminol_array: therminol_array.into(),
+            interior_solid_array_for_porous_media: twisted_tape.into(),
+            pipe_shell: steel_shell_array.into(),
+            pipe_fluid_array: therminol_array.into(),
             ambient_temperature,
-            heat_transfer_to_air: h_to_air,
+            heat_transfer_to_ambient: h_to_air,
+            flow_area,
+            darcy_loss_correlation,
         };
     }
     /// traditional uncallibrated heater constructor 
@@ -160,7 +185,7 @@ impl NonInsulatedPorousMediaFluidComponent {
     ///
     /// it was increased to 20 W/(m^2 K) because of the support structures 
     /// and other such losses
-    pub fn _new_six_watts_per_m2_kelvin_model(initial_temperature: ThermodynamicTemperature,
+    pub fn _new_six_watts_per_m2_kelvin_model_heater_v2_model(initial_temperature: ThermodynamicTemperature,
         ambient_temperature: ThermodynamicTemperature,
         user_specified_inner_nodes: usize) -> Self {
 
@@ -199,6 +224,9 @@ impl NonInsulatedPorousMediaFluidComponent {
             user_specified_inner_nodes,
             pipe_incline_angle
         );
+
+        let darcy_loss_correlation = 
+            therminol_array.fluid_component_loss_properties.clone();
         // now the outer steel array
         let steel_shell_array = 
         SolidColumn::new_cylindrical_shell(
@@ -225,14 +253,18 @@ impl NonInsulatedPorousMediaFluidComponent {
             atmospheric_pressure,
             SolidMaterial::SteelSS304L,
             user_specified_inner_nodes 
+
         );
 
         return Self { inner_nodes: user_specified_inner_nodes,
-            twisted_tape_interior: twisted_tape.into(),
-            steel_shell: steel_shell_array.into(),
-            therminol_array: therminol_array.into(),
+            interior_solid_array_for_porous_media: twisted_tape.into(),
+            pipe_shell: steel_shell_array.into(),
+            pipe_fluid_array: therminol_array.into(),
             ambient_temperature,
-            heat_transfer_to_air: h_to_air,
+            heat_transfer_to_ambient: h_to_air,
+            flow_area,
+            darcy_loss_correlation,
+
         };
     }
 
@@ -247,7 +279,7 @@ impl NonInsulatedPorousMediaFluidComponent {
     ///
     /// it was increased to 20 W/(m^2 K) because of the support structures 
     /// and other such losses
-    pub fn _user_callibrated_htc_to_air_model(initial_temperature: ThermodynamicTemperature,
+    pub fn ciet_heater_v2_generic_model(initial_temperature: ThermodynamicTemperature,
         ambient_temperature: ThermodynamicTemperature,
         user_specified_inner_nodes: usize,
         h_to_air: HeatTransfer) -> Self {
@@ -285,6 +317,9 @@ impl NonInsulatedPorousMediaFluidComponent {
             user_specified_inner_nodes,
             pipe_incline_angle
         );
+
+        let darcy_loss_correlation = 
+            therminol_array.fluid_component_loss_properties.clone();
         // now the outer steel array
         let steel_shell_array = 
         SolidColumn::new_cylindrical_shell(
@@ -314,11 +349,13 @@ impl NonInsulatedPorousMediaFluidComponent {
         );
 
         return Self { inner_nodes: user_specified_inner_nodes,
-            twisted_tape_interior: twisted_tape.into(),
-            steel_shell: steel_shell_array.into(),
-            therminol_array: therminol_array.into(),
+            interior_solid_array_for_porous_media: twisted_tape.into(),
+            pipe_shell: steel_shell_array.into(),
+            pipe_fluid_array: therminol_array.into(),
             ambient_temperature,
-            heat_transfer_to_air: h_to_air,
+            heat_transfer_to_ambient: h_to_air,
+            flow_area,
+            darcy_loss_correlation,
         };
     }
 }

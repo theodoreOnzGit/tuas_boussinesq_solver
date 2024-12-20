@@ -82,7 +82,7 @@ pub fn example_heater_with_struct_supports_and_mx10(){
 
     let number_of_inner_temperature_nodes: usize = 6;
 
-    let mut heater_v2_bare = NonInsulatedPorousMediaFluidComponent::new_dewet_model(
+    let mut heater_v2_bare = NonInsulatedPorousMediaFluidComponent::new_dewet_model_heater_v2(
         initial_temperature,
         ambient_air_temp,
         number_of_inner_temperature_nodes
@@ -107,7 +107,7 @@ pub fn example_heater_with_struct_supports_and_mx10(){
 
         let h_to_air = HeatTransfer::new::<watt_per_square_meter_kelvin>
             (20.0);
-        heater_v2_bare = NonInsulatedPorousMediaFluidComponent::_user_callibrated_htc_to_air_model(
+        heater_v2_bare = NonInsulatedPorousMediaFluidComponent::ciet_heater_v2_generic_model(
             initial_temperature,
             ambient_air_temp,
             number_of_inner_temperature_nodes,
@@ -264,13 +264,13 @@ pub fn example_heater_with_struct_supports_and_mx10(){
 
 
             let mut therminol_array_clone: FluidArray 
-            = heater_v2_bare.therminol_array.clone().try_into().unwrap();
+            = heater_v2_bare.pipe_fluid_array.clone().try_into().unwrap();
 
             let therminol_array_temperature: Vec<ThermodynamicTemperature> = 
             therminol_array_clone.get_temperature_vector().unwrap();
 
             let heater_surface_array_clone: SolidColumn 
-            = heater_v2_bare.steel_shell.clone().try_into().unwrap();
+            = heater_v2_bare.pipe_shell.clone().try_into().unwrap();
 
             let heater_surface_array_temp: Vec<ThermodynamicTemperature> = 
             heater_surface_array_clone.get_temperature_vector().unwrap();
@@ -468,7 +468,7 @@ pub fn example_heater_with_struct_supports_and_mx10(){
                 // now that we got the index number, we can get the 
                 // outer surface temperature 
                 let steel_shell_clone: SolidColumn = 
-                heater_v2_bare.steel_shell.clone().try_into().unwrap();
+                heater_v2_bare.pipe_shell.clone().try_into().unwrap();
 
                 let steel_temperature_array = 
                 steel_shell_clone.get_temperature_vector().unwrap();
@@ -505,12 +505,12 @@ pub fn example_heater_with_struct_supports_and_mx10(){
                 generic_advection_interaction
             ).unwrap();
 
-            heater_v2_bare.therminol_array.link_to_back(
+            heater_v2_bare.pipe_fluid_array.link_to_back(
                 &mut heater_bottom_head_bare.therminol_array,
                 generic_advection_interaction
             ).unwrap();
 
-            heater_v2_bare.therminol_array.link_to_front(
+            heater_v2_bare.pipe_fluid_array.link_to_front(
                 &mut heater_top_head_bare.therminol_array,
                 generic_advection_interaction
             ).unwrap();
@@ -621,23 +621,23 @@ pub fn example_heater_with_struct_supports_and_mx10(){
             // via the head as in ciet 
 
             if dummy_axial_conduction_enabled == true {
-                heater_v2_bare.steel_shell.link_to_back(
+                heater_v2_bare.pipe_shell.link_to_back(
                     &mut heater_bottom_head_bare.steel_shell,
                     support_conductance_interaction
                     ).unwrap();
 
-                heater_v2_bare.steel_shell.link_to_front(
+                heater_v2_bare.pipe_shell.link_to_front(
                     &mut heater_top_head_bare.steel_shell,
                     support_conductance_interaction
                     ).unwrap();
 
                 // probably edit this to include twisted tape conductance
-                heater_v2_bare.twisted_tape_interior.link_to_back(
+                heater_v2_bare.interior_solid_array_for_porous_media.link_to_back(
                     &mut heater_bottom_head_bare.twisted_tape_interior,
                     support_conductance_interaction
                     ).unwrap();
 
-                heater_v2_bare.twisted_tape_interior.link_to_front(
+                heater_v2_bare.interior_solid_array_for_porous_media.link_to_front(
                     &mut heater_top_head_bare.twisted_tape_interior,
                     support_conductance_interaction
                     ).unwrap();

@@ -16,9 +16,9 @@ impl NonInsulatedPorousMediaFluidComponent {
     pub fn advance_timestep(&mut self, 
     timestep: Time) {
 
-        self.therminol_array.advance_timestep_mut_self(timestep).unwrap();
-        self.steel_shell.advance_timestep_mut_self(timestep).unwrap();
-        self.twisted_tape_interior.advance_timestep_mut_self(timestep).unwrap();
+        self.pipe_fluid_array.advance_timestep_mut_self(timestep).unwrap();
+        self.pipe_shell.advance_timestep_mut_self(timestep).unwrap();
+        self.interior_solid_array_for_porous_media.advance_timestep_mut_self(timestep).unwrap();
         
     }
 
@@ -61,13 +61,13 @@ impl NonInsulatedPorousMediaFluidComponent {
         // advances timestep in parallel, 
         // but must clone first
         let therminol_array_mutex = 
-        Arc::new(Mutex::new(self.therminol_array.clone()));
+        Arc::new(Mutex::new(self.pipe_fluid_array.clone()));
 
         let steel_shell_mutex = 
-        Arc::new(Mutex::new(self.steel_shell.clone()));
+        Arc::new(Mutex::new(self.pipe_shell.clone()));
 
         let twisted_tape_mutex =
-        Arc::new(Mutex::new(self.twisted_tape_interior.clone()));
+        Arc::new(Mutex::new(self.interior_solid_array_for_porous_media.clone()));
 
         // now create clones of the pointers so that we can access them 
         // later 
@@ -124,15 +124,15 @@ impl NonInsulatedPorousMediaFluidComponent {
         // To advance timestep, one must then clone what is inside 
         // the mutex locks and override the data within the object
 
-        self.therminol_array.set(
+        self.pipe_fluid_array.set(
         therminol_array_mutex.lock().as_deref_mut()
         .unwrap().clone()).unwrap();
 
-        self.steel_shell.set(
+        self.pipe_shell.set(
         steel_shell_mutex.lock().as_deref_mut()
         .unwrap().clone()).unwrap();
 
-        self.twisted_tape_interior.set(
+        self.interior_solid_array_for_porous_media.set(
         twisted_tape_mutex.lock().as_deref_mut()
         .unwrap().clone()).unwrap();
 
