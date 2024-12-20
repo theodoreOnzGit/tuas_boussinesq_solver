@@ -89,7 +89,40 @@ pub struct NonInsulatedPorousMediaFluidComponent {
     ///
     /// to get thermal conductance just A/L * k
     /// basically...
-    pub thermal_conductance_lengthscale_to_ambient: Length,
+    pub solid_side_thermal_conductance_lengthscale_pipe_to_ambient: Length,
+
+    /// thermal conductance lengthscale from pipe to fluid
+    /// 
+    /// for calculating thermal resistance, we need a length 
+    /// scale 
+    ///
+    /// thermal conductance = (kA)/L
+    /// 
+    /// assuming 1D cartesian coordinates, you need to specify 
+    /// a lengthscale for an appropraite thermal resistance.
+    ///
+    /// This is not L, but rather A/L
+    ///
+    /// to get thermal conductance just A/L * k
+    /// basically...
+    pub solid_side_thermal_conductance_lengthscale_pipe_to_fluid: Length,
+
+    /// thermal conductance lengthscale from fluid to 
+    /// porous media internal
+    /// 
+    /// for calculating thermal resistance, we need a length 
+    /// scale 
+    ///
+    /// thermal conductance = (kA)/L
+    /// 
+    /// assuming 1D cartesian coordinates, you need to specify 
+    /// a lengthscale for an appropraite thermal resistance.
+    ///
+    /// This is not L, but rather A/L
+    ///
+    /// to get thermal conductance just A/L * k
+    /// basically...
+    pub solid_side_thermal_conductance_lengthscale_fluid_to_porous_media_internal: Length,
 
 }
 
@@ -187,8 +220,32 @@ impl NonInsulatedPorousMediaFluidComponent {
                 heated_length,
                 steel_thermal_conductivity).unwrap();
 
-        let thermal_conductance_lengthscale_to_ambient: Length = 
+        let steel_shell_conductance_to_fluid: ThermalConductance = 
+            try_get_thermal_conductance_annular_cylinder(
+                steel_shell_mid_diameter,
+                steel_shell_od,
+                heated_length,
+                steel_thermal_conductivity).unwrap();
+
+
+        let solid_side_thermal_conductance_lengthscale_pipe_to_ambient: Length = 
             steel_shell_conductance_to_ambient/steel_thermal_conductivity;
+
+        let solid_side_thermal_conductance_lengthscale_pipe_to_fluid: Length = 
+            steel_shell_conductance_to_fluid/steel_thermal_conductivity;
+
+        // for this iteration of the heater, I'm kind of lazy 
+        // my conductance lengthscale to the porous media interior
+        // is kind of guesswork
+        //
+        // I could put a large number here to to neglect the 
+        // resistance of the porous media fluid
+        // In fact, when calculating thermal resistance for the 
+        // twisted tape, I ignored the resistance
+        // of the twisted tape, so just put a large number here
+        let solid_side_thermal_conductance_lengthscale_fluid_to_porous_media_internal: Length = 
+            Length::new::<meter>(1e9 as f64);
+            
 
         // now twisted_tape 
         let twisted_tape_width: Length = Length::new::<inch>(1.0);
@@ -214,7 +271,9 @@ impl NonInsulatedPorousMediaFluidComponent {
             heat_transfer_to_ambient: h_to_air,
             flow_area,
             darcy_loss_correlation,
-            thermal_conductance_lengthscale_to_ambient,
+            solid_side_thermal_conductance_lengthscale_pipe_to_ambient,
+            solid_side_thermal_conductance_lengthscale_pipe_to_fluid,
+            solid_side_thermal_conductance_lengthscale_fluid_to_porous_media_internal,
 
         };
     }
@@ -300,8 +359,32 @@ impl NonInsulatedPorousMediaFluidComponent {
                 heated_length,
                 steel_thermal_conductivity).unwrap();
 
-        let thermal_conductance_lengthscale_to_ambient: Length = 
+        let steel_shell_conductance_to_fluid: ThermalConductance = 
+            try_get_thermal_conductance_annular_cylinder(
+                steel_shell_mid_diameter,
+                steel_shell_od,
+                heated_length,
+                steel_thermal_conductivity).unwrap();
+
+
+        let solid_side_thermal_conductance_lengthscale_pipe_to_ambient: Length = 
             steel_shell_conductance_to_ambient/steel_thermal_conductivity;
+
+        let solid_side_thermal_conductance_lengthscale_pipe_to_fluid: Length = 
+            steel_shell_conductance_to_fluid/steel_thermal_conductivity;
+
+        // for this iteration of the heater, I'm kind of lazy 
+        // my conductance lengthscale to the porous media interior
+        // is kind of guesswork
+        //
+        // I could put a large number here to to neglect the 
+        // resistance of the porous media fluid
+        // In fact, when calculating thermal resistance for the 
+        // twisted tape, I ignored the resistance
+        // of the twisted tape, so just put a large number here
+        let solid_side_thermal_conductance_lengthscale_fluid_to_porous_media_internal: Length = 
+            Length::new::<meter>(1e9 as f64);
+            
 
         // the twisted tape width is assumed to be the twisted 
         // tape diameter in De Wet's dissertation
@@ -329,7 +412,9 @@ impl NonInsulatedPorousMediaFluidComponent {
             heat_transfer_to_ambient: h_to_air,
             flow_area,
             darcy_loss_correlation,
-            thermal_conductance_lengthscale_to_ambient,
+            solid_side_thermal_conductance_lengthscale_pipe_to_ambient,
+            solid_side_thermal_conductance_lengthscale_pipe_to_fluid,
+            solid_side_thermal_conductance_lengthscale_fluid_to_porous_media_internal,
 
         };
     }
@@ -414,8 +499,32 @@ impl NonInsulatedPorousMediaFluidComponent {
                 heated_length,
                 steel_thermal_conductivity).unwrap();
 
-        let thermal_conductance_lengthscale_to_ambient: Length = 
+        let steel_shell_conductance_to_fluid: ThermalConductance = 
+            try_get_thermal_conductance_annular_cylinder(
+                steel_shell_mid_diameter,
+                steel_shell_od,
+                heated_length,
+                steel_thermal_conductivity).unwrap();
+
+
+        let solid_side_thermal_conductance_lengthscale_pipe_to_ambient: Length = 
             steel_shell_conductance_to_ambient/steel_thermal_conductivity;
+
+        let solid_side_thermal_conductance_lengthscale_pipe_to_fluid: Length = 
+            steel_shell_conductance_to_fluid/steel_thermal_conductivity;
+
+        // for this iteration of the heater, I'm kind of lazy 
+        // my conductance lengthscale to the porous media interior
+        // is kind of guesswork
+        //
+        // I could put a large number here to to neglect the 
+        // resistance of the porous media fluid
+        // In fact, when calculating thermal resistance for the 
+        // twisted tape, I ignored the resistance
+        // of the twisted tape, so just put a large number here
+        let solid_side_thermal_conductance_lengthscale_fluid_to_porous_media_internal: Length = 
+            Length::new::<meter>(1e9 as f64);
+            
         // the twisted tape width is assumed to be the twisted 
         // tape diameter in De Wet's dissertation
         let twisted_tape_width: Length = Length::new::<inch>(1.0);
@@ -441,7 +550,9 @@ impl NonInsulatedPorousMediaFluidComponent {
             heat_transfer_to_ambient: h_to_air,
             flow_area,
             darcy_loss_correlation,
-            thermal_conductance_lengthscale_to_ambient,
+            solid_side_thermal_conductance_lengthscale_pipe_to_ambient,
+            solid_side_thermal_conductance_lengthscale_pipe_to_fluid,
+            solid_side_thermal_conductance_lengthscale_fluid_to_porous_media_internal,
         };
     }
 }
