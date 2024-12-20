@@ -2,11 +2,7 @@ use std::thread::JoinHandle;
 use std::thread;
 
 use crate::array_control_vol_and_fluid_component_collections::fluid_component_collection::fluid_component_traits::FluidComponentTrait;
-use crate::boussinesq_thermophysical_properties::Material;
-use crate::pre_built_components::heat_transfer_entities::preprocessing::try_get_thermal_conductance_based_on_interaction;
 use crate::pre_built_components::heat_transfer_entities::HeatTransferEntity;
-use crate::heat_transfer_correlations::nusselt_number_correlations::input_structs::NusseltPrandtlReynoldsData;
-use crate::heat_transfer_correlations::nusselt_number_correlations::enums::NusseltCorrelation;
 use crate::heat_transfer_correlations::heat_transfer_interactions::heat_transfer_interaction_enums::HeatTransferInteractionType;
 use crate::boussinesq_thermophysical_properties::LiquidMaterial;
 use crate::boussinesq_thermophysical_properties::SolidMaterial;
@@ -16,9 +12,6 @@ use crate::array_control_vol_and_fluid_component_collections::one_d_fluid_array_
 use crate::tuas_lib_error::TuasLibError;
 
 use super::NonInsulatedPorousMediaFluidComponent;
-use uom::si::area::square_inch;
-use uom::si::length::inch;
-use uom::si::length::meter;
 use uom::ConstZero;
 use uom::si::pressure::atmosphere;
 use uom::si::f64::*;
@@ -715,4 +708,3 @@ impl NonInsulatedPorousMediaFluidComponent {
 /// contains preprocessing functions specifically for 
 /// ciet heater v2
 pub mod ciet_heater_v2;
-pub use ciet_heater_v2::*;
