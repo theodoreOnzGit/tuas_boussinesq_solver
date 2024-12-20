@@ -4,6 +4,8 @@ use crate::array_control_vol_and_fluid_component_collections::one_d_fluid_array_
 use crate::array_control_vol_and_fluid_component_collections::one_d_solid_array_with_lateral_coupling::SolidColumn;
 use crate::boussinesq_thermophysical_properties::SolidMaterial;
 use crate::boussinesq_thermophysical_properties::LiquidMaterial;
+use crate::boussinesq_thermophysical_properties::thermal_conductivity::*;
+use crate::heat_transfer_correlations::thermal_resistance::try_get_thermal_conductance_annular_cylinder;
 
 use super::heat_transfer_entities::HeatTransferEntity;
 use uom::si::f64::*;
@@ -73,6 +75,22 @@ pub struct NonInsulatedPorousMediaFluidComponent {
     /// loss correlations
     pub darcy_loss_correlation: DimensionlessDarcyLossCorrelations,
 
+    /// thermal conductance lengthscale to ambient 
+    /// 
+    /// for calculating thermal resistance, we need a length 
+    /// scale 
+    ///
+    /// thermal conductance = (kA)/L
+    /// 
+    /// assuming 1D cartesian coordinates, you need to specify 
+    /// a lengthscale for an appropraite thermal resistance.
+    ///
+    /// This is not L, but rather A/L
+    ///
+    /// to get thermal conductance just A/L * k
+    /// basically...
+    pub thermal_conductance_lengthscale_to_ambient: Length,
+
 }
 
 
@@ -105,8 +123,8 @@ impl NonInsulatedPorousMediaFluidComponent {
         //
         let h_to_air: HeatTransfer = 
         HeatTransfer::new::<watt_per_square_meter_kelvin>(20.0);
-        let id = Length::new::<meter>(0.0381);
-        let od = Length::new::<meter>(0.04);
+        let steel_shell_id = Length::new::<meter>(0.0381);
+        let steel_shell_od = Length::new::<meter>(0.04);
 
 
         // inner therminol array 
@@ -144,13 +162,34 @@ impl NonInsulatedPorousMediaFluidComponent {
         let steel_shell_array = 
         SolidColumn::new_cylindrical_shell(
             heated_length,
-            id,
-            od,
+            steel_shell_id,
+            steel_shell_od,
             initial_temperature,
             atmospheric_pressure,
             SolidMaterial::SteelSS304L,
             user_specified_inner_nodes 
         );
+
+        // for thermal conductance lengthscale for cylinder, we 
+        // the easiest way is to get the actual conductance 
+        // which is in terms of (kA/L) then divide by the conductivity
+        let steel_shell_mid_diameter: Length = (steel_shell_od + steel_shell_id)/2.0;
+        let steel_thermal_conductivity: ThermalConductivity = 
+            try_get_kappa_thermal_conductivity(
+                SolidMaterial::SteelSS304L.into(), 
+                initial_temperature, 
+                atmospheric_pressure).unwrap();
+        
+        let steel_shell_conductance_to_ambient: ThermalConductance = 
+            try_get_thermal_conductance_annular_cylinder(
+                steel_shell_id,
+                steel_shell_mid_diameter,
+                heated_length,
+                steel_thermal_conductivity).unwrap();
+
+        let thermal_conductance_lengthscale_to_ambient: Length = 
+            steel_shell_conductance_to_ambient/steel_thermal_conductivity;
+
         // now twisted_tape 
         let twisted_tape_width: Length = Length::new::<inch>(1.0);
         let twisted_tape_thickness = Length::new::<inch>(0.048);
@@ -175,6 +214,8 @@ impl NonInsulatedPorousMediaFluidComponent {
             heat_transfer_to_ambient: h_to_air,
             flow_area,
             darcy_loss_correlation,
+            thermal_conductance_lengthscale_to_ambient,
+
         };
     }
     /// traditional uncallibrated heater constructor 
@@ -209,8 +250,8 @@ impl NonInsulatedPorousMediaFluidComponent {
         //
         let h_to_air: HeatTransfer = 
         HeatTransfer::new::<watt_per_square_meter_kelvin>(6.0);
-        let id = Length::new::<meter>(0.0381);
-        let od = Length::new::<meter>(0.04);
+        let steel_shell_id = Length::new::<meter>(0.0381);
+        let steel_shell_od = Length::new::<meter>(0.04);
 
 
         // inner therminol array
@@ -234,13 +275,34 @@ impl NonInsulatedPorousMediaFluidComponent {
         let steel_shell_array = 
         SolidColumn::new_cylindrical_shell(
             heated_length,
-            id,
-            od,
+            steel_shell_id,
+            steel_shell_od,
             initial_temperature,
             atmospheric_pressure,
             SolidMaterial::SteelSS304L,
             user_specified_inner_nodes 
         );
+
+        // for thermal conductance lengthscale for cylinder, we 
+        // the easiest way is to get the actual conductance 
+        // which is in terms of (kA/L) then divide by the conductivity
+        let steel_shell_mid_diameter: Length = (steel_shell_od + steel_shell_id)/2.0;
+        let steel_thermal_conductivity: ThermalConductivity = 
+            try_get_kappa_thermal_conductivity(
+                SolidMaterial::SteelSS304L.into(), 
+                initial_temperature, 
+                atmospheric_pressure).unwrap();
+        
+        let steel_shell_conductance_to_ambient: ThermalConductance = 
+            try_get_thermal_conductance_annular_cylinder(
+                steel_shell_id,
+                steel_shell_mid_diameter,
+                heated_length,
+                steel_thermal_conductivity).unwrap();
+
+        let thermal_conductance_lengthscale_to_ambient: Length = 
+            steel_shell_conductance_to_ambient/steel_thermal_conductivity;
+
         // the twisted tape width is assumed to be the twisted 
         // tape diameter in De Wet's dissertation
         let twisted_tape_width: Length = Length::new::<inch>(1.0);
@@ -267,6 +329,7 @@ impl NonInsulatedPorousMediaFluidComponent {
             heat_transfer_to_ambient: h_to_air,
             flow_area,
             darcy_loss_correlation,
+            thermal_conductance_lengthscale_to_ambient,
 
         };
     }
@@ -302,8 +365,8 @@ impl NonInsulatedPorousMediaFluidComponent {
         // theoretically it's 6 W/(m^2 K) but then we'll have to manually 
         // input wall structures for additional heat loss
         //
-        let id = Length::new::<meter>(0.0381);
-        let od = Length::new::<meter>(0.04);
+        let steel_shell_id = Length::new::<meter>(0.0381);
+        let steel_shell_od = Length::new::<meter>(0.04);
 
 
         // inner therminol array
@@ -327,13 +390,32 @@ impl NonInsulatedPorousMediaFluidComponent {
         let steel_shell_array = 
         SolidColumn::new_cylindrical_shell(
             heated_length,
-            id,
-            od,
+            steel_shell_id,
+            steel_shell_od,
             initial_temperature,
             atmospheric_pressure,
             SolidMaterial::SteelSS304L,
             user_specified_inner_nodes 
         );
+        // for thermal conductance lengthscale for cylinder, we 
+        // the easiest way is to get the actual conductance 
+        // which is in terms of (kA/L) then divide by the conductivity
+        let steel_shell_mid_diameter: Length = (steel_shell_od + steel_shell_id)/2.0;
+        let steel_thermal_conductivity: ThermalConductivity = 
+            try_get_kappa_thermal_conductivity(
+                SolidMaterial::SteelSS304L.into(), 
+                initial_temperature, 
+                atmospheric_pressure).unwrap();
+        
+        let steel_shell_conductance_to_ambient: ThermalConductance = 
+            try_get_thermal_conductance_annular_cylinder(
+                steel_shell_id,
+                steel_shell_mid_diameter,
+                heated_length,
+                steel_thermal_conductivity).unwrap();
+
+        let thermal_conductance_lengthscale_to_ambient: Length = 
+            steel_shell_conductance_to_ambient/steel_thermal_conductivity;
         // the twisted tape width is assumed to be the twisted 
         // tape diameter in De Wet's dissertation
         let twisted_tape_width: Length = Length::new::<inch>(1.0);
@@ -359,6 +441,7 @@ impl NonInsulatedPorousMediaFluidComponent {
             heat_transfer_to_ambient: h_to_air,
             flow_area,
             darcy_loss_correlation,
+            thermal_conductance_lengthscale_to_ambient,
         };
     }
 }
