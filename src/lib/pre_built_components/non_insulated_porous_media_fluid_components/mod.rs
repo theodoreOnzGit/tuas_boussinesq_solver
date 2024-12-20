@@ -1,4 +1,6 @@
 
+use std::f64::consts::PI;
+
 use crate::array_control_vol_and_fluid_component_collections::one_d_fluid_array_with_lateral_coupling::fluid_component_calculation::DimensionlessDarcyLossCorrelations;
 use crate::array_control_vol_and_fluid_component_collections::one_d_fluid_array_with_lateral_coupling::FluidArray;
 use crate::array_control_vol_and_fluid_component_collections::one_d_solid_array_with_lateral_coupling::SolidColumn;
@@ -9,6 +11,7 @@ use crate::heat_transfer_correlations::nusselt_number_correlations::enums::Nusse
 use crate::heat_transfer_correlations::thermal_resistance::try_get_thermal_conductance_annular_cylinder;
 
 use super::heat_transfer_entities::HeatTransferEntity;
+use uom::si::area::square_inch;
 use uom::si::f64::*;
 use uom::si::length::{inch, meter};
 use uom::ConstZero;
@@ -126,12 +129,18 @@ pub struct NonInsulatedPorousMediaFluidComponent {
     pub solid_side_thermal_conductance_lengthscale_fluid_to_porous_media_internal: Length,
 
 
-    /// nusselt correlation to ambient 
-    pub nusselt_correlation_to_ambient: NusseltCorrelation,
+
+    /// nusselt correlation to pipe shell (to ambient)
+    pub nusselt_correlation_to_pipe_shell: NusseltCorrelation,
 
     /// lengthscale for nusselt correlation to ambient 
     /// for pipes, the hydraulic diameter usually suffices 
     pub nusselt_correlation_lengthscale_to_ambient: Length,
+
+    /// convection heat transfer area to ambient 
+    /// used to calculate conductance to ambient hA
+    /// conductance = h A 
+    pub convection_heat_transfer_area_to_ambient: Area,
 
     /// nusselt correlation to porous media interior
     pub nusselt_correlation_to_porous_media_interior: NusseltCorrelation,
@@ -139,6 +148,16 @@ pub struct NonInsulatedPorousMediaFluidComponent {
     /// lengthscale for nusselt correlation to porous_media_interior 
     /// for pipes, the hydraulic diameter usually suffices 
     pub nusselt_correlation_lengthscale_to_porous_media_interior: Length,
+
+    /// convection heat transfer area to pipe 
+    /// used to calculate conductance to pipe hA
+    /// conductance = h A 
+    pub convection_heat_transfer_area_to_pipe: Area,
+
+    /// convection heat transfer area to interior 
+    /// used to calculate conductance to interior hA
+    /// conductance = h A 
+    pub convection_heat_transfer_area_to_interior: Area,
 
 }
 
@@ -289,6 +308,23 @@ impl NonInsulatedPorousMediaFluidComponent {
             user_specified_inner_nodes 
         );
 
+        // convection heat transfer area to interior (twisted tape)
+        // this is approximate btw
+        //
+        // I just copied this straight from the preprocessing 
+        // bit to be consistent
+
+        let convection_heat_transfer_area_to_interior: Area 
+            = Area::new::<square_inch>(719.0);
+
+        // area = PI * inner diameter * L
+        let convection_heat_transfer_area_to_pipe: Area 
+            = PI * steel_shell_id * heated_length;
+
+        // area = PI * outer diameter * L 
+        let convection_heat_transfer_area_to_ambient: Area 
+            = PI * steel_shell_od * heated_length;
+
         return Self { inner_nodes: user_specified_inner_nodes,
             interior_solid_array_for_porous_media: twisted_tape.into(),
             pipe_shell: steel_shell_array.into(),
@@ -300,10 +336,13 @@ impl NonInsulatedPorousMediaFluidComponent {
             solid_side_thermal_conductance_lengthscale_pipe_to_ambient,
             solid_side_thermal_conductance_lengthscale_pipe_to_fluid,
             solid_side_thermal_conductance_lengthscale_fluid_to_porous_media_internal,
-            nusselt_correlation_to_ambient,
+            nusselt_correlation_to_pipe_shell: nusselt_correlation_to_ambient,
             nusselt_correlation_to_porous_media_interior,
             nusselt_correlation_lengthscale_to_ambient,
             nusselt_correlation_lengthscale_to_porous_media_interior,
+            convection_heat_transfer_area_to_ambient,
+            convection_heat_transfer_area_to_pipe,
+            convection_heat_transfer_area_to_interior,
 
         };
     }
@@ -441,6 +480,22 @@ impl NonInsulatedPorousMediaFluidComponent {
             user_specified_inner_nodes 
 
         );
+        // convection heat transfer area to interior (twisted tape)
+        // this is approximate btw
+        //
+        // I just copied this straight from the preprocessing 
+        // bit to be consistent
+
+        let convection_heat_transfer_area_to_interior: Area 
+            = Area::new::<square_inch>(719.0);
+
+        // area = PI * inner diameter * L
+        let convection_heat_transfer_area_to_pipe: Area 
+            = PI * steel_shell_id * heated_length;
+
+        // area = PI * outer diameter * L 
+        let convection_heat_transfer_area_to_ambient: Area 
+            = PI * steel_shell_od * heated_length;
 
         return Self { inner_nodes: user_specified_inner_nodes,
             interior_solid_array_for_porous_media: twisted_tape.into(),
@@ -453,10 +508,13 @@ impl NonInsulatedPorousMediaFluidComponent {
             solid_side_thermal_conductance_lengthscale_pipe_to_ambient,
             solid_side_thermal_conductance_lengthscale_pipe_to_fluid,
             solid_side_thermal_conductance_lengthscale_fluid_to_porous_media_internal,
-            nusselt_correlation_to_ambient,
+            nusselt_correlation_to_pipe_shell: nusselt_correlation_to_ambient,
             nusselt_correlation_to_porous_media_interior,
             nusselt_correlation_lengthscale_to_ambient,
             nusselt_correlation_lengthscale_to_porous_media_interior,
+            convection_heat_transfer_area_to_ambient,
+            convection_heat_transfer_area_to_pipe,
+            convection_heat_transfer_area_to_interior,
 
         };
     }
@@ -591,6 +649,22 @@ impl NonInsulatedPorousMediaFluidComponent {
             SolidMaterial::SteelSS304L,
             user_specified_inner_nodes 
         );
+        // convection heat transfer area to interior (twisted tape)
+        // this is approximate btw
+        //
+        // I just copied this straight from the preprocessing 
+        // bit to be consistent
+
+        let convection_heat_transfer_area_to_interior: Area 
+            = Area::new::<square_inch>(719.0);
+
+        // area = PI * inner diameter * L
+        let convection_heat_transfer_area_to_pipe: Area 
+            = PI * steel_shell_id * heated_length;
+
+        // area = PI * outer diameter * L 
+        let convection_heat_transfer_area_to_ambient: Area 
+            = PI * steel_shell_od * heated_length;
 
         return Self { inner_nodes: user_specified_inner_nodes,
             interior_solid_array_for_porous_media: twisted_tape.into(),
@@ -603,12 +677,16 @@ impl NonInsulatedPorousMediaFluidComponent {
             solid_side_thermal_conductance_lengthscale_pipe_to_ambient,
             solid_side_thermal_conductance_lengthscale_pipe_to_fluid,
             solid_side_thermal_conductance_lengthscale_fluid_to_porous_media_internal,
-            nusselt_correlation_to_ambient,
+            nusselt_correlation_to_pipe_shell: nusselt_correlation_to_ambient,
             nusselt_correlation_to_porous_media_interior,
             nusselt_correlation_lengthscale_to_ambient,
             nusselt_correlation_lengthscale_to_porous_media_interior,
+            convection_heat_transfer_area_to_ambient,
+            convection_heat_transfer_area_to_pipe,
+            convection_heat_transfer_area_to_interior,
         };
     }
+
 }
 
 

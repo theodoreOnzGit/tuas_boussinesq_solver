@@ -297,7 +297,7 @@ pub fn heater_plus_mx_10_without_supports(){
                 // this is the parallel version
                 let heater_2_join_handle: JoinHandle<NonInsulatedPorousMediaFluidComponent> 
                 = heater_v2_bare.
-                    lateral_connection_thread_spawn(
+                    ciet_heater_v2_lateral_connection_thread_spawn(
                         mass_flowrate,
                         heater_power);
 

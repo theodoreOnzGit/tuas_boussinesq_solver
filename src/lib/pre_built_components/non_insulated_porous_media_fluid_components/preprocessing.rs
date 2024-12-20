@@ -2,6 +2,7 @@ use std::thread::JoinHandle;
 use std::thread;
 
 use crate::array_control_vol_and_fluid_component_collections::fluid_component_collection::fluid_component_traits::FluidComponentTrait;
+use crate::boussinesq_thermophysical_properties::Material;
 use crate::pre_built_components::heat_transfer_entities::preprocessing::try_get_thermal_conductance_based_on_interaction;
 use crate::pre_built_components::heat_transfer_entities::HeatTransferEntity;
 use crate::heat_transfer_correlations::nusselt_number_correlations::input_structs::NusseltPrandtlReynoldsData;
@@ -12,6 +13,7 @@ use crate::boussinesq_thermophysical_properties::SolidMaterial;
 use crate::boundary_conditions::BCType;
 use crate::array_control_vol_and_fluid_component_collections::one_d_solid_array_with_lateral_coupling::SolidColumn;
 use crate::array_control_vol_and_fluid_component_collections::one_d_fluid_array_with_lateral_coupling::FluidArray;
+use crate::tuas_lib_error::TuasLibError;
 
 use super::NonInsulatedPorousMediaFluidComponent;
 use uom::si::area::square_inch;
@@ -24,7 +26,207 @@ use ndarray::*;
 
 impl NonInsulatedPorousMediaFluidComponent {
 
+    /// NonInsulatedPorousMediaFluidComponent config:
+    ///
+    /// Firstly with insulation:
+    /// |               |               |              |
+    /// |               |               |              |
+    /// |-porous media -|- shell fluid -|-outer shell--| ambient
+    /// |               |               |              |
+    /// |               |               |              |
+    ///
+    ///
+    /// This connects the control volumes within this component 
+    /// causing them to interact given a set mass flowrate
+    ///
+    /// TODO: need to test this with regression
+    #[inline]
+    pub fn lateral_and_miscellaneous_connections(&mut self,
+        prandtl_wall_correction_setting: bool,
+        mass_flowrate: MassRate,
+    ) -> Result<(), TuasLibError>{
 
+        // first set the mass flowrate
+        self.set_mass_flowrate(mass_flowrate);
+
+        // then get conductances
+        let heat_transfer_to_ambient = self.heat_transfer_to_ambient;
+
+        let ambient_to_pipe_shell_nodal_conductance: ThermalConductance = 
+            self.get_ambient_to_pipe_shell_nodal_conductance(
+                heat_transfer_to_ambient)?;
+
+        let pipe_shell_to_fluid_nodal_conductance: ThermalConductance
+            = self.get_pipe_shell_to_fluid_nodal_conductance(
+                prandtl_wall_correction_setting)?;
+
+        let interior_to_fluid_nodal_conductance: ThermalConductance 
+            = self.get_interior_to_fluid_nodal_conductance(
+                prandtl_wall_correction_setting)?;
+
+        // now that we have obtained the conductances, we then need to 
+        // obtain temperature vectors and conductance vectors for  
+        // each pipe array for the lateral connections
+
+        let ambient_temp: ThermodynamicTemperature = self.ambient_temperature;
+        let number_of_temperature_nodes = self.inner_nodes + 2;
+
+        // now for the lateral linkages
+        {
+            // let's do the temperature vectors first 
+            let mut ambient_temperature_vector: Vec<ThermodynamicTemperature>
+                = Array1::default(number_of_temperature_nodes)
+                .iter().map( |&temp| {
+                    temp
+                }
+                ).collect();
+
+            ambient_temperature_vector.fill(ambient_temp);
+            let mut pipe_fluid_array_clone: FluidArray = 
+                self.pipe_fluid_array.clone().try_into()?;
+
+            let mut interior_solid_array_clone: SolidColumn = 
+                self.interior_solid_array_for_porous_media.clone().try_into()?;
+            let mut pipe_shell_clone: SolidColumn = 
+                self.pipe_shell.clone().try_into()?;
+
+            // let's get the temperature vectors
+
+            let pipe_fluid_arr_temp_vec: Vec<ThermodynamicTemperature>
+                = pipe_fluid_array_clone.get_temperature_vector()?;
+
+            let pipe_shell_arr_temp_vec: Vec<ThermodynamicTemperature> 
+                = pipe_shell_clone.get_temperature_vector()?;
+
+            let interior_arr_temp_vec: Vec<ThermodynamicTemperature> 
+                = interior_solid_array_clone.get_temperature_vector()?;
+            // perform the inner connections 
+            // for tube fluid to shell arr 
+            //
+            pipe_fluid_array_clone. 
+                lateral_link_new_temperature_vector_avg_conductance(
+                    pipe_shell_to_fluid_nodal_conductance, 
+                    pipe_shell_arr_temp_vec)?;
+
+            pipe_shell_clone.
+                lateral_link_new_temperature_vector_avg_conductance(
+                    pipe_shell_to_fluid_nodal_conductance, 
+                    pipe_fluid_arr_temp_vec.clone())?;
+
+            // next fluid array to interior 
+            pipe_fluid_array_clone.
+                lateral_link_new_temperature_vector_avg_conductance(
+                    interior_to_fluid_nodal_conductance, 
+                    interior_arr_temp_vec)?;
+
+            interior_solid_array_clone.
+                lateral_link_new_temperature_vector_avg_conductance(
+                    interior_to_fluid_nodal_conductance, 
+                    pipe_fluid_arr_temp_vec)?;
+
+            // finally, pipe shell to ambient 
+
+            pipe_shell_clone.
+                lateral_link_new_temperature_vector_avg_conductance(
+                    ambient_to_pipe_shell_nodal_conductance, 
+                    ambient_temperature_vector)?;
+            // after this, we are done for the internal connections
+
+            // by default, we don't expect shell and 
+            // heat exchangers to have heat added to them 
+            // so I'm not going to add heat addition vectors to 
+            // any of these arrays 
+
+
+            // now that lateral connections are done, 
+            // for the outer shell, inner shell and 
+            // both fluid arrays
+            // modify the heat transfer entities
+
+            self.pipe_shell.set(pipe_shell_clone.into())?;
+
+            self.interior_solid_array_for_porous_media.set(
+                interior_solid_array_clone.into())?;
+
+            self.pipe_fluid_array
+                .set(pipe_fluid_array_clone.into())?;
+
+
+        }
+        // axial connections (adiabatic by default, otherwise 
+        // you'll have to add your own through the heat
+        // transfer entitites eg. advection)
+        self.zero_power_bc_connection();
+        
+
+        Ok(())
+
+    }
+
+    /// obtains the conductance from ambient to the pipe shell 
+    /// nodally speaking 
+
+    #[inline]
+    pub fn get_ambient_to_pipe_shell_nodal_conductance(&mut self,
+        heat_transfer_to_ambient: HeatTransfer) 
+        -> Result<ThermalConductance,TuasLibError> {
+
+            // the solid conductance is calculated using 
+            // k (A/L) where L is representative thickness 
+            // A is heat transfer area,
+            // k is thermal conductivity
+            //
+            let solid_conductance_lengthscale: Length = 
+                self.solid_side_thermal_conductance_lengthscale_pipe_to_ambient;
+            
+            // to calculate k, we need the bulk temperature 
+
+            let mut pipe_shell_clone: SolidColumn = 
+                self.pipe_shell.clone().try_into().unwrap();
+            let pipe_bulk_temp: ThermodynamicTemperature = 
+                pipe_shell_clone.try_get_bulk_temperature()?;
+
+            // next, let's get the conductivity 
+
+            let pipe_shell_material_conductivity: ThermalConductivity = 
+                pipe_shell_clone.material_control_volume
+                .try_get_thermal_conductivity(
+                    pipe_bulk_temp)?;
+
+            let number_of_nodes: f64 = self.inner_nodes as f64 + 2.0;
+            // solid side nodalised thermal conductance
+
+            let nodalised_solid_side_thermal_conductance: ThermalConductance
+                = solid_conductance_lengthscale * pipe_shell_material_conductivity
+                / number_of_nodes;
+
+            let nodalised_solid_side_thermal_resistance: ThermalResistance 
+                = nodalised_solid_side_thermal_conductance.recip();
+
+            // next, nodalised thermal conductance due to liquid side 
+            
+            let nodalised_thermal_conductance_ambient_convection: ThermalConductance 
+                = (heat_transfer_to_ambient * self.convection_heat_transfer_area_to_ambient)
+                / number_of_nodes;
+
+            let nodalised_ambient_convection_thermal_resistance: ThermalResistance 
+                = nodalised_thermal_conductance_ambient_convection.recip();
+
+
+            // add resistances together 
+            let nodalised_pipe_shell_to_ambient_resistance: ThermalResistance 
+                = nodalised_solid_side_thermal_resistance +
+                nodalised_ambient_convection_thermal_resistance;
+
+            // get conductance, and then return 
+
+            let nodalised_pipe_shell_to_ambient_conductance 
+                = nodalised_pipe_shell_to_ambient_resistance.recip();
+
+            // and we done!
+            return Ok(nodalised_pipe_shell_to_ambient_conductance);
+
+    }
 
 
     /// the end of each node should have a zero power boundary condition 
@@ -71,6 +273,17 @@ impl NonInsulatedPorousMediaFluidComponent {
     }
 
 
+    pub fn get_interior_to_fluid_nodal_conductance(
+        &self, prandtl_wall_correction_setting: bool) -> Result<ThermalConductance, TuasLibError>
+    {
+        todo!()
+    }
+
+    pub fn get_pipe_shell_to_fluid_nodal_conductance(
+        &self, prandtl_wall_correction_setting: bool) -> Result<ThermalConductance, TuasLibError>
+    {
+        todo!()
+    }
 
 
 
@@ -79,7 +292,7 @@ impl NonInsulatedPorousMediaFluidComponent {
     ///
     /// once that is done, the join handle is returned 
     /// which when unwrapped, returns the heater object
-    pub fn lateral_connection_thread_spawn(&self,
+    pub fn ciet_heater_v2_lateral_connection_thread_spawn(&self,
     mass_flowrate: MassRate,
     heater_steady_state_power: Power) -> JoinHandle<Self>{
 
