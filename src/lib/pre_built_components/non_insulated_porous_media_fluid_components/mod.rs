@@ -129,8 +129,16 @@ pub struct NonInsulatedPorousMediaFluidComponent {
     /// nusselt correlation to ambient 
     pub nusselt_correlation_to_ambient: NusseltCorrelation,
 
+    /// lengthscale for nusselt correlation to ambient 
+    /// for pipes, the hydraulic diameter usually suffices 
+    pub nusselt_correlation_lengthscale_to_ambient: Length,
+
     /// nusselt correlation to porous media interior
     pub nusselt_correlation_to_porous_media_interior: NusseltCorrelation,
+
+    /// lengthscale for nusselt correlation to porous_media_interior 
+    /// for pipes, the hydraulic diameter usually suffices 
+    pub nusselt_correlation_lengthscale_to_porous_media_interior: Length,
 
 }
 
@@ -206,6 +214,8 @@ impl NonInsulatedPorousMediaFluidComponent {
         // when I originally wrote this code 
         let nusselt_correlation_to_ambient = therminol_array.nusselt_correlation;
         let nusselt_correlation_to_porous_media_interior = therminol_array.nusselt_correlation;
+        let nusselt_correlation_lengthscale_to_ambient = hydraulic_diameter;
+        let nusselt_correlation_lengthscale_to_porous_media_interior = hydraulic_diameter;
 
         // now the outer steel array
         let steel_shell_array = 
@@ -292,6 +302,8 @@ impl NonInsulatedPorousMediaFluidComponent {
             solid_side_thermal_conductance_lengthscale_fluid_to_porous_media_internal,
             nusselt_correlation_to_ambient,
             nusselt_correlation_to_porous_media_interior,
+            nusselt_correlation_lengthscale_to_ambient,
+            nusselt_correlation_lengthscale_to_porous_media_interior,
 
         };
     }
@@ -351,6 +363,8 @@ impl NonInsulatedPorousMediaFluidComponent {
         // when I originally wrote this code 
         let nusselt_correlation_to_ambient = therminol_array.nusselt_correlation;
         let nusselt_correlation_to_porous_media_interior = therminol_array.nusselt_correlation;
+        let nusselt_correlation_lengthscale_to_ambient = hydraulic_diameter;
+        let nusselt_correlation_lengthscale_to_porous_media_interior = hydraulic_diameter;
 
         let darcy_loss_correlation = 
             therminol_array.fluid_component_loss_properties.clone();
@@ -441,6 +455,8 @@ impl NonInsulatedPorousMediaFluidComponent {
             solid_side_thermal_conductance_lengthscale_fluid_to_porous_media_internal,
             nusselt_correlation_to_ambient,
             nusselt_correlation_to_porous_media_interior,
+            nusselt_correlation_lengthscale_to_ambient,
+            nusselt_correlation_lengthscale_to_porous_media_interior,
 
         };
     }
@@ -500,6 +516,8 @@ impl NonInsulatedPorousMediaFluidComponent {
         // when I originally wrote this code 
         let nusselt_correlation_to_ambient = therminol_array.nusselt_correlation;
         let nusselt_correlation_to_porous_media_interior = therminol_array.nusselt_correlation;
+        let nusselt_correlation_lengthscale_to_ambient = hydraulic_diameter;
+        let nusselt_correlation_lengthscale_to_porous_media_interior = hydraulic_diameter;
 
         let darcy_loss_correlation = 
             therminol_array.fluid_component_loss_properties.clone();
@@ -587,6 +605,8 @@ impl NonInsulatedPorousMediaFluidComponent {
             solid_side_thermal_conductance_lengthscale_fluid_to_porous_media_internal,
             nusselt_correlation_to_ambient,
             nusselt_correlation_to_porous_media_interior,
+            nusselt_correlation_lengthscale_to_ambient,
+            nusselt_correlation_lengthscale_to_porous_media_interior,
         };
     }
 }
