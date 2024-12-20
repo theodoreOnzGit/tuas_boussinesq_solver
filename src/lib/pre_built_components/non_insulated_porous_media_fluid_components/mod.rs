@@ -5,6 +5,7 @@ use crate::array_control_vol_and_fluid_component_collections::one_d_solid_array_
 use crate::boussinesq_thermophysical_properties::SolidMaterial;
 use crate::boussinesq_thermophysical_properties::LiquidMaterial;
 use crate::boussinesq_thermophysical_properties::thermal_conductivity::*;
+use crate::heat_transfer_correlations::nusselt_number_correlations::enums::NusseltCorrelation;
 use crate::heat_transfer_correlations::thermal_resistance::try_get_thermal_conductance_annular_cylinder;
 
 use super::heat_transfer_entities::HeatTransferEntity;
@@ -124,6 +125,13 @@ pub struct NonInsulatedPorousMediaFluidComponent {
     /// basically...
     pub solid_side_thermal_conductance_lengthscale_fluid_to_porous_media_internal: Length,
 
+
+    /// nusselt correlation to ambient 
+    pub nusselt_correlation_to_ambient: NusseltCorrelation,
+
+    /// nusselt correlation to porous media interior
+    pub nusselt_correlation_to_porous_media_interior: NusseltCorrelation,
+
 }
 
 
@@ -190,6 +198,14 @@ impl NonInsulatedPorousMediaFluidComponent {
             therminol_array.fluid_component_loss_properties.clone();
         // the therminol arrays here use gnielinski correlation by 
         // default
+        
+
+        // now, nusselt correlation to ambient and to porous media 
+        // are the same, I did not do anything special because 
+        // transient validation was not important (yet) 
+        // when I originally wrote this code 
+        let nusselt_correlation_to_ambient = therminol_array.nusselt_correlation;
+        let nusselt_correlation_to_porous_media_interior = therminol_array.nusselt_correlation;
 
         // now the outer steel array
         let steel_shell_array = 
@@ -274,6 +290,8 @@ impl NonInsulatedPorousMediaFluidComponent {
             solid_side_thermal_conductance_lengthscale_pipe_to_ambient,
             solid_side_thermal_conductance_lengthscale_pipe_to_fluid,
             solid_side_thermal_conductance_lengthscale_fluid_to_porous_media_internal,
+            nusselt_correlation_to_ambient,
+            nusselt_correlation_to_porous_media_interior,
 
         };
     }
@@ -327,6 +345,12 @@ impl NonInsulatedPorousMediaFluidComponent {
             user_specified_inner_nodes,
             pipe_incline_angle
         );
+        // now, nusselt correlation to ambient and to porous media 
+        // are the same, I did not do anything special because 
+        // transient validation was not important (yet) 
+        // when I originally wrote this code 
+        let nusselt_correlation_to_ambient = therminol_array.nusselt_correlation;
+        let nusselt_correlation_to_porous_media_interior = therminol_array.nusselt_correlation;
 
         let darcy_loss_correlation = 
             therminol_array.fluid_component_loss_properties.clone();
@@ -415,6 +439,8 @@ impl NonInsulatedPorousMediaFluidComponent {
             solid_side_thermal_conductance_lengthscale_pipe_to_ambient,
             solid_side_thermal_conductance_lengthscale_pipe_to_fluid,
             solid_side_thermal_conductance_lengthscale_fluid_to_porous_media_internal,
+            nusselt_correlation_to_ambient,
+            nusselt_correlation_to_porous_media_interior,
 
         };
     }
@@ -468,6 +494,12 @@ impl NonInsulatedPorousMediaFluidComponent {
             user_specified_inner_nodes,
             pipe_incline_angle
         );
+        // now, nusselt correlation to ambient and to porous media 
+        // are the same, I did not do anything special because 
+        // transient validation was not important (yet) 
+        // when I originally wrote this code 
+        let nusselt_correlation_to_ambient = therminol_array.nusselt_correlation;
+        let nusselt_correlation_to_porous_media_interior = therminol_array.nusselt_correlation;
 
         let darcy_loss_correlation = 
             therminol_array.fluid_component_loss_properties.clone();
@@ -553,6 +585,8 @@ impl NonInsulatedPorousMediaFluidComponent {
             solid_side_thermal_conductance_lengthscale_pipe_to_ambient,
             solid_side_thermal_conductance_lengthscale_pipe_to_fluid,
             solid_side_thermal_conductance_lengthscale_fluid_to_porous_media_internal,
+            nusselt_correlation_to_ambient,
+            nusselt_correlation_to_porous_media_interior,
         };
     }
 }
