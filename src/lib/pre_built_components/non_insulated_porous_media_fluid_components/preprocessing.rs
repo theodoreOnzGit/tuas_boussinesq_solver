@@ -273,10 +273,205 @@ impl NonInsulatedPorousMediaFluidComponent {
     }
 
 
+    /// still needs to be tested
     pub fn get_interior_to_fluid_nodal_conductance(
         &self, prandtl_wall_correction_setting: bool) -> Result<ThermalConductance, TuasLibError>
     {
-        todo!()
+        // the thermal conductance here should be based on the 
+        // nusselt number correlation
+
+        // before any calculations, I will first need a clone of 
+        // the fluid array and inner shell array
+        //
+        // the fluid array represents only a single tube
+        let mut pipe_fluid_arr_clone: FluidArray = 
+            self.pipe_fluid_array.clone().try_into()?;
+
+
+        let mut interior_solid_array_clone: SolidColumn = 
+            self.interior_solid_array_for_porous_media.clone().try_into()?;
+
+        // also need to get basic temperatures and mass flowrates 
+        // only do this once because some of these methods involve 
+        // cloning, which is computationally expensive
+
+        let single_tube_mass_flowrate: MassRate = 
+            pipe_fluid_arr_clone.get_mass_flowrate();
+
+        let fluid_temperature: ThermodynamicTemperature 
+            = pipe_fluid_arr_clone.try_get_bulk_temperature()?;
+
+        let solid_array_temp: ThermodynamicTemperature 
+            = interior_solid_array_clone.try_get_bulk_temperature()?;
+
+        let atmospheric_pressure = Pressure::new::<atmosphere>(1.0);
+
+
+        let single_tube_hydraulic_diameter = 
+            self.get_hydraulic_diameter_immutable();
+        let single_tube_flow_area: Area = 
+            pipe_fluid_arr_clone.get_cross_sectional_area_immutable();
+
+        // flow area and hydraulic diameter are ok
+
+
+        let fluid_material: LiquidMaterial
+            = pipe_fluid_arr_clone.material_control_volume.try_into()?;
+
+        let solid_material: SolidMaterial 
+            = interior_solid_array_clone.material_control_volume.try_into()?;
+
+        let viscosity: DynamicViscosity = 
+            fluid_material.try_get_dynamic_viscosity(fluid_temperature)?;
+
+        let solid_thermal_conductivity: ThermalConductivity = 
+            solid_material.try_get_thermal_conductivity(
+                solid_array_temp)?;
+
+        // need to convert hydraulic diameter to an equivalent 
+        // spherical diameter
+        //
+        // but for now, I'm going to use Re and Nu using hydraulic diameter 
+        // and live with it for the time being
+        //
+        let reynolds_number_single_tube: Ratio = 
+            single_tube_mass_flowrate/
+            single_tube_flow_area
+            *single_tube_hydraulic_diameter / viscosity;
+
+        // the reynolds number here is used for nusselt number estimates 
+        // so I'm going to have an aboslute value of reynolds number 
+        // for nusselt estimates
+        
+        let reynolds_number_abs_for_nusselt: Ratio = 
+            reynolds_number_single_tube.abs();
+
+        // next, bulk prandtl number 
+
+        let bulk_prandtl_number: Ratio 
+            = fluid_material.try_get_prandtl_liquid(
+                fluid_temperature,
+                atmospheric_pressure
+            )?;
+
+        // here's where we account for wall prandtl setting 
+        // if ever an issue
+        let correct_prandtl_for_wall_temperatures = 
+            prandtl_wall_correction_setting;
+
+        let mut wall_prandtl_number = bulk_prandtl_number;
+
+        if correct_prandtl_for_wall_temperatures {
+
+            // then wall prandtl number
+            //
+            // wall prandtl number will likely be out of range as the 
+            // wall temperature is quite different from bulk fluid 
+            // temperature. May be  out of correlation range
+            // if that is the case, then just go for a partial correction
+            // temperature of the range or go for the lowest temperature 
+            // possible
+
+            // The method I use is to just use the wall prandtl number 
+            // if the number falls outside the range of correlations,
+            // then use the prandtl number at the max or min 
+
+            let mut wall_temperature_estimate = solid_array_temp;
+
+            if wall_temperature_estimate > fluid_material.max_temperature() {
+
+                wall_temperature_estimate = fluid_material.max_temperature();
+
+            } else if wall_temperature_estimate < fluid_material.min_temperature() {
+
+                wall_temperature_estimate = fluid_material.min_temperature();
+
+            }
+
+            wall_prandtl_number = fluid_material.try_get_prandtl_liquid(
+                wall_temperature_estimate,
+                atmospheric_pressure
+            )?;
+
+        }
+
+
+        // I need to use Nusselt correlations present in this struct 
+        //
+        // wall correction is optionally done here
+        //
+        // for tubes,
+        // the gnielinski correlation should be used as it 
+        // is for tubes and pipes.
+        //
+        // but I allow the user to set the nusselt correlation 
+
+        // now, for gnielinski type correlations, we require the 
+        // darcy friction factor
+        //
+        // However, the darcy friction factor for other components 
+        // will come in the form:
+        //
+        // (f_darcy L/D + K)
+        //
+        // the next best thing we can get is:
+        //
+        // (f_darcy + D/L  K)
+
+        // (f_darcy L/D + K)
+        let fldk: Ratio = 
+            pipe_fluid_arr_clone
+            .fluid_component_loss_properties
+            .fldk_based_on_darcy_friction_factor(reynolds_number_abs_for_nusselt)
+            .unwrap();
+
+        let length_to_diameter: Ratio = 
+            pipe_fluid_arr_clone.get_component_length_immutable()/
+            pipe_fluid_arr_clone.get_hydraulic_diameter_immutable();
+        // (f_darcy + D/L  K)
+        // then let's scale it by length to diameter 
+        let modified_darcy_friction_factor: Ratio = 
+            fldk/length_to_diameter;
+
+        let nusselt_estimate_tube_side = 
+            self.nusselt_correlation_to_pipe_shell
+            .estimate_based_on_prandtl_darcy_and_reynolds_wall_correction(
+                bulk_prandtl_number, 
+                wall_prandtl_number, 
+                modified_darcy_friction_factor,
+                reynolds_number_abs_for_nusselt)?;
+
+        // now we can get the heat transfer coeff, 
+
+        let tube_h_to_fluid: HeatTransfer;
+
+        let k_fluid_average: ThermalConductivity = 
+            fluid_material.try_get_thermal_conductivity(
+                fluid_temperature)?;
+
+        tube_h_to_fluid = nusselt_estimate_tube_side * k_fluid_average / single_tube_hydraulic_diameter;
+
+        // and then get the convective resistance
+        let number_of_temperature_nodes = self.inner_nodes as f64 + 2.0;
+        // now we can get the nodalised conductance 
+
+        let nodalised_fluid_side_conductance: ThermalConductance 
+            = (tube_h_to_fluid * self.convection_heat_transfer_area_to_pipe)
+            / number_of_temperature_nodes;
+
+        
+        // now solid side nodalised conductance 
+        let nodalised_solid_side_conductance: ThermalConductance 
+            = (self.solid_side_thermal_conductance_lengthscale_fluid_to_porous_media_internal * 
+                solid_thermal_conductivity) / number_of_temperature_nodes;
+
+        let nodalised_pipe_fluid_to_shell_thermal_resistance: ThermalResistance 
+            = nodalised_solid_side_conductance.recip() 
+            + nodalised_fluid_side_conductance.recip();
+
+        // return the conductance 
+
+        return Ok(nodalised_pipe_fluid_to_shell_thermal_resistance.recip());
     }
 
     /// still work in progress... yet to be tested
@@ -290,7 +485,7 @@ impl NonInsulatedPorousMediaFluidComponent {
         // the fluid array and inner shell array
         //
         // the fluid array represents only a single tube
-        let mut tube_side_single_fluid_array_clone: FluidArray = 
+        let mut pipe_fluid_arr_clone: FluidArray = 
             self.pipe_fluid_array.clone().try_into()?;
 
 
@@ -302,10 +497,10 @@ impl NonInsulatedPorousMediaFluidComponent {
         // cloning, which is computationally expensive
 
         let single_tube_mass_flowrate: MassRate = 
-            tube_side_single_fluid_array_clone.get_mass_flowrate();
+            pipe_fluid_arr_clone.get_mass_flowrate();
 
         let fluid_temperature: ThermodynamicTemperature 
-            = tube_side_single_fluid_array_clone.try_get_bulk_temperature()?;
+            = pipe_fluid_arr_clone.try_get_bulk_temperature()?;
 
         let wall_temperature: ThermodynamicTemperature 
             = pipe_shell_clone.try_get_bulk_temperature()?;
@@ -316,13 +511,13 @@ impl NonInsulatedPorousMediaFluidComponent {
         let single_tube_hydraulic_diameter = 
             self.get_hydraulic_diameter_immutable();
         let single_tube_flow_area: Area = 
-            tube_side_single_fluid_array_clone.get_cross_sectional_area_immutable();
+            pipe_fluid_arr_clone.get_cross_sectional_area_immutable();
 
         // flow area and hydraulic diameter are ok
 
 
         let fluid_material: LiquidMaterial
-            = tube_side_single_fluid_array_clone.material_control_volume.try_into()?;
+            = pipe_fluid_arr_clone.material_control_volume.try_into()?;
 
         let solid_material: SolidMaterial 
             = pipe_shell_clone.material_control_volume.try_into()?;
@@ -426,14 +621,14 @@ impl NonInsulatedPorousMediaFluidComponent {
 
         // (f_darcy L/D + K)
         let fldk: Ratio = 
-            tube_side_single_fluid_array_clone
+            pipe_fluid_arr_clone
             .fluid_component_loss_properties
             .fldk_based_on_darcy_friction_factor(reynolds_number_abs_for_nusselt)
             .unwrap();
 
         let length_to_diameter: Ratio = 
-            tube_side_single_fluid_array_clone.get_component_length_immutable()/
-            tube_side_single_fluid_array_clone.get_hydraulic_diameter_immutable();
+            pipe_fluid_arr_clone.get_component_length_immutable()/
+            pipe_fluid_arr_clone.get_hydraulic_diameter_immutable();
         // (f_darcy + D/L  K)
         // then let's scale it by length to diameter 
         let modified_darcy_friction_factor: Ratio = 
