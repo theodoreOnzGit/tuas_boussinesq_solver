@@ -501,7 +501,7 @@ impl NonInsulatedPorousMediaFluidComponent {
         // only do this once because some of these methods involve 
         // cloning, which is computationally expensive
 
-        let single_tube_mass_flowrate: MassRate = 
+        let mass_flowrate: MassRate = 
             pipe_fluid_arr_clone.get_mass_flowrate();
 
         let fluid_temperature: ThermodynamicTemperature 
@@ -515,7 +515,7 @@ impl NonInsulatedPorousMediaFluidComponent {
 
         let nusselt_hydraulic_diameter = 
             self.nusselt_correlation_lengthscale_to_ambient;
-        let single_tube_flow_area: Area = 
+        let flow_area: Area = 
             pipe_fluid_arr_clone.get_cross_sectional_area_immutable();
 
         // flow area and hydraulic diameter are ok
@@ -541,8 +541,8 @@ impl NonInsulatedPorousMediaFluidComponent {
         // and live with it for the time being
         //
         let reynolds_number_single_tube: Ratio = 
-            single_tube_mass_flowrate/
-            single_tube_flow_area
+            mass_flowrate/
+            flow_area
             *nusselt_hydraulic_diameter / viscosity;
 
         // the reynolds number here is used for nusselt number estimates 
