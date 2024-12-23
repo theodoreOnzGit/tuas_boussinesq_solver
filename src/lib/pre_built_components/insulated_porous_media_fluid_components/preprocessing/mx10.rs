@@ -35,7 +35,7 @@ impl InsulatedPorousMediaFluidComponent {
     pub fn lateral_and_miscellaneous_connections_mx10(&mut self,
         mass_flowrate: MassRate){
 
-        let h_air_to_steel_surf = self.heat_transfer_to_air;
+        let h_air_to_steel_surf = self.heat_transfer_to_ambient;
         let heater_steady_state_power: Power = Power::ZERO;
 
         // clone each array and set them later

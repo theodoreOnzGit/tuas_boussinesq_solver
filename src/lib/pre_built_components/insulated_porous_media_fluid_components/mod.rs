@@ -1,13 +1,19 @@
+use std::f64::consts::PI;
+
 use crate::array_control_vol_and_fluid_component_collections::one_d_fluid_array_with_lateral_coupling::fluid_component_calculation::DimensionlessDarcyLossCorrelations;
+use crate::boussinesq_thermophysical_properties::thermal_conductivity::*;
 use crate::array_control_vol_and_fluid_component_collections::one_d_fluid_array_with_lateral_coupling::FluidArray;
 use crate::array_control_vol_and_fluid_component_collections::one_d_solid_array_with_lateral_coupling::SolidColumn;
 use crate::boussinesq_thermophysical_properties::SolidMaterial;
 use crate::boussinesq_thermophysical_properties::LiquidMaterial;
+use crate::heat_transfer_correlations::nusselt_number_correlations::enums::NusseltCorrelation;
+use crate::heat_transfer_correlations::thermal_resistance::try_get_thermal_conductance_annular_cylinder;
 
 use super::heat_transfer_entities::HeatTransferEntity;
 use uom::si::f64::*;
 use uom::si::area::square_meter;
 use uom::si::heat_transfer::watt_per_square_meter_kelvin;
+use uom::si::length::inch;
 use uom::si::length::meter;
 use uom::si::ratio::ratio;
 use uom::si::pressure::atmosphere;
@@ -32,6 +38,15 @@ pub struct InsulatedPorousMediaFluidComponent {
     pub insulation_array: HeatTransferEntity,
 
     /// heat transfer entity representing control volumes 
+    /// of heat generating or 
+    /// non-heat generating components within the pipe 
+    /// or fluid component 
+    ///
+    /// for example,
+    /// the twisted tape in the heated section of CIET's Heater
+    pub interior_solid_array_for_porous_media: HeatTransferEntity,
+
+    /// heat transfer entity representing control volumes 
     /// for the steel piping in MX-10
     pub pipe_shell: HeatTransferEntity,
 
@@ -44,7 +59,7 @@ pub struct InsulatedPorousMediaFluidComponent {
 
     /// heat transfer coefficient used to calculate heat loss 
     /// to air
-    pub heat_transfer_to_air: HeatTransfer,
+    pub heat_transfer_to_ambient: HeatTransfer,
 
     tube_inner_diameter: Length,
 
@@ -59,6 +74,118 @@ pub struct InsulatedPorousMediaFluidComponent {
     /// loss correlations
     /// for pipe losses
     pub darcy_loss_correlation: DimensionlessDarcyLossCorrelations,
+
+    /// thermal conductance lengthscale to ambient 
+    /// 
+    /// for calculating thermal resistance, we need a length 
+    /// scale 
+    ///
+    /// thermal conductance = (kA)/L
+    /// 
+    /// assuming 1D cartesian coordinates, you need to specify 
+    /// a lengthscale for an appropraite thermal resistance.
+    ///
+    /// This is not L, but rather A/L
+    ///
+    /// to get thermal conductance just A/L * k
+    /// basically...
+    pub thermal_conductance_lengthscale_pipe_shell_to_insulation_pipe_interface: Length,
+
+    /// thermal conductance lengthscale from pipe to fluid
+    /// 
+    /// for calculating thermal resistance, we need a length 
+    /// scale 
+    ///
+    /// thermal conductance = (kA)/L
+    /// 
+    /// assuming 1D cartesian coordinates, you need to specify 
+    /// a lengthscale for an appropraite thermal resistance.
+    ///
+    /// This is not L, but rather A/L
+    ///
+    /// to get thermal conductance just A/L * k
+    /// basically...
+    pub thermal_conductance_lengthscale_pipe_shell_to_fluid: Length,
+
+    /// thermal conductance lengthscale from fluid to 
+    /// porous media internal
+    /// 
+    /// for calculating thermal resistance, we need a length 
+    /// scale 
+    ///
+    /// thermal conductance = (kA)/L
+    /// 
+    /// assuming 1D cartesian coordinates, you need to specify 
+    /// a lengthscale for an appropraite thermal resistance.
+    ///
+    /// This is not L, but rather A/L
+    ///
+    /// to get thermal conductance just A/L * k
+    /// basically...
+    pub thermal_conductance_lengthscale_fluid_to_porous_media_internal: Length,
+
+    /// thermal conductance lengthscale from pipe shell to insulation
+    /// 
+    /// 
+    /// for calculating thermal resistance, we need a length 
+    /// scale 
+    ///
+    /// thermal conductance = (kA)/L
+    /// 
+    /// assuming 1D cartesian coordinates, you need to specify 
+    /// a lengthscale for an appropraite thermal resistance.
+    ///
+    /// This is not L, but rather A/L
+    ///
+    /// to get thermal conductance just A/L * k
+    /// basically...
+    pub thermal_conductance_lengthscale_insulation_to_insulation_pipe_interface: Length,
+
+    /// thermal conductance lengthscale from pipe shell to insulation
+    /// 
+    /// 
+    /// for calculating thermal resistance, we need a length 
+    /// scale 
+    ///
+    /// thermal conductance = (kA)/L
+    /// 
+    /// assuming 1D cartesian coordinates, you need to specify 
+    /// a lengthscale for an appropraite thermal resistance.
+    ///
+    /// This is not L, but rather A/L
+    ///
+    /// to get thermal conductance just A/L * k
+    /// basically...
+    pub thermal_conductance_lengthscale_insulation_to_ambient: Length,
+
+    /// nusselt correlation from fluid to pipe shell 
+    pub nusselt_correlation_fluid_to_pipe_shell: NusseltCorrelation,
+
+    /// lengthscale for nusselt correlation to ambient 
+    /// for pipes, the hydraulic diameter usually suffices 
+    pub nusselt_correlation_lengthscale_fluid_to_pipe_shell: Length,
+
+    /// convection heat transfer area to ambient 
+    /// used to calculate conductance to ambient hA
+    /// conductance = h A 
+    pub convection_heat_transfer_area_insulation_to_ambient: Area,
+
+    /// nusselt correlation to porous media interior
+    pub nusselt_correlation_fluid_to_porous_media_interior: NusseltCorrelation,
+
+    /// lengthscale for nusselt correlation to porous_media_interior 
+    /// for pipes, the hydraulic diameter usually suffices 
+    pub nusselt_correlation_lengthscale_fluid_to_porous_media_interior: Length,
+
+    /// convection heat transfer area to pipe 
+    /// used to calculate conductance to pipe hA
+    /// conductance = h A 
+    pub convection_heat_transfer_area_fluid_to_pipe_shell: Area,
+
+    /// convection heat transfer area to interior 
+    /// used to calculate conductance to interior hA
+    /// conductance = h A 
+    pub convection_heat_transfer_area_fluid_to_interior: Area,
 }
 
 impl InsulatedPorousMediaFluidComponent {
@@ -125,7 +252,6 @@ impl InsulatedPorousMediaFluidComponent {
         let reynolds_power_c: f64 = -1.0;
 
 
-
         // inner therminol array
         let therminol_array: FluidArray = 
         FluidArray::new_custom_component(
@@ -164,9 +290,130 @@ impl InsulatedPorousMediaFluidComponent {
             user_specified_inner_nodes 
         );
 
+        // for the porous media internal I am using the twisted 
+        // tape dimensions as an estimate
+        // the twisted tape width is assumed to be the twisted 
+        // tape diameter in De Wet's dissertation
+        let twisted_tape_width: Length = Length::new::<inch>(1.0);
+        let twisted_tape_thickness = Length::new::<inch>(0.048);
+        let twisted_tape_height = component_length;
+
+        let porous_media_internal = 
+        SolidColumn::new_block(
+            twisted_tape_height,
+            twisted_tape_thickness,
+            twisted_tape_width,
+            initial_temperature,
+            atmospheric_pressure,
+            SolidMaterial::SteelSS304L,
+            user_specified_inner_nodes 
+        );
+            
+
+
+        // for new code, I need a lot of lengthscales and area scales 
+
+        // so first, areas, usuall PI * d * l
+        //
+        // note that we don't actually have heat transfer areas of 
+        // the interior for static mixers, so I'm just using a guestimate
+        let convection_heat_transfer_area_fluid_to_pipe_shell: Area
+            = PI * steel_id * component_length;
+
+        let convection_heat_transfer_area_fluid_to_interior: Area
+            = convection_heat_transfer_area_fluid_to_pipe_shell * 2.0;
+
+        let convection_heat_transfer_area_insulation_to_ambient: Area 
+            = PI * fiberglass_od * component_length;
+
+        // now nusselt correlations
+        // I'm also guestimating that it is for the inside,
+        // there was no experimental data or whatsover.
+        let nusselt_correlation_fluid_to_pipe_shell: NusseltCorrelation 
+            = therminol_array.nusselt_correlation.clone();
+
+        let nusselt_correlation_fluid_to_porous_media_interior: NusseltCorrelation 
+            = nusselt_correlation_fluid_to_pipe_shell.clone();
+
+        // now for the nusselt correlation lengthscales
+
+        let steel_thermal_conductivity: ThermalConductivity = 
+            try_get_kappa_thermal_conductivity(
+                SolidMaterial::SteelSS304L.into(), 
+                initial_temperature, 
+                atmospheric_pressure).unwrap();
+
+        let fiberglass_thermal_conductivity: ThermalConductivity = 
+            try_get_kappa_thermal_conductivity(
+                SolidMaterial::Fiberglass.into(), 
+                initial_temperature, 
+                atmospheric_pressure).unwrap();
+
+        let steel_shell_mid_diameter: Length = (steel_od + steel_id)/2.0;
+
+        let fiberglass_shell_mid_diameter: Length 
+            = (fiberglass_od + fiberglass_id)/2.0;
+
+
+        let steel_shell_conductance_to_fluid: ThermalConductance = 
+            try_get_thermal_conductance_annular_cylinder(
+                steel_id,
+                steel_shell_mid_diameter,
+                component_length,
+                steel_thermal_conductivity).unwrap();
+
+
+        let steel_shell_conductance_to_insulation_pipe_boundary: ThermalConductance = 
+            try_get_thermal_conductance_annular_cylinder(
+                steel_shell_mid_diameter,
+                steel_od,
+                component_length,
+                steel_thermal_conductivity).unwrap();
+
+        let insulation_conductance_to_insulation_pipe_boundary: ThermalConductance =
+            try_get_thermal_conductance_annular_cylinder(
+                fiberglass_id,
+                fiberglass_shell_mid_diameter,
+                component_length,
+                fiberglass_thermal_conductivity).unwrap();
+
+        let insulation_conductance_to_ambient: ThermalConductance =
+            try_get_thermal_conductance_annular_cylinder(
+                fiberglass_shell_mid_diameter,
+                fiberglass_id,
+                component_length,
+                fiberglass_thermal_conductivity).unwrap();
+
+        let nusselt_correlation_lengthscale_fluid_to_pipe_shell: Length 
+            = hydraulic_diameter;
+
+        let thermal_conductance_lengthscale_pipe_shell_to_fluid: Length 
+            = steel_shell_conductance_to_fluid/steel_thermal_conductivity;
+
+        let thermal_conductance_lengthscale_pipe_shell_to_insulation_pipe_interface: Length 
+            = steel_shell_conductance_to_insulation_pipe_boundary/steel_thermal_conductivity;
+
+        let thermal_conductance_lengthscale_insulation_to_insulation_pipe_interface: Length 
+            = insulation_conductance_to_insulation_pipe_boundary/fiberglass_thermal_conductivity;
+
+        let thermal_conductance_lengthscale_insulation_to_ambient: Length 
+            = insulation_conductance_to_ambient/fiberglass_thermal_conductivity;
+
+        // for thermal conductance lengthscale for inner array,
+        // I am guestimating
+        //
+        // just ignoring the thermal resistance of the 
+        // insides, like lumped capacitance essentially
+
+        let thermal_conductance_lengthscale_fluid_to_porous_media_internal: Length = 
+            Length::new::<meter>(1e9 as f64);
+
+        let nusselt_correlation_lengthscale_fluid_to_porous_media_interior: Length 
+            = hydraulic_diameter;
+
         // f + L/D K = 21 + 4000/Re
         let darcy_loss_correlation = 
-        DimensionlessDarcyLossCorrelations::
+            DimensionlessDarcyLossCorrelations::
             new_simple_reynolds_power_component(
                 Ratio::new::<ratio>(21.0),
                 Ratio::new::<ratio>(4000.0),
@@ -174,17 +421,30 @@ impl InsulatedPorousMediaFluidComponent {
             );
 
         return Self { inner_nodes: user_specified_inner_nodes,
-            insulation_array: insulation.into(),
+        insulation_array: insulation.into(),
             pipe_shell: steel_shell_array.into(),
             pipe_fluid_array: therminol_array.into(),
             ambient_temperature,
-            heat_transfer_to_air: h_to_air,
+            heat_transfer_to_ambient: h_to_air,
             tube_inner_diameter: steel_id,
             tube_outer_diameter: steel_od,
             insulation_inner_diameter: fiberglass_id,
             insulation_outer_diameter: fiberglass_od,
             flow_area,
             darcy_loss_correlation,
+            interior_solid_array_for_porous_media: porous_media_internal.into(),
+            thermal_conductance_lengthscale_pipe_shell_to_insulation_pipe_interface,
+            thermal_conductance_lengthscale_pipe_shell_to_fluid,
+            thermal_conductance_lengthscale_fluid_to_porous_media_internal,
+            thermal_conductance_lengthscale_insulation_to_insulation_pipe_interface,
+            thermal_conductance_lengthscale_insulation_to_ambient,
+            nusselt_correlation_fluid_to_pipe_shell,
+            nusselt_correlation_lengthscale_fluid_to_pipe_shell,
+            convection_heat_transfer_area_insulation_to_ambient,
+            nusselt_correlation_fluid_to_porous_media_interior,
+            convection_heat_transfer_area_fluid_to_pipe_shell,
+            convection_heat_transfer_area_fluid_to_interior,
+            nusselt_correlation_lengthscale_fluid_to_porous_media_interior,
         };
     }
 
@@ -286,6 +546,126 @@ impl InsulatedPorousMediaFluidComponent {
             SolidMaterial::Fiberglass,
             user_specified_inner_nodes 
         );
+        // for the porous media internal I am using the twisted 
+        // tape dimensions as an estimate
+        // the twisted tape width is assumed to be the twisted 
+        // tape diameter in De Wet's dissertation
+        let twisted_tape_width: Length = Length::new::<inch>(1.0);
+        let twisted_tape_thickness = Length::new::<inch>(0.048);
+        let twisted_tape_height = component_length;
+
+        let porous_media_internal = 
+        SolidColumn::new_block(
+            twisted_tape_height,
+            twisted_tape_thickness,
+            twisted_tape_width,
+            initial_temperature,
+            atmospheric_pressure,
+            SolidMaterial::SteelSS304L,
+            user_specified_inner_nodes 
+        );
+            
+
+
+        // for new code, I need a lot of lengthscales and area scales 
+
+        // so first, areas, usuall PI * d * l
+        //
+        // note that we don't actually have heat transfer areas of 
+        // the interior for static mixers, so I'm just using a guestimate
+        let convection_heat_transfer_area_fluid_to_pipe_shell: Area
+            = PI * steel_id * component_length;
+
+        let convection_heat_transfer_area_fluid_to_interior: Area
+            = convection_heat_transfer_area_fluid_to_pipe_shell * 2.0;
+
+        let convection_heat_transfer_area_insulation_to_ambient: Area 
+            = PI * fiberglass_od * component_length;
+
+        // now nusselt correlations
+        // I'm also guestimating that it is for the inside,
+        // there was no experimental data or whatsover.
+        let nusselt_correlation_fluid_to_pipe_shell: NusseltCorrelation 
+            = therminol_array.nusselt_correlation.clone();
+
+        let nusselt_correlation_fluid_to_porous_media_interior: NusseltCorrelation 
+            = nusselt_correlation_fluid_to_pipe_shell.clone();
+
+        // now for the nusselt correlation lengthscales
+
+        let steel_thermal_conductivity: ThermalConductivity = 
+            try_get_kappa_thermal_conductivity(
+                SolidMaterial::SteelSS304L.into(), 
+                initial_temperature, 
+                atmospheric_pressure).unwrap();
+
+        let fiberglass_thermal_conductivity: ThermalConductivity = 
+            try_get_kappa_thermal_conductivity(
+                SolidMaterial::Fiberglass.into(), 
+                initial_temperature, 
+                atmospheric_pressure).unwrap();
+
+        let steel_shell_mid_diameter: Length = (steel_od + steel_id)/2.0;
+
+        let fiberglass_shell_mid_diameter: Length 
+            = (fiberglass_od + fiberglass_id)/2.0;
+
+
+        let steel_shell_conductance_to_fluid: ThermalConductance = 
+            try_get_thermal_conductance_annular_cylinder(
+                steel_id,
+                steel_shell_mid_diameter,
+                component_length,
+                steel_thermal_conductivity).unwrap();
+
+
+        let steel_shell_conductance_to_insulation_pipe_boundary: ThermalConductance = 
+            try_get_thermal_conductance_annular_cylinder(
+                steel_shell_mid_diameter,
+                steel_od,
+                component_length,
+                steel_thermal_conductivity).unwrap();
+
+        let insulation_conductance_to_insulation_pipe_boundary: ThermalConductance =
+            try_get_thermal_conductance_annular_cylinder(
+                fiberglass_id,
+                fiberglass_shell_mid_diameter,
+                component_length,
+                fiberglass_thermal_conductivity).unwrap();
+
+        let insulation_conductance_to_ambient: ThermalConductance =
+            try_get_thermal_conductance_annular_cylinder(
+                fiberglass_shell_mid_diameter,
+                fiberglass_id,
+                component_length,
+                fiberglass_thermal_conductivity).unwrap();
+
+        let nusselt_correlation_lengthscale_fluid_to_pipe_shell: Length 
+            = hydraulic_diameter;
+
+        let thermal_conductance_lengthscale_pipe_shell_to_fluid: Length 
+            = steel_shell_conductance_to_fluid/steel_thermal_conductivity;
+
+        let thermal_conductance_lengthscale_pipe_shell_to_insulation_pipe_interface: Length 
+            = steel_shell_conductance_to_insulation_pipe_boundary/steel_thermal_conductivity;
+
+        let thermal_conductance_lengthscale_insulation_to_insulation_pipe_interface: Length 
+            = insulation_conductance_to_insulation_pipe_boundary/fiberglass_thermal_conductivity;
+
+        let thermal_conductance_lengthscale_insulation_to_ambient: Length 
+            = insulation_conductance_to_ambient/fiberglass_thermal_conductivity;
+
+        // for thermal conductance lengthscale for inner array,
+        // I am guestimating
+        //
+        // just ignoring the thermal resistance of the 
+        // insides, like lumped capacitance essentially
+
+        let thermal_conductance_lengthscale_fluid_to_porous_media_internal: Length = 
+            Length::new::<meter>(1e9 as f64);
+
+        let nusselt_correlation_lengthscale_fluid_to_porous_media_interior: Length 
+            = hydraulic_diameter;
 
         // f + L/D K = 21 + 4000/Re
         let darcy_loss_correlation = 
@@ -301,13 +681,26 @@ impl InsulatedPorousMediaFluidComponent {
             pipe_shell: steel_shell_array.into(),
             pipe_fluid_array: therminol_array.into(),
             ambient_temperature,
-            heat_transfer_to_air: h_to_air,
+            heat_transfer_to_ambient: h_to_air,
             tube_inner_diameter: steel_id,
             tube_outer_diameter: steel_od,
             insulation_inner_diameter: fiberglass_id,
             insulation_outer_diameter: fiberglass_od,
             flow_area,
             darcy_loss_correlation,
+            interior_solid_array_for_porous_media: porous_media_internal.into(),
+            thermal_conductance_lengthscale_pipe_shell_to_insulation_pipe_interface,
+            thermal_conductance_lengthscale_pipe_shell_to_fluid,
+            thermal_conductance_lengthscale_fluid_to_porous_media_internal,
+            thermal_conductance_lengthscale_insulation_to_insulation_pipe_interface,
+            thermal_conductance_lengthscale_insulation_to_ambient,
+            nusselt_correlation_fluid_to_pipe_shell,
+            nusselt_correlation_lengthscale_fluid_to_pipe_shell,
+            convection_heat_transfer_area_insulation_to_ambient,
+            nusselt_correlation_fluid_to_porous_media_interior,
+            nusselt_correlation_lengthscale_fluid_to_porous_media_interior,
+            convection_heat_transfer_area_fluid_to_pipe_shell,
+            convection_heat_transfer_area_fluid_to_interior,
         };
     }
 
@@ -402,6 +795,126 @@ impl InsulatedPorousMediaFluidComponent {
             SolidMaterial::Fiberglass,
             user_specified_inner_nodes 
         );
+        // for the porous media internal I am using the twisted 
+        // tape dimensions as an estimate
+        // the twisted tape width is assumed to be the twisted 
+        // tape diameter in De Wet's dissertation
+        let twisted_tape_width: Length = Length::new::<inch>(1.0);
+        let twisted_tape_thickness = Length::new::<inch>(0.048);
+        let twisted_tape_height = component_length;
+
+        let porous_media_internal = 
+        SolidColumn::new_block(
+            twisted_tape_height,
+            twisted_tape_thickness,
+            twisted_tape_width,
+            initial_temperature,
+            atmospheric_pressure,
+            SolidMaterial::SteelSS304L,
+            user_specified_inner_nodes 
+        );
+            
+
+
+        // for new code, I need a lot of lengthscales and area scales 
+
+        // so first, areas, usuall PI * d * l
+        //
+        // note that we don't actually have heat transfer areas of 
+        // the interior for static mixers, so I'm just using a guestimate
+        let convection_heat_transfer_area_fluid_to_pipe_shell: Area
+            = PI * steel_id * component_length;
+
+        let convection_heat_transfer_area_fluid_to_interior: Area
+            = convection_heat_transfer_area_fluid_to_pipe_shell * 2.0;
+
+        let convection_heat_transfer_area_insulation_to_ambient: Area 
+            = PI * fiberglass_od * component_length;
+
+        // now nusselt correlations
+        // I'm also guestimating that it is for the inside,
+        // there was no experimental data or whatsover.
+        let nusselt_correlation_fluid_to_pipe_shell: NusseltCorrelation 
+            = therminol_array.nusselt_correlation.clone();
+
+        let nusselt_correlation_fluid_to_porous_media_interior: NusseltCorrelation 
+            = nusselt_correlation_fluid_to_pipe_shell.clone();
+
+        // now for the nusselt correlation lengthscales
+
+        let steel_thermal_conductivity: ThermalConductivity = 
+            try_get_kappa_thermal_conductivity(
+                SolidMaterial::SteelSS304L.into(), 
+                initial_temperature, 
+                atmospheric_pressure).unwrap();
+
+        let fiberglass_thermal_conductivity: ThermalConductivity = 
+            try_get_kappa_thermal_conductivity(
+                SolidMaterial::Fiberglass.into(), 
+                initial_temperature, 
+                atmospheric_pressure).unwrap();
+
+        let steel_shell_mid_diameter: Length = (steel_od + steel_id)/2.0;
+
+        let fiberglass_shell_mid_diameter: Length 
+            = (fiberglass_od + fiberglass_id)/2.0;
+
+
+        let steel_shell_conductance_to_fluid: ThermalConductance = 
+            try_get_thermal_conductance_annular_cylinder(
+                steel_id,
+                steel_shell_mid_diameter,
+                component_length,
+                steel_thermal_conductivity).unwrap();
+
+
+        let steel_shell_conductance_to_insulation_pipe_boundary: ThermalConductance = 
+            try_get_thermal_conductance_annular_cylinder(
+                steel_shell_mid_diameter,
+                steel_od,
+                component_length,
+                steel_thermal_conductivity).unwrap();
+
+        let insulation_conductance_to_insulation_pipe_boundary: ThermalConductance =
+            try_get_thermal_conductance_annular_cylinder(
+                fiberglass_id,
+                fiberglass_shell_mid_diameter,
+                component_length,
+                fiberglass_thermal_conductivity).unwrap();
+
+        let insulation_conductance_to_ambient: ThermalConductance =
+            try_get_thermal_conductance_annular_cylinder(
+                fiberglass_shell_mid_diameter,
+                fiberglass_id,
+                component_length,
+                fiberglass_thermal_conductivity).unwrap();
+
+        let nusselt_correlation_lengthscale_fluid_to_pipe_shell: Length 
+            = hydraulic_diameter;
+
+        let thermal_conductance_lengthscale_pipe_shell_to_fluid: Length 
+            = steel_shell_conductance_to_fluid/steel_thermal_conductivity;
+
+        let thermal_conductance_lengthscale_pipe_shell_to_insulation_pipe_interface: Length 
+            = steel_shell_conductance_to_insulation_pipe_boundary/steel_thermal_conductivity;
+
+        let thermal_conductance_lengthscale_insulation_to_insulation_pipe_interface: Length 
+            = insulation_conductance_to_insulation_pipe_boundary/fiberglass_thermal_conductivity;
+
+        let thermal_conductance_lengthscale_insulation_to_ambient: Length 
+            = insulation_conductance_to_ambient/fiberglass_thermal_conductivity;
+
+        // for thermal conductance lengthscale for inner array,
+        // I am guestimating
+        //
+        // just ignoring the thermal resistance of the 
+        // insides, like lumped capacitance essentially
+
+        let thermal_conductance_lengthscale_fluid_to_porous_media_internal: Length = 
+            Length::new::<meter>(1e9 as f64);
+
+        let nusselt_correlation_lengthscale_fluid_to_porous_media_interior: Length 
+            = hydraulic_diameter;
 
         // f + L/D K = 21 + 4000/Re
         let darcy_loss_correlation = 
@@ -417,13 +930,26 @@ impl InsulatedPorousMediaFluidComponent {
             pipe_shell: steel_shell_array.into(),
             pipe_fluid_array: therminol_array.into(),
             ambient_temperature,
-            heat_transfer_to_air: h_to_air,
+            heat_transfer_to_ambient: h_to_air,
             tube_inner_diameter: steel_id,
             tube_outer_diameter: steel_od,
             insulation_inner_diameter: fiberglass_id,
             insulation_outer_diameter: fiberglass_od,
             flow_area,
             darcy_loss_correlation,
+            interior_solid_array_for_porous_media: porous_media_internal.into(),
+            thermal_conductance_lengthscale_pipe_shell_to_insulation_pipe_interface,
+            thermal_conductance_lengthscale_pipe_shell_to_fluid,
+            thermal_conductance_lengthscale_fluid_to_porous_media_internal,
+            thermal_conductance_lengthscale_insulation_to_insulation_pipe_interface,
+            thermal_conductance_lengthscale_insulation_to_ambient,
+            nusselt_correlation_fluid_to_pipe_shell,
+            nusselt_correlation_lengthscale_fluid_to_pipe_shell,
+            convection_heat_transfer_area_insulation_to_ambient,
+            nusselt_correlation_fluid_to_porous_media_interior,
+            nusselt_correlation_lengthscale_fluid_to_porous_media_interior,
+            convection_heat_transfer_area_fluid_to_pipe_shell,
+            convection_heat_transfer_area_fluid_to_interior,
         };
     }
 
@@ -516,6 +1042,126 @@ impl InsulatedPorousMediaFluidComponent {
             SolidMaterial::Fiberglass,
             user_specified_inner_nodes 
         );
+        // for the porous media internal I am using the twisted 
+        // tape dimensions as an estimate
+        // the twisted tape width is assumed to be the twisted 
+        // tape diameter in De Wet's dissertation
+        let twisted_tape_width: Length = Length::new::<inch>(1.0);
+        let twisted_tape_thickness = Length::new::<inch>(0.048);
+        let twisted_tape_height = component_length;
+
+        let porous_media_internal = 
+        SolidColumn::new_block(
+            twisted_tape_height,
+            twisted_tape_thickness,
+            twisted_tape_width,
+            initial_temperature,
+            atmospheric_pressure,
+            SolidMaterial::SteelSS304L,
+            user_specified_inner_nodes 
+        );
+            
+
+
+        // for new code, I need a lot of lengthscales and area scales 
+
+        // so first, areas, usuall PI * d * l
+        //
+        // note that we don't actually have heat transfer areas of 
+        // the interior for static mixers, so I'm just using a guestimate
+        let convection_heat_transfer_area_fluid_to_pipe_shell: Area
+            = PI * steel_id * component_length;
+
+        let convection_heat_transfer_area_fluid_to_interior: Area
+            = convection_heat_transfer_area_fluid_to_pipe_shell * 2.0;
+
+        let convection_heat_transfer_area_insulation_to_ambient: Area 
+            = PI * fiberglass_od * component_length;
+
+        // now nusselt correlations
+        // I'm also guestimating that it is for the inside,
+        // there was no experimental data or whatsover.
+        let nusselt_correlation_fluid_to_pipe_shell: NusseltCorrelation 
+            = therminol_array.nusselt_correlation.clone();
+
+        let nusselt_correlation_fluid_to_porous_media_interior: NusseltCorrelation 
+            = nusselt_correlation_fluid_to_pipe_shell.clone();
+
+        // now for the nusselt correlation lengthscales
+
+        let steel_thermal_conductivity: ThermalConductivity = 
+            try_get_kappa_thermal_conductivity(
+                SolidMaterial::SteelSS304L.into(), 
+                initial_temperature, 
+                atmospheric_pressure).unwrap();
+
+        let fiberglass_thermal_conductivity: ThermalConductivity = 
+            try_get_kappa_thermal_conductivity(
+                SolidMaterial::Fiberglass.into(), 
+                initial_temperature, 
+                atmospheric_pressure).unwrap();
+
+        let steel_shell_mid_diameter: Length = (steel_od + steel_id)/2.0;
+
+        let fiberglass_shell_mid_diameter: Length 
+            = (fiberglass_od + fiberglass_id)/2.0;
+
+
+        let steel_shell_conductance_to_fluid: ThermalConductance = 
+            try_get_thermal_conductance_annular_cylinder(
+                steel_id,
+                steel_shell_mid_diameter,
+                component_length,
+                steel_thermal_conductivity).unwrap();
+
+
+        let steel_shell_conductance_to_insulation_pipe_boundary: ThermalConductance = 
+            try_get_thermal_conductance_annular_cylinder(
+                steel_shell_mid_diameter,
+                steel_od,
+                component_length,
+                steel_thermal_conductivity).unwrap();
+
+        let insulation_conductance_to_insulation_pipe_boundary: ThermalConductance =
+            try_get_thermal_conductance_annular_cylinder(
+                fiberglass_id,
+                fiberglass_shell_mid_diameter,
+                component_length,
+                fiberglass_thermal_conductivity).unwrap();
+
+        let insulation_conductance_to_ambient: ThermalConductance =
+            try_get_thermal_conductance_annular_cylinder(
+                fiberglass_shell_mid_diameter,
+                fiberglass_id,
+                component_length,
+                fiberglass_thermal_conductivity).unwrap();
+
+        let nusselt_correlation_lengthscale_fluid_to_pipe_shell: Length 
+            = hydraulic_diameter;
+
+        let thermal_conductance_lengthscale_pipe_shell_to_fluid: Length 
+            = steel_shell_conductance_to_fluid/steel_thermal_conductivity;
+
+        let thermal_conductance_lengthscale_pipe_shell_to_insulation_pipe_interface: Length 
+            = steel_shell_conductance_to_insulation_pipe_boundary/steel_thermal_conductivity;
+
+        let thermal_conductance_lengthscale_insulation_to_insulation_pipe_interface: Length 
+            = insulation_conductance_to_insulation_pipe_boundary/fiberglass_thermal_conductivity;
+
+        let thermal_conductance_lengthscale_insulation_to_ambient: Length 
+            = insulation_conductance_to_ambient/fiberglass_thermal_conductivity;
+
+        // for thermal conductance lengthscale for inner array,
+        // I am guestimating
+        //
+        // just ignoring the thermal resistance of the 
+        // insides, like lumped capacitance essentially
+
+        let thermal_conductance_lengthscale_fluid_to_porous_media_internal: Length = 
+            Length::new::<meter>(1e9 as f64);
+
+        let nusselt_correlation_lengthscale_fluid_to_porous_media_interior: Length 
+            = hydraulic_diameter;
 
         // K = 1.8 in a pipe
         let darcy_loss_correlation = 
@@ -532,13 +1178,26 @@ impl InsulatedPorousMediaFluidComponent {
             pipe_shell: steel_shell_array.into(),
             pipe_fluid_array: therminol_array.into(),
             ambient_temperature,
-            heat_transfer_to_air: h_to_air,
+            heat_transfer_to_ambient: h_to_air,
             tube_inner_diameter: steel_id,
             tube_outer_diameter: steel_od,
             insulation_inner_diameter: fiberglass_id,
             insulation_outer_diameter: fiberglass_od,
             flow_area,
             darcy_loss_correlation,
+            interior_solid_array_for_porous_media: porous_media_internal.into(),
+            thermal_conductance_lengthscale_pipe_shell_to_insulation_pipe_interface,
+            thermal_conductance_lengthscale_pipe_shell_to_fluid,
+            thermal_conductance_lengthscale_fluid_to_porous_media_internal,
+            thermal_conductance_lengthscale_insulation_to_insulation_pipe_interface,
+            thermal_conductance_lengthscale_insulation_to_ambient,
+            nusselt_correlation_fluid_to_pipe_shell,
+            nusselt_correlation_lengthscale_fluid_to_pipe_shell,
+            convection_heat_transfer_area_insulation_to_ambient,
+            nusselt_correlation_fluid_to_porous_media_interior,
+            nusselt_correlation_lengthscale_fluid_to_porous_media_interior,
+            convection_heat_transfer_area_fluid_to_pipe_shell,
+            convection_heat_transfer_area_fluid_to_interior,
         };
     }
 
@@ -628,6 +1287,126 @@ impl InsulatedPorousMediaFluidComponent {
             SolidMaterial::Fiberglass,
             user_specified_inner_nodes 
         );
+        // for the porous media internal I am using the twisted 
+        // tape dimensions as an estimate
+        // the twisted tape width is assumed to be the twisted 
+        // tape diameter in De Wet's dissertation
+        let twisted_tape_width: Length = Length::new::<inch>(1.0);
+        let twisted_tape_thickness = Length::new::<inch>(0.048);
+        let twisted_tape_height = component_length;
+
+        let porous_media_internal = 
+        SolidColumn::new_block(
+            twisted_tape_height,
+            twisted_tape_thickness,
+            twisted_tape_width,
+            initial_temperature,
+            atmospheric_pressure,
+            SolidMaterial::SteelSS304L,
+            user_specified_inner_nodes 
+        );
+            
+
+
+        // for new code, I need a lot of lengthscales and area scales 
+
+        // so first, areas, usuall PI * d * l
+        //
+        // note that we don't actually have heat transfer areas of 
+        // the interior for static mixers, so I'm just using a guestimate
+        let convection_heat_transfer_area_fluid_to_pipe_shell: Area
+            = PI * steel_id * component_length;
+
+        let convection_heat_transfer_area_fluid_to_interior: Area
+            = convection_heat_transfer_area_fluid_to_pipe_shell * 2.0;
+
+        let convection_heat_transfer_area_insulation_to_ambient: Area 
+            = PI * fiberglass_od * component_length;
+
+        // now nusselt correlations
+        // I'm also guestimating that it is for the inside,
+        // there was no experimental data or whatsover.
+        let nusselt_correlation_fluid_to_pipe_shell: NusseltCorrelation 
+            = therminol_array.nusselt_correlation.clone();
+
+        let nusselt_correlation_fluid_to_porous_media_interior: NusseltCorrelation 
+            = nusselt_correlation_fluid_to_pipe_shell.clone();
+
+        // now for the nusselt correlation lengthscales
+
+        let steel_thermal_conductivity: ThermalConductivity = 
+            try_get_kappa_thermal_conductivity(
+                SolidMaterial::SteelSS304L.into(), 
+                initial_temperature, 
+                atmospheric_pressure).unwrap();
+
+        let fiberglass_thermal_conductivity: ThermalConductivity = 
+            try_get_kappa_thermal_conductivity(
+                SolidMaterial::Fiberglass.into(), 
+                initial_temperature, 
+                atmospheric_pressure).unwrap();
+
+        let steel_shell_mid_diameter: Length = (steel_od + steel_id)/2.0;
+
+        let fiberglass_shell_mid_diameter: Length 
+            = (fiberglass_od + fiberglass_id)/2.0;
+
+
+        let steel_shell_conductance_to_fluid: ThermalConductance = 
+            try_get_thermal_conductance_annular_cylinder(
+                steel_id,
+                steel_shell_mid_diameter,
+                component_length,
+                steel_thermal_conductivity).unwrap();
+
+
+        let steel_shell_conductance_to_insulation_pipe_boundary: ThermalConductance = 
+            try_get_thermal_conductance_annular_cylinder(
+                steel_shell_mid_diameter,
+                steel_od,
+                component_length,
+                steel_thermal_conductivity).unwrap();
+
+        let insulation_conductance_to_insulation_pipe_boundary: ThermalConductance =
+            try_get_thermal_conductance_annular_cylinder(
+                fiberglass_id,
+                fiberglass_shell_mid_diameter,
+                component_length,
+                fiberglass_thermal_conductivity).unwrap();
+
+        let insulation_conductance_to_ambient: ThermalConductance =
+            try_get_thermal_conductance_annular_cylinder(
+                fiberglass_shell_mid_diameter,
+                fiberglass_id,
+                component_length,
+                fiberglass_thermal_conductivity).unwrap();
+
+        let nusselt_correlation_lengthscale_fluid_to_pipe_shell: Length 
+            = hydraulic_diameter;
+
+        let thermal_conductance_lengthscale_pipe_shell_to_fluid: Length 
+            = steel_shell_conductance_to_fluid/steel_thermal_conductivity;
+
+        let thermal_conductance_lengthscale_pipe_shell_to_insulation_pipe_interface: Length 
+            = steel_shell_conductance_to_insulation_pipe_boundary/steel_thermal_conductivity;
+
+        let thermal_conductance_lengthscale_insulation_to_insulation_pipe_interface: Length 
+            = insulation_conductance_to_insulation_pipe_boundary/fiberglass_thermal_conductivity;
+
+        let thermal_conductance_lengthscale_insulation_to_ambient: Length 
+            = insulation_conductance_to_ambient/fiberglass_thermal_conductivity;
+
+        // for thermal conductance lengthscale for inner array,
+        // I am guestimating
+        //
+        // just ignoring the thermal resistance of the 
+        // insides, like lumped capacitance essentially
+
+        let thermal_conductance_lengthscale_fluid_to_porous_media_internal: Length = 
+            Length::new::<meter>(1e9 as f64);
+
+        let nusselt_correlation_lengthscale_fluid_to_porous_media_interior: Length 
+            = hydraulic_diameter;
 
         // K = 1.8 in a pipe
         let darcy_loss_correlation = 
@@ -644,13 +1423,26 @@ impl InsulatedPorousMediaFluidComponent {
             pipe_shell: steel_shell_array.into(),
             pipe_fluid_array: therminol_array.into(),
             ambient_temperature,
-            heat_transfer_to_air: h_to_air,
+            heat_transfer_to_ambient: h_to_air,
             tube_inner_diameter: steel_id,
             tube_outer_diameter: steel_od,
             insulation_inner_diameter: fiberglass_id,
             insulation_outer_diameter: fiberglass_od,
             flow_area,
             darcy_loss_correlation,
+            interior_solid_array_for_porous_media: porous_media_internal.into(),
+            thermal_conductance_lengthscale_pipe_shell_to_insulation_pipe_interface,
+            thermal_conductance_lengthscale_pipe_shell_to_fluid,
+            thermal_conductance_lengthscale_fluid_to_porous_media_internal,
+            thermal_conductance_lengthscale_insulation_to_insulation_pipe_interface,
+            thermal_conductance_lengthscale_insulation_to_ambient,
+            nusselt_correlation_fluid_to_pipe_shell,
+            nusselt_correlation_lengthscale_fluid_to_pipe_shell,
+            convection_heat_transfer_area_insulation_to_ambient,
+            nusselt_correlation_fluid_to_porous_media_interior,
+            nusselt_correlation_lengthscale_fluid_to_porous_media_interior,
+            convection_heat_transfer_area_fluid_to_pipe_shell,
+            convection_heat_transfer_area_fluid_to_interior,
         };
     }
 
@@ -740,6 +1532,126 @@ impl InsulatedPorousMediaFluidComponent {
             SolidMaterial::Fiberglass,
             user_specified_inner_nodes 
         );
+        // for the porous media internal I am using the twisted 
+        // tape dimensions as an estimate
+        // the twisted tape width is assumed to be the twisted 
+        // tape diameter in De Wet's dissertation
+        let twisted_tape_width: Length = Length::new::<inch>(1.0);
+        let twisted_tape_thickness = Length::new::<inch>(0.048);
+        let twisted_tape_height = component_length;
+
+        let porous_media_internal = 
+        SolidColumn::new_block(
+            twisted_tape_height,
+            twisted_tape_thickness,
+            twisted_tape_width,
+            initial_temperature,
+            atmospheric_pressure,
+            SolidMaterial::SteelSS304L,
+            user_specified_inner_nodes 
+        );
+            
+
+
+        // for new code, I need a lot of lengthscales and area scales 
+
+        // so first, areas, usuall PI * d * l
+        //
+        // note that we don't actually have heat transfer areas of 
+        // the interior for static mixers, so I'm just using a guestimate
+        let convection_heat_transfer_area_fluid_to_pipe_shell: Area
+            = PI * steel_id * component_length;
+
+        let convection_heat_transfer_area_fluid_to_interior: Area
+            = convection_heat_transfer_area_fluid_to_pipe_shell * 2.0;
+
+        let convection_heat_transfer_area_insulation_to_ambient: Area 
+            = PI * fiberglass_od * component_length;
+
+        // now nusselt correlations
+        // I'm also guestimating that it is for the inside,
+        // there was no experimental data or whatsover.
+        let nusselt_correlation_fluid_to_pipe_shell: NusseltCorrelation 
+            = therminol_array.nusselt_correlation.clone();
+
+        let nusselt_correlation_fluid_to_porous_media_interior: NusseltCorrelation 
+            = nusselt_correlation_fluid_to_pipe_shell.clone();
+
+        // now for the nusselt correlation lengthscales
+
+        let steel_thermal_conductivity: ThermalConductivity = 
+            try_get_kappa_thermal_conductivity(
+                SolidMaterial::SteelSS304L.into(), 
+                initial_temperature, 
+                atmospheric_pressure).unwrap();
+
+        let fiberglass_thermal_conductivity: ThermalConductivity = 
+            try_get_kappa_thermal_conductivity(
+                SolidMaterial::Fiberglass.into(), 
+                initial_temperature, 
+                atmospheric_pressure).unwrap();
+
+        let steel_shell_mid_diameter: Length = (steel_od + steel_id)/2.0;
+
+        let fiberglass_shell_mid_diameter: Length 
+            = (fiberglass_od + fiberglass_id)/2.0;
+
+
+        let steel_shell_conductance_to_fluid: ThermalConductance = 
+            try_get_thermal_conductance_annular_cylinder(
+                steel_id,
+                steel_shell_mid_diameter,
+                component_length,
+                steel_thermal_conductivity).unwrap();
+
+
+        let steel_shell_conductance_to_insulation_pipe_boundary: ThermalConductance = 
+            try_get_thermal_conductance_annular_cylinder(
+                steel_shell_mid_diameter,
+                steel_od,
+                component_length,
+                steel_thermal_conductivity).unwrap();
+
+        let insulation_conductance_to_insulation_pipe_boundary: ThermalConductance =
+            try_get_thermal_conductance_annular_cylinder(
+                fiberglass_id,
+                fiberglass_shell_mid_diameter,
+                component_length,
+                fiberglass_thermal_conductivity).unwrap();
+
+        let insulation_conductance_to_ambient: ThermalConductance =
+            try_get_thermal_conductance_annular_cylinder(
+                fiberglass_shell_mid_diameter,
+                fiberglass_id,
+                component_length,
+                fiberglass_thermal_conductivity).unwrap();
+
+        let nusselt_correlation_lengthscale_fluid_to_pipe_shell: Length 
+            = hydraulic_diameter;
+
+        let thermal_conductance_lengthscale_pipe_shell_to_fluid: Length 
+            = steel_shell_conductance_to_fluid/steel_thermal_conductivity;
+
+        let thermal_conductance_lengthscale_pipe_shell_to_insulation_pipe_interface: Length 
+            = steel_shell_conductance_to_insulation_pipe_boundary/steel_thermal_conductivity;
+
+        let thermal_conductance_lengthscale_insulation_to_insulation_pipe_interface: Length 
+            = insulation_conductance_to_insulation_pipe_boundary/fiberglass_thermal_conductivity;
+
+        let thermal_conductance_lengthscale_insulation_to_ambient: Length 
+            = insulation_conductance_to_ambient/fiberglass_thermal_conductivity;
+
+        // for thermal conductance lengthscale for inner array,
+        // I am guestimating
+        //
+        // just ignoring the thermal resistance of the 
+        // insides, like lumped capacitance essentially
+
+        let thermal_conductance_lengthscale_fluid_to_porous_media_internal: Length = 
+            Length::new::<meter>(1e9 as f64);
+
+        let nusselt_correlation_lengthscale_fluid_to_porous_media_interior: Length 
+            = hydraulic_diameter;
 
         // K = 1.8 in a pipe
         let darcy_loss_correlation = 
@@ -756,13 +1668,26 @@ impl InsulatedPorousMediaFluidComponent {
             pipe_shell: steel_shell_array.into(),
             pipe_fluid_array: therminol_array.into(),
             ambient_temperature,
-            heat_transfer_to_air: h_to_air,
+            heat_transfer_to_ambient: h_to_air,
             tube_inner_diameter: steel_id,
             tube_outer_diameter: steel_od,
             insulation_inner_diameter: fiberglass_id,
             insulation_outer_diameter: fiberglass_od,
             flow_area,
             darcy_loss_correlation,
+            interior_solid_array_for_porous_media: porous_media_internal.into(),
+            thermal_conductance_lengthscale_pipe_shell_to_insulation_pipe_interface,
+            thermal_conductance_lengthscale_pipe_shell_to_fluid,
+            thermal_conductance_lengthscale_fluid_to_porous_media_internal,
+            thermal_conductance_lengthscale_insulation_to_insulation_pipe_interface,
+            thermal_conductance_lengthscale_insulation_to_ambient,
+            nusselt_correlation_fluid_to_pipe_shell,
+            nusselt_correlation_lengthscale_fluid_to_pipe_shell,
+            convection_heat_transfer_area_insulation_to_ambient,
+            nusselt_correlation_fluid_to_porous_media_interior,
+            nusselt_correlation_lengthscale_fluid_to_porous_media_interior,
+            convection_heat_transfer_area_fluid_to_pipe_shell,
+            convection_heat_transfer_area_fluid_to_interior,
         };
     }
 }

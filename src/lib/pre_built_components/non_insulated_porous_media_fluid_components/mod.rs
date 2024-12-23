@@ -260,15 +260,15 @@ impl NonInsulatedPorousMediaFluidComponent {
         
         let steel_shell_conductance_to_ambient: ThermalConductance = 
             try_get_thermal_conductance_annular_cylinder(
-                steel_shell_id,
                 steel_shell_mid_diameter,
+                steel_shell_od,
                 heated_length,
                 steel_thermal_conductivity).unwrap();
 
         let steel_shell_conductance_to_fluid: ThermalConductance = 
             try_get_thermal_conductance_annular_cylinder(
+                steel_shell_id,
                 steel_shell_mid_diameter,
-                steel_shell_od,
                 heated_length,
                 steel_thermal_conductivity).unwrap();
 
@@ -431,15 +431,15 @@ impl NonInsulatedPorousMediaFluidComponent {
         
         let steel_shell_conductance_to_ambient: ThermalConductance = 
             try_get_thermal_conductance_annular_cylinder(
-                steel_shell_id,
                 steel_shell_mid_diameter,
+                steel_shell_od,
                 heated_length,
                 steel_thermal_conductivity).unwrap();
 
         let steel_shell_conductance_to_fluid: ThermalConductance = 
             try_get_thermal_conductance_annular_cylinder(
+                steel_shell_id,
                 steel_shell_mid_diameter,
-                steel_shell_od,
                 heated_length,
                 steel_thermal_conductivity).unwrap();
 
@@ -602,15 +602,15 @@ impl NonInsulatedPorousMediaFluidComponent {
         
         let steel_shell_conductance_to_ambient: ThermalConductance = 
             try_get_thermal_conductance_annular_cylinder(
-                steel_shell_id,
                 steel_shell_mid_diameter,
+                steel_shell_od,
                 heated_length,
                 steel_thermal_conductivity).unwrap();
 
         let steel_shell_conductance_to_fluid: ThermalConductance = 
             try_get_thermal_conductance_annular_cylinder(
+                steel_shell_id,
                 steel_shell_mid_diameter,
-                steel_shell_od,
                 heated_length,
                 steel_thermal_conductivity).unwrap();
 
