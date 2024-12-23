@@ -184,6 +184,37 @@ pub fn example_heated_section_regression_new_and_old(){
         //note: conduction occurs, so first node is hotter\n 
         //than the therminol fluid", twisted_tape_temperature);
 
+        let heater_v2_bare_original_temp_vector = 
+            heater_v2_bare_original
+            .pipe_fluid_array
+            .get_temperature_vector()
+            .unwrap();
+
+        let heater_v2_bare_new_code_temp_vector = 
+            heater_v2_bare_new_code
+            .pipe_fluid_array
+            .get_temperature_vector()
+            .unwrap();
+
+        let heater_v2_bare_outlet_temp_original = 
+            heater_v2_bare_original_temp_vector
+            .iter()
+            .last()
+            .unwrap();
+
+        let heater_v2_bare_outlet_temp_new_code = 
+            heater_v2_bare_new_code_temp_vector
+            .iter()
+            .last()
+            .unwrap();
+
+        // assert that both temperatures are equal to within
+        // 1e-2 (1%) at every timestep
+        approx::assert_relative_eq!(
+            heater_v2_bare_outlet_temp_original.get::<degree_celsius>(),
+            heater_v2_bare_outlet_temp_new_code.get::<degree_celsius>(),
+            max_relative=1e-2
+        );
         // print loop time 
         simulation_time += timestep;
 
@@ -191,9 +222,8 @@ pub fn example_heated_section_regression_new_and_old(){
         dbg!(time_taken_for_calculation_loop);
     }
 
-    // once simulation completed, write data
-
-    // assert that outlet temperatures are the SAME for both 
+    // once simulation completed
+// assert that outlet temperatures are the SAME for both 
 
     let heater_v2_bare_original_temp_vector = 
         heater_v2_bare_original
