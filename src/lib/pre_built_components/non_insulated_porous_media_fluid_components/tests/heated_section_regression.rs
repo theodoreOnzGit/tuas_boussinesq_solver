@@ -9,7 +9,7 @@ use crate::heat_transfer_correlations::heat_transfer_interactions::heat_transfer
 use crate::pre_built_components::non_insulated_porous_media_fluid_components::NonInsulatedPorousMediaFluidComponent;
 use crate::pre_built_components::heat_transfer_entities::HeatTransferEntity;
 #[test]
-#[ignore = "debugging"]
+//#[ignore = "debugging"]
 pub fn example_heated_section_regression_new_and_old(){
     use std::time::SystemTime;
 
