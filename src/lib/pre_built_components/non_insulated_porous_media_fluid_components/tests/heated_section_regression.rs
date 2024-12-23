@@ -747,7 +747,7 @@ pub fn regression_new_and_old_nodal_conductance_twisted_tape_to_pipe_fluid_array
             = heater_v2_bare_original
             .ciet_heater_v2_get_therminol_node_twisted_tape_conductance();
 
-        let prandtl_wall_correction_setting = false;
+        let prandtl_wall_correction_setting = true;
         let twisted_tape_to_fluid_conductance_new_code  
             = heater_v2_bare_new_code.get_interior_to_fluid_nodal_conductance(
                 prandtl_wall_correction_setting).unwrap();
