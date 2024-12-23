@@ -12,12 +12,9 @@ use uom::si::f64::*;
 use crate::array_control_vol_and_fluid_component_collections::fluid_component_collection::fluid_component_traits::FluidComponentTrait;
 use crate::heat_transfer_correlations::nusselt_number_correlations::input_structs::GnielinskiData;
 use crate::heat_transfer_correlations::thermal_resistance::try_get_thermal_conductance_annular_cylinder;
-use crate::pre_built_components::heat_transfer_entities::HeatTransferEntity;
 use crate::heat_transfer_correlations::nusselt_number_correlations::enums::NusseltCorrelation;
-use crate::heat_transfer_correlations::heat_transfer_interactions::heat_transfer_interaction_enums::HeatTransferInteractionType;
 use crate::boussinesq_thermophysical_properties::LiquidMaterial;
 use crate::boussinesq_thermophysical_properties::SolidMaterial;
-use crate::boundary_conditions::BCType;
 use crate::array_control_vol_and_fluid_component_collections::one_d_solid_array_with_lateral_coupling::SolidColumn;
 use crate::array_control_vol_and_fluid_component_collections::one_d_fluid_array_with_lateral_coupling::FluidArray;
 
@@ -62,7 +59,7 @@ impl InsulatedPorousMediaFluidComponent {
         = self.get_therminol_node_steel_shell_conductance_mx10();
 
         let tube_to_insulation_conductance: ThermalConductance 
-        = self.get_steel_to_fiberglass_conductance_mx10();
+        = self.get_steel_to_fiberglass_conductance_mx10_nodal();
 
         // power fraction array
         let number_of_temperature_nodes = self.inner_nodes + 2;
@@ -178,13 +175,10 @@ impl InsulatedPorousMediaFluidComponent {
         let mut fiberglass_clone: SolidColumn = 
         self.insulation_array.clone().try_into().unwrap();
 
-        let mut therminol_clone: FluidArray = 
-        self.pipe_fluid_array.clone().try_into().unwrap();
 
         // find parameters for fiberglass conductance
 
         let number_of_temperature_nodes = self.inner_nodes + 2;
-        let component_length: Length = therminol_clone.get_component_length();
 
         let fiberglass_shell_temperature = fiberglass_clone.try_get_bulk_temperature() 
             .unwrap();
@@ -197,26 +191,18 @@ impl InsulatedPorousMediaFluidComponent {
             fiberglass_shell_temperature
         ).unwrap();
 
-        let node_length: Length  = component_length / 
-        number_of_temperature_nodes as f64;
 
-        let od: Length = self.insulation_outer_diameter;
-
-        let insulation_mid_length: Length 
-        = 0.5 * (od + self.insulation_inner_diameter);
 
         let fiberglass_layer_conductance: ThermalConductance = 
-        try_get_thermal_conductance_annular_cylinder(
-            insulation_mid_length,
-            od,
-            node_length,
-            fiberglass_conductivity
-        ).unwrap();
+            fiberglass_conductivity * 
+            self.thermal_conductance_lengthscale_insulation_to_ambient
+            / number_of_temperature_nodes as f64;
 
         // find parameters for conductance due to convection 
         // resistance 
 
-        let node_area: Area = od * PI * node_length;
+        let node_area: Area = self.convection_heat_transfer_area_insulation_to_ambient 
+            / number_of_temperature_nodes as f64;
 
         let air_convection_conductance: ThermalConductance
         = node_area * h_air_to_insulation_surf;
@@ -312,13 +298,13 @@ impl InsulatedPorousMediaFluidComponent {
         length/hydraulic_diameter;
 
 
-        let heater_nusselt_correlation: NusseltCorrelation 
+        let mixer_nusselt_correlation: NusseltCorrelation 
         =  NusseltCorrelation::PipeGnielinskiGeneric(
             mx10_prandtl_reynolds_data
         );
 
         let nusselt_estimate: Ratio = 
-        heater_nusselt_correlation.try_get().unwrap();
+        mixer_nusselt_correlation.try_get().unwrap();
 
         // now we can get the heat transfer coeff, 
 
@@ -416,7 +402,7 @@ impl InsulatedPorousMediaFluidComponent {
     /// obtains therminol to twisted tape conductance 
     /// based on approx wakao correlation
     #[inline]
-    pub fn get_steel_to_fiberglass_conductance_mx10(
+    pub fn get_steel_to_fiberglass_conductance_mx10_nodal(
     &self) -> ThermalConductance {
 
         // first, make a clone of steel and fiberglass nodes 
@@ -435,22 +421,6 @@ impl InsulatedPorousMediaFluidComponent {
         let array_length =  therminol_clone.get_component_length();
 
         let number_of_temperature_nodes = self.inner_nodes + 2;
-
-        let node_length = array_length / 
-        number_of_temperature_nodes as f64;
-
-        // then we need to find the surface area of each node 
-        // for steel to fiberglass, it will be 
-        // the steel outer diameter or insulation inner_diameter
-        
-        let steel_mid_section_diameter = 0.5 * (self.tube_outer_diameter 
-        + self.tube_inner_diameter);
-
-        let fiberglass_mid_section_diameter = 0.5 * (self.insulation_inner_diameter
-        + self.insulation_outer_diameter);
-
-        let steel_od = self.tube_outer_diameter;
-
         // next, thermal conductivities of both steel and fiberglass 
 
         let steel_shell_temperature = steel_clone.try_get_bulk_temperature() 
@@ -477,26 +447,20 @@ impl InsulatedPorousMediaFluidComponent {
 
         // we should be able to get the conductance now
 
-        let fiberglass_layer_conductance: ThermalConductance = 
-        try_get_thermal_conductance_annular_cylinder(
-            steel_od,
-            fiberglass_mid_section_diameter,
-            node_length,
-            fiberglass_conductivity
-        ).unwrap();
+        let fiberglass_layer_conductance_nodal: ThermalConductance = 
+            fiberglass_conductivity * 
+            self.thermal_conductance_lengthscale_insulation_to_insulation_pipe_interface
+            / number_of_temperature_nodes as f64;
         
-        let steel_layer_conductance: ThermalConductance = 
-        try_get_thermal_conductance_annular_cylinder(
-            steel_mid_section_diameter,
-            steel_od,
-            node_length,
-            steel_conductivity
-        ).unwrap();
+        let steel_layer_conductance_nodal: ThermalConductance = 
+            steel_conductivity * 
+            self.thermal_conductance_lengthscale_pipe_shell_to_insulation_pipe_interface
+            / number_of_temperature_nodes as f64;
 
         // now that we have the conductances, we get the resistances 
 
-        let fiberglass_resistance = 1.0/fiberglass_layer_conductance;
-        let steel_resistance = 1.0/steel_layer_conductance;
+        let fiberglass_resistance = 1.0/fiberglass_layer_conductance_nodal;
+        let steel_resistance = 1.0/steel_layer_conductance_nodal;
 
         let total_resistance = fiberglass_resistance + steel_resistance;
 
