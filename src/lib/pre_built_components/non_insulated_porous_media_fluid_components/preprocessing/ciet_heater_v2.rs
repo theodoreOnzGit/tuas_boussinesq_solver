@@ -47,7 +47,7 @@ impl NonInsulatedPorousMediaFluidComponent {
         = self.ciet_heater_v2_get_therminol_node_steel_shell_conductance();
 
         let twisted_tape_to_therminol_conductance: ThermalConductance 
-        = self.get_therminol_node_twisted_tape_conductance_ciet_heater_v2();
+        = self.ciet_heater_v2_get_therminol_node_twisted_tape_conductance();
 
         // other stuff 
         let number_of_temperature_nodes = self.inner_nodes + 2;
@@ -397,7 +397,7 @@ impl NonInsulatedPorousMediaFluidComponent {
     /// obtains therminol to twisted tape conductance 
     /// based on approx wakao correlation
     #[inline]
-    pub fn get_therminol_node_twisted_tape_conductance_ciet_heater_v2(
+    pub fn ciet_heater_v2_get_therminol_node_twisted_tape_conductance(
     &self) -> ThermalConductance {
 
         // the twisted tape itself acts as a thermal 
