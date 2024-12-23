@@ -44,7 +44,7 @@ impl NonInsulatedPorousMediaFluidComponent {
         self.set_mass_flowrate(mass_flowrate);
 
         let steel_surf_to_therminol_conductance: ThermalConductance 
-        = self.get_therminol_node_steel_shell_conductance_for_ciet_heater_v2();
+        = self.ciet_heater_v2_get_therminol_node_steel_shell_conductance();
 
         let twisted_tape_to_therminol_conductance: ThermalConductance 
         = self.get_therminol_node_twisted_tape_conductance_ciet_heater_v2();
@@ -218,7 +218,7 @@ impl NonInsulatedPorousMediaFluidComponent {
 
     /// obtains therminol to steel shell conductance
     #[inline]
-    pub fn get_therminol_node_steel_shell_conductance_for_ciet_heater_v2(&mut self) 
+    pub fn ciet_heater_v2_get_therminol_node_steel_shell_conductance(&mut self) 
         -> ThermalConductance {
 
         // the thermal conductance here should be based on the 
