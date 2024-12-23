@@ -154,6 +154,10 @@ pub fn example_heated_section_regression_new_and_old(){
 
         heater_v2_bare_original = heater_2_join_handle.join().unwrap();
 
+        heater_v2_bare_original.advance_timestep(timestep);
+
+        let twisted_tape_power = Power::ZERO;
+
 
         // 
         // note that prandtl wall correction is switched off in the 
@@ -161,7 +165,9 @@ pub fn example_heated_section_regression_new_and_old(){
         let prandtl_wall_correction_setting = false;
         heater_v2_bare_new_code.lateral_and_miscellaneous_connections(
             prandtl_wall_correction_setting, 
-            mass_flowrate)
+            mass_flowrate,
+            heater_power,
+            twisted_tape_power)
             .unwrap();
 
         // then advance timestep 
@@ -172,39 +178,6 @@ pub fn example_heated_section_regression_new_and_old(){
         dbg!(heated_section_exit_temperature
         .into_format_args(degree_celsius,uom::fmt::DisplayStyle::Abbreviation));
 
-        // assert that outlet temperatures are the SAME for both 
-
-        let heater_v2_bare_original_temp_vector = 
-            heater_v2_bare_original
-            .pipe_fluid_array
-            .get_temperature_vector()
-            .unwrap();
-
-        let heater_v2_bare_new_code_temp_vector = 
-            heater_v2_bare_new_code
-            .pipe_fluid_array
-            .get_temperature_vector()
-            .unwrap();
-
-        let heater_v2_bare_outlet_temp_original = 
-            heater_v2_bare_original_temp_vector
-            .iter()
-            .last()
-            .unwrap();
-
-        let heater_v2_bare_outlet_temp_new_code = 
-            heater_v2_bare_new_code_temp_vector
-            .iter()
-            .last()
-            .unwrap();
-
-        // assert that both temperatures are equal to within
-        // 1e-2 (1%) at every timestep
-        approx::assert_relative_eq!(
-            heater_v2_bare_outlet_temp_original.get::<degree_celsius>(),
-            heater_v2_bare_outlet_temp_new_code.get::<degree_celsius>(),
-            max_relative=1e-2
-            );
 
 
 
@@ -228,6 +201,39 @@ pub fn example_heated_section_regression_new_and_old(){
 
     // once simulation completed, write data
 
+    // assert that outlet temperatures are the SAME for both 
+
+    let heater_v2_bare_original_temp_vector = 
+        heater_v2_bare_original
+        .pipe_fluid_array
+        .get_temperature_vector()
+        .unwrap();
+
+    let heater_v2_bare_new_code_temp_vector = 
+        heater_v2_bare_new_code
+        .pipe_fluid_array
+        .get_temperature_vector()
+        .unwrap();
+
+    let heater_v2_bare_outlet_temp_original = 
+        heater_v2_bare_original_temp_vector
+        .iter()
+        .last()
+        .unwrap();
+
+    let heater_v2_bare_outlet_temp_new_code = 
+        heater_v2_bare_new_code_temp_vector
+        .iter()
+        .last()
+        .unwrap();
+
+    // assert that both temperatures are equal to within
+    // 1e-2 (1%) at every timestep
+    approx::assert_relative_eq!(
+        heater_v2_bare_outlet_temp_original.get::<degree_celsius>(),
+        heater_v2_bare_outlet_temp_new_code.get::<degree_celsius>(),
+        max_relative=1e-2
+    );
 
     //todo!("haven't coded csv writing file")
 

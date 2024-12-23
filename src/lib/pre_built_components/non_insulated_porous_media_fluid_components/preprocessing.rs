@@ -31,12 +31,12 @@ impl NonInsulatedPorousMediaFluidComponent {
     ///
     /// This connects the control volumes within this component 
     /// causing them to interact given a set mass flowrate
-    ///
-    /// TODO: need to test this with regression
     #[inline]
     pub fn lateral_and_miscellaneous_connections(&mut self,
         prandtl_wall_correction_setting: bool,
         mass_flowrate: MassRate,
+        shell_side_steady_state_power: Power,
+        porous_media_side_steady_state_power: Power,
     ) -> Result<(), TuasLibError>{
 
         // first set the mass flowrate
@@ -125,11 +125,23 @@ impl NonInsulatedPorousMediaFluidComponent {
                     ambient_temperature_vector)?;
             // after this, we are done for the internal connections
 
-            // by default, we don't expect shell and 
-            // heat exchangers to have heat added to them 
-            // so I'm not going to add heat addition vectors to 
-            // any of these arrays 
+            // now, add power arrays
+            // assume even power distribution (this can be changed 
+            // in future)
+            let number_of_temperature_nodes = self.inner_nodes + 2;
+            let q_fraction_per_node: f64 = 1.0/ number_of_temperature_nodes as f64;
+            let mut q_frac_arr: Array1<f64> = Array::default(number_of_temperature_nodes);
+            q_frac_arr.fill(q_fraction_per_node);
 
+            pipe_shell_clone.lateral_link_new_power_vector(
+                shell_side_steady_state_power,
+                q_frac_arr.clone()
+            ).unwrap();
+
+            interior_solid_array_clone.lateral_link_new_power_vector(
+                porous_media_side_steady_state_power, 
+                q_frac_arr
+            ).unwrap();
 
             // now that lateral connections are done, 
             // for the outer shell, inner shell and 
@@ -669,15 +681,16 @@ impl NonInsulatedPorousMediaFluidComponent {
     }
 
 
-
     /// spawns a thread and moves the clone of the entire heater object into the 
     /// thread, "locking" it for parallel computation
     ///
     /// once that is done, the join handle is returned 
     /// which when unwrapped, returns the heater object
-    pub fn ciet_heater_v2_lateral_connection_thread_spawn(&self,
-    mass_flowrate: MassRate,
-    heater_steady_state_power: Power) -> JoinHandle<Self>{
+    pub fn lateral_connection_thread_spawn(&self,
+        prandtl_wall_correction_setting: bool,
+        mass_flowrate: MassRate,
+        shell_side_steady_state_power: Power,
+        porous_media_side_steady_state_power: Power) -> JoinHandle<Self>{
 
         let mut heater_clone = self.clone();
 
@@ -688,9 +701,12 @@ impl NonInsulatedPorousMediaFluidComponent {
 
                 // carry out the connection calculations
                 heater_clone.
-                    ciet_heater_v2_lateral_and_miscellaneous_connections(
+                    lateral_and_miscellaneous_connections(
+                        prandtl_wall_correction_setting,
                         mass_flowrate,
-                        heater_steady_state_power);
+                        shell_side_steady_state_power,
+                        porous_media_side_steady_state_power
+                    ).unwrap();
                 
                 heater_clone
 
@@ -700,6 +716,7 @@ impl NonInsulatedPorousMediaFluidComponent {
         return join_handle;
 
     }
+
 
 }
 

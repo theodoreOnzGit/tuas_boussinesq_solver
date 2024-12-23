@@ -1,3 +1,5 @@
+use std::thread::JoinHandle;
+use std::thread;
 use super::super::NonInsulatedPorousMediaFluidComponent;
 use crate::array_control_vol_and_fluid_component_collections::fluid_component_collection::fluid_component_traits::FluidComponentTrait;
 use crate::pre_built_components::heat_transfer_entities::preprocessing::try_get_thermal_conductance_based_on_interaction;
@@ -570,5 +572,36 @@ impl NonInsulatedPorousMediaFluidComponent {
         = h * heat_transfer_area_per_node;
 
         return average_node_conductance;
+    }
+
+    /// spawns a thread and moves the clone of the entire heater object into the 
+    /// thread, "locking" it for parallel computation
+    ///
+    /// once that is done, the join handle is returned 
+    /// which when unwrapped, returns the heater object
+    pub fn ciet_heater_v2_lateral_connection_thread_spawn(&self,
+    mass_flowrate: MassRate,
+    heater_steady_state_power: Power) -> JoinHandle<Self>{
+
+        let mut heater_clone = self.clone();
+
+        // move ptr into a new thread 
+
+        let join_handle = thread::spawn(
+            move || -> Self {
+
+                // carry out the connection calculations
+                heater_clone.
+                    ciet_heater_v2_lateral_and_miscellaneous_connections(
+                        mass_flowrate,
+                        heater_steady_state_power);
+                
+                heater_clone
+
+            }
+        );
+
+        return join_handle;
+
     }
 }
