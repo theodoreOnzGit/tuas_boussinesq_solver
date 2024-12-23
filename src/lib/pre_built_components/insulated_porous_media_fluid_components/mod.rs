@@ -380,7 +380,7 @@ impl InsulatedPorousMediaFluidComponent {
         let insulation_conductance_to_ambient: ThermalConductance =
             try_get_thermal_conductance_annular_cylinder(
                 fiberglass_shell_mid_diameter,
-                fiberglass_id,
+                fiberglass_od,
                 component_length,
                 fiberglass_thermal_conductivity).unwrap();
 
@@ -636,7 +636,7 @@ impl InsulatedPorousMediaFluidComponent {
         let insulation_conductance_to_ambient: ThermalConductance =
             try_get_thermal_conductance_annular_cylinder(
                 fiberglass_shell_mid_diameter,
-                fiberglass_id,
+                fiberglass_od,
                 component_length,
                 fiberglass_thermal_conductivity).unwrap();
 
@@ -885,7 +885,7 @@ impl InsulatedPorousMediaFluidComponent {
         let insulation_conductance_to_ambient: ThermalConductance =
             try_get_thermal_conductance_annular_cylinder(
                 fiberglass_shell_mid_diameter,
-                fiberglass_id,
+                fiberglass_od,
                 component_length,
                 fiberglass_thermal_conductivity).unwrap();
 
@@ -1132,7 +1132,7 @@ impl InsulatedPorousMediaFluidComponent {
         let insulation_conductance_to_ambient: ThermalConductance =
             try_get_thermal_conductance_annular_cylinder(
                 fiberglass_shell_mid_diameter,
-                fiberglass_id,
+                fiberglass_od,
                 component_length,
                 fiberglass_thermal_conductivity).unwrap();
 
@@ -1377,7 +1377,7 @@ impl InsulatedPorousMediaFluidComponent {
         let insulation_conductance_to_ambient: ThermalConductance =
             try_get_thermal_conductance_annular_cylinder(
                 fiberglass_shell_mid_diameter,
-                fiberglass_id,
+                fiberglass_od,
                 component_length,
                 fiberglass_thermal_conductivity).unwrap();
 
@@ -1622,7 +1622,7 @@ impl InsulatedPorousMediaFluidComponent {
         let insulation_conductance_to_ambient: ThermalConductance =
             try_get_thermal_conductance_annular_cylinder(
                 fiberglass_shell_mid_diameter,
-                fiberglass_id,
+                fiberglass_od,
                 component_length,
                 fiberglass_thermal_conductivity).unwrap();
 
