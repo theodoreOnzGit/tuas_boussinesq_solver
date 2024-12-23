@@ -551,11 +551,11 @@ pub fn example_heater_with_struct_supports_and_mx10(){
 
 
             let static_mixer_join_handle = 
-            static_mixer_mx_10_object.lateral_connection_thread_spawn(
+            static_mixer_mx_10_object.lateral_connection_thread_spawn_mx10(
                 mass_flowrate);
 
             let static_mixer_pipe_join_handle = 
-            static_mixer_mx_10_pipe.lateral_connection_thread_spawn(
+            static_mixer_mx_10_pipe.lateral_connection_thread_spawn_mx10(
                 mass_flowrate);
 
             // link struct supports to ambient air

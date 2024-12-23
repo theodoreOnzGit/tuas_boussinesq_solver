@@ -291,11 +291,11 @@ pub fn heater_plus_mx_10_with_supports(){
 
 
                 let static_mixer_join_handle = 
-                static_mixer_mx_10_object.lateral_connection_thread_spawn(
+                static_mixer_mx_10_object.lateral_connection_thread_spawn_mx10(
                     mass_flowrate);
 
                 let static_mixer_pipe_join_handle = 
-                static_mixer_mx_10_pipe.lateral_connection_thread_spawn(
+                static_mixer_mx_10_pipe.lateral_connection_thread_spawn_mx10(
                     mass_flowrate);
 
                 if connect_struct_support {

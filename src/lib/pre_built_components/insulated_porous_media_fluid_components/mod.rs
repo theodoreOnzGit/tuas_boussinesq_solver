@@ -56,7 +56,9 @@ pub struct InsulatedPorousMediaFluidComponent {
 
     flow_area: Area,
 
-    darcy_loss_correlation: DimensionlessDarcyLossCorrelations,
+    /// loss correlations
+    /// for pipe losses
+    pub darcy_loss_correlation: DimensionlessDarcyLossCorrelations,
 }
 
 impl InsulatedPorousMediaFluidComponent {

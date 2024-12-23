@@ -313,11 +313,11 @@ pub fn heater_plus_mx_10_without_supports(){
                 if connect_static_mixer_10 {
 
                     let static_mixer_join_handle = 
-                    static_mixer_mx_10_object.lateral_connection_thread_spawn(
+                    static_mixer_mx_10_object.lateral_connection_thread_spawn_mx10(
                         mass_flowrate);
 
                     let static_mixer_pipe_join_handle = 
-                    static_mixer_mx_10_pipe.lateral_connection_thread_spawn(
+                    static_mixer_mx_10_pipe.lateral_connection_thread_spawn_mx10(
                         mass_flowrate);
 
                     static_mixer_mx_10_object = static_mixer_join_handle.join().unwrap();
