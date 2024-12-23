@@ -45,8 +45,8 @@ pub fn example_heated_section_regression_new_and_old(){
 
     // time settings 
 
-    let max_time = Time::new::<second>(10.0);
-    let timestep = Time::new::<second>(0.01);
+    let max_time = Time::new::<second>(100.0);
+    let timestep = Time::new::<second>(0.3);
     let mut simulation_time = Time::ZERO;
     let mass_flowrate = MassRate::new::<kilogram_per_second>(0.18);
     let heater_power = Power::new::<kilowatt>(8.0);
@@ -167,9 +167,6 @@ pub fn example_heated_section_regression_new_and_old(){
         // then advance timestep 
         heater_v2_bare_new_code.advance_timestep(timestep);
 
-        simulation_time += timestep;
-
-        let time_taken_for_calculation_loop = loop_time_start.elapsed().unwrap();
 
         // print outlet temperature 
         dbg!(heated_section_exit_temperature
@@ -223,6 +220,9 @@ pub fn example_heated_section_regression_new_and_old(){
         //than the therminol fluid", twisted_tape_temperature);
 
         // print loop time 
+        simulation_time += timestep;
+
+        let time_taken_for_calculation_loop = loop_time_start.elapsed().unwrap();
         dbg!(time_taken_for_calculation_loop);
     }
 
