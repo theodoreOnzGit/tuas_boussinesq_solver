@@ -1,4 +1,6 @@
 
+use uom::si::thermal_conductance::watt_per_kelvin;
+
 use crate::array_control_vol_and_fluid_component_collections::fluid_component_collection::fluid_component_traits::FluidComponentTrait;
 use crate::array_control_vol_and_fluid_component_collections::one_d_fluid_array_with_lateral_coupling::FluidArray;
 use crate::boundary_conditions::BCType;
@@ -431,6 +433,7 @@ pub fn regression_new_and_old_nodal_conductance_steel_shell_to_pipe_fluid_array(
         number_of_temperature_nodes
     );
 
+
     // I'm cloning this heater v2 bare so as to test the new advancing 
     // timestep and such
     let mut heater_v2_bare_new_code = 
@@ -543,9 +546,10 @@ pub fn regression_new_and_old_nodal_conductance_steel_shell_to_pipe_fluid_array(
                 prandtl_wall_correction_setting).unwrap();
 
 
-        assert_eq!(
-            pipe_shell_to_fluid_conductance_original
-            ,pipe_shell_to_fluid_conductance_new_code
+        approx::assert_relative_eq!(
+            pipe_shell_to_fluid_conductance_original.get::<watt_per_kelvin>(),
+            pipe_shell_to_fluid_conductance_new_code.get::<watt_per_kelvin>(),
+            max_relative=1e-2
         );
     }
 

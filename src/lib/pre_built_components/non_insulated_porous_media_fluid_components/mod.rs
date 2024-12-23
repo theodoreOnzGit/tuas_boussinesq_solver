@@ -8,6 +8,7 @@ use crate::boussinesq_thermophysical_properties::SolidMaterial;
 use crate::boussinesq_thermophysical_properties::LiquidMaterial;
 use crate::boussinesq_thermophysical_properties::thermal_conductivity::*;
 use crate::heat_transfer_correlations::nusselt_number_correlations::enums::NusseltCorrelation;
+use crate::heat_transfer_correlations::nusselt_number_correlations::input_structs::NusseltPrandtlReynoldsData;
 use crate::heat_transfer_correlations::thermal_resistance::try_get_thermal_conductance_annular_cylinder;
 
 use super::heat_transfer_entities::HeatTransferEntity;
@@ -206,7 +207,7 @@ impl NonInsulatedPorousMediaFluidComponent {
         let a = Ratio::ZERO;
         let b = Ratio::new::<ratio>(17.9);
         let c: f64  = -0.34;
-        let therminol_array: FluidArray = 
+        let mut therminol_array: FluidArray = 
         FluidArray::new_custom_component(
             heated_length,
             hydraulic_diameter,
@@ -220,6 +221,16 @@ impl NonInsulatedPorousMediaFluidComponent {
             user_specified_inner_nodes,
             pipe_incline_angle
         );
+
+        // the therminol array nusselt correlation should be that of the 
+        // heater 
+
+        let heater_prandtl_reynolds_data: NusseltPrandtlReynoldsData 
+        = NusseltPrandtlReynoldsData::default();
+        therminol_array.nusselt_correlation = 
+            NusseltCorrelation::CIETHeaterVersion2(
+                heater_prandtl_reynolds_data
+                );
 
         let darcy_loss_correlation = 
             therminol_array.fluid_component_loss_properties.clone();
@@ -382,8 +393,7 @@ impl NonInsulatedPorousMediaFluidComponent {
         let steel_shell_od = Length::new::<meter>(0.04);
 
 
-        // inner therminol array
-        let therminol_array: FluidArray = 
+        let mut therminol_array: FluidArray = 
         FluidArray::new_odd_shaped_pipe(
             heated_length,
             hydraulic_diameter,
@@ -396,6 +406,14 @@ impl NonInsulatedPorousMediaFluidComponent {
             user_specified_inner_nodes,
             pipe_incline_angle
         );
+
+
+        let heater_prandtl_reynolds_data: NusseltPrandtlReynoldsData 
+        = NusseltPrandtlReynoldsData::default();
+        therminol_array.nusselt_correlation = 
+            NusseltCorrelation::CIETHeaterVersion2(
+                heater_prandtl_reynolds_data
+                );
         // now, nusselt correlation to ambient and to porous media 
         // are the same, I did not do anything special because 
         // transient validation was not important (yet) 
@@ -555,7 +573,7 @@ impl NonInsulatedPorousMediaFluidComponent {
 
 
         // inner therminol array
-        let therminol_array: FluidArray = 
+        let mut therminol_array: FluidArray = 
         FluidArray::new_odd_shaped_pipe(
             heated_length,
             hydraulic_diameter,
@@ -568,6 +586,14 @@ impl NonInsulatedPorousMediaFluidComponent {
             user_specified_inner_nodes,
             pipe_incline_angle
         );
+
+
+        let heater_prandtl_reynolds_data: NusseltPrandtlReynoldsData 
+        = NusseltPrandtlReynoldsData::default();
+        therminol_array.nusselt_correlation = 
+            NusseltCorrelation::CIETHeaterVersion2(
+                heater_prandtl_reynolds_data
+                );
         // now, nusselt correlation to ambient and to porous media 
         // are the same, I did not do anything special because 
         // transient validation was not important (yet) 
