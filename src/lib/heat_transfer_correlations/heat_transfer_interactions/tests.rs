@@ -61,3 +61,10 @@ pub fn radiation_conductance_unit_test(){
 
 
 }
+
+#[test]
+pub fn radial_conductance_solid_inside_liquid_outside_test(){
+
+    unimplemented!()
+}
+
