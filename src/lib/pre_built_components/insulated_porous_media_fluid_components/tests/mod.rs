@@ -363,7 +363,7 @@ pub fn regression_heater_v1_porous_and_non_porous_conductance_pipe_to_insulation
         heater_v1_without_inner_annular_pipe.set_mass_flowrate(mass_flowrate);
 
 
-        let pipe_shell_to_fluid_conductance_without_inner_annular_pipe  
+        let pipe_shell_to_insulation_conductance_without_inner_annular_pipe  
             = heater_v1_without_inner_annular_pipe
             .get_pipe_shell_to_insulation_nodal_conductance().unwrap();
         // heater v2 insulated next
@@ -371,15 +371,15 @@ pub fn regression_heater_v1_porous_and_non_porous_conductance_pipe_to_insulation
         heater_v1_with_annular_pipe.set_mass_flowrate(mass_flowrate);
 
 
-        let pipe_shell_to_fluid_conductance_insulated  
+        let pipe_shell_to_insulation_conductance_insulated  
             = heater_v1_with_annular_pipe
             .get_pipe_shell_to_insulation_nodal_conductance().unwrap();
 
 
         // at the initial state, both must be the same
         approx::assert_relative_eq!(
-            pipe_shell_to_fluid_conductance_without_inner_annular_pipe.get::<watt_per_kelvin>(),
-            pipe_shell_to_fluid_conductance_insulated.get::<watt_per_kelvin>(),
+            pipe_shell_to_insulation_conductance_without_inner_annular_pipe.get::<watt_per_kelvin>(),
+            pipe_shell_to_insulation_conductance_insulated.get::<watt_per_kelvin>(),
             max_relative=1e-5
         );
     }
