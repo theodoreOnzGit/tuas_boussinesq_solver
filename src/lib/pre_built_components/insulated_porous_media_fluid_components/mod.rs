@@ -12,14 +12,17 @@ use crate::heat_transfer_correlations::nusselt_number_correlations::input_struct
 use crate::heat_transfer_correlations::thermal_resistance::try_get_thermal_conductance_annular_cylinder;
 
 use super::heat_transfer_entities::HeatTransferEntity;
+use uom::si::angle::degree;
 use uom::si::area::square_inch;
 use uom::si::f64::*;
 use uom::si::area::square_meter;
 use uom::si::heat_transfer::watt_per_square_meter_kelvin;
 use uom::si::length::inch;
 use uom::si::length::meter;
+use uom::si::length::millimeter;
 use uom::si::ratio::ratio;
 use uom::si::pressure::atmosphere;
+use uom::si::thermodynamic_temperature::degree_celsius;
 use uom::ConstZero;
 /// Fluid Components with Internals 
 /// 
@@ -196,12 +199,11 @@ impl InsulatedPorousMediaFluidComponent {
         ambient_temperature: ThermodynamicTemperature,
         fluid_pressure: Pressure,
         solid_pressure: Pressure,
-        hydraulic_diameter: Length,
+        pipe_shell_id: Length,
         pipe_length: Length,
         flow_area: Area,
         incline_angle: Angle,
         form_loss: Ratio,
-        surface_roughness: Length,
         outer_pipe_thickness: Length,
         inner_pipe_id: Length,
         inner_pipe_od: Length,
@@ -220,6 +222,17 @@ impl InsulatedPorousMediaFluidComponent {
         if user_specified_inner_nodes < 2 {
             user_specified_inner_nodes = 2;
         }
+
+        // for hydraulic diameter, the calculation is 4A/P_wetted 
+        // the area is the flow area specified.
+        // whereas the wetted perimeter is 
+        // the od of the inner pipe 
+        // and id of the outer pipe
+        //
+        let wetted_perimeter: Length = PI * pipe_shell_id + PI * inner_pipe_od;
+
+        let hydraulic_diameter: Length = 4.0 * flow_area/wetted_perimeter;
+
 
         let pipe_fluid_array: FluidArray = 
         FluidArray::new_odd_shaped_pipe(
@@ -242,7 +255,6 @@ impl InsulatedPorousMediaFluidComponent {
         let darcy_loss_correlation = 
             pipe_fluid_array.fluid_component_loss_properties.clone();
 
-        let pipe_shell_id = hydraulic_diameter;
         let pipe_shell_od = 2.0 * outer_pipe_thickness + pipe_shell_id;
 
         let pipe_shell_array = 
@@ -396,6 +408,66 @@ impl InsulatedPorousMediaFluidComponent {
             convection_heat_transfer_area_fluid_to_pipe_shell,
             convection_heat_transfer_area_fluid_to_interior,
         };
+
+    }
+
+    /// constructs the ciet heater v1 with inner annular pipe
+    pub fn new_ciet_heater_v1_with_annular_pipe(
+        initial_temperature: ThermodynamicTemperature,
+        ambient_temperature: ThermodynamicTemperature,
+        user_specified_inner_nodes: usize
+        ) -> Self {
+
+        let ambient_temperature = ThermodynamicTemperature::new::<degree_celsius>(20.0);
+        let fluid_pressure = Pressure::new::<atmosphere>(1.0);
+        let solid_pressure = Pressure::new::<atmosphere>(1.0);
+        // hydraulic diameter should be about 6.60e-3m
+        // assert in unit test
+        let _hydraulic_diameter = Length::new::<meter>(6.60e-3);
+        let pipe_length = Length::new::<meter>(1.6383);
+        let flow_area = Area::new::<square_meter>(3.64e-4);
+        let incline_angle = Angle::new::<degree>(90.0 + 180.0);
+        let form_loss = Ratio::new::<ratio>(0.0);
+        //estimated component wall roughness (doesn't matter here,
+        //but i need to fill in)
+        let pipe_shell_id = Length::new::<inch>(1.51);
+        let outer_pipe_thickness = Length::new::<meter>(0.001905);
+        let insulation_thickness = Length::new::<meter>(0.0508);
+        let pipe_shell_material = SolidMaterial::SteelSS304L;
+        let inner_annular_pipe_material = SolidMaterial::SteelSS304L;
+        let insulation_material = SolidMaterial::Fiberglass;
+        let pipe_fluid_material = LiquidMaterial::TherminolVP1;
+        let htc_to_ambient = HeatTransfer::new::<watt_per_square_meter_kelvin>(20.0);
+        // from SAM nodalisation, we have 15 nodes only, 
+        // now because there are two outer nodes, the 
+        // number of inner nodes is 15-2
+        let user_specified_inner_nodes = 15-2; 
+
+        // based on SAM inputs
+        let inner_pipe_od = Length::new::<inch>(1.25);
+        let inner_pipe_thickness = Length::new::<meter>(0.0026);
+        let inner_pipe_id = inner_pipe_od - 2.0 * inner_pipe_thickness;
+
+        Self::new_annular_pipe(
+            initial_temperature, 
+            ambient_temperature, 
+            fluid_pressure, 
+            solid_pressure, 
+            pipe_shell_id, 
+            pipe_length, 
+            flow_area, 
+            incline_angle, 
+            form_loss, 
+            outer_pipe_thickness, 
+            inner_pipe_id, 
+            inner_pipe_od, 
+            insulation_thickness, 
+            insulation_material, 
+            pipe_shell_material, 
+            inner_annular_pipe_material, 
+            pipe_fluid_material, 
+            htc_to_ambient, 
+            user_specified_inner_nodes + 2)
 
     }
 

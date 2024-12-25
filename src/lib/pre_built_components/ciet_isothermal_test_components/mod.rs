@@ -60,7 +60,7 @@ pub mod isothermal_ctah_heater_dhx_branch_test;
 // Professor Per F. Peterson
 use uom::si::f64::*;
 use uom::si::heat_transfer::watt_per_square_meter_kelvin;
-use uom::si::length::{meter, millimeter};
+use uom::si::length::{inch, meter, millimeter};
 use uom::si::ratio::ratio;
 use uom::si::thermodynamic_temperature::degree_celsius;
 use uom::si::pressure::atmosphere;
@@ -2072,7 +2072,7 @@ pub fn new_heated_section_version_1_label_1_without_inner_annular_pipe(initial_t
     //estimated component wall roughness (doesn't matter here,
     //but i need to fill in)
     let surface_roughness = Length::new::<millimeter>(0.015);
-    let shell_id = hydraulic_diameter;
+    let shell_id = Length::new::<inch>(1.51);
     let pipe_thickness = Length::new::<meter>(0.001905);
     let shell_od = shell_id + 2.0 * pipe_thickness;
     let insulation_thickness = Length::new::<meter>(0.0508);
