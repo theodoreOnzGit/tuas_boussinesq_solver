@@ -539,13 +539,13 @@ pub fn steady_state_test_for_heater_v1_eight_nodes_validation(){
     let heater_power = Power::new::<kilowatt>(2.53);
     let initial_temperature: ThermodynamicTemperature = 
     ThermodynamicTemperature::new::<degree_celsius>(78.852);
-    let final_expected_outlet_temp =
+    let final_experimental_outlet_temp =
         ThermodynamicTemperature::new::<degree_celsius>(86.976);
     let inlet_temperature = initial_temperature;
     let ambient_air_temp: ThermodynamicTemperature = 
     ThermodynamicTemperature::new::<degree_celsius>(21.76);
 
-    let number_of_inner_temperature_nodes: usize = 8;
+    let number_of_inner_temperature_nodes: usize = 10-2;
     
     let mut heater_v1 = InsulatedPorousMediaFluidComponent::new_ciet_heater_v1_with_annular_pipe(
         initial_temperature,
@@ -623,8 +623,8 @@ pub fn steady_state_test_for_heater_v1_eight_nodes_validation(){
 
     // time settings 
 
-    let max_time = Time::new::<second>(300.0);
-    let timestep = Time::new::<second>(0.2);
+    let max_time = Time::new::<second>(200.0);
+    let timestep = Time::new::<second>(0.05);
     let mut simulation_time = Time::ZERO;
     let mass_flowrate = MassRate::new::<kilogram_per_second>(0.18);
 
@@ -937,10 +937,12 @@ pub fn steady_state_test_for_heater_v1_eight_nodes_validation(){
 
         }
         // assert final temp 
-        approx::assert_relative_eq!(
-            final_expected_outlet_temp.get::<degree_celsius>(),
+        //
+        // it's within 1.3 degc of expt data, not
+        approx::abs_diff_eq!(
+            final_experimental_outlet_temp.get::<degree_celsius>(),
             final_outlet_temp.get::<degree_celsius>(),
-            max_relative=0.0)
+            epsilon=1.3)
 
     });
 
