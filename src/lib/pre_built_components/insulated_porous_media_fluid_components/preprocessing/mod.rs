@@ -746,6 +746,7 @@ impl InsulatedPorousMediaFluidComponent {
                 modified_darcy_friction_factor,
                 reynolds_number_abs_for_nusselt)?;
 
+        dbg!(&nusselt_estimate_tube_side);
         // now we can get the heat transfer coeff, 
 
         let tube_h_to_fluid: HeatTransfer;
@@ -764,13 +765,18 @@ impl InsulatedPorousMediaFluidComponent {
             = (tube_h_to_fluid * self.convection_heat_transfer_area_fluid_to_interior)
             / number_of_temperature_nodes;
 
+        dbg!(&nodalised_fluid_side_conductance);
+
         
         // now solid side nodalised conductance 
+        // if you want to have lumped capacitance,
         // with large enough conductance lengthscale (eg 1e9 meters)
         // this provides negligible thermal resistance
         let nodalised_solid_side_conductance: ThermalConductance 
-            = (self.nusselt_correlation_lengthscale_fluid_to_porous_media_interior * 
+            = (self.thermal_conductance_lengthscale_fluid_to_porous_media_internal * 
                 solid_thermal_conductivity) / number_of_temperature_nodes;
+
+        dbg!(&nodalised_solid_side_conductance);
 
         let nodalised_pipe_fluid_to_shell_thermal_resistance: ThermalResistance 
             = nodalised_solid_side_conductance.recip() 
