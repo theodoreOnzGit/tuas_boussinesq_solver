@@ -19,10 +19,8 @@ use uom::si::area::square_meter;
 use uom::si::heat_transfer::watt_per_square_meter_kelvin;
 use uom::si::length::inch;
 use uom::si::length::meter;
-use uom::si::length::millimeter;
 use uom::si::ratio::ratio;
 use uom::si::pressure::atmosphere;
-use uom::si::thermodynamic_temperature::degree_celsius;
 use uom::ConstZero;
 /// Fluid Components with Internals 
 /// 
@@ -467,6 +465,127 @@ impl InsulatedPorousMediaFluidComponent {
             pipe_fluid_material, 
             htc_to_ambient, 
             user_specified_inner_nodes + 2)
+
+    }
+
+    /// makes an insulated top head for the ciet v1 heater 
+    /// same dimensions as ciet heater except for length and K
+    /// K = 3.75 (this is in addition to pipe form losses)
+    /// l = 0.0889m 
+    /// d_h = 6.60e-3 m (hydraulic diameter)
+    pub fn new_ciet_v1_top_head(
+        initial_temperature: ThermodynamicTemperature,
+        ambient_temperature: ThermodynamicTemperature,
+        user_specified_inner_nodes: usize
+        ) -> Self {
+
+        let fluid_pressure = Pressure::new::<atmosphere>(1.0);
+        let solid_pressure = Pressure::new::<atmosphere>(1.0);
+        // hydraulic diameter should be about 6.60e-3m
+        // assert in unit test
+        let _hydraulic_diameter = Length::new::<meter>(6.60e-3);
+        let pipe_length = Length::new::<meter>(0.0889);
+        let flow_area = Area::new::<square_meter>(3.64e-4);
+        let incline_angle = Angle::new::<degree>(90.0 + 180.0);
+        let form_loss = Ratio::new::<ratio>(3.75);
+        //estimated component wall roughness (doesn't matter here,
+        //but i need to fill in)
+        let pipe_shell_id = Length::new::<inch>(1.51);
+        let outer_pipe_thickness = Length::new::<meter>(0.001905);
+        let insulation_thickness = Length::new::<meter>(0.0508);
+        let pipe_shell_material = SolidMaterial::SteelSS304L;
+        let inner_annular_pipe_material = SolidMaterial::SteelSS304L;
+        let insulation_material = SolidMaterial::Fiberglass;
+        let pipe_fluid_material = LiquidMaterial::TherminolVP1;
+        let htc_to_ambient = HeatTransfer::new::<watt_per_square_meter_kelvin>(20.0);
+        let _user_specified_inner_nodes_in_sam_model = 2-2; 
+
+        // based on SAM inputs
+        let inner_pipe_od = Length::new::<inch>(1.25);
+        let inner_pipe_thickness = Length::new::<meter>(0.0026);
+        let inner_pipe_id = inner_pipe_od - 2.0 * inner_pipe_thickness;
+
+        Self::new_annular_pipe(
+            initial_temperature, 
+            ambient_temperature, 
+            fluid_pressure, 
+            solid_pressure, 
+            pipe_shell_id, 
+            pipe_length, 
+            flow_area, 
+            incline_angle, 
+            form_loss, 
+            outer_pipe_thickness, 
+            inner_pipe_id, 
+            inner_pipe_od, 
+            insulation_thickness, 
+            insulation_material, 
+            pipe_shell_material, 
+            inner_annular_pipe_material, 
+            pipe_fluid_material, 
+            htc_to_ambient, 
+            user_specified_inner_nodes + 2)
+
+
+    }
+    /// makes an insulated bottom head for the ciet v1 heater 
+    /// same dimensions as ciet heater except for length and K
+    /// K = 3.95 (this is in addition to pipe form losses)
+    /// l = 0.0889m 
+    /// d_h = 6.60e-3 m (hydraulic diameter)
+    pub fn new_ciet_v1_bottom_head(
+        initial_temperature: ThermodynamicTemperature,
+        ambient_temperature: ThermodynamicTemperature,
+        user_specified_inner_nodes: usize
+        ) -> Self {
+
+        let fluid_pressure = Pressure::new::<atmosphere>(1.0);
+        let solid_pressure = Pressure::new::<atmosphere>(1.0);
+        // hydraulic diameter should be about 6.60e-3m
+        // assert in unit test
+        let _hydraulic_diameter = Length::new::<meter>(6.60e-3);
+        let pipe_length = Length::new::<meter>(0.19685);
+        let flow_area = Area::new::<square_meter>(3.64e-4);
+        let incline_angle = Angle::new::<degree>(90.0 + 180.0);
+        let form_loss = Ratio::new::<ratio>(3.75);
+        //estimated component wall roughness (doesn't matter here,
+        //but i need to fill in)
+        let pipe_shell_id = Length::new::<inch>(1.51);
+        let outer_pipe_thickness = Length::new::<meter>(0.001905);
+        let insulation_thickness = Length::new::<meter>(0.0508);
+        let pipe_shell_material = SolidMaterial::SteelSS304L;
+        let inner_annular_pipe_material = SolidMaterial::SteelSS304L;
+        let insulation_material = SolidMaterial::Fiberglass;
+        let pipe_fluid_material = LiquidMaterial::TherminolVP1;
+        let htc_to_ambient = HeatTransfer::new::<watt_per_square_meter_kelvin>(20.0);
+        let _user_specified_inner_nodes_in_sam_model = 2-2; 
+
+        // based on SAM inputs
+        let inner_pipe_od = Length::new::<inch>(1.25);
+        let inner_pipe_thickness = Length::new::<meter>(0.0026);
+        let inner_pipe_id = inner_pipe_od - 2.0 * inner_pipe_thickness;
+
+        Self::new_annular_pipe(
+            initial_temperature, 
+            ambient_temperature, 
+            fluid_pressure, 
+            solid_pressure, 
+            pipe_shell_id, 
+            pipe_length, 
+            flow_area, 
+            incline_angle, 
+            form_loss, 
+            outer_pipe_thickness, 
+            inner_pipe_id, 
+            inner_pipe_od, 
+            insulation_thickness, 
+            insulation_material, 
+            pipe_shell_material, 
+            inner_annular_pipe_material, 
+            pipe_fluid_material, 
+            htc_to_ambient, 
+            user_specified_inner_nodes + 2)
+
 
     }
 
