@@ -424,7 +424,10 @@ impl NonInsulatedPorousMediaFluidComponent {
             user_specified_inner_nodes,
             pipe_incline_angle
         );
-
+        // the therminol arrays here use gnielinski correlation by 
+        // default, but
+        // the therminol array nusselt correlation should be that of the 
+        // heater 
 
         let heater_prandtl_reynolds_data: NusseltPrandtlReynoldsData 
         = NusseltPrandtlReynoldsData::default();
@@ -432,12 +435,20 @@ impl NonInsulatedPorousMediaFluidComponent {
             NusseltCorrelation::CIETHeaterVersion2(
                 heater_prandtl_reynolds_data
                 );
+
+
+        let wakao_correlation = NusseltCorrelation::Wakao(
+            WakaoData::default()
+        );
+
+        
+
         // now, nusselt correlation to ambient and to porous media 
         // are the same, I did not do anything special because 
         // transient validation was not important (yet) 
         // when I originally wrote this code 
         let nusselt_correlation_to_ambient = therminol_array.nusselt_correlation;
-        let nusselt_correlation_to_porous_media_interior = therminol_array.nusselt_correlation;
+        let nusselt_correlation_to_porous_media_interior = wakao_correlation;
         let nusselt_correlation_lengthscale_to_ambient = hydraulic_diameter;
         let nusselt_correlation_lengthscale_to_porous_media_interior = hydraulic_diameter;
 
@@ -606,18 +617,30 @@ impl NonInsulatedPorousMediaFluidComponent {
         );
 
 
+        // the therminol arrays here use gnielinski correlation by 
+        // default, but 
+        // the therminol array nusselt correlation should be that of the 
+        // heater 
+
         let heater_prandtl_reynolds_data: NusseltPrandtlReynoldsData 
         = NusseltPrandtlReynoldsData::default();
         therminol_array.nusselt_correlation = 
             NusseltCorrelation::CIETHeaterVersion2(
                 heater_prandtl_reynolds_data
                 );
+
+        let wakao_correlation = NusseltCorrelation::Wakao(
+            WakaoData::default()
+        );
+
+        
+
         // now, nusselt correlation to ambient and to porous media 
         // are the same, I did not do anything special because 
         // transient validation was not important (yet) 
         // when I originally wrote this code 
         let nusselt_correlation_to_ambient = therminol_array.nusselt_correlation;
-        let nusselt_correlation_to_porous_media_interior = therminol_array.nusselt_correlation;
+        let nusselt_correlation_to_porous_media_interior = wakao_correlation;
         let nusselt_correlation_lengthscale_to_ambient = hydraulic_diameter;
         let nusselt_correlation_lengthscale_to_porous_media_interior = hydraulic_diameter;
 

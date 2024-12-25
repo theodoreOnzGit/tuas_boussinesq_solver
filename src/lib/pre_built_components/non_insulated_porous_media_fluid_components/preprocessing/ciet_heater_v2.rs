@@ -516,6 +516,7 @@ impl NonInsulatedPorousMediaFluidComponent {
         let reynolds: Ratio = 
         mass_flowrate/flow_area*hydraulic_diameter / viscosity;
 
+        // reynolds is the same...
         // need to get prandtl number of fluid 
         // so I need fluid temperature 
 
@@ -532,6 +533,7 @@ impl NonInsulatedPorousMediaFluidComponent {
             (fluid_average_temperature, fluid_average_pressure) .unwrap();
 
 
+
         // with Pr and Re, get nusselt estimate 
         // from wakao correlation
 
@@ -541,7 +543,9 @@ impl NonInsulatedPorousMediaFluidComponent {
                 prandtl_bulk: fluid_prandtl,
             }
         );
-        let nusselt_estimate: Ratio = wakao_correlation.try_get_nusselt().unwrap();
+        let nusselt_estimate_wakao_correlation: Ratio 
+            = wakao_correlation.try_get_nusselt().unwrap();
+
 
         // with nusselt estimate done, (I didn't convert the 
         // hydraulic diameter to an equivalent particle diameter)
@@ -556,7 +560,7 @@ impl NonInsulatedPorousMediaFluidComponent {
         fluid_material.try_get_thermal_conductivity(
             fluid_average_temperature).unwrap();
 
-        h = nusselt_estimate * k_fluid_average / hydraulic_diameter;
+        h = nusselt_estimate_wakao_correlation * k_fluid_average / hydraulic_diameter;
 
         let number_of_temperature_nodes = self.inner_nodes + 2;
 

@@ -344,6 +344,7 @@ impl NonInsulatedPorousMediaFluidComponent {
             single_tube_flow_area
             *hydraulic_diameter / viscosity;
 
+
         // the reynolds number here is used for nusselt number estimates 
         // so I'm going to have an aboslute value of reynolds number 
         // for nusselt estimates
@@ -438,8 +439,9 @@ impl NonInsulatedPorousMediaFluidComponent {
         let modified_darcy_friction_factor: Ratio = 
             fldk/length_to_diameter;
 
+
         let nusselt_estimate_tube_side = 
-            self.nusselt_correlation_to_pipe_shell
+            self.nusselt_correlation_to_porous_media_interior
             .estimate_based_on_prandtl_darcy_and_reynolds_wall_correction(
                 bulk_prandtl_number, 
                 wall_prandtl_number, 
@@ -461,13 +463,13 @@ impl NonInsulatedPorousMediaFluidComponent {
         // now we can get the nodalised conductance 
 
         let nodalised_fluid_side_conductance: ThermalConductance 
-            = (tube_h_to_fluid * self.convection_heat_transfer_area_to_pipe)
+            = (tube_h_to_fluid * self.convection_heat_transfer_area_to_interior)
             / number_of_temperature_nodes;
-
-        dbg!(&nodalised_fluid_side_conductance);
 
         
         // now solid side nodalised conductance 
+        // with large enough conductance lengthscale (eg 1e9 meters)
+        // this provides negligible thermal resistance
         let nodalised_solid_side_conductance: ThermalConductance 
             = (self.solid_side_thermal_conductance_lengthscale_fluid_to_porous_media_internal * 
                 solid_thermal_conductivity) / number_of_temperature_nodes;
