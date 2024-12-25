@@ -1,3 +1,5 @@
+use uom::si::length::meter;
+
 use crate::pre_built_components::ciet_isothermal_test_components::new_heated_section_version_1_label_1_without_inner_annular_pipe;
 
 #[test]
@@ -213,6 +215,41 @@ pub fn regression_heater_v1_porous_and_non_porous_conductance_pipe_to_insulation
     dbg!(time_taken_for_calculation_loop);
     unimplemented!()
 
+
+}
+
+#[test]
+pub fn assert_if_hydraulic_diameter_of_heater_v1_is_correct(){
+
+
+    use crate::pre_built_components::insulated_porous_media_fluid_components::InsulatedPorousMediaFluidComponent;
+    use crate::array_control_vol_and_fluid_component_collections::fluid_component_collection::fluid_component_traits::FluidComponentTrait;
+    use uom::si::f64::*;
+    use uom::si::thermodynamic_temperature::degree_celsius;
+
+
+    // heater v1 hydraulic diameter should be about 6.60e-3m
+    // assert in unit test
+    let reference_hydraulic_diameter = Length::new::<meter>(6.60e-3);
+    let initial_temperature: ThermodynamicTemperature = 
+        ThermodynamicTemperature::new::<degree_celsius>(79.12);
+    let ambient_temperature: ThermodynamicTemperature = 
+        ThermodynamicTemperature::new::<degree_celsius>(21.76);
+
+    let user_specified_inner_nodes = 15-2;
+    let mut ciet_heater_v1 = 
+        InsulatedPorousMediaFluidComponent::new_ciet_heater_v1_with_annular_pipe(
+            initial_temperature, 
+            ambient_temperature, 
+            user_specified_inner_nodes);
+
+    let test_hydraulic_diameter = ciet_heater_v1.get_hydraulic_diameter();
+
+    approx::assert_relative_eq!(
+        reference_hydraulic_diameter.get::<meter>(),
+        test_hydraulic_diameter.get::<meter>(),
+        max_relative=0.01
+    );
 
 }
 
