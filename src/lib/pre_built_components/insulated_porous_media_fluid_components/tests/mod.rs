@@ -1,10 +1,42 @@
-use crate::prelude::beta_testing::InsulatedPorousMediaFluidComponent;
+#[test]
+pub fn transient_test_for_heater_v1(){
+    unimplemented!()
+}
+#[test]
+pub fn steady_state_test_for_heater_v1(){
+    unimplemented!()
+}
+/// will probably use insulated pipes as a reference for this
+/// possibly the heater v1 without internal
+#[test]
+pub fn test_to_assert_if_conductance_from_insulation_to_ambient_is_correct(){
+    unimplemented!()
+}
 
+/// will probably use insulated pipes as a reference for this
+/// possibly the heater v1 without internal
+#[test]
+pub fn test_to_assert_if_conductance_from_insulation_to_pipe_is_correct(){
+    unimplemented!()
+}
+
+/// for heater v2, with insulation slapped on it, and the heater v2 without 
+/// insulation, conductance from pipe to the fluid should be the same
+#[test] 
+pub fn regression_heater_v2_insulated_and_non_insulated_conductance_fluid_arr_to_pipe(){
+
+    unimplemented!()
+}
+
+
+/// for heater v2, with insulation slapped on it, and the heater v2 without 
+/// insulation, conductance from twisted tape to the fluid should be the same
 #[test]
 pub fn regression_heater_v2_insulated_and_non_insulated_conductance_twisted_tape_to_pipe_fluid_array(){
 
     use uom::si::thermal_conductance::watt_per_kelvin;
 
+    use crate::pre_built_components::insulated_porous_media_fluid_components::InsulatedPorousMediaFluidComponent;
     use crate::array_control_vol_and_fluid_component_collections::fluid_component_collection::fluid_component_traits::FluidComponentTrait;
     use crate::array_control_vol_and_fluid_component_collections::one_d_fluid_array_with_lateral_coupling::FluidArray;
     use crate::boundary_conditions::BCType;

@@ -2060,7 +2060,7 @@ pub fn new_heater_top_head_1a(initial_temperature: ThermodynamicTemperature) -> 
 /// fluoride-salt-cooled, high-temperature reactors. University of 
 /// California, Berkeley, 2015.
 /// Argonne, IL (United States), 2019.
-pub fn new_heated_section_version_1_label_1(initial_temperature: ThermodynamicTemperature) -> InsulatedFluidComponent {
+pub fn new_heated_section_version_1_label_1_without_inner_annular_pipe(initial_temperature: ThermodynamicTemperature) -> InsulatedFluidComponent {
     let ambient_temperature = ThermodynamicTemperature::new::<degree_celsius>(20.0);
     let fluid_pressure = Pressure::new::<atmosphere>(1.0);
     let solid_pressure = Pressure::new::<atmosphere>(1.0);
