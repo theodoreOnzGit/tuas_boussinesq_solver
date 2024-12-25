@@ -132,7 +132,84 @@ impl InsulatedPorousMediaFluidComponent {
 
     }
 
+    /// obtains the conductance from ambient to the pipe shell 
+    /// nodally speaking 
 
+    #[inline]
+    pub fn get_pipe_shell_to_insulation_nodal_conductance(&mut self) 
+        -> Result<ThermalConductance,TuasLibError> {
+
+            // the solid conductance is calculated using 
+            // k (A/L) where L is representative thickness 
+            // A is heat transfer area,
+            // k is thermal conductivity
+            //
+            let insulation_conductance_lengthscale: Length = 
+                self.thermal_conductance_lengthscale_insulation_to_insulation_pipe_interface;
+
+            let pipe_shell_conductance_lengthscale: Length = 
+                self.thermal_conductance_lengthscale_pipe_shell_to_insulation_pipe_interface;
+            
+            // to calculate k, we need the bulk temperature 
+
+            let mut insulation_clone: SolidColumn = 
+                self.insulation_array.clone().try_into().unwrap();
+            let insulation_bulk_temp: ThermodynamicTemperature = 
+                insulation_clone.try_get_bulk_temperature()?;
+
+            let mut pipe_shell_clone: SolidColumn = 
+                self.pipe_shell.clone().try_into()?;
+            let pipe_shell_temp: ThermodynamicTemperature = 
+                pipe_shell_clone.try_get_bulk_temperature()?;
+
+            // next, let's get the conductivity 
+
+            let insulation_material_conductivity: ThermalConductivity = 
+                insulation_clone.material_control_volume
+                .try_get_thermal_conductivity(
+                    insulation_bulk_temp)?;
+
+            let pipe_shell_material_conductivity: ThermalConductivity = 
+                pipe_shell_clone.material_control_volume
+                .try_get_thermal_conductivity(
+                    pipe_shell_temp)?;
+
+
+            let number_of_nodes: f64 = self.inner_nodes as f64 + 2.0;
+            // insulation side nodalised thermal conductance
+
+            let nodalised_insulation_side_thermal_conductance: ThermalConductance
+                = insulation_conductance_lengthscale * insulation_material_conductivity
+                / number_of_nodes;
+
+            let nodalised_insulation_side_thermal_resistance: ThermalResistance 
+                = nodalised_insulation_side_thermal_conductance.recip();
+
+            // pipe shell side nodalised thermal conductance 
+            let nodalised_pipe_shell_side_thermal_conductance: ThermalConductance
+                = pipe_shell_conductance_lengthscale * pipe_shell_material_conductivity
+                / number_of_nodes;
+
+            let nodalised_pipe_shell_side_thermal_resistance: ThermalResistance 
+                = nodalised_pipe_shell_side_thermal_conductance.recip();
+
+
+            // add resistances together 
+            let nodalised_insulation_to_ambient_resistance: ThermalResistance 
+                = nodalised_insulation_side_thermal_resistance +
+                nodalised_pipe_shell_side_thermal_resistance;
+
+            // get conductance, and then return 
+
+            let nodalised_insulation_to_ambient_conductance 
+                = nodalised_insulation_to_ambient_resistance.recip();
+
+            // and we done!
+            return Ok(nodalised_insulation_to_ambient_conductance);
+
+    }
+
+    /// gets pipe shell to fluid nodalised conductance
     #[inline]
     pub fn get_pipe_shell_to_fluid_nodal_conductance(
         &self, prandtl_wall_correction_setting: bool) -> Result<ThermalConductance, TuasLibError>
