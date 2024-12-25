@@ -413,12 +413,6 @@ impl InsulatedPorousMediaFluidComponent {
         let mut steel_clone: SolidColumn = 
         self.pipe_shell.clone().try_into().unwrap();
 
-        let mut therminol_clone: FluidArray = 
-        self.pipe_fluid_array.clone().try_into().unwrap();
-
-        // find the length of the array and node length
-
-        let array_length =  therminol_clone.get_component_length();
 
         let number_of_temperature_nodes = self.inner_nodes + 2;
         // next, thermal conductivities of both steel and fiberglass 
