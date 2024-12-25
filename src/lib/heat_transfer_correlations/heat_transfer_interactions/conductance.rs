@@ -378,9 +378,6 @@ pub fn get_conductance_single_cylindrical_radial_solid_liquid(
     let liquid_thermal_conductance: ThermalConductance = 
     h * surface_area_for_solid_liquid_boundary;
 
-    dbg!(&liquid_thermal_conductance);
-    dbg!(&solid_layer_conductance);
-
     // now we do overall thermal resistance and conductance
 
     let overall_thermal_resistance = 1.0/liquid_thermal_conductance 
