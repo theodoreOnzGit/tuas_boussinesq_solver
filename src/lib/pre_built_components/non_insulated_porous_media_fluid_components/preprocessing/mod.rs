@@ -483,7 +483,9 @@ impl NonInsulatedPorousMediaFluidComponent {
         return Ok(nodalised_pipe_fluid_to_shell_thermal_resistance.recip());
     }
 
-    /// still work in progress... yet to be tested
+    /// gets the pipe shell to fluid nodalised conductance 
+    ///
+    #[inline]
     pub fn get_pipe_shell_to_fluid_nodal_conductance(
         &self, prandtl_wall_correction_setting: bool) -> Result<ThermalConductance, TuasLibError>
     {
