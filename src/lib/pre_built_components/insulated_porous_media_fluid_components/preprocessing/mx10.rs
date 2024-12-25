@@ -304,7 +304,7 @@ impl InsulatedPorousMediaFluidComponent {
         );
 
         let nusselt_estimate: Ratio = 
-        mixer_nusselt_correlation.try_get().unwrap();
+        mixer_nusselt_correlation.try_get_nusselt().unwrap();
 
         // now we can get the heat transfer coeff, 
 

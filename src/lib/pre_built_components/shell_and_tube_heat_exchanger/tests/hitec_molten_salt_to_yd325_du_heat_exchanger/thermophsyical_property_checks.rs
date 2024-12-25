@@ -238,7 +238,7 @@ pub fn yd325_tube_reynolds_prandtl_nusselt(){
                 tube_side_gnielinski_data);
 
         let nusselt_calculated: Ratio = 
-            tube_side_nusselt_correlation.try_get().unwrap();
+            tube_side_nusselt_correlation.try_get_nusselt().unwrap();
 
 
         dbg!(

@@ -156,6 +156,15 @@ pub struct WakaoData {
     pub prandtl_bulk: Ratio,
 }
 
+impl Default for WakaoData {
+    fn default() -> Self {
+        return Self {
+            reynolds: Ratio::ZERO,
+            prandtl_bulk: Ratio::ZERO,
+        };
+    }
+}
+
 impl WakaoData {
     /// Returns: 
     ///

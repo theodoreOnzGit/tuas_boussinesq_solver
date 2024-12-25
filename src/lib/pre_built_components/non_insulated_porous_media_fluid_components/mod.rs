@@ -9,6 +9,7 @@ use crate::boussinesq_thermophysical_properties::LiquidMaterial;
 use crate::boussinesq_thermophysical_properties::thermal_conductivity::*;
 use crate::heat_transfer_correlations::nusselt_number_correlations::enums::NusseltCorrelation;
 use crate::heat_transfer_correlations::nusselt_number_correlations::input_structs::NusseltPrandtlReynoldsData;
+use crate::heat_transfer_correlations::nusselt_number_correlations::input_structs::WakaoData;
 use crate::heat_transfer_correlations::thermal_resistance::try_get_thermal_conductance_annular_cylinder;
 
 use super::heat_transfer_entities::HeatTransferEntity;
@@ -236,6 +237,11 @@ impl NonInsulatedPorousMediaFluidComponent {
             therminol_array.fluid_component_loss_properties.clone();
         // the therminol arrays here use gnielinski correlation by 
         // default
+
+        let wakao_correlation = NusseltCorrelation::Wakao(
+            WakaoData::default()
+        );
+
         
 
         // now, nusselt correlation to ambient and to porous media 
@@ -243,7 +249,7 @@ impl NonInsulatedPorousMediaFluidComponent {
         // transient validation was not important (yet) 
         // when I originally wrote this code 
         let nusselt_correlation_to_ambient = therminol_array.nusselt_correlation;
-        let nusselt_correlation_to_porous_media_interior = therminol_array.nusselt_correlation;
+        let nusselt_correlation_to_porous_media_interior = wakao_correlation;
         let nusselt_correlation_lengthscale_to_ambient = hydraulic_diameter;
         let nusselt_correlation_lengthscale_to_porous_media_interior = hydraulic_diameter;
 
@@ -325,12 +331,24 @@ impl NonInsulatedPorousMediaFluidComponent {
         // I just copied this straight from the preprocessing 
         // bit to be consistent
 
-        let convection_heat_transfer_area_to_interior: Area 
-            = Area::new::<square_inch>(719.0);
+        // find suitable heat transfer area
+        let heated_length = Length::new::<meter>(1.6383);
+        let heated_length_plus_heads = Length::new::<inch>(78.0);
 
+        let heat_transfer_area_heated_length_plus_heads: Area = 
+            Area::new::<square_inch>(719.0);
+
+        let heat_transfer_area_heated_length_only: Area
+            = heated_length/ heated_length_plus_heads * 
+            heat_transfer_area_heated_length_plus_heads;
+
+        let convection_heat_transfer_area_to_interior = 
+            heat_transfer_area_heated_length_only;
         // area = PI * inner diameter * L
         let convection_heat_transfer_area_to_pipe: Area 
             = PI * steel_shell_id * heated_length;
+
+
 
         // area = PI * outer diameter * L 
         let convection_heat_transfer_area_to_ambient: Area 

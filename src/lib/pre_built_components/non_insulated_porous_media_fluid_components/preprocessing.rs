@@ -312,7 +312,7 @@ impl NonInsulatedPorousMediaFluidComponent {
         let atmospheric_pressure = Pressure::new::<atmosphere>(1.0);
 
 
-        let single_tube_hydraulic_diameter = 
+        let hydraulic_diameter = 
             self.get_hydraulic_diameter_immutable();
         let single_tube_flow_area: Area = 
             pipe_fluid_arr_clone.get_cross_sectional_area_immutable();
@@ -342,7 +342,7 @@ impl NonInsulatedPorousMediaFluidComponent {
         let reynolds_number_single_tube: Ratio = 
             single_tube_mass_flowrate/
             single_tube_flow_area
-            *single_tube_hydraulic_diameter / viscosity;
+            *hydraulic_diameter / viscosity;
 
         // the reynolds number here is used for nusselt number estimates 
         // so I'm going to have an aboslute value of reynolds number 
@@ -454,7 +454,7 @@ impl NonInsulatedPorousMediaFluidComponent {
             fluid_material.try_get_thermal_conductivity(
                 fluid_temperature)?;
 
-        tube_h_to_fluid = nusselt_estimate_tube_side * k_fluid_average / single_tube_hydraulic_diameter;
+        tube_h_to_fluid = nusselt_estimate_tube_side * k_fluid_average / hydraulic_diameter;
 
         // and then get the convective resistance
         let number_of_temperature_nodes = self.inner_nodes as f64 + 2.0;
@@ -463,6 +463,8 @@ impl NonInsulatedPorousMediaFluidComponent {
         let nodalised_fluid_side_conductance: ThermalConductance 
             = (tube_h_to_fluid * self.convection_heat_transfer_area_to_pipe)
             / number_of_temperature_nodes;
+
+        dbg!(&nodalised_fluid_side_conductance);
 
         
         // now solid side nodalised conductance 

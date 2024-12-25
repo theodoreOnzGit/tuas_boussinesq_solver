@@ -334,7 +334,7 @@ impl HeaterTopBottomHead {
         );
 
         let nusselt_estimate: Ratio = 
-        heater_nusselt_correlation.try_get().unwrap();
+        heater_nusselt_correlation.try_get_nusselt().unwrap();
 
         // now we can get the heat transfer coeff, 
 

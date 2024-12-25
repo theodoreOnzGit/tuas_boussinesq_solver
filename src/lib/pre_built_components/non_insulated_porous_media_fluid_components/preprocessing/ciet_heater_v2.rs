@@ -2,6 +2,7 @@ use std::thread::JoinHandle;
 use std::thread;
 use super::super::NonInsulatedPorousMediaFluidComponent;
 use crate::array_control_vol_and_fluid_component_collections::fluid_component_collection::fluid_component_traits::FluidComponentTrait;
+use crate::heat_transfer_correlations::nusselt_number_correlations::input_structs::WakaoData;
 use crate::pre_built_components::heat_transfer_entities::preprocessing::try_get_thermal_conductance_based_on_interaction;
 use crate::heat_transfer_correlations::nusselt_number_correlations::input_structs::NusseltPrandtlReynoldsData;
 use crate::heat_transfer_correlations::nusselt_number_correlations::enums::NusseltCorrelation;
@@ -299,7 +300,7 @@ impl NonInsulatedPorousMediaFluidComponent {
         );
 
         let nusselt_estimate: Ratio = 
-        heater_nusselt_correlation.try_get().unwrap();
+        heater_nusselt_correlation.try_get_nusselt().unwrap();
 
 
 
@@ -396,6 +397,8 @@ impl NonInsulatedPorousMediaFluidComponent {
 
     /// obtains therminol to twisted tape conductance 
     /// based on approx wakao correlation
+    ///
+    /// Is very hand wavy but well, it's something
     #[inline]
     pub fn ciet_heater_v2_get_therminol_node_twisted_tape_conductance(
     &self) -> ThermalConductance {
@@ -498,8 +501,6 @@ impl NonInsulatedPorousMediaFluidComponent {
         let mut therminol_fluid_array_clone: FluidArray = 
         self.pipe_fluid_array.clone().try_into().unwrap();
 
-        let mut twisted_tape_array_clone: SolidColumn = 
-        self.interior_solid_array_for_porous_media.clone().try_into().unwrap();
         // next, need the nusselt number based on Wakao Correlation 
         let mass_flowrate = therminol_fluid_array_clone.get_mass_flowrate();
         let flow_area: Area = self.get_cross_sectional_area_immutable();
@@ -530,22 +531,17 @@ impl NonInsulatedPorousMediaFluidComponent {
         let fluid_prandtl: Ratio = fluid_material.try_get_prandtl_liquid
             (fluid_average_temperature, fluid_average_pressure) .unwrap();
 
-        let twisted_tape_temperature: ThermodynamicTemperature 
-        = twisted_tape_array_clone.try_get_bulk_temperature().unwrap();
-
-        let twisted_tape_wall_prandtl: Ratio = 
-        fluid_material.try_get_prandtl_liquid(
-            twisted_tape_temperature, fluid_average_pressure).unwrap();
 
         // with Pr and Re, get nusselt estimate 
-        //
+        // from wakao correlation
 
-        let nusselt_estimate: Ratio = 
-        therminol_fluid_array_clone.get_nusselt(
-            reynolds,
-            fluid_prandtl,
-            twisted_tape_wall_prandtl,
-        ).unwrap();
+        let wakao_correlation = NusseltCorrelation::Wakao(
+            WakaoData{
+                reynolds,
+                prandtl_bulk: fluid_prandtl,
+            }
+        );
+        let nusselt_estimate: Ratio = wakao_correlation.try_get_nusselt().unwrap();
 
         // with nusselt estimate done, (I didn't convert the 
         // hydraulic diameter to an equivalent particle diameter)
@@ -570,6 +566,9 @@ impl NonInsulatedPorousMediaFluidComponent {
 
         let average_node_conductance: ThermalConductance 
         = h * heat_transfer_area_per_node;
+
+        // note that there is nearly no thermal resistance for 
+        // the inner portion
 
         return average_node_conductance;
     }
