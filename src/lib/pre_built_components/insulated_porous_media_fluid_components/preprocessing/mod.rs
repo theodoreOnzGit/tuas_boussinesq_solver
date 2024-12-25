@@ -23,6 +23,173 @@ use crate::tuas_lib_error::TuasLibError;
 
 impl InsulatedPorousMediaFluidComponent {
 
+    /// InsulatedPorousMediaFluidComponent config:
+    ///
+    /// Firstly with insulation:
+    /// |               |               |             |              |
+    /// |               |               |             |              |
+    /// |-porous media -|- shell fluid -|-outer shell-|-insulation --| ambient
+    /// |               |               |             |              |
+    /// |               |               |             |              |
+    ///
+    ///
+    /// This connects the control volumes within this component 
+    /// causing them to interact given a set mass flowrate
+    #[inline]
+    pub fn lateral_and_miscellaneous_connections(&mut self,
+        prandtl_wall_correction_setting: bool,
+        mass_flowrate: MassRate,
+        shell_side_steady_state_power: Power,
+        porous_media_side_steady_state_power: Power,
+    ) -> Result<(), TuasLibError>{
+
+        // first set the mass flowrate
+        self.set_mass_flowrate(mass_flowrate);
+
+        // then get conductances
+        let heat_transfer_to_ambient = self.heat_transfer_to_ambient;
+
+        let ambient_to_insulation_nodal_conductance: ThermalConductance = 
+            self.get_ambient_to_insulation_nodal_conductance(
+                heat_transfer_to_ambient)?;
+
+        let pipe_shell_to_insulation_nodal_conductance: ThermalConductance = 
+            self.get_pipe_shell_to_insulation_nodal_conductance()?;
+
+        let pipe_shell_to_fluid_nodal_conductance: ThermalConductance
+            = self.get_pipe_shell_to_fluid_nodal_conductance(
+                prandtl_wall_correction_setting)?;
+
+        let interior_to_fluid_nodal_conductance: ThermalConductance 
+            = self.get_interior_to_fluid_nodal_conductance(
+                prandtl_wall_correction_setting)?;
+
+        // now that we have obtained the conductances, we then need to 
+        // obtain temperature vectors and conductance vectors for  
+        // each pipe array for the lateral connections
+
+        let ambient_temp: ThermodynamicTemperature = self.ambient_temperature;
+        let number_of_temperature_nodes = self.inner_nodes + 2;
+
+        // now for the lateral linkages
+        {
+            // let's do the temperature vectors first 
+            let mut ambient_temperature_vector: Vec<ThermodynamicTemperature>
+                = Array1::default(number_of_temperature_nodes)
+                .iter().map( |&temp| {
+                    temp
+                }
+                ).collect();
+
+            ambient_temperature_vector.fill(ambient_temp);
+            let mut pipe_fluid_array_clone: FluidArray = 
+                self.pipe_fluid_array.clone().try_into()?;
+
+            let mut interior_solid_array_clone: SolidColumn = 
+                self.interior_solid_array_for_porous_media.clone().try_into()?;
+            let mut pipe_shell_clone: SolidColumn = 
+                self.pipe_shell.clone().try_into()?;
+            let mut insulation_array_clone: SolidColumn = 
+                self.insulation_array.clone().try_into()?;
+
+            // let's get the temperature vectors
+
+            let pipe_fluid_arr_temp_vec: Vec<ThermodynamicTemperature>
+                = pipe_fluid_array_clone.get_temperature_vector()?;
+
+            let pipe_shell_arr_temp_vec: Vec<ThermodynamicTemperature> 
+                = pipe_shell_clone.get_temperature_vector()?;
+
+            let interior_arr_temp_vec: Vec<ThermodynamicTemperature> 
+                = interior_solid_array_clone.get_temperature_vector()?;
+
+            let insulation_arr_temp_vec: Vec<ThermodynamicTemperature> 
+                = insulation_array_clone.get_temperature_vector()?;
+            // perform the inner connections 
+            // for tube fluid to shell arr 
+            //
+            pipe_fluid_array_clone. 
+                lateral_link_new_temperature_vector_avg_conductance(
+                    pipe_shell_to_fluid_nodal_conductance, 
+                    pipe_shell_arr_temp_vec.clone())?;
+
+            pipe_shell_clone.
+                lateral_link_new_temperature_vector_avg_conductance(
+                    pipe_shell_to_fluid_nodal_conductance, 
+                    pipe_fluid_arr_temp_vec.clone())?;
+
+            // next fluid array to interior 
+            pipe_fluid_array_clone.
+                lateral_link_new_temperature_vector_avg_conductance(
+                    interior_to_fluid_nodal_conductance, 
+                    interior_arr_temp_vec)?;
+
+            interior_solid_array_clone.
+                lateral_link_new_temperature_vector_avg_conductance(
+                    interior_to_fluid_nodal_conductance, 
+                    pipe_fluid_arr_temp_vec)?;
+
+            // next insulation to pipe shell
+
+            pipe_fluid_array_clone. 
+                lateral_link_new_temperature_vector_avg_conductance(
+                    pipe_shell_to_insulation_nodal_conductance, 
+                    insulation_arr_temp_vec)?;
+
+            insulation_array_clone. 
+                lateral_link_new_temperature_vector_avg_conductance(
+                    pipe_shell_to_insulation_nodal_conductance, 
+                    pipe_shell_arr_temp_vec)?;
+
+            // finally, insulation to ambient 
+            insulation_array_clone.lateral_link_new_temperature_vector_avg_conductance(
+                ambient_to_insulation_nodal_conductance, 
+                ambient_temperature_vector)?;
+
+            // after this, we are done for the internal connections
+
+            // now, add power arrays
+            // assume even power distribution (this can be changed 
+            // in future)
+            let number_of_temperature_nodes = self.inner_nodes + 2;
+            let q_fraction_per_node: f64 = 1.0/ number_of_temperature_nodes as f64;
+            let mut q_frac_arr: Array1<f64> = Array::default(number_of_temperature_nodes);
+            q_frac_arr.fill(q_fraction_per_node);
+
+            pipe_shell_clone.lateral_link_new_power_vector(
+                shell_side_steady_state_power,
+                q_frac_arr.clone()
+            ).unwrap();
+
+            interior_solid_array_clone.lateral_link_new_power_vector(
+                porous_media_side_steady_state_power, 
+                q_frac_arr
+            ).unwrap();
+
+            // now that lateral connections are done, 
+            // for the outer shell, inner shell and 
+            // both fluid arrays
+            // modify the heat transfer entities
+
+            self.pipe_shell.set(pipe_shell_clone.into())?;
+
+            self.interior_solid_array_for_porous_media.set(
+                interior_solid_array_clone.into())?;
+
+            self.pipe_fluid_array.set(pipe_fluid_array_clone.into())?;
+            self.insulation_array.set(insulation_array_clone.into())?;
+
+
+        }
+        // axial connections (adiabatic by default, otherwise 
+        // you'll have to add your own through the heat
+        // transfer entitites eg. advection)
+        self.zero_power_bc_connection();
+        
+
+        Ok(())
+
+    }
 
     /// the end of each node should have a zero power boundary condition 
     /// connected to each of them at the bare minimum
@@ -619,6 +786,42 @@ impl InsulatedPorousMediaFluidComponent {
         return Ok(nodalised_pipe_fluid_to_shell_thermal_resistance.recip());
     }
 
+    /// spawns a thread and moves the clone of the entire heater object into the 
+    /// thread, "locking" it for parallel computation
+    ///
+    /// once that is done, the join handle is returned 
+    /// which when unwrapped, returns the heater object
+    #[inline]
+    pub fn lateral_connection_thread_spawn(&self,
+        prandtl_wall_correction_setting: bool,
+        mass_flowrate: MassRate,
+        shell_side_steady_state_power: Power,
+        porous_media_side_steady_state_power: Power) -> JoinHandle<Self>{
+
+        let mut insulated_porous_media_pipe_clone = self.clone();
+
+        // move ptr into a new thread 
+
+        let join_handle = thread::spawn(
+            move || -> Self {
+
+                // carry out the connection calculations
+                insulated_porous_media_pipe_clone.
+                    lateral_and_miscellaneous_connections(
+                        prandtl_wall_correction_setting,
+                        mass_flowrate,
+                        shell_side_steady_state_power,
+                        porous_media_side_steady_state_power
+                    ).unwrap();
+                
+                insulated_porous_media_pipe_clone
+
+            }
+        );
+
+        return join_handle;
+
+    }
 }
 
 

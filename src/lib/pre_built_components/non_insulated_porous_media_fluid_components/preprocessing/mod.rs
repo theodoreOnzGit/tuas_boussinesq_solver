@@ -695,13 +695,14 @@ impl NonInsulatedPorousMediaFluidComponent {
     ///
     /// once that is done, the join handle is returned 
     /// which when unwrapped, returns the heater object
+    #[inline]
     pub fn lateral_connection_thread_spawn(&self,
         prandtl_wall_correction_setting: bool,
         mass_flowrate: MassRate,
         shell_side_steady_state_power: Power,
         porous_media_side_steady_state_power: Power) -> JoinHandle<Self>{
 
-        let mut heater_clone = self.clone();
+        let mut non_insulated_porous_media_pipe_clone = self.clone();
 
         // move ptr into a new thread 
 
@@ -709,7 +710,7 @@ impl NonInsulatedPorousMediaFluidComponent {
             move || -> Self {
 
                 // carry out the connection calculations
-                heater_clone.
+                non_insulated_porous_media_pipe_clone.
                     lateral_and_miscellaneous_connections(
                         prandtl_wall_correction_setting,
                         mass_flowrate,
@@ -717,7 +718,7 @@ impl NonInsulatedPorousMediaFluidComponent {
                         porous_media_side_steady_state_power
                     ).unwrap();
                 
-                heater_clone
+                non_insulated_porous_media_pipe_clone
 
             }
         );
