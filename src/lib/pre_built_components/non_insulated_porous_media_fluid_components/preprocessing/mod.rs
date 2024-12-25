@@ -278,7 +278,10 @@ impl NonInsulatedPorousMediaFluidComponent {
     }
 
 
-    /// still needs to be tested
+    /// gets nodalised conductance from porous media or twisted 
+    /// tape (for heater v2) to the fluid
+    /// regression tested this one, works okay
+    #[inline]
     pub fn get_interior_to_fluid_nodal_conductance(
         &self, prandtl_wall_correction_setting: bool) -> Result<ThermalConductance, TuasLibError>
     {
