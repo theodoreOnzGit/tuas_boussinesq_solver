@@ -1,18 +1,13 @@
-use std::f64::consts::PI;
 use std::thread::{self, JoinHandle};
 
 use super::InsulatedPorousMediaFluidComponent;
-use uom::si::length::meter;
 use uom::ConstZero;
 use uom::si::pressure::atmosphere;
 use ndarray::*;
 
 use uom::si::f64::*;
 use crate::array_control_vol_and_fluid_component_collections::fluid_component_collection::fluid_component_traits::FluidComponentTrait;
-use crate::heat_transfer_correlations::nusselt_number_correlations::input_structs::GnielinskiData;
-use crate::heat_transfer_correlations::thermal_resistance::try_get_thermal_conductance_annular_cylinder;
 use crate::pre_built_components::heat_transfer_entities::HeatTransferEntity;
-use crate::heat_transfer_correlations::nusselt_number_correlations::enums::NusseltCorrelation;
 use crate::heat_transfer_correlations::heat_transfer_interactions::heat_transfer_interaction_enums::HeatTransferInteractionType;
 use crate::boussinesq_thermophysical_properties::LiquidMaterial;
 use crate::boussinesq_thermophysical_properties::SolidMaterial;
