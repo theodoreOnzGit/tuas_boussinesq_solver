@@ -11,7 +11,7 @@ use super::InsulatedPorousMediaFluidComponent;
 impl InsulatedPorousMediaFluidComponent {
     /// advances timestep for each HeatTransferEntity within the 
     /// HeaterVersion2Bare
-    pub fn _advance_timestepp(&mut self, 
+    pub fn advance_timestep(&mut self, 
     timestep: Time) {
 
         self.pipe_fluid_array.advance_timestep_mut_self(timestep).unwrap();
@@ -35,9 +35,7 @@ impl InsulatedPorousMediaFluidComponent {
 
 
                 // carry out the connection calculations
-                component_clone.pipe_fluid_array.advance_timestep_mut_self(timestep).unwrap();
-                component_clone.pipe_shell.advance_timestep_mut_self(timestep).unwrap();
-                component_clone.insulation_array.advance_timestep_mut_self(timestep).unwrap();
+                component_clone.advance_timestep(timestep);
                 
                 component_clone
 

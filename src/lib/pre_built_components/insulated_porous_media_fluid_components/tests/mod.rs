@@ -1,4 +1,4 @@
-use uom::si::length::meter;
+use uom::si::{heat_transfer::watt_per_square_meter_kelvin, length::meter};
 
 use crate::pre_built_components::ciet_isothermal_test_components::new_heated_section_version_1_label_1_without_inner_annular_pipe;
 
@@ -6,6 +6,10 @@ use crate::pre_built_components::ciet_isothermal_test_components::new_heated_sec
 pub fn transient_test_for_heater_v1(){
     unimplemented!()
 }
+/// Validation test using the experimental data,
+///
+/// for now, there is too much parasitic heat loss,
+/// as the heater outlet temperature is about 1.3 degC lower than in experiment
 ///
 /// On page 46 and 47 of Zweibaum's thesis, the following transient was done 
 /// power step transient at the following approximate times:
@@ -576,6 +580,15 @@ pub fn steady_state_test_for_heater_v1_eight_nodes_validation(){
         initial_temperature,
         ambient_air_temp);
 
+    // heat transfer coeff calibrated to 6.0 W/(m^2 K) 
+    let htc_calibrated = HeatTransfer::new::<watt_per_square_meter_kelvin>(6.0);
+
+    heater_v1.heat_transfer_to_ambient = htc_calibrated;
+    heater_top_head.heat_transfer_to_ambient = htc_calibrated;
+    heater_bottom_head.heat_transfer_to_ambient = htc_calibrated;
+    static_mixer_mx_10_object.heat_transfer_to_ambient = htc_calibrated;
+    static_mixer_mx_10_pipe.heat_transfer_to_ambient = htc_calibrated;
+
     //let struct_support_equiv_diameter: Length = Length::new::<inch>(0.5);
     //let struc_support_equiv_length: Length = Length::new::<foot>(1.0);
 
@@ -623,7 +636,7 @@ pub fn steady_state_test_for_heater_v1_eight_nodes_validation(){
 
     // time settings 
 
-    let max_time = Time::new::<second>(200.0);
+    let max_time = Time::new::<second>(300.0);
     let timestep = Time::new::<second>(0.05);
     let mut simulation_time = Time::ZERO;
     let mass_flowrate = MassRate::new::<kilogram_per_second>(0.18);
@@ -824,48 +837,31 @@ pub fn steady_state_test_for_heater_v1_eight_nodes_validation(){
                 let prandtl_wall_correction_setting = true;
                 // make other connections by spawning a new thread 
                 // this is the parallel version
-                let heater_2_join_handle: JoinHandle<InsulatedPorousMediaFluidComponent> 
-                = heater_v1.
-                    lateral_connection_thread_spawn(
+                heater_v1.lateral_and_miscellaneous_connections(
                         prandtl_wall_correction_setting,
                         mass_flowrate,
                         heater_power,
-                        porous_media_side_steady_state_power);
+                        porous_media_side_steady_state_power).unwrap();
 
-                let heater_bottom_join_handle: JoinHandle<InsulatedPorousMediaFluidComponent> 
-                = heater_bottom_head. 
-                    lateral_connection_thread_spawn(
+                heater_bottom_head.lateral_and_miscellaneous_connections(
                         prandtl_wall_correction_setting,
                         mass_flowrate,
                         heater_top_bottom_head_power,
-                        heater_top_bottom_head_power);
+                        heater_top_bottom_head_power).unwrap();
 
-                let heater_top_head_join_handle = 
-                heater_top_head.
-                    lateral_connection_thread_spawn(
+                heater_top_head.lateral_and_miscellaneous_connections(
                         prandtl_wall_correction_setting,
                         mass_flowrate,
                         heater_top_bottom_head_power,
-                        heater_top_bottom_head_power);
-
-                if connect_static_mixer_10 {
-
-                    let static_mixer_join_handle = 
-                    static_mixer_mx_10_object.lateral_connection_thread_spawn_mx10(
-                        mass_flowrate);
-
-                    let static_mixer_pipe_join_handle = 
-                    static_mixer_mx_10_pipe.lateral_connection_thread_spawn_mx10(
-                        mass_flowrate);
-
-                    static_mixer_mx_10_object = static_mixer_join_handle.join().unwrap();
-                    static_mixer_mx_10_pipe = static_mixer_pipe_join_handle.join().unwrap();
-                }
+                        heater_top_bottom_head_power).unwrap();
 
 
-                heater_v1 = heater_2_join_handle.join().unwrap();
-                heater_bottom_head = heater_bottom_join_handle.join().unwrap();
-                heater_top_head = heater_top_head_join_handle.join().unwrap();
+                static_mixer_mx_10_object.lateral_and_miscellaneous_connections_mx10(
+                    mass_flowrate);
+
+                static_mixer_mx_10_pipe.lateral_and_miscellaneous_connections_mx10(
+                    mass_flowrate);
+
 
                 //// calculate timestep (serial method)
                 //heater_v2_bare.advance_timestep(
@@ -873,48 +869,14 @@ pub fn steady_state_test_for_heater_v1_eight_nodes_validation(){
 
                 // calculate timestep (thread spawn method, parallel) 
 
-                let heater_2_join_handle: JoinHandle<InsulatedPorousMediaFluidComponent> 
-                = heater_v1.advance_timestep_thread_spawn(
-                    timestep);
 
-                let heater_bottom_join_handle: JoinHandle<InsulatedPorousMediaFluidComponent> 
-                = heater_bottom_head. 
-                    advance_timestep_thread_spawn(
-                        timestep);
+                heater_v1.advance_timestep(timestep);
+                heater_top_head.advance_timestep(timestep);
+                heater_bottom_head.advance_timestep(timestep);
+                static_mixer_mx_10_pipe.advance_timestep(timestep);
+                static_mixer_mx_10_object.advance_timestep(timestep);
 
-                let heater_top_head_join_handle = 
-                heater_top_head.advance_timestep_thread_spawn(
-                    timestep);
 
-                if connect_static_mixer_10 {
-                    let static_mixer_join_handle = 
-                    static_mixer_mx_10_object.advance_timestep_thread_spawn(
-                        timestep);
-
-                    let static_mixer_pipe_join_handle = 
-                    static_mixer_mx_10_pipe.advance_timestep_thread_spawn(
-                        timestep);
-                    static_mixer_mx_10_object = static_mixer_join_handle.join().unwrap();
-                    static_mixer_mx_10_pipe = static_mixer_pipe_join_handle.join().unwrap();
-
-                }
-
-                //let structural_support_heater_bottom_head_join_handle = 
-                //structural_support_heater_bottom_head.
-                //advance_timestep_mut_self_thread_spawn(timestep);
-
-                //let structural_support_heater_top_head_join_handle = 
-                //structural_support_heater_top_head.
-                //advance_timestep_mut_self_thread_spawn(timestep);
-
-                heater_v1 = heater_2_join_handle.join().unwrap();
-                heater_bottom_head = heater_bottom_join_handle.join().unwrap();
-                heater_top_head = heater_top_head_join_handle.join().unwrap();
-
-                //structural_support_heater_bottom_head 
-                //=  structural_support_heater_bottom_head_join_handle.join().unwrap();
-                //structural_support_heater_top_head 
-                //=  structural_support_heater_top_head_join_handle.join().unwrap();
 
             } 
 
@@ -939,10 +901,10 @@ pub fn steady_state_test_for_heater_v1_eight_nodes_validation(){
         // assert final temp 
         //
         // it's within 1.3 degc of expt data, not
-        approx::abs_diff_eq!(
+        approx::assert_abs_diff_eq!(
             final_experimental_outlet_temp.get::<degree_celsius>(),
             final_outlet_temp.get::<degree_celsius>(),
-            epsilon=1.3)
+            epsilon=0.0);
 
     });
 

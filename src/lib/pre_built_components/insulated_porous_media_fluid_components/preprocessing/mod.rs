@@ -278,9 +278,6 @@ impl InsulatedPorousMediaFluidComponent {
             let nodalised_ambient_convection_thermal_resistance: ThermalResistance 
                 = nodalised_thermal_conductance_ambient_convection.recip();
             
-            dbg!(&nodalised_thermal_conductance_ambient_convection);
-            dbg!(&nodalised_insulation_side_thermal_conductance);
-
 
             // add resistances together 
             let nodalised_insulation_to_ambient_resistance: ThermalResistance 
