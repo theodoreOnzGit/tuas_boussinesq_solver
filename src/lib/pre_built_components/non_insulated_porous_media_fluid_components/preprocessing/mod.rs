@@ -468,7 +468,6 @@ impl NonInsulatedPorousMediaFluidComponent {
         let nodalised_fluid_side_conductance: ThermalConductance 
             = (tube_h_to_fluid * self.convection_heat_transfer_area_to_interior)
             / number_of_temperature_nodes;
-        dbg!(&nodalised_fluid_side_conductance);
 
         
         // now solid side nodalised conductance 
@@ -478,7 +477,6 @@ impl NonInsulatedPorousMediaFluidComponent {
             = (self.solid_side_thermal_conductance_lengthscale_fluid_to_porous_media_internal * 
                 solid_thermal_conductivity) / number_of_temperature_nodes;
 
-        dbg!(&nodalised_solid_side_conductance);
         let nodalised_pipe_fluid_to_shell_thermal_resistance: ThermalResistance 
             = nodalised_solid_side_conductance.recip() 
             + nodalised_fluid_side_conductance.recip();
