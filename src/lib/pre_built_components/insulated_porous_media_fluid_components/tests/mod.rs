@@ -45,7 +45,7 @@ pub fn regression_heater_v1_porous_and_non_porous_conductance_pipe_to_insulation
     let ambient_air_temp: ThermodynamicTemperature = 
     ThermodynamicTemperature::new::<degree_celsius>(21.76);
 
-    let number_of_temperature_nodes: usize = 8;
+    let number_of_temperature_nodes: usize = 15;
     
 
     let mut heater_v1_without_inner_annular_pipe = 
@@ -53,7 +53,7 @@ pub fn regression_heater_v1_porous_and_non_porous_conductance_pipe_to_insulation
             initial_temperature);
 
     let mut heater_v1_with_annular_pipe = 
-        InsulatedPorousMediaFluidComponent::new_dewet_model_heater_v2_insulated(
+        InsulatedPorousMediaFluidComponent::new_ciet_heater_v1_with_annular_pipe(
         initial_temperature, 
         ambient_air_temp, 
         number_of_temperature_nodes

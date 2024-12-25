@@ -418,7 +418,6 @@ impl InsulatedPorousMediaFluidComponent {
         user_specified_inner_nodes: usize
         ) -> Self {
 
-        let ambient_temperature = ThermodynamicTemperature::new::<degree_celsius>(20.0);
         let fluid_pressure = Pressure::new::<atmosphere>(1.0);
         let solid_pressure = Pressure::new::<atmosphere>(1.0);
         // hydraulic diameter should be about 6.60e-3m
@@ -441,7 +440,7 @@ impl InsulatedPorousMediaFluidComponent {
         // from SAM nodalisation, we have 15 nodes only, 
         // now because there are two outer nodes, the 
         // number of inner nodes is 15-2
-        let user_specified_inner_nodes = 15-2; 
+        let _user_specified_inner_nodes_in_sam_model = 15-2; 
 
         // based on SAM inputs
         let inner_pipe_od = Length::new::<inch>(1.25);
