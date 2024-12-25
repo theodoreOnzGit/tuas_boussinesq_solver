@@ -205,6 +205,7 @@ impl InsulatedPorousMediaFluidComponent {
         outer_pipe_thickness: Length,
         inner_pipe_id: Length,
         inner_pipe_od: Length,
+        insulation_thickness: Length,
         insulation_material: SolidMaterial,
         pipe_shell_material: SolidMaterial,
         inner_annular_pipe_material: SolidMaterial,
@@ -220,7 +221,7 @@ impl InsulatedPorousMediaFluidComponent {
             user_specified_inner_nodes = 2;
         }
 
-        let mut fluid_array: FluidArray = 
+        let pipe_fluid_array: FluidArray = 
         FluidArray::new_odd_shaped_pipe(
             pipe_length, 
             hydraulic_diameter, 
@@ -233,27 +234,169 @@ impl InsulatedPorousMediaFluidComponent {
             user_specified_inner_nodes, 
             incline_angle);
 
-        let nusselt_correlation_fluid_to_pipe_shell = fluid_array.nusselt_correlation;
-        let nusselt_correlation_fluid_to_porous_media_interior = fluid_array.nusselt_correlation;
+        let nusselt_correlation_fluid_to_pipe_shell = pipe_fluid_array.nusselt_correlation;
+        let nusselt_correlation_fluid_to_porous_media_interior = pipe_fluid_array.nusselt_correlation;
         let nusselt_correlation_lengthscale_fluid_to_pipe_shell = hydraulic_diameter;
         let nusselt_correlation_lengthscale_fluid_to_porous_media_interior = hydraulic_diameter;
 
-        let steel_shell_id = hydraulic_diameter;
-        let steel_shell_od = 2.0 * outer_pipe_thickness + steel_shell_id;
+        let darcy_loss_correlation = 
+            pipe_fluid_array.fluid_component_loss_properties.clone();
+
+        let pipe_shell_id = hydraulic_diameter;
+        let pipe_shell_od = 2.0 * outer_pipe_thickness + pipe_shell_id;
 
         let pipe_shell_array = 
         SolidColumn::new_cylindrical_shell(
             pipe_length,
-            steel_shell_id,
-            steel_shell_od,
+            pipe_shell_id,
+            pipe_shell_od,
             initial_temperature,
             solid_pressure,
             pipe_shell_material,
             user_specified_inner_nodes 
         );
+        // for thermal conductance lengthscale for cylinder, we 
+        // the easiest way is to get the actual conductance 
+        // which is in terms of (kA/L) then divide by the conductivity
+        let pipe_shell_mid_diameter: Length = (pipe_shell_od + pipe_shell_id)/2.0;
+        let pipe_shell_thermal_conductivity: ThermalConductivity = 
+            try_get_kappa_thermal_conductivity(
+                pipe_shell_material.into(), 
+                initial_temperature, 
+                solid_pressure).unwrap();
+        
+        let pipe_shell_conductance_to_ambient: ThermalConductance = 
+            try_get_thermal_conductance_annular_cylinder(
+                pipe_shell_mid_diameter,
+                pipe_shell_od,
+                pipe_length,
+                pipe_shell_thermal_conductivity).unwrap();
+
+        let pipe_shell_conductance_to_fluid: ThermalConductance = 
+            try_get_thermal_conductance_annular_cylinder(
+                pipe_shell_id,
+                pipe_shell_mid_diameter,
+                pipe_length,
+                pipe_shell_thermal_conductivity).unwrap();
 
 
-        todo!()
+        let thermal_conductance_lengthscale_pipe_shell_to_insulation_pipe_interface: Length = 
+            pipe_shell_conductance_to_ambient/pipe_shell_thermal_conductivity;
+
+        let thermal_conductance_lengthscale_pipe_shell_to_fluid: Length = 
+            pipe_shell_conductance_to_fluid/pipe_shell_thermal_conductivity;
+
+        let inner_pipe_array = 
+        SolidColumn::new_cylindrical_shell(
+            pipe_length,
+            inner_pipe_id,
+            inner_pipe_od,
+            initial_temperature,
+            solid_pressure,
+            inner_annular_pipe_material,
+            user_specified_inner_nodes 
+        );
+        // for thermal conductance lengthscale for cylinder, we 
+        // the easiest way is to get the actual conductance 
+        // which is in terms of (kA/L) then divide by the conductivity
+        let inner_pipe_mid_diameter: Length = (inner_pipe_od + inner_pipe_id)/2.0;
+        let inner_pipe_thermal_conductivity: ThermalConductivity = 
+            try_get_kappa_thermal_conductivity(
+                inner_annular_pipe_material.into(), 
+                initial_temperature, 
+                solid_pressure).unwrap();
+        
+        let inner_pipe_conductance_to_fluid: ThermalConductance = 
+            try_get_thermal_conductance_annular_cylinder(
+                inner_pipe_mid_diameter,
+                inner_pipe_od,
+                pipe_length,
+                inner_pipe_thermal_conductivity).unwrap();
+
+
+        let thermal_conductance_lengthscale_fluid_to_porous_media_internal: Length = 
+            inner_pipe_conductance_to_fluid/inner_pipe_thermal_conductivity;
+
+        let insulation_id = pipe_shell_od;
+        let insulation_od = insulation_id + 2.0 * insulation_thickness;
+        // next is the insulation array 
+        let insulation_array = 
+        SolidColumn::new_cylindrical_shell(
+            pipe_length,
+            insulation_id,
+            insulation_od,
+            initial_temperature,
+            solid_pressure,
+            insulation_material,
+            user_specified_inner_nodes 
+        );
+        let insulation_mid_diameter: Length = (insulation_od + insulation_id)/2.0;
+        let insulation_thermal_conductivity: ThermalConductivity = 
+            try_get_kappa_thermal_conductivity(
+                SolidMaterial::Fiberglass.into(), 
+                initial_temperature, 
+                solid_pressure).unwrap();
+        
+        let insulation_conductance_to_ambient: ThermalConductance = 
+            try_get_thermal_conductance_annular_cylinder(
+                insulation_mid_diameter,
+                insulation_od,
+                pipe_length,
+                insulation_thermal_conductivity).unwrap();
+
+        let insulation_conductance_to_pipe_insulation_boundary: ThermalConductance = 
+            try_get_thermal_conductance_annular_cylinder(
+                insulation_id,
+                insulation_mid_diameter,
+                pipe_length,
+                insulation_thermal_conductivity).unwrap();
+
+
+        let thermal_conductance_lengthscale_insulation_to_ambient: Length = 
+            insulation_conductance_to_ambient/insulation_thermal_conductivity;
+
+        let thermal_conductance_lengthscale_insulation_to_insulation_pipe_interface: Length = 
+            insulation_conductance_to_pipe_insulation_boundary/insulation_thermal_conductivity;
+
+
+        // area = PI * inner diameter * L
+        let convection_heat_transfer_area_fluid_to_interior = 
+            PI * inner_pipe_od * pipe_length;
+        // area = PI * inner diameter * L
+        let convection_heat_transfer_area_fluid_to_pipe_shell: Area 
+            = PI * pipe_shell_id * pipe_length;
+
+
+
+        // area = PI * outer diameter * L 
+        let convection_heat_transfer_area_insulation_to_ambient: Area 
+            = PI * insulation_od * pipe_length;
+
+
+        return Self{
+            inner_nodes: user_specified_inner_nodes,
+            insulation_array: insulation_array.into(),
+            interior_solid_array_for_porous_media: inner_pipe_array.into(),
+            pipe_shell: pipe_shell_array.into(),
+            pipe_fluid_array: pipe_fluid_array.into(),
+            ambient_temperature,
+            heat_transfer_to_ambient: htc_to_ambient,
+            flow_area,
+            darcy_loss_correlation,
+            thermal_conductance_lengthscale_pipe_shell_to_insulation_pipe_interface,
+            thermal_conductance_lengthscale_pipe_shell_to_fluid,
+            thermal_conductance_lengthscale_fluid_to_porous_media_internal,
+            thermal_conductance_lengthscale_insulation_to_insulation_pipe_interface,
+            thermal_conductance_lengthscale_insulation_to_ambient,
+            nusselt_correlation_fluid_to_pipe_shell,
+            nusselt_correlation_lengthscale_fluid_to_pipe_shell,
+            convection_heat_transfer_area_insulation_to_ambient,
+            nusselt_correlation_fluid_to_porous_media_interior,
+            nusselt_correlation_lengthscale_fluid_to_porous_media_interior,
+            convection_heat_transfer_area_fluid_to_pipe_shell,
+            convection_heat_transfer_area_fluid_to_interior,
+        };
+
     }
 
     /// traditional callibrated heater constructor 
