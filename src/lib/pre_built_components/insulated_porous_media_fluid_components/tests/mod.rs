@@ -40,7 +40,7 @@ pub fn test_to_assert_if_conductance_from_insulation_to_ambient_is_correct(){
     let ambient_air_temp: ThermodynamicTemperature = 
     ThermodynamicTemperature::new::<degree_celsius>(21.76);
 
-    let number_of_temperature_nodes: usize = 15;
+    let number_of_inner_temperature_nodes: usize = 15-2;
     
 
     let mut heater_v1_without_inner_annular_pipe = 
@@ -51,7 +51,7 @@ pub fn test_to_assert_if_conductance_from_insulation_to_ambient_is_correct(){
         InsulatedPorousMediaFluidComponent::new_ciet_heater_v1_with_annular_pipe(
         initial_temperature, 
         ambient_air_temp, 
-        number_of_temperature_nodes
+        number_of_inner_temperature_nodes
     );
 
 
@@ -244,7 +244,7 @@ pub fn regression_heater_v1_porous_and_non_porous_conductance_pipe_to_insulation
     let ambient_air_temp: ThermodynamicTemperature = 
     ThermodynamicTemperature::new::<degree_celsius>(21.76);
 
-    let number_of_temperature_nodes: usize = 15;
+    let number_of_inner_temperature_nodes: usize = 15-2;
     
 
     let mut heater_v1_without_inner_annular_pipe = 
@@ -255,7 +255,7 @@ pub fn regression_heater_v1_porous_and_non_porous_conductance_pipe_to_insulation
         InsulatedPorousMediaFluidComponent::new_ciet_heater_v1_with_annular_pipe(
         initial_temperature, 
         ambient_air_temp, 
-        number_of_temperature_nodes
+        number_of_inner_temperature_nodes
     );
 
 
@@ -410,8 +410,6 @@ pub fn regression_heater_v1_porous_and_non_porous_conductance_pipe_to_insulation
 
     let time_taken_for_calculation_loop = loop_time_start.elapsed().unwrap();
     dbg!(time_taken_for_calculation_loop);
-    unimplemented!()
-
 
 }
 
