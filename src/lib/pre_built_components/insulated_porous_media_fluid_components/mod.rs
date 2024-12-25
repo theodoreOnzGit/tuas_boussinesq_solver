@@ -187,6 +187,74 @@ pub struct InsulatedPorousMediaFluidComponent {
 
 impl InsulatedPorousMediaFluidComponent {
 
+    /// constructs a new annular pipe with insulation
+    ///
+    /// uses the normal pipe (darcy) friction factor and 
+    /// Gnielinksi type correlations for convection
+    pub fn new_annular_pipe(
+        initial_temperature: ThermodynamicTemperature,
+        ambient_temperature: ThermodynamicTemperature,
+        fluid_pressure: Pressure,
+        solid_pressure: Pressure,
+        hydraulic_diameter: Length,
+        pipe_length: Length,
+        flow_area: Area,
+        incline_angle: Angle,
+        form_loss: Ratio,
+        surface_roughness: Length,
+        outer_pipe_thickness: Length,
+        inner_pipe_id: Length,
+        inner_pipe_od: Length,
+        insulation_material: SolidMaterial,
+        pipe_shell_material: SolidMaterial,
+        inner_annular_pipe_material: SolidMaterial,
+        pipe_fluid_material: LiquidMaterial,
+        htc_to_ambient: HeatTransfer,
+        user_specificed_number_of_nodes: usize,
+        ) -> Self { 
+
+        let mut user_specified_inner_nodes = 
+            user_specificed_number_of_nodes - 2;
+
+        if user_specified_inner_nodes < 2 {
+            user_specified_inner_nodes = 2;
+        }
+
+        let mut fluid_array: FluidArray = 
+        FluidArray::new_odd_shaped_pipe(
+            pipe_length, 
+            hydraulic_diameter, 
+            flow_area, 
+            initial_temperature, 
+            fluid_pressure, 
+            pipe_shell_material, 
+            pipe_fluid_material, 
+            form_loss, 
+            user_specified_inner_nodes, 
+            incline_angle);
+
+        let nusselt_correlation_fluid_to_pipe_shell = fluid_array.nusselt_correlation;
+        let nusselt_correlation_fluid_to_porous_media_interior = fluid_array.nusselt_correlation;
+        let nusselt_correlation_lengthscale_fluid_to_pipe_shell = hydraulic_diameter;
+        let nusselt_correlation_lengthscale_fluid_to_porous_media_interior = hydraulic_diameter;
+
+        let steel_shell_id = hydraulic_diameter;
+        let steel_shell_od = 2.0 * outer_pipe_thickness + steel_shell_id;
+
+        let pipe_shell_array = 
+        SolidColumn::new_cylindrical_shell(
+            pipe_length,
+            steel_shell_id,
+            steel_shell_od,
+            initial_temperature,
+            solid_pressure,
+            pipe_shell_material,
+            user_specified_inner_nodes 
+        );
+
+
+        todo!()
+    }
 
     /// traditional callibrated heater constructor 
     /// with 20 W/(m^2 K) of heat loss  to air

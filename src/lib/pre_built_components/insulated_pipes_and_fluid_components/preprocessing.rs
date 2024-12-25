@@ -124,7 +124,7 @@ impl InsulatedFluidComponent {
         // 3. we'll need the shell midpoint to insulation midpoint thermal conductance
 
         let pipe_shell_to_insulation_array_conductance: ThermalConductance 
-            = self.get_pipe_shell_to_insulation_conductance()?;
+            = self.get_pipe_shell_to_insulation_nodal_conductance()?;
 
         // next, we need to consider discretisation, ie how much 
         // power fraction
@@ -598,7 +598,7 @@ impl InsulatedFluidComponent {
 
     /// obtains pipe shell to insulation conductance
     #[inline]
-    pub fn get_pipe_shell_to_insulation_conductance(
+    pub fn get_pipe_shell_to_insulation_nodal_conductance(
     &self) -> Result<ThermalConductance,TuasLibError> {
 
         // first, make a clone of pipe shell and insulation
