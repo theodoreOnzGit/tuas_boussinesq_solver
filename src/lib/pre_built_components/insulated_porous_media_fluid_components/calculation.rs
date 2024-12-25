@@ -17,6 +17,7 @@ impl InsulatedPorousMediaFluidComponent {
         self.pipe_fluid_array.advance_timestep_mut_self(timestep).unwrap();
         self.pipe_shell.advance_timestep_mut_self(timestep).unwrap();
         self.insulation_array.advance_timestep_mut_self(timestep).unwrap();
+        self.interior_solid_array_for_porous_media.advance_timestep_mut_self(timestep).unwrap();
     }
 
     /// advances timestep by spawning a thread 

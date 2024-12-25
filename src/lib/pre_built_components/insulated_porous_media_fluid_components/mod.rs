@@ -1952,3 +1952,8 @@ pub mod calculation;
 /// for postprocessing, one can obtain temperature profiles 
 /// of the component using the postprocessing modules
 pub mod postprocessing;
+
+/// tests for regression, make sure conductances are 
+/// calculated correctly
+#[cfg(test)]
+pub mod tests;
