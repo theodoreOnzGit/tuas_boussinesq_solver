@@ -2,11 +2,14 @@ use uom::si::length::meter;
 
 use crate::pre_built_components::ciet_isothermal_test_components::new_heated_section_version_1_label_1_without_inner_annular_pipe;
 
-#[test]
-pub fn transient_test_for_heater_v1(){
-    unimplemented!()
-}
 
+pub mod transient_validation;
+
+/// based on zweibaum's test data in page 46-47 of his dissertation 
+///
+/// I did a steady state validation test for heater v1
+///
+/// results agree to within 0.2 degC of expt data, which is decent!
 pub mod steady_state_validation;
 /// will probably use insulated pipes as a reference for this
 /// possibly the heater v1 without internal

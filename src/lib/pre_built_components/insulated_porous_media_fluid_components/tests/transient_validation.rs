@@ -1,9 +1,12 @@
-
-
-/// Validation test using the experimental data,
+/// Transient Validation test using the experimental data,
+/// 
+/// we are specifically going for the transient at 4050s
 ///
-/// for now, results look good! within 0.2 degC of expt data
-/// so long as ambient htc is around 6 W/(m^2 K)
+/// the outlet temp at 4100s after power step from 2530 kW to 6080 kW 
+/// is 96.884 degC approx
+///
+/// this is 50s in after transient
+///
 ///
 /// On page 46 and 47 of Zweibaum's thesis, the following transient was done 
 /// power step transient at the following approximate times:
@@ -520,7 +523,7 @@
 /// 7920,79.062,88.35,86.948,80.225
 /// 7930,79.021,88.374,86.966,80.179
 #[test]
-pub fn steady_state_test_for_heater_v1_eight_nodes_validation(){
+pub fn transient_test_for_heater_v1_eight_nodes_validation(){
     use uom::si::f64::*;
     use uom::si::thermodynamic_temperature::degree_celsius;
     use crate::prelude::beta_testing::*;
@@ -535,11 +538,11 @@ pub fn steady_state_test_for_heater_v1_eight_nodes_validation(){
 
 
     // heater v1 example
-    let heater_power = Power::new::<kilowatt>(2.53);
+    let mut heater_power = Power::new::<kilowatt>(4.24);
     let initial_temperature: ThermodynamicTemperature = 
-    ThermodynamicTemperature::new::<degree_celsius>(78.852);
+    ThermodynamicTemperature::new::<degree_celsius>(79.067);
     let final_experimental_outlet_temp =
-        ThermodynamicTemperature::new::<degree_celsius>(86.976);
+        ThermodynamicTemperature::new::<degree_celsius>(96.884);
     let inlet_temperature = initial_temperature;
     let ambient_air_temp: ThermodynamicTemperature = 
     ThermodynamicTemperature::new::<degree_celsius>(21.76);
@@ -631,7 +634,7 @@ pub fn steady_state_test_for_heater_v1_eight_nodes_validation(){
 
     // time settings 
 
-    let max_time = Time::new::<second>(300.0);
+    let max_time = Time::new::<second>(350.0);
     let timestep = Time::new::<second>(0.05);
     let mut simulation_time = Time::ZERO;
     let mass_flowrate = MassRate::new::<kilogram_per_second>(0.18);
@@ -830,6 +833,13 @@ pub fn steady_state_test_for_heater_v1_eight_nodes_validation(){
                 let porous_media_side_steady_state_power = Power::ZERO;
                 let heater_top_bottom_head_power = Power::ZERO;
                 let prandtl_wall_correction_setting = true;
+
+                // 
+                if simulation_time > Time::new::<second>(350.0) {
+                    heater_power = Power::new::<kilowatt>(6.08);
+                }
+
+
                 // make other connections by spawning a new thread 
                 // this is the parallel version
                 heater_v1.lateral_and_miscellaneous_connections(
@@ -912,7 +922,7 @@ pub fn steady_state_test_for_heater_v1_eight_nodes_validation(){
     // once simulation completed, write data
 
 
-    //todo!("haven't coded csv writing file")
+    unimplemented!();
 
 
 
