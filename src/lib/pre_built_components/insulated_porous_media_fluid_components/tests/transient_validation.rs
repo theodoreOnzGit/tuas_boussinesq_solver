@@ -3,9 +3,13 @@
 /// we are specifically going for the transient at 4050s
 ///
 /// the outlet temp at 4100s after power step from 2530 kW to 6080 kW 
-/// is 96.884 degC approx
+/// is 97.31 degC approx
 ///
-/// this is 50s in after transient
+/// this is 50s in after transient. 
+///
+/// If the temperatures 50s after the transient match, the test passes.
+///
+///
 ///
 ///
 /// On page 46 and 47 of Zweibaum's thesis, the following transient was done 
@@ -30,7 +34,9 @@
 /// 7551.991,2707.641
 /// 7975.111,2707.641
 ///
-/// The resulting approx temperatures were:
+/// Based on fig 2-21
+/// The resulting approx temperatures for the transient at about 
+/// 4050s were (power going from 4.24 kW to 6.08 kW) :
 ///
 ///
 /// Time (s),Heater Outlet Temp (degC)
@@ -119,8 +125,13 @@
 /// 4321.862,79.18
 /// 4363.009,79.18
 /// 4383.998,78.996
+///
+/// I'm testing temperatures 50s into the transient. Which should be 
+/// about 97.316 degC (+/- 0.5 degC of thermocouple uncertainty)
+///
+/// 
 #[test]
-pub fn transient_test_for_heater_v1_eight_nodes_validation(){
+pub fn transient_test_stepup_4050s_fig_2_21_zweibaum_thesis_for_heater_v1_eight_nodes_validation(){
     use uom::si::f64::*;
     use uom::si::thermodynamic_temperature::degree_celsius;
     use crate::prelude::beta_testing::*;
@@ -432,7 +443,7 @@ pub fn transient_test_for_heater_v1_eight_nodes_validation(){
                 let prandtl_wall_correction_setting = true;
 
                 // 
-                if simulation_time > Time::new::<second>(350.0) {
+                if simulation_time > Time::new::<second>(300.0) {
                     heater_power = Power::new::<kilowatt>(6.08);
                 }
 
@@ -506,20 +517,11 @@ pub fn transient_test_for_heater_v1_eight_nodes_validation(){
         approx::assert_abs_diff_eq!(
             final_experimental_outlet_temp.get::<degree_celsius>(),
             final_outlet_temp.get::<degree_celsius>(),
-            epsilon=0.2);
+            epsilon=0.5);
 
     });
 
     main_loop.join().unwrap();
-
-
-
-
-
-    // once simulation completed, write data
-
-
-    unimplemented!();
 
 
 
