@@ -369,7 +369,7 @@ pub fn example_heater_with_struct_supports_and_mx10(){
                 temp_profile_data_vec.push(elapsed_calc_time_seconds_string);
 
                 let steel_temperature_vec = 
-                heater_v2_bare.steel_shell_temperature();
+                heater_v2_bare.pipe_shell_temperature();
 
 
 

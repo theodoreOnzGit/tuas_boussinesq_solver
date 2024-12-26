@@ -1,9 +1,10 @@
 use std::{ops::{Deref, DerefMut}, sync::{Arc, Mutex}, thread, time::{Duration, SystemTime}};
 
+use diagnostics::pri_loop_heater_temperature_diagnostics_ver_4;
 use fluid_solvers::three_branch_pri_loop_flowrates_parallel_ver_4;
 use heat_transfer_solvers::{ciet_pri_loop_three_branch_link_up_components_ver_4, pri_loop_three_branch_advance_timestep_except_dhx_ver_4};
 use tuas_boussinesq_solver::{boussinesq_thermophysical_properties::LiquidMaterial, pre_built_components::ciet_three_branch_plus_dracs::components::{new_active_ctah_horizontal, new_active_ctah_vertical}, prelude::beta_testing::{HeatTransferEntity, InsulatedPorousMediaFluidComponent}, single_control_vol::SingleCVNode};
-use uom::si::{mass_rate::kilogram_per_second, power::kilowatt, pressure::{atmosphere, pascal}};
+use uom::si::{length::{inch, meter}, mass_rate::kilogram_per_second, power::kilowatt, pressure::{atmosphere, pascal}};
 
 use super::ciet_data::CIETState;
 /// controller has been roughly validated using set A1 of the coupled nat circ 
@@ -31,7 +32,7 @@ pub fn educational_ciet_loop_version_4(
     use tuas_boussinesq_solver::pre_built_components::ciet_steady_state_natural_circulation_test_components::coupled_dracs_loop_tests::dhx_constructor::new_dhx_sthe_version_1;
     use tuas_boussinesq_solver::pre_built_components::ciet_steady_state_natural_circulation_test_components::coupled_dracs_loop_tests::dracs_loop_calc_functions_no_tchx_calibration::dracs_loop_dhx_tube_temperature_diagnostics;
     use tuas_boussinesq_solver::pre_built_components::ciet_steady_state_natural_circulation_test_components::coupled_dracs_loop_tests::dracs_loop_calc_functions_sam_tchx_calibration::{coupled_dracs_fluid_mechanics_calc_abs_mass_rate_sam_tchx_calibration, coupled_dracs_loop_link_up_components_sam_tchx_calibration, dracs_loop_advance_timestep_except_dhx_sam_tchx_calibration};
-    use tuas_boussinesq_solver::pre_built_components::ciet_steady_state_natural_circulation_test_components::coupled_dracs_loop_tests::pri_loop_calc_functions::{pri_loop_dhx_shell_temperature_diagnostics, pri_loop_heater_temperature_diagnostics};
+    use tuas_boussinesq_solver::pre_built_components::ciet_steady_state_natural_circulation_test_components::coupled_dracs_loop_tests::pri_loop_calc_functions::pri_loop_dhx_shell_temperature_diagnostics;
     use tuas_boussinesq_solver::pre_built_components::
         ciet_steady_state_natural_circulation_test_components::dracs_loop_components::*;
     use uom::si::thermodynamic_temperature::degree_celsius;
@@ -157,12 +158,18 @@ pub fn educational_ciet_loop_version_4(
     let mut pipe_3 = new_pipe_3_sam_model(initial_temperature);
     let mut pipe_2a = new_pipe_2a(initial_temperature);
     let mut static_mixer_10_label_2 = new_static_mixer_10_label_2(initial_temperature);
-    let mut heater_top_head_1a = new_heater_top_head_1a(initial_temperature);
+    let mut heater_top_head_1a = InsulatedPorousMediaFluidComponent::new_ciet_heater_v1_top_head(
+        initial_temperature,
+        ambient_temperature,
+        2-2);
     let mut heater_ver_1 = InsulatedPorousMediaFluidComponent::new_ciet_heater_v1_with_annular_pipe(
         initial_temperature,
         ambient_temperature,
         15-2);
-    let mut heater_bottom_head_1b = new_heater_bottom_head_1b(initial_temperature);
+    let mut heater_bottom_head_1b = InsulatedPorousMediaFluidComponent::new_ciet_heater_v1_bottom_head(
+        initial_temperature,
+        ambient_temperature,
+        2-2);
     let mut pipe_18 = new_pipe_18(initial_temperature);
 
 
@@ -352,12 +359,24 @@ pub fn educational_ciet_loop_version_4(
         pri_loop_cold_leg_insulation_thickness);
     pipe_18.calibrate_insulation_thickness(
         pri_loop_cold_leg_insulation_thickness);
+
+    let bottom_head_pipe_length = Length::new::<meter>(0.19685);
+    let bottom_head_insulation_id = Length::new::<inch>(1.51)
+        + 2.0 * Length::new::<meter>(0.001905);
     heater_bottom_head_1b.calibrate_insulation_thickness(
+        bottom_head_pipe_length,
+        bottom_head_insulation_id,
         pri_loop_cold_leg_insulation_thickness);
 
     // pri loop hot leg 
-    //
+    
+    let top_head_pipe_length = Length::new::<meter>(0.0889);
+    let top_head_insulation_id = Length::new::<inch>(1.51)
+        + 2.0 * Length::new::<meter>(0.001905);
+
     heater_top_head_1a.calibrate_insulation_thickness(
+        top_head_pipe_length,
+        top_head_insulation_id,
         pri_loop_hot_leg_insulation_thickness);
     static_mixer_10_label_2.calibrate_insulation_thickness(
         pri_loop_hot_leg_insulation_thickness);
@@ -1074,7 +1093,7 @@ pub fn educational_ciet_loop_version_4(
         let display_temperatures = true;
         // temperatures before and after heater
         let ((bt_11,_wt_10),(bt_12,_wt_13)) = 
-            pri_loop_heater_temperature_diagnostics(
+            pri_loop_heater_temperature_diagnostics_ver_4(
                 &mut heater_bottom_head_1b, 
                 &mut static_mixer_10_label_2, 
                 display_temperatures);
@@ -1117,7 +1136,6 @@ pub fn educational_ciet_loop_version_4(
             let pipe_1a_temp = 
                 *heater_top_head_1a
                 .pipe_fluid_array_temperature()
-                .unwrap()
                 .first()
                 .unwrap();
 
@@ -1127,7 +1145,6 @@ pub fn educational_ciet_loop_version_4(
             let pipe_1b_temp = 
                 *heater_bottom_head_1b
                 .pipe_fluid_array_temperature()
-                .unwrap()
                 .first()
                 .unwrap();
 
@@ -1804,3 +1821,6 @@ pub mod archive;
 pub mod fluid_solvers;
 
 pub mod heat_transfer_solvers;
+
+/// displays and prints temperature in command line interface (CLI)
+pub mod diagnostics;

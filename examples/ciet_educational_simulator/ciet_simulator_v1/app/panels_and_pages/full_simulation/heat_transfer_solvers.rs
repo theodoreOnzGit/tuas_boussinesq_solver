@@ -47,9 +47,9 @@ pub fn ciet_pri_loop_three_branch_link_up_components_ver_4(
     pipe_3: &mut InsulatedFluidComponent,
     pipe_2a: &mut InsulatedFluidComponent,
     static_mixer_10_label_2: &mut InsulatedFluidComponent,
-    heater_top_head_1a: &mut InsulatedFluidComponent,
+    heater_top_head_1a: &mut InsulatedPorousMediaFluidComponent,
     heater_version1_1: &mut InsulatedPorousMediaFluidComponent,
-    heater_bottom_head_1b: &mut InsulatedFluidComponent,
+    heater_bottom_head_1b: &mut InsulatedPorousMediaFluidComponent,
     pipe_18: &mut InsulatedFluidComponent,
     pipe_5a: &mut InsulatedFluidComponent,
     pipe_26: &mut InsulatedFluidComponent,
@@ -491,17 +491,23 @@ pub fn ciet_pri_loop_three_branch_link_up_components_ver_4(
                 heater_flow, zero_power).unwrap();
             static_mixer_10_label_2.lateral_and_miscellaneous_connections_no_wall_correction(
                 heater_flow, zero_power).unwrap();
-            heater_top_head_1a.lateral_and_miscellaneous_connections_no_wall_correction(
-                heater_flow, zero_power).unwrap();
             let heat_rate_in_annular_pipe = Power::ZERO;
             let prandtl_wall_correction_setting = false;
+            heater_top_head_1a.lateral_and_miscellaneous_connections(
+                prandtl_wall_correction_setting,
+                heater_flow, 
+                zero_power,
+                heat_rate_in_annular_pipe).unwrap();
             heater_version1_1.lateral_and_miscellaneous_connections(
                 prandtl_wall_correction_setting,
                 heater_flow, 
                 heat_rate_through_heater,
                 heat_rate_in_annular_pipe).unwrap();
-            heater_bottom_head_1b.lateral_and_miscellaneous_connections_no_wall_correction(
-                heater_flow, zero_power).unwrap();
+            heater_bottom_head_1b.lateral_and_miscellaneous_connections(
+                prandtl_wall_correction_setting,
+                heater_flow, 
+                zero_power,
+                heat_rate_in_annular_pipe).unwrap();
             pipe_18.lateral_and_miscellaneous_connections_no_wall_correction(
                 heater_flow, zero_power).unwrap();
 
@@ -588,9 +594,9 @@ pub fn pri_loop_three_branch_advance_timestep_except_dhx_ver_4(
     pipe_3: &mut InsulatedFluidComponent,
     pipe_2a: &mut InsulatedFluidComponent,
     static_mixer_10_label_2: &mut InsulatedFluidComponent,
-    heater_top_head_1a: &mut InsulatedFluidComponent,
+    heater_top_head_1a: &mut InsulatedPorousMediaFluidComponent,
     heater_version1_1: &mut InsulatedPorousMediaFluidComponent,
-    heater_bottom_head_1b: &mut InsulatedFluidComponent,
+    heater_bottom_head_1b: &mut InsulatedPorousMediaFluidComponent,
     pipe_18: &mut InsulatedFluidComponent,
     pipe_5a: &mut InsulatedFluidComponent,
     pipe_26: &mut InsulatedFluidComponent,
@@ -631,9 +637,9 @@ pub fn pri_loop_three_branch_advance_timestep_except_dhx_ver_4(
     pipe_3.advance_timestep(timestep).unwrap();
     pipe_2a.advance_timestep(timestep).unwrap();
     static_mixer_10_label_2.advance_timestep(timestep).unwrap();
-    heater_top_head_1a.advance_timestep(timestep).unwrap();
+    heater_top_head_1a.advance_timestep(timestep);
     heater_version1_1.advance_timestep(timestep);
-    heater_bottom_head_1b.advance_timestep(timestep).unwrap();
+    heater_bottom_head_1b.advance_timestep(timestep);
     pipe_18.advance_timestep(timestep).unwrap();
 
 

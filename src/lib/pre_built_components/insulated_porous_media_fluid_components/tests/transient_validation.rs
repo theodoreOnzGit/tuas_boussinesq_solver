@@ -166,13 +166,13 @@ pub fn transient_test_stepup_4050s_fig_2_21_zweibaum_thesis_for_heater_v1_eight_
 
 
     let mut heater_top_head
-        = InsulatedPorousMediaFluidComponent::new_ciet_v1_top_head(
+        = InsulatedPorousMediaFluidComponent::new_ciet_heater_v1_top_head(
             initial_temperature, 
             ambient_air_temp, 
             0);
 
     let mut heater_bottom_head 
-        = InsulatedPorousMediaFluidComponent::new_ciet_v1_bottom_head(
+        = InsulatedPorousMediaFluidComponent::new_ciet_heater_v1_bottom_head(
             initial_temperature, 
             ambient_air_temp, 
             0);
@@ -722,13 +722,13 @@ pub fn transient_test_stepdown_4050s_fig_2_21_zweibaum_thesis_for_heater_v1_eigh
 
 
     let mut heater_top_head
-        = InsulatedPorousMediaFluidComponent::new_ciet_v1_top_head(
+        = InsulatedPorousMediaFluidComponent::new_ciet_heater_v1_top_head(
             initial_temperature, 
             ambient_air_temp, 
             0);
 
     let mut heater_bottom_head 
-        = InsulatedPorousMediaFluidComponent::new_ciet_v1_bottom_head(
+        = InsulatedPorousMediaFluidComponent::new_ciet_heater_v1_bottom_head(
             initial_temperature, 
             ambient_air_temp, 
             0);

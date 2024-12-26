@@ -52,13 +52,13 @@ pub fn steady_state_test_for_heater_v1_eight_nodes_validation(){
 
 
     let mut heater_top_head
-        = InsulatedPorousMediaFluidComponent::new_ciet_v1_top_head(
+        = InsulatedPorousMediaFluidComponent::new_ciet_heater_v1_top_head(
             initial_temperature, 
             ambient_air_temp, 
             0);
 
     let mut heater_bottom_head 
-        = InsulatedPorousMediaFluidComponent::new_ciet_v1_bottom_head(
+        = InsulatedPorousMediaFluidComponent::new_ciet_heater_v1_bottom_head(
             initial_temperature, 
             ambient_air_temp, 
             0);

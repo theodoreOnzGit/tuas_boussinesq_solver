@@ -474,7 +474,7 @@ impl InsulatedPorousMediaFluidComponent {
     /// K = 3.75 (this is in addition to pipe form losses)
     /// l = 0.0889m 
     /// d_h = 6.60e-3 m (hydraulic diameter)
-    pub fn new_ciet_v1_top_head(
+    pub fn new_ciet_heater_v1_top_head(
         initial_temperature: ThermodynamicTemperature,
         ambient_temperature: ThermodynamicTemperature,
         user_specified_inner_nodes: usize
@@ -534,7 +534,7 @@ impl InsulatedPorousMediaFluidComponent {
     /// K = 3.95 (this is in addition to pipe form losses)
     /// l = 0.0889m 
     /// d_h = 6.60e-3 m (hydraulic diameter)
-    pub fn new_ciet_v1_bottom_head(
+    pub fn new_ciet_heater_v1_bottom_head(
         initial_temperature: ThermodynamicTemperature,
         ambient_temperature: ThermodynamicTemperature,
         user_specified_inner_nodes: usize
@@ -2362,3 +2362,6 @@ pub mod tests;
 
 /// conversion into other types 
 pub mod type_conversion;
+
+/// calibration 
+pub mod calibration;
