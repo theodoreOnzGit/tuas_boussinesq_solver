@@ -147,7 +147,7 @@ impl eframe::App for CIETApp {
                     ui.selectable_value(&mut self.open_panel, Panel::TCHX, "TCHX"); 
                     ui.selectable_value(&mut self.open_panel, Panel::DHX, "DHX STHE"); 
                     ui.selectable_value(&mut self.open_panel, Panel::HeaterAndFrequencyResponse, "Frequency Response"); 
-                    ui.selectable_value(&mut self.open_panel, Panel::NodalisedDiagram, "CIET NodalisedDiagram Diagram"); 
+                    ui.selectable_value(&mut self.open_panel, Panel::NodalisedDiagram, "CIET Nodalised Diagram"); 
             }
             );
             ui.separator();
