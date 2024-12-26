@@ -1,6 +1,6 @@
 use std::{sync::{Arc,Mutex}, thread, time::Duration};
 
-use panels_and_pages::{ciet_data::{CIETState, PagePlotData}, full_simulation::educational_ciet_loop_version_4, heater_ctrl_and_frequency_response::FreqResponseSettings, Panel};
+use panels_and_pages::{ciet_data::{CIETState, PagePlotData}, full_simulation::educational_ciet_loop_version_4, frequency_response_and_transients::FreqResponseAndTransientSettings, Panel};
 use uom::si::{power::kilowatt, time::second};
 use useful_functions::update_ciet_plot_from_ciet_state;
 use uom::si::f64::*;
@@ -31,7 +31,7 @@ pub struct CIETApp {
     ciet_plot_data: PagePlotData,
 
     #[serde(skip)]
-    frequency_response_settings: FreqResponseSettings,
+    frequency_response_settings: FreqResponseAndTransientSettings,
 
     // checks whether user wants fast fwd or slow motion
     user_wants_fast_fwd_on: bool,
@@ -58,7 +58,7 @@ impl Default for CIETApp {
             ciet_state,
             ciet_plot_data_mutex_ptr_for_parallel_data_transfer: ciet_plot_data,
             ciet_plot_data: PagePlotData::default(),
-            frequency_response_settings: FreqResponseSettings::default(),
+            frequency_response_settings: FreqResponseAndTransientSettings::default(),
             user_wants_fast_fwd_on: false,
             user_wants_slow_motion_on: false,
 
@@ -146,7 +146,7 @@ impl eframe::App for CIETApp {
                     ui.selectable_value(&mut self.open_panel, Panel::CTAHPump, "CTAH Pump"); 
                     ui.selectable_value(&mut self.open_panel, Panel::TCHX, "TCHX"); 
                     ui.selectable_value(&mut self.open_panel, Panel::DHX, "DHX STHE"); 
-                    ui.selectable_value(&mut self.open_panel, Panel::HeaterAndFrequencyResponse, "Frequency Response"); 
+                    ui.selectable_value(&mut self.open_panel, Panel::FrequencyResponseAndTransients, "Frequency Response and Transients"); 
                     ui.selectable_value(&mut self.open_panel, Panel::NodalisedDiagram, "CIET Nodalised Diagram"); 
             }
             );
@@ -177,7 +177,7 @@ impl eframe::App for CIETApp {
                 Panel::TCHX => {
                     self.ciet_sim_tchx_page_csv(ui);
                 },
-                Panel::HeaterAndFrequencyResponse => {
+                Panel::FrequencyResponseAndTransients => {
 
                     self.ciet_sim_heater_page_csv(ui);
                 },
@@ -195,12 +195,12 @@ impl eframe::App for CIETApp {
             // show correct panel or page based on user selection
 
             match self.open_panel {
-                Panel::HeaterAndFrequencyResponse => {
+                Panel::FrequencyResponseAndTransients => {
                     // enables scrolling within the image
                     //egui::ScrollArea::both().show(ui, |ui| {
                     //    ui.image(egui::include_image!("ciet_gui_schematics.png"));
                     //});
-                    self.ciet_sim_freq_response_page(ui);
+                    self.ciet_sim_transients_and_freq_response_page(ui);
 
                     
                 },

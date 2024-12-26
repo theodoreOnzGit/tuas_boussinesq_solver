@@ -220,7 +220,7 @@ impl CIETApp {
 
             // allow the user to go straight to frequency response page
             if ui.put(rect, frequency_response_label).clicked() {
-                self.open_panel = Panel::HeaterAndFrequencyResponse;
+                self.open_panel = Panel::FrequencyResponseAndTransients;
             }
 
             drop(heater_set_pt_slider_kw);

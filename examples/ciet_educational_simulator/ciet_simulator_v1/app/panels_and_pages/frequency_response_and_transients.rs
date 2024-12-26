@@ -8,7 +8,7 @@ use crate::ciet_simulator_v1::CIETApp;
 
 impl CIETApp {
 
-    pub fn ciet_sim_freq_response_page(&mut self, ui: &mut Ui){
+    pub fn ciet_sim_transients_and_freq_response_page(&mut self, ui: &mut Ui){
 
 
 
@@ -30,6 +30,7 @@ impl CIETApp {
 
             ui.add(heater_set_pt_slider_kw);
 
+            ui.heading("");
             ui.checkbox(&mut self.frequency_response_settings.frequency_response_switched_on, 
                 "Frequency Response Control");
             ui.label(self.frequency_response_settings.get_sin_wave_label());
@@ -52,6 +53,38 @@ impl CIETApp {
                 .drag_value_speed(0.001);
 
             ui.add(total_amplitude_slider_kw);
+
+            ui.heading("");
+            ui.checkbox(&mut self.frequency_response_settings.step_response_switched_on, 
+                "Step Response Control");
+
+            let step_response_slider_kw = egui::Slider::new(
+                &mut self.frequency_response_settings.user_set_step_response_power_kw, 
+                -10.0..=10.0)
+                .text("Desired Step Response Power (kW)")
+                .logarithmic(false)
+                .drag_value_speed(0.01);
+
+            ui.add(step_response_slider_kw);
+
+            if ui.add(egui::Button::new("Start Step Response")).clicked() {
+                // only change step response if the step response is switched on 
+                if self.frequency_response_settings.step_response_switched_on {
+
+                    let step_response_power_kw: f64 = 
+                        self.frequency_response_settings.user_set_step_response_power_kw;
+
+                    // set step response power to 0
+                    self.frequency_response_settings.user_set_step_response_power_kw = 0.0;
+
+                    // add the step response power to the steady state 
+                    // power 
+                    self.frequency_response_settings.steady_state_power_kw 
+                        += step_response_power_kw;
+
+
+                }
+            }
 
             // note: frequency response updates are done in the app.rs 
         }
@@ -79,16 +112,18 @@ impl CIETApp {
 
 }
 
-pub struct FreqResponseSettings{
+pub struct FreqResponseAndTransientSettings{
     pub advanced_heater_control_switched_on: bool,
     pub frequency_response_switched_on: bool,
+    pub step_response_switched_on: bool,
     pub steady_state_power_kw: f64,
+    pub user_set_step_response_power_kw: f64,
     pub total_amplitude_kw: f64,
     pub angular_velocity_rad_per_s: f64,
     
 }
 
-impl FreqResponseSettings {
+impl FreqResponseAndTransientSettings {
 
     pub fn get_frequency_response_signal(&self,
         current_sim_time: Time) -> Power {
@@ -139,7 +174,7 @@ impl FreqResponseSettings {
     }
 }
 
-impl Default for FreqResponseSettings {
+impl Default for FreqResponseAndTransientSettings {
     fn default() -> Self {
         return Self {
             advanced_heater_control_switched_on: false,
@@ -147,6 +182,8 @@ impl Default for FreqResponseSettings {
             steady_state_power_kw: 0.0,
             total_amplitude_kw: 0.0,
             angular_velocity_rad_per_s: 0.0,
+            step_response_switched_on: false,
+            user_set_step_response_power_kw: 0.0,
 
         };
     }

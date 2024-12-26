@@ -7,7 +7,7 @@ pub(crate) enum Panel {
     Heater,
     DHX,
     TCHX,
-    HeaterAndFrequencyResponse,
+    FrequencyResponseAndTransients,
     NodalisedDiagram,
 }
 
@@ -37,7 +37,7 @@ pub mod tchx_page;
 pub mod full_simulation;
 
 /// contains code for fine control, step and frequency response 
-pub mod heater_ctrl_and_frequency_response;
+pub mod frequency_response_and_transients;
 
 /// citation and disclaimer page code
 pub mod citations_and_disclaimers;
