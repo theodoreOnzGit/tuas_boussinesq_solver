@@ -1,9 +1,11 @@
+
 use std::{ops::{Deref, DerefMut}, sync::{Arc, Mutex}, thread, time::{Duration, SystemTime}};
 
 use tuas_boussinesq_solver::{boussinesq_thermophysical_properties::LiquidMaterial, pre_built_components::ciet_three_branch_plus_dracs::{components::{new_active_ctah_horizontal, new_active_ctah_vertical}, solver_functions::{ciet_pri_loop_three_branch_link_up_components, pri_loop_three_branch_advance_timestep_except_dhx, three_branch_pri_loop_flowrates_parallel}}, prelude::beta_testing::HeatTransferEntity, single_control_vol::SingleCVNode};
 use uom::si::{mass_rate::kilogram_per_second, power::kilowatt, pressure::{atmosphere, pascal}};
 
-use super::ciet_data::CIETState;
+use crate::ciet_simulator_v1::app::panels_and_pages::ciet_data::CIETState;
+
 /// controller has been roughly validated using set A1 of the coupled nat circ 
 /// and a constant forced circulation flow of about 0.18 kg/s.
 /// At this flowrate, the heater temperature in is 80C, heater temp out is 
@@ -13,7 +15,7 @@ use super::ciet_data::CIETState;
 ///
 /// Parasitic heat losses for forced circulation NOT calibrated or validated
 ///
-pub fn educational_ciet_loop_version_4(
+pub fn _educational_ciet_loop_version_3(
     global_ciet_state_ptr:Arc<Mutex<CIETState>>){
 
     use uom::si::length::centimeter;
@@ -1784,13 +1786,3 @@ pub fn educational_ciet_loop_version_4(
     }
 
 }
-
-/// if we want to separate fluid mechanics and heat transfer using 
-/// different time steps, it is also possible. However, it will need 
-/// quite some effort
-///
-/// this is under construction
-pub mod separated_solvers;
-
-/// for older versions of the simulator
-pub mod archive;

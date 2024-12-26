@@ -1,6 +1,6 @@
 use std::{sync::{Arc,Mutex}, thread, time::Duration};
 
-use panels_and_pages::{ciet_data::{CIETState, PagePlotData}, full_simulation::educational_ciet_loop_version_3, heater_ctrl_and_frequency_response::FreqResponseSettings, Panel};
+use panels_and_pages::{ciet_data::{CIETState, PagePlotData}, full_simulation::educational_ciet_loop_version_4, heater_ctrl_and_frequency_response::FreqResponseSettings, Panel};
 use uom::si::{power::kilowatt, time::second};
 use useful_functions::update_ciet_plot_from_ciet_state;
 use uom::si::f64::*;
@@ -98,7 +98,7 @@ impl CIETApp {
         // now spawn a thread moving in the pointer 
         //
         thread::spawn(move ||{
-            educational_ciet_loop_version_3(ciet_state_ptr);
+            educational_ciet_loop_version_4(ciet_state_ptr);
         });
 
         // spawn a thread to update the plotting bits
