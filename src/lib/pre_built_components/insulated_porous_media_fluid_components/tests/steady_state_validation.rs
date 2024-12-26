@@ -130,7 +130,7 @@ pub fn steady_state_test_for_heater_v1_eight_nodes_validation(){
     // time settings 
 
     let max_time = Time::new::<second>(300.0);
-    let timestep = Time::new::<second>(0.05);
+    let timestep = Time::new::<second>(0.1);
     let mut simulation_time = Time::ZERO;
     let mass_flowrate = MassRate::new::<kilogram_per_second>(0.18);
 

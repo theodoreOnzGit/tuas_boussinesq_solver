@@ -17,4 +17,12 @@ impl InsulatedPorousMediaFluidComponent {
     pub fn insulation_array_temperature(&mut self) -> Vec<ThermodynamicTemperature>{
         self.insulation_array.get_temperature_vector().unwrap()
     }
+
+    /// returns the number of nodes in this InsulatedPorousMediaFluidComponent
+    ///
+    /// I made this to check if the constructor was working correctly
+    pub fn number_of_nodes(&self) -> usize {
+        return self.inner_nodes + 2;
+    }
 }
+

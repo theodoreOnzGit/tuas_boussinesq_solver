@@ -855,3 +855,36 @@ pub fn regression_heater_v2_insulated_and_non_insulated_conductance_twisted_tape
 
 
 }
+
+#[test] 
+pub fn check_if_number_of_nodes_is_correct(){
+
+    use uom::si::f64::*;
+    use uom::si::thermodynamic_temperature::degree_celsius;
+    use crate::prelude::beta_testing::*;
+
+    // construct structs
+
+
+
+    // heater v1 example
+    let initial_temperature: ThermodynamicTemperature = 
+    ThermodynamicTemperature::new::<degree_celsius>(78.852);
+    let ambient_air_temp: ThermodynamicTemperature = 
+    ThermodynamicTemperature::new::<degree_celsius>(21.76);
+
+    let number_of_inner_temperature_nodes: usize = 10-2;
+    
+    let heater_v1 = InsulatedPorousMediaFluidComponent::new_ciet_heater_v1_with_annular_pipe(
+        initial_temperature,
+        ambient_air_temp,
+        number_of_inner_temperature_nodes
+    );
+
+    assert_eq!(
+        number_of_inner_temperature_nodes + 2,
+        heater_v1.number_of_nodes(),
+        )
+
+
+}

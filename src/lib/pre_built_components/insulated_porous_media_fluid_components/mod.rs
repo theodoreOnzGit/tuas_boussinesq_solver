@@ -216,9 +216,10 @@ impl InsulatedPorousMediaFluidComponent {
 
         let mut user_specified_inner_nodes = 
             user_specificed_number_of_nodes - 2;
+        // if we get less than 2 total number of nodes 
 
-        if user_specified_inner_nodes < 2 {
-            user_specified_inner_nodes = 2;
+        if user_specificed_number_of_nodes < 2 {
+            user_specified_inner_nodes = 0;
         }
 
         // for hydraulic diameter, the calculation is 4A/P_wetted 
