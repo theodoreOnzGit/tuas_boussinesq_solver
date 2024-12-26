@@ -1,6 +1,8 @@
 use std::{ops::{Deref, DerefMut}, sync::{Arc, Mutex}, thread, time::{Duration, SystemTime}};
 
-use tuas_boussinesq_solver::{boussinesq_thermophysical_properties::LiquidMaterial, pre_built_components::ciet_three_branch_plus_dracs::{components::{new_active_ctah_horizontal, new_active_ctah_vertical}, solver_functions::{ciet_pri_loop_three_branch_link_up_components, pri_loop_three_branch_advance_timestep_except_dhx, three_branch_pri_loop_flowrates_parallel}}, prelude::beta_testing::HeatTransferEntity, single_control_vol::SingleCVNode};
+use fluid_solvers::three_branch_pri_loop_flowrates_parallel_ver_4;
+use heat_transfer_solvers::{ciet_pri_loop_three_branch_link_up_components_ver_4, pri_loop_three_branch_advance_timestep_except_dhx_ver_4};
+use tuas_boussinesq_solver::{boussinesq_thermophysical_properties::LiquidMaterial, pre_built_components::ciet_three_branch_plus_dracs::components::{new_active_ctah_horizontal, new_active_ctah_vertical}, prelude::beta_testing::{HeatTransferEntity, InsulatedPorousMediaFluidComponent}, single_control_vol::SingleCVNode};
 use uom::si::{mass_rate::kilogram_per_second, power::kilowatt, pressure::{atmosphere, pascal}};
 
 use super::ciet_data::CIETState;
@@ -134,6 +136,7 @@ pub fn educational_ciet_loop_version_4(
     let mut pipe_39 = new_pipe_39(initial_temperature);
 
     // pri loop dhx branch top to bottom 5a to 17b 
+    let ambient_temperature = ThermodynamicTemperature::new::<degree_celsius>(20.0);
 
     let mut pipe_5a = new_branch_5a(initial_temperature);
     let mut pipe_26 = new_pipe_26(initial_temperature);
@@ -155,7 +158,10 @@ pub fn educational_ciet_loop_version_4(
     let mut pipe_2a = new_pipe_2a(initial_temperature);
     let mut static_mixer_10_label_2 = new_static_mixer_10_label_2(initial_temperature);
     let mut heater_top_head_1a = new_heater_top_head_1a(initial_temperature);
-    let mut heater_ver_1 = new_heated_section_version_1_label_1_without_inner_annular_pipe(initial_temperature);
+    let mut heater_ver_1 = InsulatedPorousMediaFluidComponent::new_ciet_heater_v1_with_annular_pipe(
+        initial_temperature,
+        ambient_temperature,
+        15-2);
     let mut heater_bottom_head_1b = new_heater_bottom_head_1b(initial_temperature);
     let mut pipe_18 = new_pipe_18(initial_temperature);
 
@@ -474,7 +480,7 @@ pub fn educational_ciet_loop_version_4(
         // I'm going to check all arrays in the heater as well
 
         let heater_temp_vec_degc: Vec<f64> = 
-            heater_ver_1.pipe_fluid_array_temperature()
+            heater_ver_1.pipe_fluid_array.get_temperature_vector()
             .unwrap()
             .iter()
             .map(|temp|{
@@ -496,7 +502,7 @@ pub fn educational_ciet_loop_version_4(
         // forced circ loop such that you have opposing mixed convection
 
         let heater_surf_temp_vec_degc: Vec<f64> = 
-            heater_ver_1.pipe_shell_temperature()
+            heater_ver_1.pipe_shell.get_temperature_vector()
             .unwrap()
             .iter()
             .map(|temp|{
@@ -831,7 +837,7 @@ pub fn educational_ciet_loop_version_4(
             // flow should go from up to down
             // this was tested ok
             let (dhx_flow, heater_flow, ctah_flow) = 
-                three_branch_pri_loop_flowrates_parallel(
+                three_branch_pri_loop_flowrates_parallel_ver_4(
                     pump_pressure, 
                     ctah_branch_blocked, 
                     dhx_branch_blocked, 
@@ -928,7 +934,7 @@ pub fn educational_ciet_loop_version_4(
 
 
 
-        ciet_pri_loop_three_branch_link_up_components(
+        ciet_pri_loop_three_branch_link_up_components_ver_4(
             dhx_flow, 
             heater_flow, 
             ctah_flow, 
@@ -987,8 +993,8 @@ pub fn educational_ciet_loop_version_4(
                 dhx_heat_loss_to_ambient_watts_per_m2_kelvin);
 
         // calibrate heater to ambient htc as zero 
-        heater_ver_1.calibrate_heat_transfer_to_ambient(
-            HeatTransfer::ZERO);
+        heater_ver_1.heat_transfer_to_ambient = 
+            HeatTransfer::new::<watt_per_square_meter_kelvin>(6.0);
 
 
         // todo: need to advance timestep here
@@ -1012,7 +1018,7 @@ pub fn educational_ciet_loop_version_4(
         //     &mut static_mixer_21_label_25, &mut static_mixer_20_label_23, 
         //     &mut pipe_23a, &mut pipe_22, &mut flowmeter_20_21a, 
         //     &mut pipe_21, &mut pipe_20, &mut pipe_19, &mut pipe_17b);
-        pri_loop_three_branch_advance_timestep_except_dhx(
+        pri_loop_three_branch_advance_timestep_except_dhx_ver_4(
             timestep, &mut pipe_4, &mut pipe_3, 
             &mut pipe_2a, &mut static_mixer_10_label_2, 
             &mut heater_top_head_1a, &mut heater_ver_1, 
@@ -1794,3 +1800,7 @@ pub mod separated_solvers;
 
 /// for older versions of the simulator
 pub mod archive;
+
+pub mod fluid_solvers;
+
+pub mod heat_transfer_solvers;

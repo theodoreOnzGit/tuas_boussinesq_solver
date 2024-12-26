@@ -2359,3 +2359,6 @@ pub mod postprocessing;
 /// calculated correctly
 #[cfg(test)]
 pub mod tests;
+
+/// conversion into other types 
+pub mod type_conversion;
