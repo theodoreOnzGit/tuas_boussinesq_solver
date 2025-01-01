@@ -723,11 +723,22 @@ pub fn educational_ciet_loop_version_4(
 
         // this is buggy, got to find out why
         let ctah_heat_transfer_coeff: HeatTransfer = {
-            let ctah_outlet_temp_degc = pipe_8a
+            // this assumes forward flow
+            let mut ctah_outlet_temp_degc = pipe_8a
                 .pipe_fluid_array
                 .try_get_bulk_temperature()
                 .unwrap()
                 .get::<degree_celsius>();
+
+            // if backflow, then we take pipe 6a to be outlet temp 
+
+            if local_ciet_state.fm40_ctah_branch_kg_per_s < 0.0 {
+                ctah_outlet_temp_degc = pipe_6a
+                    .pipe_fluid_array
+                    .try_get_bulk_temperature()
+                    .unwrap()
+                    .get::<degree_celsius>();
+            }
 
 
             let reference_temperature_interval_deg_celsius = 80.0;
