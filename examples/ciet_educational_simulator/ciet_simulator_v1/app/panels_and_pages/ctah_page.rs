@@ -186,15 +186,15 @@ impl CIETApp {
             bt43_bt41_temp_plot.show(ui, |plot_ui| {
                 plot_ui.line(Line::new(PlotPoints::from(
                             time_bt43_vec.clone()
-                )).name("bt43 (ctah inlet) temperature deg C"));
+                )).name("bt43 (ctah inlet in fwd flow) temperature deg C"));
                 plot_ui.line(Line::new(PlotPoints::from(
                             time_bt41_vec.clone()
-                )).name("bt41 (ctah outlet) temperature deg C"));
+                )).name("bt41 (ctah outlet in fwd flow) temperature deg C"));
 
 
                 plot_ui.line(Line::new(PlotPoints::from(
                             time_bt41_setpt_vec.clone()
-                )).name("bt41 (ctah outlet) set pt deg C"));
+                )).name("bt41 (ctah outlet in fwd flow) set pt deg C"));
                 //plot_ui.line(Line::new(PlotPoints::from(
                 //            time_simulated_reactor_feedback_outlet_temp_vec.clone()
                 //)).name("simulated reactivity bt12 (heater outlet) temperature deg C"));
