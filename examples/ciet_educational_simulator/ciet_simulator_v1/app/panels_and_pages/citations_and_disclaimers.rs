@@ -16,8 +16,25 @@ impl CIETApp {
         ui.label("Results are not guaranteed to be physically accurate");
         ui.label("USE AT YOUR OWN RISK");
 
-        ui.separator();
-        ui.separator();
+        ui.label(" ");
+        ui.label(" ");
+
+        ui.heading("COPYRIGHT");
+        
+        ui.label(" ");
+
+        ui.label("Theodore Kay Chen Ong, SiCong Xiao, SNRSI, and Per F. Peterson");
+
+        ui.label(" ");
+        ui.label(" ");
+        ui.heading("CREDITS");
+        
+        ui.label(" ");
+
+        ui.label("Heater, cooler and heat exchanger artwork from DWSIM released under GPLv3");
+
+        ui.label(" ");
+        ui.label(" ");
 
         ui.heading("Citations appreciated:");
         ui.label(" ");

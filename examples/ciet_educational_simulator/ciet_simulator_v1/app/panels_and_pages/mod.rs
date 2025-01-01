@@ -9,6 +9,7 @@ pub(crate) enum Panel {
     TCHX,
     FrequencyResponseAndTransients,
     NodalisedDiagram,
+    OnlineCalibration,
 }
 
 pub mod main_page;
@@ -32,12 +33,17 @@ pub mod nat_circ_simulation;
 
 pub mod tchx_page;
 
+/// contains code for fine control, step and frequency response 
+pub mod frequency_response_and_transients;
+
 /// contains code for the full educational simulator of CIET 
 /// both forced and natural circulation
 pub mod full_simulation;
 
-/// contains code for fine control, step and frequency response 
-pub mod frequency_response_and_transients;
+/// contains code on the fly adjustment of heater, and other components
+pub mod online_calibration;
 
 /// citation and disclaimer page code
 pub mod citations_and_disclaimers;
+
+

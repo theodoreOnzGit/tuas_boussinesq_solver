@@ -1,6 +1,6 @@
 use std::{sync::{Arc,Mutex}, thread, time::Duration};
 
-use panels_and_pages::{ciet_data::{CIETState, PagePlotData}, full_simulation::educational_ciet_loop_version_4, frequency_response_and_transients::FreqResponseAndTransientSettings, Panel};
+use panels_and_pages::{ciet_data::{CIETState, PagePlotData}, frequency_response_and_transients::FreqResponseAndTransientSettings, full_simulation::educational_ciet_loop_version_4, online_calibration::HeaterType, Panel};
 use uom::si::{power::kilowatt, time::second};
 use useful_functions::update_ciet_plot_from_ciet_state;
 use uom::si::f64::*;
@@ -38,6 +38,10 @@ pub struct CIETApp {
     // checks whether user wants fast fwd or slow motion
     user_wants_slow_motion_on: bool,
 
+    // for the user to select the heater type desierd
+    #[serde(skip)]
+    user_desired_heater_type: HeaterType,
+
 }
 
 pub mod panels_and_pages;
@@ -61,6 +65,7 @@ impl Default for CIETApp {
             frequency_response_settings: FreqResponseAndTransientSettings::default(),
             user_wants_fast_fwd_on: false,
             user_wants_slow_motion_on: false,
+            user_desired_heater_type: HeaterType::InsulatedHeaterV1Fine15Mesh,
 
         }
     }
@@ -147,6 +152,7 @@ impl eframe::App for CIETApp {
                     ui.selectable_value(&mut self.open_panel, Panel::TCHX, "TCHX"); 
                     ui.selectable_value(&mut self.open_panel, Panel::DHX, "DHX STHE"); 
                     ui.selectable_value(&mut self.open_panel, Panel::FrequencyResponseAndTransients, "Frequency Response and Transients"); 
+                    ui.selectable_value(&mut self.open_panel, Panel::OnlineCalibration, "Online Calibration"); 
                     ui.selectable_value(&mut self.open_panel, Panel::NodalisedDiagram, "CIET Nodalised Diagram"); 
             }
             );
@@ -182,6 +188,8 @@ impl eframe::App for CIETApp {
                     self.ciet_sim_heater_page_csv(ui);
                 },
                 Panel::NodalisedDiagram => {},
+                Panel::OnlineCalibration => {},
+
             }
         });
 
@@ -229,6 +237,11 @@ impl eframe::App for CIETApp {
                         ui.image(egui::include_image!("ciet_sam_diagram_replica.jpg"));
                     });
                 },
+                Panel::OnlineCalibration => {
+                    self.ciet_sim_online_calibration_page(ui);
+
+                },
+
             }
 
             ui.add(egui::github_link_file!(
@@ -295,6 +308,17 @@ impl eframe::App for CIETApp {
                     total_heater_power_kw;
                 // update frequency response back into state 
                 self.ciet_state.lock().unwrap().overwrite_state(ciet_state_local);
+        }
+
+        // now for calibration functions, eg. heater type 
+
+        {
+            let user_desired_heater_type: HeaterType = self.user_desired_heater_type;
+
+            let mut ciet_state_local: CIETState 
+                = self.ciet_state.lock().unwrap().clone();
+            ciet_state_local.current_heater_type = user_desired_heater_type;
+            self.ciet_state.lock().unwrap().overwrite_state(ciet_state_local);
         }
 
         // request update every 0.1 s 

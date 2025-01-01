@@ -106,6 +106,9 @@ pub struct CIETState {
     pub is_ctah_branch_blocked: bool,
     pub is_dhx_branch_blocked: bool,
 
+    // this allows user to select heater type 
+    pub current_heater_type: HeaterType,
+
 
 }
 
@@ -200,6 +203,8 @@ impl Default for CIETState {
 
             // tchx settings
             tchx_htc_watt_per_m2_kelvin: 0.0,
+            //
+            current_heater_type: HeaterType::InsulatedHeaterV1Fine15Mesh,
         }
     }
 }
@@ -355,6 +360,8 @@ use uom::si::heat_transfer::watt_per_square_meter_kelvin;
 use uom::si::f64::*;
 use uom::si::thermodynamic_temperature::{degree_celsius, kelvin};
 use uom::si::power::kilowatt;
+
+use super::online_calibration::HeaterType;
 
 /// this is the struct used to store data for graph plotting and 
 /// csv extraction
