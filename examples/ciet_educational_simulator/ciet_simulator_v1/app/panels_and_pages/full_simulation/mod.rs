@@ -6,6 +6,8 @@ use heat_transfer_solvers::{ciet_pri_loop_three_branch_link_up_components_ver_4,
 use tuas_boussinesq_solver::{boussinesq_thermophysical_properties::LiquidMaterial, pre_built_components::ciet_three_branch_plus_dracs::components::{new_active_ctah_horizontal, new_active_ctah_vertical}, prelude::beta_testing::{HeatTransferEntity, InsulatedPorousMediaFluidComponent}, single_control_vol::SingleCVNode};
 use uom::si::{length::{inch, meter}, mass_rate::kilogram_per_second, power::kilowatt, pressure::{atmosphere, pascal}};
 
+use crate::ciet_simulator_v1::app::panels_and_pages::online_calibration::HeaterType;
+
 use super::ciet_data::CIETState;
 /// controller has been roughly validated using set A1 of the coupled nat circ 
 /// and a constant forced circulation flow of about 0.18 kg/s.
@@ -162,10 +164,15 @@ pub fn educational_ciet_loop_version_4(
         initial_temperature,
         ambient_temperature,
         2-2);
-    let mut heater_ver_1 = InsulatedPorousMediaFluidComponent::new_ciet_heater_v1_with_annular_pipe(
+    let mut heater_ver_1_15_nodes = InsulatedPorousMediaFluidComponent::new_ciet_heater_v1_with_annular_pipe(
         initial_temperature,
         ambient_temperature,
         15-2);
+
+    let mut heater_ver_1_8_nodes = InsulatedPorousMediaFluidComponent::new_ciet_heater_v1_with_annular_pipe(
+        initial_temperature,
+        ambient_temperature,
+        8-2);
     let mut heater_bottom_head_1b = InsulatedPorousMediaFluidComponent::new_ciet_heater_v1_bottom_head(
         initial_temperature,
         ambient_temperature,
@@ -330,13 +337,13 @@ pub fn educational_ciet_loop_version_4(
     let heater_calibrated_nusselt_factor = Ratio::new::<ratio>(
         heater_calibrated_nusselt_factor_float);
     let mut heater_fluid_array_clone: FluidArray 
-        = heater_ver_1.pipe_fluid_array.clone().try_into().unwrap();
+        = heater_ver_1_15_nodes.pipe_fluid_array.clone().try_into().unwrap();
 
     calibrate_nusselt_correlation_of_heat_transfer_entity(
         &mut heater_fluid_array_clone.nusselt_correlation, 
         heater_calibrated_nusselt_factor);
 
-    heater_ver_1.pipe_fluid_array = heater_fluid_array_clone.into();
+    heater_ver_1_15_nodes.pipe_fluid_array = heater_fluid_array_clone.into();
 
     // now calibrate the insulation thickness for all 
 
@@ -498,42 +505,84 @@ pub fn educational_ciet_loop_version_4(
 
         // I'm going to check all arrays in the heater as well
 
-        let heater_temp_vec_degc: Vec<f64> = 
-            heater_ver_1.pipe_fluid_array.get_temperature_vector()
-            .unwrap()
-            .iter()
-            .map(|temp|{
-                temp.get::<degree_celsius>()
-            }).collect();
+        match local_ciet_state.current_heater_type {
 
-        // killswitch if any heater cv exceeds 160.0 C
-        for heater_cv_temperature_degc in heater_temp_vec_degc.iter() {
-            if *heater_cv_temperature_degc > 160.0 {
-                heat_rate_through_heater = Power::ZERO;
-                local_ciet_state.set_heater_power_kilowatts(0.0);
-            }
+            HeaterType::InsulatedHeaterV1Fine15Mesh => {
+
+                let heater_temp_vec_degc: Vec<f64> = 
+                    heater_ver_1_15_nodes.pipe_fluid_array.get_temperature_vector()
+                    .unwrap()
+                    .iter()
+                    .map(|temp|{
+                        temp.get::<degree_celsius>()
+                    }).collect();
+                // killswitch if any heater cv exceeds 160.0 C
+                for heater_cv_temperature_degc in heater_temp_vec_degc.iter() {
+                    if *heater_cv_temperature_degc > 160.0 {
+                        heat_rate_through_heater = Power::ZERO;
+                        local_ciet_state.set_heater_power_kilowatts(0.0);
+                    }
+                }
+                // killswitch if any heated pipe cv exceeds 350C
+                //
+                // this tends to happen when you reverse the pump in the 
+                // the heater fluid gets too hot and simulation crashes
+                // forced circ loop such that you have opposing mixed convection
+
+                let heater_surf_temp_vec_degc: Vec<f64> = 
+                    heater_ver_1_15_nodes.pipe_shell.get_temperature_vector()
+                    .unwrap()
+                    .iter()
+                    .map(|temp|{
+                        temp.get::<degree_celsius>()
+                    }).collect();
+
+                for heater_cv_temperature_degc in heater_surf_temp_vec_degc.iter() {
+                    if *heater_cv_temperature_degc > 350.0 {
+                        heat_rate_through_heater = Power::ZERO;
+                        local_ciet_state.set_heater_power_kilowatts(0.0);
+                    }
+                }
+
+            },
+            HeaterType::InsulatedHeaterV1Coarse8Mesh => {
+                let corase_mesh_heater_temp_vec_degc: Vec<f64> = 
+                    heater_ver_1_8_nodes.pipe_fluid_array.get_temperature_vector()
+                    .unwrap()
+                    .iter()
+                    .map(|temp|{
+                        temp.get::<degree_celsius>()
+                    }).collect();
+
+                for heater_cv_temperature_degc in corase_mesh_heater_temp_vec_degc.iter() {
+                    if *heater_cv_temperature_degc > 160.0 {
+                        heat_rate_through_heater = Power::ZERO;
+                        local_ciet_state.set_heater_power_kilowatts(0.0);
+                    }
+                }
+
+
+                let corase_mesh_heater_surf_temp_vec_degc: Vec<f64> = 
+                    heater_ver_1_8_nodes.pipe_shell.get_temperature_vector()
+                    .unwrap()
+                    .iter()
+                    .map(|temp|{
+                        temp.get::<degree_celsius>()
+                    }).collect();
+                for heater_cv_temperature_degc in corase_mesh_heater_surf_temp_vec_degc.iter() {
+                    if *heater_cv_temperature_degc > 350.0 {
+                        heat_rate_through_heater = Power::ZERO;
+                        local_ciet_state.set_heater_power_kilowatts(0.0);
+                    }
+                }
+
+            },
         }
 
-        // killswitch if any heated pipe cv exceeds 350C
-        //
-        // this tends to happen when you reverse the pump in the 
-        // the heater fluid gets too hot and simulation crashes
-        // forced circ loop such that you have opposing mixed convection
 
-        let heater_surf_temp_vec_degc: Vec<f64> = 
-            heater_ver_1.pipe_shell.get_temperature_vector()
-            .unwrap()
-            .iter()
-            .map(|temp|{
-                temp.get::<degree_celsius>()
-            }).collect();
 
-        for heater_cv_temperature_degc in heater_surf_temp_vec_degc.iter() {
-            if *heater_cv_temperature_degc > 350.0 {
-                heat_rate_through_heater = Power::ZERO;
-                local_ciet_state.set_heater_power_kilowatts(0.0);
-            }
-        }
+
+
 
         let tchx_outlet_temperature_set_point_degc = 
             local_ciet_state.bt_66_tchx_outlet_set_pt_deg_c;
@@ -783,7 +832,8 @@ pub fn educational_ciet_loop_version_4(
         let cloned_pipe_2a = pipe_2a.clone();
         let cloned_static_mixer_10_label_2 = static_mixer_10_label_2.clone();
         let cloned_heater_top_head_1a = heater_top_head_1a.clone();
-        let cloned_heater_ver_1 = heater_ver_1.clone();
+        let cloned_heater_ver_1_15_nodes = heater_ver_1_15_nodes.clone();
+        let cloned_heater_ver_1_8_nodes = heater_ver_1_8_nodes.clone();
         let cloned_heater_bottom_head_1b = heater_bottom_head_1b.clone();
         let cloned_pipe_18 = pipe_18.clone();
 
@@ -855,57 +905,116 @@ pub fn educational_ciet_loop_version_4(
                 cloned_dhx_sthe_2.get_clone_of_shell_side_fluid_component();
             // flow should go from up to down
             // this was tested ok
-            let (dhx_flow, heater_flow, ctah_flow) = 
-                three_branch_pri_loop_flowrates_parallel_ver_4(
-                    pump_pressure, 
-                    ctah_branch_blocked, 
-                    dhx_branch_blocked, 
-                    &cloned_pipe_4, 
-                    &cloned_pipe_3, 
-                    &cloned_pipe_2a, 
-                    &cloned_static_mixer_10_label_2, 
-                    &cloned_heater_top_head_1a, 
-                    &cloned_heater_ver_1, 
-                    &cloned_heater_bottom_head_1b, 
-                    &cloned_pipe_18, 
-                    &cloned_pipe_5a, 
-                    &cloned_pipe_26, 
-                    &cloned_pipe_25a, 
-                    &cloned_static_mixer_21_label_25, 
-                    &cloned_dhx_shell_side_pipe_24, 
-                    &cloned_static_mixer_20_label_23, 
-                    &cloned_pipe_23a, 
-                    &cloned_pipe_22, 
-                    &cloned_flowmeter_20_21a, 
-                    &cloned_pipe_21, 
-                    &cloned_pipe_20, 
-                    &cloned_pipe_19, 
-                    &cloned_pipe_17b, 
-                    &cloned_pipe_5b, 
-                    &cloned_static_mixer_41_label_6, 
-                    &cloned_pipe_6a, 
-                    &cloned_ctah_vertical_label_7a, 
-                    &cloned_ctah_horizontal_label_7b, 
-                    &cloned_pipe_8a, 
-                    &cloned_static_mixer_40_label_8, 
-                    &cloned_pipe_9, 
-                    &cloned_pipe_10, 
-                    &cloned_pipe_11, 
-                    &cloned_pipe_12, 
-                    &cloned_ctah_pump, 
-                    &cloned_pipe_13, 
-                    &cloned_pipe_14, 
-                    &cloned_flowmeter_40_14a, 
-                    &cloned_pipe_15, 
-                    &cloned_pipe_16, 
-                    &cloned_pipe_17a);
 
-            *mass_flow_dhx_br_ptr_clone.lock().unwrap().deref_mut() 
-                = dhx_flow;
-            *mass_flow_heater_br_ptr_clone.lock().unwrap().deref_mut() 
-                = heater_flow;
-            *mass_flow_ctah_br_ptr_clone.lock().unwrap().deref_mut() 
-                = ctah_flow;
+            match local_ciet_state.current_heater_type {
+                HeaterType::InsulatedHeaterV1Fine15Mesh => {
+                    let (dhx_flow, heater_flow, ctah_flow) = 
+                        three_branch_pri_loop_flowrates_parallel_ver_4(
+                            pump_pressure, 
+                            ctah_branch_blocked, 
+                            dhx_branch_blocked, 
+                            &cloned_pipe_4, 
+                            &cloned_pipe_3, 
+                            &cloned_pipe_2a, 
+                            &cloned_static_mixer_10_label_2, 
+                            &cloned_heater_top_head_1a, 
+                            &cloned_heater_ver_1_15_nodes, 
+                            &cloned_heater_bottom_head_1b, 
+                            &cloned_pipe_18, 
+                            &cloned_pipe_5a, 
+                            &cloned_pipe_26, 
+                            &cloned_pipe_25a, 
+                            &cloned_static_mixer_21_label_25, 
+                            &cloned_dhx_shell_side_pipe_24, 
+                            &cloned_static_mixer_20_label_23, 
+                            &cloned_pipe_23a, 
+                            &cloned_pipe_22, 
+                            &cloned_flowmeter_20_21a, 
+                            &cloned_pipe_21, 
+                            &cloned_pipe_20, 
+                            &cloned_pipe_19, 
+                            &cloned_pipe_17b, 
+                            &cloned_pipe_5b, 
+                            &cloned_static_mixer_41_label_6, 
+                            &cloned_pipe_6a, 
+                            &cloned_ctah_vertical_label_7a, 
+                            &cloned_ctah_horizontal_label_7b, 
+                            &cloned_pipe_8a, 
+                            &cloned_static_mixer_40_label_8, 
+                            &cloned_pipe_9, 
+                            &cloned_pipe_10, 
+                            &cloned_pipe_11, 
+                            &cloned_pipe_12, 
+                            &cloned_ctah_pump, 
+                            &cloned_pipe_13, 
+                            &cloned_pipe_14, 
+                            &cloned_flowmeter_40_14a, 
+                            &cloned_pipe_15, 
+                            &cloned_pipe_16, 
+                            &cloned_pipe_17a);
+                    *mass_flow_dhx_br_ptr_clone.lock().unwrap().deref_mut() 
+                        = dhx_flow;
+                    *mass_flow_heater_br_ptr_clone.lock().unwrap().deref_mut() 
+                        = heater_flow;
+                    *mass_flow_ctah_br_ptr_clone.lock().unwrap().deref_mut() 
+                        = ctah_flow;
+                },
+                HeaterType::InsulatedHeaterV1Coarse8Mesh => {
+
+                    let (dhx_flow, heater_flow, ctah_flow) = 
+                        three_branch_pri_loop_flowrates_parallel_ver_4(
+                            pump_pressure, 
+                            ctah_branch_blocked, 
+                            dhx_branch_blocked, 
+                            &cloned_pipe_4, 
+                            &cloned_pipe_3, 
+                            &cloned_pipe_2a, 
+                            &cloned_static_mixer_10_label_2, 
+                            &cloned_heater_top_head_1a, 
+                            &cloned_heater_ver_1_8_nodes, 
+                            &cloned_heater_bottom_head_1b, 
+                            &cloned_pipe_18, 
+                            &cloned_pipe_5a, 
+                            &cloned_pipe_26, 
+                            &cloned_pipe_25a, 
+                            &cloned_static_mixer_21_label_25, 
+                            &cloned_dhx_shell_side_pipe_24, 
+                            &cloned_static_mixer_20_label_23, 
+                            &cloned_pipe_23a, 
+                            &cloned_pipe_22, 
+                            &cloned_flowmeter_20_21a, 
+                            &cloned_pipe_21, 
+                            &cloned_pipe_20, 
+                            &cloned_pipe_19, 
+                            &cloned_pipe_17b, 
+                            &cloned_pipe_5b, 
+                            &cloned_static_mixer_41_label_6, 
+                            &cloned_pipe_6a, 
+                            &cloned_ctah_vertical_label_7a, 
+                            &cloned_ctah_horizontal_label_7b, 
+                            &cloned_pipe_8a, 
+                            &cloned_static_mixer_40_label_8, 
+                            &cloned_pipe_9, 
+                            &cloned_pipe_10, 
+                            &cloned_pipe_11, 
+                            &cloned_pipe_12, 
+                            &cloned_ctah_pump, 
+                            &cloned_pipe_13, 
+                            &cloned_pipe_14, 
+                            &cloned_flowmeter_40_14a, 
+                            &cloned_pipe_15, 
+                            &cloned_pipe_16, 
+                            &cloned_pipe_17a);
+
+                    *mass_flow_dhx_br_ptr_clone.lock().unwrap().deref_mut() 
+                        = dhx_flow;
+                    *mass_flow_heater_br_ptr_clone.lock().unwrap().deref_mut() 
+                        = heater_flow;
+                    *mass_flow_ctah_br_ptr_clone.lock().unwrap().deref_mut() 
+                        = ctah_flow;
+                },
+            }
+
 
 
         }
@@ -952,56 +1061,111 @@ pub fn educational_ciet_loop_version_4(
         //dbg!(&(dhx_flow,heater_flow,ctah_flow));
 
 
+        match local_ciet_state.current_heater_type {
+            HeaterType::InsulatedHeaterV1Fine15Mesh => {
+                ciet_pri_loop_three_branch_link_up_components_ver_4(
+                    dhx_flow, 
+                    heater_flow, 
+                    ctah_flow, 
+                    heat_rate_through_heater, 
+                    average_temperature_for_density_calcs, 
+                    ambient_htc, 
+                    ctah_heat_transfer_coeff, 
+                    &mut pipe_4, 
+                    &mut pipe_3, 
+                    &mut pipe_2a, 
+                    &mut static_mixer_10_label_2, 
+                    &mut heater_top_head_1a, 
+                    &mut heater_ver_1_15_nodes, 
+                    &mut heater_bottom_head_1b, 
+                    &mut pipe_18, 
+                    &mut pipe_5a, 
+                    &mut pipe_26, 
+                    &mut pipe_25a, 
+                    &mut static_mixer_21_label_25, 
+                    &mut dhx_sthe, 
+                    &mut static_mixer_20_label_23, 
+                    &mut pipe_23a, 
+                    &mut pipe_22, 
+                    &mut flowmeter_20_21a, 
+                    &mut pipe_21, 
+                    &mut pipe_20, 
+                    &mut pipe_19, 
+                    &mut pipe_17b, 
+                    &mut pipe_5b, 
+                    &mut static_mixer_41_label_6, 
+                    &mut pipe_6a, 
+                    &mut ctah_vertical_label_7a, 
+                    &mut ctah_horizontal_label_7b, 
+                    &mut pipe_8a, 
+                    &mut static_mixer_40_label_8, 
+                    &mut pipe_9, 
+                    &mut pipe_10, 
+                    &mut pipe_11, 
+                    &mut pipe_12, 
+                    &mut ctah_pump, 
+                    &mut pipe_13, 
+                    &mut pipe_14, 
+                    &mut flowmeter_40_14a, 
+                    &mut pipe_15, 
+                    &mut pipe_16, 
+                    &mut pipe_17a,
+                    &mut top_mixing_node_5a_5b_4,
+                    &mut bottom_mixing_node_17a_17b_18);
+            },
+            HeaterType::InsulatedHeaterV1Coarse8Mesh => {
+                ciet_pri_loop_three_branch_link_up_components_ver_4(
+                    dhx_flow, 
+                    heater_flow, 
+                    ctah_flow, 
+                    heat_rate_through_heater, 
+                    average_temperature_for_density_calcs, 
+                    ambient_htc, 
+                    ctah_heat_transfer_coeff, 
+                    &mut pipe_4, 
+                    &mut pipe_3, 
+                    &mut pipe_2a, 
+                    &mut static_mixer_10_label_2, 
+                    &mut heater_top_head_1a, 
+                    &mut heater_ver_1_8_nodes, 
+                    &mut heater_bottom_head_1b, 
+                    &mut pipe_18, 
+                    &mut pipe_5a, 
+                    &mut pipe_26, 
+                    &mut pipe_25a, 
+                    &mut static_mixer_21_label_25, 
+                    &mut dhx_sthe, 
+                    &mut static_mixer_20_label_23, 
+                    &mut pipe_23a, 
+                    &mut pipe_22, 
+                    &mut flowmeter_20_21a, 
+                    &mut pipe_21, 
+                    &mut pipe_20, 
+                    &mut pipe_19, 
+                    &mut pipe_17b, 
+                    &mut pipe_5b, 
+                    &mut static_mixer_41_label_6, 
+                    &mut pipe_6a, 
+                    &mut ctah_vertical_label_7a, 
+                    &mut ctah_horizontal_label_7b, 
+                    &mut pipe_8a, 
+                    &mut static_mixer_40_label_8, 
+                    &mut pipe_9, 
+                    &mut pipe_10, 
+                    &mut pipe_11, 
+                    &mut pipe_12, 
+                    &mut ctah_pump, 
+                    &mut pipe_13, 
+                    &mut pipe_14, 
+                    &mut flowmeter_40_14a, 
+                    &mut pipe_15, 
+                    &mut pipe_16, 
+                    &mut pipe_17a,
+                    &mut top_mixing_node_5a_5b_4,
+                    &mut bottom_mixing_node_17a_17b_18);
+            },
+        }
 
-        ciet_pri_loop_three_branch_link_up_components_ver_4(
-            dhx_flow, 
-            heater_flow, 
-            ctah_flow, 
-            heat_rate_through_heater, 
-            average_temperature_for_density_calcs, 
-            ambient_htc, 
-            ctah_heat_transfer_coeff, 
-            &mut pipe_4, 
-            &mut pipe_3, 
-            &mut pipe_2a, 
-            &mut static_mixer_10_label_2, 
-            &mut heater_top_head_1a, 
-            &mut heater_ver_1, 
-            &mut heater_bottom_head_1b, 
-            &mut pipe_18, 
-            &mut pipe_5a, 
-            &mut pipe_26, 
-            &mut pipe_25a, 
-            &mut static_mixer_21_label_25, 
-            &mut dhx_sthe, 
-            &mut static_mixer_20_label_23, 
-            &mut pipe_23a, 
-            &mut pipe_22, 
-            &mut flowmeter_20_21a, 
-            &mut pipe_21, 
-            &mut pipe_20, 
-            &mut pipe_19, 
-            &mut pipe_17b, 
-            &mut pipe_5b, 
-            &mut static_mixer_41_label_6, 
-            &mut pipe_6a, 
-            &mut ctah_vertical_label_7a, 
-            &mut ctah_horizontal_label_7b, 
-            &mut pipe_8a, 
-            &mut static_mixer_40_label_8, 
-            &mut pipe_9, 
-            &mut pipe_10, 
-            &mut pipe_11, 
-            &mut pipe_12, 
-            &mut ctah_pump, 
-            &mut pipe_13, 
-            &mut pipe_14, 
-            &mut flowmeter_40_14a, 
-            &mut pipe_15, 
-            &mut pipe_16, 
-            &mut pipe_17a,
-            &mut top_mixing_node_5a_5b_4,
-            &mut bottom_mixing_node_17a_17b_18);
 
 
         // need to calibrate dhx sthe ambient htc
@@ -1011,8 +1175,10 @@ pub fn educational_ciet_loop_version_4(
             HeatTransfer::new::<watt_per_square_meter_kelvin>(
                 dhx_heat_loss_to_ambient_watts_per_m2_kelvin);
 
-        // calibrate heater to ambient htc as zero 
-        heater_ver_1.heat_transfer_to_ambient = 
+        // calibrate heater to ambient htc 
+        heater_ver_1_15_nodes.heat_transfer_to_ambient = 
+            HeatTransfer::new::<watt_per_square_meter_kelvin>(6.0);
+        heater_ver_1_8_nodes.heat_transfer_to_ambient = 
             HeatTransfer::new::<watt_per_square_meter_kelvin>(6.0);
 
 
@@ -1037,26 +1203,53 @@ pub fn educational_ciet_loop_version_4(
         //     &mut static_mixer_21_label_25, &mut static_mixer_20_label_23, 
         //     &mut pipe_23a, &mut pipe_22, &mut flowmeter_20_21a, 
         //     &mut pipe_21, &mut pipe_20, &mut pipe_19, &mut pipe_17b);
-        pri_loop_three_branch_advance_timestep_except_dhx_ver_4(
-            timestep, &mut pipe_4, &mut pipe_3, 
-            &mut pipe_2a, &mut static_mixer_10_label_2, 
-            &mut heater_top_head_1a, &mut heater_ver_1, 
-            &mut heater_bottom_head_1b, &mut pipe_18, 
-            &mut pipe_5a, &mut pipe_26, &mut pipe_25a, 
-            &mut static_mixer_21_label_25, 
-            &mut static_mixer_20_label_23, &mut pipe_23a, 
-            &mut pipe_22, &mut flowmeter_20_21a, 
-            &mut pipe_21, &mut pipe_20, &mut pipe_19, 
-            &mut pipe_17b, &mut pipe_5b, 
-            &mut static_mixer_41_label_6, &mut pipe_6a, 
-            &mut ctah_vertical_label_7a, 
-            &mut ctah_horizontal_label_7b, &mut pipe_8a, 
-            &mut static_mixer_40_label_8, &mut pipe_9, 
-            &mut pipe_10, &mut pipe_11, &mut pipe_12, 
-            &mut ctah_pump, &mut pipe_13, &mut pipe_14, 
-            &mut flowmeter_40_14a, &mut pipe_15, &mut pipe_16, 
-            &mut pipe_17a, &mut top_mixing_node_5a_5b_4, 
-            &mut bottom_mixing_node_17a_17b_18);
+
+        match local_ciet_state.current_heater_type {
+            HeaterType::InsulatedHeaterV1Fine15Mesh => {
+                pri_loop_three_branch_advance_timestep_except_dhx_ver_4(
+                    timestep, &mut pipe_4, &mut pipe_3, 
+                    &mut pipe_2a, &mut static_mixer_10_label_2, 
+                    &mut heater_top_head_1a, &mut heater_ver_1_15_nodes, 
+                    &mut heater_bottom_head_1b, &mut pipe_18, 
+                    &mut pipe_5a, &mut pipe_26, &mut pipe_25a, 
+                    &mut static_mixer_21_label_25, 
+                    &mut static_mixer_20_label_23, &mut pipe_23a, 
+                    &mut pipe_22, &mut flowmeter_20_21a, 
+                    &mut pipe_21, &mut pipe_20, &mut pipe_19, 
+                    &mut pipe_17b, &mut pipe_5b, 
+                    &mut static_mixer_41_label_6, &mut pipe_6a, 
+                    &mut ctah_vertical_label_7a, 
+                    &mut ctah_horizontal_label_7b, &mut pipe_8a, 
+                    &mut static_mixer_40_label_8, &mut pipe_9, 
+                    &mut pipe_10, &mut pipe_11, &mut pipe_12, 
+                    &mut ctah_pump, &mut pipe_13, &mut pipe_14, 
+                    &mut flowmeter_40_14a, &mut pipe_15, &mut pipe_16, 
+                    &mut pipe_17a, &mut top_mixing_node_5a_5b_4, 
+                    &mut bottom_mixing_node_17a_17b_18);
+            },
+            HeaterType::InsulatedHeaterV1Coarse8Mesh => {
+                pri_loop_three_branch_advance_timestep_except_dhx_ver_4(
+                    timestep, &mut pipe_4, &mut pipe_3, 
+                    &mut pipe_2a, &mut static_mixer_10_label_2, 
+                    &mut heater_top_head_1a, &mut heater_ver_1_8_nodes, 
+                    &mut heater_bottom_head_1b, &mut pipe_18, 
+                    &mut pipe_5a, &mut pipe_26, &mut pipe_25a, 
+                    &mut static_mixer_21_label_25, 
+                    &mut static_mixer_20_label_23, &mut pipe_23a, 
+                    &mut pipe_22, &mut flowmeter_20_21a, 
+                    &mut pipe_21, &mut pipe_20, &mut pipe_19, 
+                    &mut pipe_17b, &mut pipe_5b, 
+                    &mut static_mixer_41_label_6, &mut pipe_6a, 
+                    &mut ctah_vertical_label_7a, 
+                    &mut ctah_horizontal_label_7b, &mut pipe_8a, 
+                    &mut static_mixer_40_label_8, &mut pipe_9, 
+                    &mut pipe_10, &mut pipe_11, &mut pipe_12, 
+                    &mut ctah_pump, &mut pipe_13, &mut pipe_14, 
+                    &mut flowmeter_40_14a, &mut pipe_15, &mut pipe_16, 
+                    &mut pipe_17a, &mut top_mixing_node_5a_5b_4, 
+                    &mut bottom_mixing_node_17a_17b_18);
+            },
+        }
 
 
         // for dhx, a little more care is needed to do the 
@@ -1110,11 +1303,23 @@ pub fn educational_ciet_loop_version_4(
                 &mut dhx_tube_side_30b, 
                 display_temperatures);
         // heater average surface temp 
-        let heater_avg_surf_temp: ThermodynamicTemperature = 
-            heater_ver_1.pipe_shell.try_get_bulk_temperature().unwrap();
+        
+        match local_ciet_state.current_heater_type {
+            HeaterType::InsulatedHeaterV1Fine15Mesh => {
+                let heater_avg_surf_temp: ThermodynamicTemperature = 
+                    heater_ver_1_15_nodes.pipe_shell.try_get_bulk_temperature().unwrap();
 
-        let _simulated_heater_avg_surf_temp_degc: f64 = 
-            heater_avg_surf_temp.get::<degree_celsius>();
+                let _simulated_heater_avg_surf_temp_degc: f64 = 
+                    heater_avg_surf_temp.get::<degree_celsius>();
+            },
+            HeaterType::InsulatedHeaterV1Coarse8Mesh => {
+                let heater_avg_surf_temp: ThermodynamicTemperature = 
+                    heater_ver_1_8_nodes.pipe_shell.try_get_bulk_temperature().unwrap();
+
+                let _simulated_heater_avg_surf_temp_degc: f64 = 
+                    heater_avg_surf_temp.get::<degree_celsius>();
+            },
+        }
 
         // update the local ciet state 
         // update to 2dp
