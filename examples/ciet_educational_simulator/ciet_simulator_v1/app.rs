@@ -162,8 +162,10 @@ impl eframe::App for CIETApp {
         egui::SidePanel::right("Supplementary Info").show(ctx, |ui|{
             match self.open_panel {
                 Panel::MainPage => {
-                    self.ciet_main_page_side_panel(ui);
-                    self.citation_disclaimer_and_acknowledgements(ui);
+                    egui::ScrollArea::both().show(ui, |ui| {
+                        self.ciet_main_page_side_panel(ui);
+                        self.citation_disclaimer_and_acknowledgements(ui);
+                    });
                 },
                 Panel::CTAHPump => {
                     self.ciet_sim_ctah_pump_page_csv(ui);
