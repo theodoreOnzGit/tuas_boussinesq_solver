@@ -121,7 +121,7 @@ pub fn mesh_refined_case_c_tchx_out_313_kelvin_40_celsius(){
                 ThermodynamicTemperature::new::<degree_celsius>(40.0);
             let initial_temperature = tchx_outlet_temperature_set_point;
 
-            let timestep = Time::new::<second>(0.5);
+            let timestep = Time::new::<second>(0.25);
             let heat_rate_through_dhx = input_power;
             let mut tchx_heat_transfer_coeff: HeatTransfer;
 
