@@ -251,7 +251,8 @@ pub fn educational_ciet_loop_version_4(
         _heater_surface_temp_tolerance_degc) = 
         (1.6,109.47,105.76,5.0);
 
-    let ctah_branch_insulation_thickness_cm = 1.00;
+    let ctah_branch_post_ctah_insulation_thickness_cm = 1.00;
+    let ctah_branch_pre_ctah_insulation_thickness_cm = 0.5;
 
 
     // calibration steps **************
@@ -270,8 +271,10 @@ pub fn educational_ciet_loop_version_4(
         Length::new::<centimeter>(dracs_loop_cold_leg_insulation_thickness_cm);
     let dracs_loop_hot_leg_insulation_thickness = 
         Length::new::<centimeter>(dracs_loop_hot_leg_insulation_thickness_cm);
-    let ctah_branch_insulation_thickness = 
-        Length::new::<centimeter>(ctah_branch_insulation_thickness_cm);
+    let ctah_branch_insulation_thickness_pre_ctah = 
+        Length::new::<centimeter>(ctah_branch_pre_ctah_insulation_thickness_cm);
+    let ctah_branch_insulation_thickness_post_ctah = 
+        Length::new::<centimeter>(ctah_branch_post_ctah_insulation_thickness_cm);
 
     // calibrated nusselt correlation settings (using Gnielinksi correlation)
 
@@ -440,33 +443,33 @@ pub fn educational_ciet_loop_version_4(
 
     // ctah branch 
     pipe_5b.calibrate_insulation_thickness(
-        ctah_branch_insulation_thickness);
+        ctah_branch_insulation_thickness_pre_ctah);
     static_mixer_41_label_6.calibrate_insulation_thickness(
-        ctah_branch_insulation_thickness);
+        ctah_branch_insulation_thickness_pre_ctah);
     pipe_6a.calibrate_insulation_thickness(
-        ctah_branch_insulation_thickness);
+        ctah_branch_insulation_thickness_pre_ctah);
     pipe_8a.calibrate_insulation_thickness(
-        ctah_branch_insulation_thickness);
+        ctah_branch_insulation_thickness_post_ctah);
     static_mixer_40_label_8.calibrate_insulation_thickness(
-        ctah_branch_insulation_thickness);
+        ctah_branch_insulation_thickness_post_ctah);
     pipe_9.calibrate_insulation_thickness(
-        ctah_branch_insulation_thickness);
+        ctah_branch_insulation_thickness_post_ctah);
     pipe_10.calibrate_insulation_thickness(
-        ctah_branch_insulation_thickness);
+        ctah_branch_insulation_thickness_post_ctah);
     pipe_11.calibrate_insulation_thickness(
-        ctah_branch_insulation_thickness);
+        ctah_branch_insulation_thickness_post_ctah);
     pipe_12.calibrate_insulation_thickness(
-        ctah_branch_insulation_thickness);
+        ctah_branch_insulation_thickness_post_ctah);
     pipe_13.calibrate_insulation_thickness(
-        ctah_branch_insulation_thickness);
+        ctah_branch_insulation_thickness_post_ctah);
     pipe_14.calibrate_insulation_thickness(
-        ctah_branch_insulation_thickness);
+        ctah_branch_insulation_thickness_post_ctah);
     pipe_15.calibrate_insulation_thickness(
-        ctah_branch_insulation_thickness);
+        ctah_branch_insulation_thickness_post_ctah);
     pipe_16.calibrate_insulation_thickness(
-        ctah_branch_insulation_thickness);
+        ctah_branch_insulation_thickness_post_ctah);
     pipe_17a.calibrate_insulation_thickness(
-        ctah_branch_insulation_thickness);
+        ctah_branch_insulation_thickness_post_ctah);
 
 
 
