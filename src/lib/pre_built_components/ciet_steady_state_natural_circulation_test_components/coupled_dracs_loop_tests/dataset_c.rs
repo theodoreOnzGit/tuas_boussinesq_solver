@@ -41,7 +41,7 @@ pub fn ciet_coupled_nat_circ_set_c1(){
         expt_heater_surf_temp_avg_degc,
         simulated_expected_heater_surf_temp_degc,
         heater_surface_temp_tolerance_degc) = 
-        (1.6, 86.80711,75.8,12.0);
+        (1.7, 86.80711,75.8,12.0);
 
 
     regression_coupled_dracs_loop_version_7(
@@ -110,7 +110,7 @@ pub fn ciet_coupled_nat_circ_set_c2(){
         expt_heater_surf_temp_avg_degc,
         simulated_expected_heater_surf_temp_degc,
         heater_surface_temp_tolerance_degc) = 
-        (1.6, 96.92,88.44,13.0);
+        (1.7, 96.92,88.44,13.0);
 
 
     regression_coupled_dracs_loop_version_7(
@@ -179,7 +179,7 @@ pub fn ciet_coupled_nat_circ_set_c3(){
         expt_heater_surf_temp_avg_degc,
         simulated_expected_heater_surf_temp_degc,
         heater_surface_temp_tolerance_degc) = 
-        (1.6, 105.23,98.48,8.0);
+        (1.7, 105.23,98.48,8.0);
 
 
     regression_coupled_dracs_loop_version_7(
@@ -248,7 +248,7 @@ pub fn ciet_coupled_nat_circ_set_c4(){
         expt_heater_surf_temp_avg_degc,
         simulated_expected_heater_surf_temp_degc,
         heater_surface_temp_tolerance_degc) = 
-        (1.6, 114.57,111.51,4.0);
+        (1.7, 114.57,111.51,4.0);
 
 
     regression_coupled_dracs_loop_version_7(
@@ -318,7 +318,7 @@ pub fn ciet_coupled_nat_circ_set_c5(){
         expt_heater_surf_temp_avg_degc,
         simulated_expected_heater_surf_temp_degc,
         heater_surface_temp_tolerance_degc) = 
-        (1.6, 122.82,122.96,0.5);
+        (1.7, 122.82,122.96,0.5);
 
 
     regression_coupled_dracs_loop_version_7(
@@ -388,7 +388,7 @@ pub fn ciet_coupled_nat_circ_set_c6(){
         expt_heater_surf_temp_avg_degc,
         simulated_expected_heater_surf_temp_degc,
         heater_surface_temp_tolerance_degc) = 
-        (1.6, 130.37,133.21,4.0);
+        (1.7, 130.37,133.21,4.0);
 
 
     regression_coupled_dracs_loop_version_7(
@@ -458,7 +458,7 @@ pub fn ciet_coupled_nat_circ_set_c7(){
         expt_heater_surf_temp_avg_degc,
         simulated_expected_heater_surf_temp_degc,
         heater_surface_temp_tolerance_degc) = 
-        (1.6, 138.12,141.73,5.0);
+        (1.7, 138.12,141.73,5.0);
 
 
     regression_coupled_dracs_loop_version_7(
@@ -529,7 +529,7 @@ pub fn ciet_coupled_nat_circ_set_c8(){
         expt_heater_surf_temp_avg_degc,
         simulated_expected_heater_surf_temp_degc,
         heater_surface_temp_tolerance_degc) = 
-        (1.6, 145.79,148.53,4.0);
+        (1.7, 145.79,148.53,4.0);
 
 
     regression_coupled_dracs_loop_version_7(
@@ -598,7 +598,7 @@ pub fn ciet_coupled_nat_circ_set_c9(){
         expt_heater_surf_temp_avg_degc,
         simulated_expected_heater_surf_temp_degc,
         heater_surface_temp_tolerance_degc) = 
-        (1.6, 153.29,151.55,2.0);
+        (1.7, 153.29,151.55,2.0);
 
 
     regression_coupled_dracs_loop_version_7(
