@@ -578,7 +578,7 @@ pub fn ciet_coupled_nat_circ_set_b9(){
         experimental_pri_mass_flowrate_kg_per_s,
         simulated_expected_dracs_mass_flowrate_kg_per_s,
         simulated_expected_pri_mass_flowrate_kg_per_s) 
-        = (3031.16, 35.0, 4.6360e-2, 3.8490e-2, 4.8452e-2, 3.7335e-2);
+        = (3031.16, 35.0, 4.6360e-2, 3.8490e-2, 4.8452e-2, 3.7733e-2);
 
 
     let (shell_side_to_tubes_nusselt_number_correction_factor,

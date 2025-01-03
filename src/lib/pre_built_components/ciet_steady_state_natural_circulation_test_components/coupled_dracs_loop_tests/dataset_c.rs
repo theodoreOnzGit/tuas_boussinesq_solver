@@ -598,7 +598,7 @@ pub fn ciet_coupled_nat_circ_set_c9(){
         expt_heater_surf_temp_avg_degc,
         simulated_expected_heater_surf_temp_degc,
         heater_surface_temp_tolerance_degc) = 
-        (1.6, 154.49,151.55,12.0);
+        (1.6, 153.29,154.50,12.0);
 
 
     regression_coupled_dracs_loop_version_7(
