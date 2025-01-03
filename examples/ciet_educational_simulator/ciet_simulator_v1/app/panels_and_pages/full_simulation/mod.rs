@@ -16,8 +16,14 @@ use super::ciet_data::CIETState;
 ///
 /// The CTAH cools DowthermA/Therminol VP1 to 80C, 
 ///
-/// Parasitic heat losses for forced circulation NOT calibrated or validated
 ///
+/// for the parasitic heat loss calibration
+/// At 0.18 kg/s and 7.15 kW
+/// Heater outlet, CTAH inlet, CTAH Outlet and Heater inlet in degc:
+/// 101.674, 100.626, 79.928, 79.004
+///
+/// Each branch should be such that there is about a 1 K drop from 
+/// heater to CTAH and 0.9 K drop from CTAH to heater respectively
 pub fn educational_ciet_loop_version_4(
     global_ciet_state_ptr:Arc<Mutex<CIETState>>){
 
@@ -243,7 +249,9 @@ pub fn educational_ciet_loop_version_4(
         _expt_heater_surf_temp_avg_degc,
         _simulated_expected_heater_surf_temp_degc,
         _heater_surface_temp_tolerance_degc) = 
-        (10.0,109.47,105.76,5.0);
+        (1.6,109.47,105.76,5.0);
+
+    let ctah_branch_insulation_thickness_cm = 3.00;
 
 
     // calibration steps **************
@@ -262,6 +270,8 @@ pub fn educational_ciet_loop_version_4(
         Length::new::<centimeter>(dracs_loop_cold_leg_insulation_thickness_cm);
     let dracs_loop_hot_leg_insulation_thickness = 
         Length::new::<centimeter>(dracs_loop_hot_leg_insulation_thickness_cm);
+    let ctah_branch_insulation_thickness = 
+        Length::new::<centimeter>(ctah_branch_insulation_thickness_cm);
 
     // calibrated nusselt correlation settings (using Gnielinksi correlation)
 
@@ -427,6 +437,36 @@ pub fn educational_ciet_loop_version_4(
         dracs_loop_hot_leg_insulation_thickness);
     pipe_34.calibrate_insulation_thickness(
         dracs_loop_hot_leg_insulation_thickness);
+
+    // ctah branch 
+    pipe_5b.calibrate_insulation_thickness(
+        ctah_branch_insulation_thickness);
+    static_mixer_41_label_6.calibrate_insulation_thickness(
+        ctah_branch_insulation_thickness);
+    pipe_6a.calibrate_insulation_thickness(
+        ctah_branch_insulation_thickness);
+    pipe_8a.calibrate_insulation_thickness(
+        ctah_branch_insulation_thickness);
+    static_mixer_40_label_8.calibrate_insulation_thickness(
+        ctah_branch_insulation_thickness);
+    pipe_9.calibrate_insulation_thickness(
+        ctah_branch_insulation_thickness);
+    pipe_10.calibrate_insulation_thickness(
+        ctah_branch_insulation_thickness);
+    pipe_11.calibrate_insulation_thickness(
+        ctah_branch_insulation_thickness);
+    pipe_12.calibrate_insulation_thickness(
+        ctah_branch_insulation_thickness);
+    pipe_13.calibrate_insulation_thickness(
+        ctah_branch_insulation_thickness);
+    pipe_14.calibrate_insulation_thickness(
+        ctah_branch_insulation_thickness);
+    pipe_15.calibrate_insulation_thickness(
+        ctah_branch_insulation_thickness);
+    pipe_16.calibrate_insulation_thickness(
+        ctah_branch_insulation_thickness);
+    pipe_17a.calibrate_insulation_thickness(
+        ctah_branch_insulation_thickness);
 
 
 
