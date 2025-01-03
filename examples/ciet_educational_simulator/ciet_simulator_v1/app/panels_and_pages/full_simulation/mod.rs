@@ -251,7 +251,7 @@ pub fn educational_ciet_loop_version_4(
         _heater_surface_temp_tolerance_degc) = 
         (1.6,109.47,105.76,5.0);
 
-    let ctah_branch_insulation_thickness_cm = 3.00;
+    let ctah_branch_insulation_thickness_cm = 1.00;
 
 
     // calibration steps **************
