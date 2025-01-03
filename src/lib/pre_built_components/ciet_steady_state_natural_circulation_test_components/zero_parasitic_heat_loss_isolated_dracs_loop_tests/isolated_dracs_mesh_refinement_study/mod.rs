@@ -789,7 +789,10 @@ pub fn mesh_refined_case_c_tchx_out_313_kelvin_40_celsius(){
             approx::assert_relative_eq!(
                 tuas_boussinesq_solver_flowrate_kg_per_s_at_4000s_time,
                 final_mass_flowrate.get::<kilogram_per_second>(),
-                max_relative = 0.44e-2 // this is the max error between SAM and analytical
+                max_relative = 0.1e-2
+                // 0.44% is the max error between SAM and analytical
+                // but for mesh refinement, this is regression and I'm making 
+                // it much more stringent
             );
             // final assertion 
 
@@ -808,7 +811,7 @@ pub fn mesh_refined_case_c_tchx_out_313_kelvin_40_celsius(){
             verify_isolated_dhx_sam_solution(
                 582.6, // dhx power (watts)
                 2.8033e-2, // SAM/ mass flowrate kg/s
-                2.8358e-2, // tuas_boussinesq_solver_flowrate_kg_per_s (for regression)
+                2.8273e-2, // tuas_boussinesq_solver_flowrate_kg_per_s (for regression)
                 0.026, // max error tolerance
             ).unwrap();
         }
@@ -818,7 +821,7 @@ pub fn mesh_refined_case_c_tchx_out_313_kelvin_40_celsius(){
             verify_isolated_dhx_sam_solution(
                 785.9, // dhx power (watts)
                 3.1807e-2,// SAM/ mass flowrate kg/s
-                3.2272e-2, // tuas_boussinesq_solver_flowrate_kg_per_s (for regression)
+                3.2172e-2, // tuas_boussinesq_solver_flowrate_kg_per_s (for regression)
                 0.026, // max error tolerance
             ).unwrap();
         }
@@ -828,7 +831,7 @@ pub fn mesh_refined_case_c_tchx_out_313_kelvin_40_celsius(){
             verify_isolated_dhx_sam_solution(
                 971.4, // dhx power (watts)
                 3.4690e-2,// SAM/ mass flowrate kg/s
-                3.5319e-2, // tuas_boussinesq_solver_flowrate_kg_per_s (for regression)
+                3.5213e-2, // tuas_boussinesq_solver_flowrate_kg_per_s (for regression)
                 0.026, // max error tolerance
             ).unwrap();
         }
@@ -838,7 +841,7 @@ pub fn mesh_refined_case_c_tchx_out_313_kelvin_40_celsius(){
             verify_isolated_dhx_sam_solution(
                 1185.2, // dhx power (watts)
                 3.7765e-2,// SAM/ mass flowrate kg/s
-                3.8408e-2, // tuas_boussinesq_solver_flowrate_kg_per_s (for regression)
+                3.8294e-2, // tuas_boussinesq_solver_flowrate_kg_per_s (for regression)
                 0.026, // max error tolerance
             ).unwrap();
         }
@@ -848,7 +851,7 @@ pub fn mesh_refined_case_c_tchx_out_313_kelvin_40_celsius(){
             verify_isolated_dhx_sam_solution(
                 1369.1, // dhx power (watts)
                 4.0100e-2,// SAM/ mass flowrate kg/s
-                4.0793e-2, // tuas_boussinesq_solver_flowrate_kg_per_s (for regression)
+                4.0673e-2, // tuas_boussinesq_solver_flowrate_kg_per_s (for regression)
                 0.026, // max error tolerance
             ).unwrap();
         }
@@ -858,7 +861,7 @@ pub fn mesh_refined_case_c_tchx_out_313_kelvin_40_celsius(){
             verify_isolated_dhx_sam_solution(
                 1584.1, // dhx power (watts)
                 4.2499e-2,// SAM/ mass flowrate kg/s
-                4.3334e-2, // tuas_boussinesq_solver_flowrate_kg_per_s (for regression)
+                4.3208e-2, // tuas_boussinesq_solver_flowrate_kg_per_s (for regression)
                 0.026, // max error tolerance
             ).unwrap();
         }
@@ -868,7 +871,7 @@ pub fn mesh_refined_case_c_tchx_out_313_kelvin_40_celsius(){
             verify_isolated_dhx_sam_solution(
                 1763.7, // dhx power (watts)
                 4.4448e-2,// SAM/ mass flowrate kg/s
-                4.5292e-2, // tuas_boussinesq_solver_flowrate_kg_per_s (for regression)
+                4.5161e-2, // tuas_boussinesq_solver_flowrate_kg_per_s (for regression)
                 0.026, // max error tolerance
             ).unwrap();
         }
@@ -878,7 +881,7 @@ pub fn mesh_refined_case_c_tchx_out_313_kelvin_40_celsius(){
             verify_isolated_dhx_sam_solution(
                 1970.0, // dhx power (watts)
                 4.6455e-2,// SAM/ mass flowrate kg/s
-                4.7387e-2, // tuas_boussinesq_solver_flowrate_kg_per_s (for regression)
+                4.7251e-2, // tuas_boussinesq_solver_flowrate_kg_per_s (for regression)
                 0.026, // max error tolerance
             ).unwrap();
         }
@@ -888,7 +891,7 @@ pub fn mesh_refined_case_c_tchx_out_313_kelvin_40_celsius(){
             verify_isolated_dhx_sam_solution(
                 2177.0, // dhx power (watts)
                 4.8315e-2,// SAM/ mass flowrate kg/s
-                4.9350e-2, // tuas_boussinesq_solver_flowrate_kg_per_s (for regression)
+                4.9210e-2, // tuas_boussinesq_solver_flowrate_kg_per_s (for regression)
                 0.026, // max error tolerance
             ).unwrap();
         }
