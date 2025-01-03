@@ -108,6 +108,7 @@ pub mod misc_debugging;
 /// consider mesh refinement as a source of error. 
 ///
 /// I'm going to do some rudimentary mesh refinement
+#[cfg(test)]
 mod isolated_dracs_mesh_refinement_study;
 
 
