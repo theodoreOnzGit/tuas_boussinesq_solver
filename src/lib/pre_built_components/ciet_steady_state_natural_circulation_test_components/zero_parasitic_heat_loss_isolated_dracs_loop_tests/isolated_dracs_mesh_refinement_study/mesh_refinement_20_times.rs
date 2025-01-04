@@ -1,3 +1,4 @@
+
 use uom::si::angle::degree;
 use uom::si::area::square_meter;
 use uom::si::f64::*;
@@ -227,7 +228,7 @@ Result<(),TuasLibError>{
         ThermodynamicTemperature::new::<degree_celsius>(40.0);
     let initial_temperature = tchx_outlet_temperature_set_point;
 
-    let timestep = Time::new::<second>(0.25);
+    let timestep = Time::new::<second>(0.025);
     let heat_rate_through_dhx = input_power;
     let mut tchx_heat_transfer_coeff: HeatTransfer;
 
@@ -972,7 +973,7 @@ pub fn new_mesh_refined_pipe_34(initial_temperature: ThermodynamicTemperature) -
     let user_specified_inner_nodes_sam = 5-2; 
     // double number of nodes, then find inner nodes
     let mesh_refined_inner_nodes = 
-        2 * (user_specified_inner_nodes_sam + 2) - 2;
+        20 * (user_specified_inner_nodes_sam + 2) - 2;
 
     let insulated_component = InsulatedFluidComponent::new_insulated_pipe(
         initial_temperature, 
@@ -1042,7 +1043,7 @@ pub fn new_mesh_refined_pipe_33(initial_temperature: ThermodynamicTemperature) -
     // number of inner nodes is 28-2
     let user_specified_inner_nodes_sam = 28-2; 
     let mesh_refined_inner_nodes = 
-        2 * (user_specified_inner_nodes_sam + 2) - 2;
+        20 * (user_specified_inner_nodes_sam + 2) - 2;
 
     let insulated_component = InsulatedFluidComponent::new_insulated_pipe(
         initial_temperature, 
@@ -1112,7 +1113,7 @@ pub fn new_mesh_refined_pipe_32(initial_temperature: ThermodynamicTemperature) -
     // number of inner nodes is zero
     let user_specified_inner_nodes_sam = 0; 
     let mesh_refined_inner_nodes = 
-        2 * (user_specified_inner_nodes_sam + 2) - 2;
+        20 * (user_specified_inner_nodes_sam + 2) - 2;
 
     let insulated_component = InsulatedFluidComponent::new_insulated_pipe(
         initial_temperature, 
@@ -1183,7 +1184,7 @@ pub fn new_mesh_refined_static_mixer_61_label_31(initial_temperature: Thermodyna
     // number of inner nodes is zero
     let user_specified_inner_nodes_sam = 0; 
     let mesh_refined_inner_nodes = 
-        2 * (user_specified_inner_nodes_sam + 2) - 2;
+        20 * (user_specified_inner_nodes_sam + 2) - 2;
 
     let insulated_component = InsulatedFluidComponent::new_custom_component(
         initial_temperature, 
@@ -1253,7 +1254,7 @@ pub fn new_mesh_refined_pipe_31a(initial_temperature: ThermodynamicTemperature) 
     // number of inner nodes is zero
     let user_specified_inner_nodes_sam = 0; 
     let mesh_refined_inner_nodes = 
-        2 * (user_specified_inner_nodes_sam + 2) - 2;
+        20 * (user_specified_inner_nodes_sam + 2) - 2;
 
     let insulated_component = InsulatedFluidComponent::new_insulated_pipe(
         initial_temperature, 
@@ -1331,7 +1332,7 @@ NonInsulatedFluidComponent {
     // number of inner nodes is zero
     let user_specified_inner_nodes_sam = 2-2; 
     let mesh_refined_inner_nodes = 
-        2 * (user_specified_inner_nodes_sam + 2) - 2;
+        20 * (user_specified_inner_nodes_sam + 2) - 2;
 
     let non_insulated_component = NonInsulatedFluidComponent::new_bare_pipe(
         initial_temperature, 
@@ -1411,7 +1412,7 @@ NonInsulatedFluidComponent {
     // number of inner nodes is 11-2
     let user_specified_inner_nodes_sam = 11-2; 
     let mesh_refined_inner_nodes = 
-        2 * (user_specified_inner_nodes_sam + 2) - 2;
+        20 * (user_specified_inner_nodes_sam + 2) - 2;
 
     let mut non_insulated_component = NonInsulatedFluidComponent::new_bare_pipe(
         initial_temperature, 
@@ -1506,7 +1507,7 @@ NonInsulatedParallelFluidComponent {
     // number of inner nodes is 11-2
     let user_specified_inner_nodes_sam = 11-2; 
     let mesh_refined_inner_nodes = 
-        2 * (user_specified_inner_nodes_sam + 2) - 2;
+        20 * (user_specified_inner_nodes_sam + 2) - 2;
     let number_of_tubes: u32 = 19;
 
     let mut non_insulated_component_parallel = NonInsulatedParallelFluidComponent::new_bare_pipe_parallel_array(
@@ -1595,7 +1596,7 @@ NonInsulatedFluidComponent {
     // number of inner nodes is zero
     let user_specified_inner_nodes_sam = 2-2; 
     let mesh_refined_inner_nodes = 
-        2 * (user_specified_inner_nodes_sam + 2) - 2;
+        20 * (user_specified_inner_nodes_sam + 2) - 2;
 
     let non_insulated_component = NonInsulatedFluidComponent::new_bare_pipe(
         initial_temperature, 
@@ -1665,7 +1666,7 @@ pub fn new_mesh_refined_ndhx_tchx_horizontal_35a(
     // we subtract 2 
     let user_specified_inner_nodes_sam = 11-2; 
     let mesh_refined_inner_nodes = 
-        2 * (user_specified_inner_nodes_sam + 2) - 2;
+        20 * (user_specified_inner_nodes_sam + 2) - 2;
 
     let mut non_insulated_component = NonInsulatedFluidComponent::
         new_custom_component(
@@ -1751,7 +1752,7 @@ NonInsulatedFluidComponent {
     // number of inner nodes is 4-2
     let user_specified_inner_nodes_sam = 4-2; 
     let mesh_refined_inner_nodes = 
-        2 * (user_specified_inner_nodes_sam + 2) - 2;
+        20 * (user_specified_inner_nodes_sam + 2) - 2;
 
     let mut non_insulated_component = NonInsulatedFluidComponent::new_bare_pipe(
         initial_temperature, 
@@ -1832,7 +1833,7 @@ NonInsulatedFluidComponent {
     // number of inner nodes is 4-2
     let user_specified_inner_nodes_sam = 4-2; 
     let mesh_refined_inner_nodes = 
-        2 * (user_specified_inner_nodes_sam + 2) - 2;
+        20 * (user_specified_inner_nodes_sam + 2) - 2;
 
     let mut non_insulated_component = NonInsulatedFluidComponent::new_bare_pipe(
         initial_temperature, 
@@ -1912,7 +1913,7 @@ NonInsulatedFluidComponent {
     // number of inner nodes is 4-2
     let user_specified_inner_nodes_sam = 4-2; 
     let mesh_refined_inner_nodes = 
-        2 * (user_specified_inner_nodes_sam + 2) - 2;
+        20 * (user_specified_inner_nodes_sam + 2) - 2;
 
     let mut non_insulated_component = NonInsulatedFluidComponent::new_bare_pipe(
         initial_temperature, 
@@ -1995,7 +1996,7 @@ pub fn new_mesh_refined_pipe_36a(initial_temperature: ThermodynamicTemperature) 
     // number of inner nodes is zero
     let user_specified_inner_nodes_sam = 0; 
     let mesh_refined_inner_nodes = 
-        2 * (user_specified_inner_nodes_sam + 2) - 2;
+        20 * (user_specified_inner_nodes_sam + 2) - 2;
 
     let insulated_component = InsulatedFluidComponent::new_insulated_pipe(
         initial_temperature, 
@@ -2065,7 +2066,7 @@ pub fn new_mesh_refined_static_mixer_60_label_36(initial_temperature: Thermodyna
     // number of inner nodes is zero
     let user_specified_inner_nodes_sam = 0; 
     let mesh_refined_inner_nodes = 
-        2 * (user_specified_inner_nodes_sam + 2) - 2;
+        20 * (user_specified_inner_nodes_sam + 2) - 2;
 
     let insulated_component = InsulatedFluidComponent::new_custom_component(
         initial_temperature, 
@@ -2138,7 +2139,7 @@ pub fn new_mesh_refined_pipe_37(initial_temperature: ThermodynamicTemperature) -
     // number of inner nodes is 16-2
     let user_specified_inner_nodes_sam = 16-2; 
     let mesh_refined_inner_nodes = 
-        2 * (user_specified_inner_nodes_sam + 2) - 2;
+        20 * (user_specified_inner_nodes_sam + 2) - 2;
 
     let insulated_component = InsulatedFluidComponent::new_insulated_pipe(
         initial_temperature, 
@@ -2207,7 +2208,7 @@ NonInsulatedFluidComponent {
     // now because there are two outer nodes, we subtract 2
     let user_specified_inner_nodes_sam = 2-2; 
     let mesh_refined_inner_nodes = 
-        2 * (user_specified_inner_nodes_sam + 2) - 2;
+        20 * (user_specified_inner_nodes_sam + 2) - 2;
 
 
     let non_insulated_component = NonInsulatedFluidComponent::
@@ -2279,7 +2280,7 @@ pub fn new_mesh_refined_pipe_38(initial_temperature: ThermodynamicTemperature) -
     // number of inner nodes is 3-2
     let user_specified_inner_nodes_sam = 3-2; 
     let mesh_refined_inner_nodes = 
-        2 * (user_specified_inner_nodes_sam + 2) - 2;
+        20 * (user_specified_inner_nodes_sam + 2) - 2;
 
     let insulated_component = InsulatedFluidComponent::new_insulated_pipe(
         initial_temperature, 
@@ -2349,7 +2350,7 @@ pub fn new_mesh_refined_pipe_39(initial_temperature: ThermodynamicTemperature) -
     // number of inner nodes is 18-2
     let user_specified_inner_nodes_sam = 18-2; 
     let mesh_refined_inner_nodes = 
-        2 * (user_specified_inner_nodes_sam + 2) - 2;
+        20 * (user_specified_inner_nodes_sam + 2) - 2;
 
     let insulated_component = InsulatedFluidComponent::new_insulated_pipe(
         initial_temperature, 
