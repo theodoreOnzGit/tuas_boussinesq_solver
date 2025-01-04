@@ -15,7 +15,7 @@ pub fn mesh_refined_case_c1_tchx_out_313_kelvin_40_celsius(){
     verify_isolated_dhx_sam_solution(
         582.6, // dhx power (watts)
         2.8033e-2, // SAM/ mass flowrate kg/s
-        2.8273e-2, // tuas_boussinesq_solver_flowrate_kg_per_s (for regression)
+        2.8220e-2, // tuas_boussinesq_solver_flowrate_kg_per_s (for regression)
         0.026, // max error tolerance
     ).unwrap();
     // max error tolerance is about 3.0%
@@ -33,7 +33,7 @@ pub fn mesh_refined_case_c2_tchx_out_313_kelvin_40_celsius(){
     verify_isolated_dhx_sam_solution(
         785.9, // dhx power (watts)
         3.1807e-2,// SAM/ mass flowrate kg/s
-        3.2172e-2, // tuas_boussinesq_solver_flowrate_kg_per_s (for regression)
+        3.2113e-2, // tuas_boussinesq_solver_flowrate_kg_per_s (for regression)
         0.026, // max error tolerance
     ).unwrap();
     // max error tolerance is about 3.0%
@@ -49,7 +49,7 @@ pub fn mesh_refined_case_c3_tchx_out_313_kelvin_40_celsius(){
     verify_isolated_dhx_sam_solution(
         971.4, // dhx power (watts)
         3.4690e-2,// SAM/ mass flowrate kg/s
-        3.5213e-2, // tuas_boussinesq_solver_flowrate_kg_per_s (for regression)
+        3.5149e-2, // tuas_boussinesq_solver_flowrate_kg_per_s (for regression)
         0.026, // max error tolerance
     ).unwrap();
 }
@@ -63,7 +63,7 @@ pub fn mesh_refined_case_c4_tchx_out_313_kelvin_40_celsius(){
     verify_isolated_dhx_sam_solution(
         1185.2, // dhx power (watts)
         3.7765e-2,// SAM/ mass flowrate kg/s
-        3.8294e-2, // tuas_boussinesq_solver_flowrate_kg_per_s (for regression)
+        3.8226e-2, // tuas_boussinesq_solver_flowrate_kg_per_s (for regression)
         0.026, // max error tolerance
     ).unwrap();
 }
@@ -75,7 +75,7 @@ pub fn mesh_refined_case_c5_tchx_out_313_kelvin_40_celsius(){
     verify_isolated_dhx_sam_solution(
         1369.1, // dhx power (watts)
         4.0100e-2,// SAM/ mass flowrate kg/s
-        4.0673e-2, // tuas_boussinesq_solver_flowrate_kg_per_s (for regression)
+        4.0601e-2, // tuas_boussinesq_solver_flowrate_kg_per_s (for regression)
         0.026, // max error tolerance
     ).unwrap();
 }
@@ -87,7 +87,7 @@ pub fn mesh_refined_case_c6_tchx_out_313_kelvin_40_celsius(){
     verify_isolated_dhx_sam_solution(
         1584.1, // dhx power (watts)
         4.2499e-2,// SAM/ mass flowrate kg/s
-        4.3208e-2, // tuas_boussinesq_solver_flowrate_kg_per_s (for regression)
+        4.3133e-2, // tuas_boussinesq_solver_flowrate_kg_per_s (for regression)
         0.026, // max error tolerance
     ).unwrap();
 }
@@ -99,7 +99,7 @@ pub fn mesh_refined_case_c7_tchx_out_313_kelvin_40_celsius(){
     verify_isolated_dhx_sam_solution(
         1763.7, // dhx power (watts)
         4.4448e-2,// SAM/ mass flowrate kg/s
-        4.5161e-2, // tuas_boussinesq_solver_flowrate_kg_per_s (for regression)
+        4.5082e-2, // tuas_boussinesq_solver_flowrate_kg_per_s (for regression)
         0.026, // max error tolerance
     ).unwrap();
 }
@@ -111,7 +111,7 @@ pub fn mesh_refined_case_c8_tchx_out_313_kelvin_40_celsius(){
     verify_isolated_dhx_sam_solution(
         1970.0, // dhx power (watts)
         4.6455e-2,// SAM/ mass flowrate kg/s
-        4.7251e-2, // tuas_boussinesq_solver_flowrate_kg_per_s (for regression)
+        4.7170e-2, // tuas_boussinesq_solver_flowrate_kg_per_s (for regression)
         0.026, // max error tolerance
     ).unwrap();
 }
@@ -123,7 +123,7 @@ pub fn mesh_refined_case_c9_tchx_out_313_kelvin_40_celsius(){
     verify_isolated_dhx_sam_solution(
         2177.0, // dhx power (watts)
         4.8315e-2,// SAM/ mass flowrate kg/s
-        4.9210e-2, // tuas_boussinesq_solver_flowrate_kg_per_s (for regression)
+        4.9125e-2, // tuas_boussinesq_solver_flowrate_kg_per_s (for regression)
         0.026, // max error tolerance
     ).unwrap();
 }
@@ -170,7 +170,6 @@ pub fn mesh_refined_case_c9_tchx_out_313_kelvin_40_celsius(){
 use uom::si::{frequency::hertz, ratio::ratio, time::millisecond};
 use uom::si::thermodynamic_temperature::kelvin;
 use uom::si::mass_rate::kilogram_per_second;
-use std::thread;
 
 use crate::tuas_lib_error::TuasLibError;
 
