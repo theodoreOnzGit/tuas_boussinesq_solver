@@ -46,7 +46,7 @@ use crate::pre_built_components::non_insulated_parallel_fluid_components::NonIns
 /// this specific test is for mesh refinement
 ///
 #[test]
-//#[ignore = "comment out for debugging"]
+#[ignore = "regression test takes several hours"]
 pub fn mesh_refined_case_c1_tchx_out_313_kelvin_40_celsius(){
 
 
@@ -64,7 +64,7 @@ pub fn mesh_refined_case_c1_tchx_out_313_kelvin_40_celsius(){
 
 
 #[test]
-//#[ignore = "comment out for debugging"]
+#[ignore = "regression test takes several hours"]
 pub fn mesh_refined_case_c2_tchx_out_313_kelvin_40_celsius(){
 
 
@@ -80,7 +80,7 @@ pub fn mesh_refined_case_c2_tchx_out_313_kelvin_40_celsius(){
     // join threads
 }
 #[test]
-//#[ignore = "comment out for debugging"]
+#[ignore = "regression test takes several hours"]
 pub fn mesh_refined_case_c3_tchx_out_313_kelvin_40_celsius(){
 
 
@@ -94,7 +94,7 @@ pub fn mesh_refined_case_c3_tchx_out_313_kelvin_40_celsius(){
 
 
 #[test]
-//#[ignore = "comment out for debugging"]
+#[ignore = "regression test takes several hours"]
 pub fn mesh_refined_case_c4_tchx_out_313_kelvin_40_celsius(){
 
 
@@ -106,7 +106,7 @@ pub fn mesh_refined_case_c4_tchx_out_313_kelvin_40_celsius(){
     ).unwrap();
 }
 #[test]
-//#[ignore = "comment out for debugging"]
+#[ignore = "regression test takes several hours"]
 pub fn mesh_refined_case_c5_tchx_out_313_kelvin_40_celsius(){
 
 
@@ -118,7 +118,7 @@ pub fn mesh_refined_case_c5_tchx_out_313_kelvin_40_celsius(){
     ).unwrap();
 }
 #[test]
-//#[ignore = "comment out for debugging"]
+#[ignore = "regression test takes several hours"]
 pub fn mesh_refined_case_c6_tchx_out_313_kelvin_40_celsius(){
 
 
@@ -130,7 +130,7 @@ pub fn mesh_refined_case_c6_tchx_out_313_kelvin_40_celsius(){
     ).unwrap();
 }
 #[test]
-//#[ignore = "comment out for debugging"]
+#[ignore = "regression test takes several hours"]
 pub fn mesh_refined_case_c7_tchx_out_313_kelvin_40_celsius(){
 
 
@@ -142,7 +142,7 @@ pub fn mesh_refined_case_c7_tchx_out_313_kelvin_40_celsius(){
     ).unwrap();
 }
 #[test]
-//#[ignore = "comment out for debugging"]
+#[ignore = "regression test takes several hours"]
 pub fn mesh_refined_case_c8_tchx_out_313_kelvin_40_celsius(){
 
 
@@ -154,7 +154,7 @@ pub fn mesh_refined_case_c8_tchx_out_313_kelvin_40_celsius(){
     ).unwrap();
 }
 #[test]
-//#[ignore = "comment out for debugging"]
+#[ignore = "regression test takes several hours"]
 pub fn mesh_refined_case_c9_tchx_out_313_kelvin_40_celsius(){
 
 
