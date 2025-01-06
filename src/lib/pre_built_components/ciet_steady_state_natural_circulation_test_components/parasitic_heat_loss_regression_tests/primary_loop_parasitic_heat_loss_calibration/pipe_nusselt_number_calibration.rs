@@ -19,7 +19,7 @@ pub fn hot_leg_nusselt_calibration_failed(){
             let dhx_inlet_regression_temperature_degc = 
                 74.5;
 
-            let multiplicative_coeff_regression_value = 25.9;
+            let multiplicative_coeff_regression_value = 23.74;
 
             hot_leg_nusselt_calibration_regression_test_v1_failed(
                 experimental_primary_mass_flowrate_kg_per_s, 
@@ -37,7 +37,7 @@ pub fn hot_leg_nusselt_calibration_failed(){
     // the dhx outlet temperature is about 74.06 deg C
     // the thermal resistance is likely dominated by the insulation
     let set_c1_v2 = thread::Builder::new()
-        .name("set_c1_v1".to_string()).spawn(||{
+        .name("set_c1_v2".to_string()).spawn(||{
 
             let (experimental_primary_mass_flowrate_kg_per_s,
                 heater_outlet_temperature_degc,
@@ -48,7 +48,7 @@ pub fn hot_leg_nusselt_calibration_failed(){
             let dhx_inlet_regression_temperature_degc = 
                 74.5;
 
-            let multiplicative_coeff_regression_value = 19728.0;
+            let multiplicative_coeff_regression_value = 20178.8;
 
             hot_leg_nusselt_calibration_regression_test_v2_failed(
                 experimental_primary_mass_flowrate_kg_per_s, 
