@@ -57,7 +57,7 @@ pub fn hot_leg_insulation_thickness_calibration_v1(){
             let (experimental_primary_mass_flowrate_kg_per_s,
                 heater_outlet_temperature_degc,
                 dhx_inlet_temperature_set_point_degc) =
-                (0.02367,82.41863,78.36713);
+                (0.02367,82.41863,78.22);
             let max_time_seconds = 500.0;
             // temperatures are regressed to within 0.1 K
             let insulation_thickness_cm_for_regression_testing = 0.21;
@@ -85,7 +85,7 @@ pub fn hot_leg_insulation_thickness_calibration_v1(){
             let (experimental_primary_mass_flowrate_kg_per_s,
                 heater_outlet_temperature_degc,
                 dhx_inlet_temperature_set_point_degc) =
-                (0.02635,87.78188,84.37342);
+                (0.02635,87.78188,84.21);
             let max_time_seconds = 500.0;
             // temperatures are regressed to within 0.1 K
             let insulation_thickness_cm_for_regression_testing = 0.288;
@@ -114,7 +114,7 @@ pub fn hot_leg_insulation_thickness_calibration_v1(){
             let (experimental_primary_mass_flowrate_kg_per_s,
                 heater_outlet_temperature_degc,
                 dhx_inlet_temperature_set_point_degc) =
-                (0.02949,94.71628,90.97595);
+                (0.02949,94.71628,90.76);
             let max_time_seconds = 500.0;
             // temperatures are regressed to within 0.1 K
             let insulation_thickness_cm_for_regression_testing = 0.23;
