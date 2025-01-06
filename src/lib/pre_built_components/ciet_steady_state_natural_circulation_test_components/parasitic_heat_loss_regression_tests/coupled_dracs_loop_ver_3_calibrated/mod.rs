@@ -17,7 +17,7 @@ pub fn regression_long_test_calibrated_ver3_set_c1(){
         experimental_pri_mass_flowrate_kg_per_s,
         simulated_expected_dracs_mass_flowrate_kg_per_s,
         simulated_expected_pri_mass_flowrate_kg_per_s) 
-        = (841.02, 40.0, 2.6860e-2, 2.0030e-2, 2.601e-2, 2.1058e-2);
+        = (841.02, 40.0, 2.6860e-2, 2.0030e-2, 2.601e-2, 2.1387e-2);
 
 
     let (shell_side_to_tubes_nusselt_number_correction_factor,
@@ -76,7 +76,7 @@ pub fn regression_long_test_calibrated_ver3_set_c2(){
         experimental_pri_mass_flowrate_kg_per_s,
         simulated_expected_dracs_mass_flowrate_kg_per_s,
         simulated_expected_pri_mass_flowrate_kg_per_s) 
-        = (1158.69, 40.0, 3.0550e-2, 2.3670e-2, 3.0649e-2, 2.4946e-2);
+        = (1158.69, 40.0, 3.0550e-2, 2.3670e-2, 3.0649e-2, 2.5320e-2);
 
 
     let (shell_side_to_tubes_nusselt_number_correction_factor,
@@ -194,7 +194,7 @@ pub fn regression_long_test_calibrated_ver3_set_c4(){
         experimental_pri_mass_flowrate_kg_per_s,
         simulated_expected_dracs_mass_flowrate_kg_per_s,
         simulated_expected_pri_mass_flowrate_kg_per_s) 
-        = (1736.11, 40.0, 3.6490e-2, 2.9490e-2, 3.7343e-2, 3.0681e-2);
+        = (1736.11, 40.0, 3.6490e-2, 2.9490e-2, 3.7343e-2, 3.1109e-2);
 
 
     let (shell_side_to_tubes_nusselt_number_correction_factor,
@@ -254,7 +254,7 @@ pub fn regression_long_test_calibrated_ver3_set_c5(){
         experimental_pri_mass_flowrate_kg_per_s,
         simulated_expected_dracs_mass_flowrate_kg_per_s,
         simulated_expected_pri_mass_flowrate_kg_per_s) 
-        = (2026.29, 40.0, 3.8690e-2, 3.1900e-2, 4.0175e-2, 3.3095e-2);
+        = (2026.29, 40.0, 3.8690e-2, 3.1900e-2, 4.0175e-2, 3.3544e-2);
 
 
     let (shell_side_to_tubes_nusselt_number_correction_factor,
@@ -324,7 +324,7 @@ pub fn regression_long_test_calibrated_ver3_set_c6_extra_extra_extra_long(){
         experimental_pri_mass_flowrate_kg_per_s,
         simulated_expected_dracs_mass_flowrate_kg_per_s,
         simulated_expected_pri_mass_flowrate_kg_per_s) 
-        = (2288.83, 40.0, 4.1150e-2, 3.4120e-2, 4.2153e-2, 3.4979e-2);
+        = (2288.83, 40.0, 4.1150e-2, 3.4120e-2, 4.2153e-2, 3.5367e-2);
 
 
     let (shell_side_to_tubes_nusselt_number_correction_factor,
@@ -392,7 +392,7 @@ pub fn regression_long_test_calibrated_ver3_set_c6_extra_extra_long(){
         experimental_pri_mass_flowrate_kg_per_s,
         simulated_expected_dracs_mass_flowrate_kg_per_s,
         simulated_expected_pri_mass_flowrate_kg_per_s) 
-        = (2288.83, 40.0, 4.1150e-2, 3.4120e-2, 4.2153e-2, 3.4979e-2);
+        = (2288.83, 40.0, 4.1150e-2, 3.4120e-2, 4.2153e-2, 3.5380e-2);
 
 
     let (shell_side_to_tubes_nusselt_number_correction_factor,
@@ -460,7 +460,7 @@ pub fn regression_long_test_calibrated_ver3_set_c6_extra_long(){
         experimental_pri_mass_flowrate_kg_per_s,
         simulated_expected_dracs_mass_flowrate_kg_per_s,
         simulated_expected_pri_mass_flowrate_kg_per_s) 
-        = (2288.83, 40.0, 4.1150e-2, 3.4120e-2, 4.2253e-2, 3.5005e-2);
+        = (2288.83, 40.0, 4.1150e-2, 3.4120e-2, 4.2253e-2, 3.5424e-2);
 
 
     let (shell_side_to_tubes_nusselt_number_correction_factor,
@@ -520,7 +520,7 @@ pub fn regression_long_test_calibrated_ver3_set_c6(){
         experimental_pri_mass_flowrate_kg_per_s,
         simulated_expected_dracs_mass_flowrate_kg_per_s,
         simulated_expected_pri_mass_flowrate_kg_per_s) 
-        = (2288.83, 40.0, 4.1150e-2, 3.4120e-2, 4.2519e-2, 3.5072e-2);
+        = (2288.83, 40.0, 4.1150e-2, 3.4120e-2, 4.2519e-2, 3.5538e-2);
 
 
     let (shell_side_to_tubes_nusselt_number_correction_factor,
@@ -639,7 +639,7 @@ pub fn regression_long_test_calibrated_ver3_set_c7(){
         experimental_pri_mass_flowrate_kg_per_s,
         simulated_expected_dracs_mass_flowrate_kg_per_s,
         simulated_expected_pri_mass_flowrate_kg_per_s) 
-        = (2508.71, 40.0, 4.3120e-2, 3.5620e-2, 4.4351e-2, 3.6600e-2);
+        = (2508.71, 40.0, 4.3120e-2, 3.5620e-2, 4.4351e-2, 3.7077e-2);
 
 
     let (shell_side_to_tubes_nusselt_number_correction_factor,
@@ -700,7 +700,7 @@ pub fn regression_long_test_calibrated_ver3_set_c8(){
         experimental_pri_mass_flowrate_kg_per_s,
         simulated_expected_dracs_mass_flowrate_kg_per_s,
         simulated_expected_pri_mass_flowrate_kg_per_s) 
-        = (2685.83, 40.0, 4.5090e-2, 3.5930e-2, 4.5752e-2, 3.7756e-2);
+        = (2685.83, 40.0, 4.5090e-2, 3.5930e-2, 4.5752e-2, 3.8242e-2);
 
 
     let (shell_side_to_tubes_nusselt_number_correction_factor,
@@ -761,7 +761,7 @@ pub fn regression_long_test_calibrated_ver3_set_c9(){
         experimental_pri_mass_flowrate_kg_per_s,
         simulated_expected_dracs_mass_flowrate_kg_per_s,
         simulated_expected_pri_mass_flowrate_kg_per_s) 
-        = (2764.53, 40.0, 4.6990e-2, 3.5470e-2, 4.6354e-2, 3.8250e-2);
+        = (2764.53, 40.0, 4.6990e-2, 3.5470e-2, 4.6354e-2, 3.8738e-2);
 
 
     let (shell_side_to_tubes_nusselt_number_correction_factor,
