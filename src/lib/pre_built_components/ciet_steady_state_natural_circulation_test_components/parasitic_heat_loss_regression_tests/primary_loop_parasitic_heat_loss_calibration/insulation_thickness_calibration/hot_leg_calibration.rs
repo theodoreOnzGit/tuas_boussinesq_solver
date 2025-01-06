@@ -155,7 +155,7 @@ pub fn hot_leg_validation_set_c1(){
     let insulation_thickness_cm_for_regression_testing = 0.24;
 
     let dhx_inlet_regression_temperature_degc = 
-        71.25;
+        71.17;
 
     pri_loop_hot_leg_insulation_thickness_calibration_validation_test_v1(
         experimental_primary_mass_flowrate_kg_per_s, 
@@ -181,7 +181,7 @@ pub fn hot_leg_validation_set_c2(){
     let insulation_thickness_cm_for_regression_testing = 0.24;
 
     let dhx_inlet_regression_temperature_degc = 
-        78.57;
+        78.45;
 
     pri_loop_hot_leg_insulation_thickness_calibration_validation_test_v1(
         experimental_primary_mass_flowrate_kg_per_s, 
@@ -207,7 +207,7 @@ pub fn hot_leg_validation_set_c3(){
     let insulation_thickness_cm_for_regression_testing = 0.24;
 
     let dhx_inlet_regression_temperature_degc = 
-        84.00;
+        83.89;
 
     pri_loop_hot_leg_insulation_thickness_calibration_validation_test_v1(
         experimental_primary_mass_flowrate_kg_per_s, 
@@ -233,7 +233,7 @@ pub fn hot_leg_validation_set_c4(){
     let insulation_thickness_cm_for_regression_testing = 0.24;
 
     let dhx_inlet_regression_temperature_degc = 
-        90.98;
+        90.84;
 
     pri_loop_hot_leg_insulation_thickness_calibration_validation_test_v1(
         experimental_primary_mass_flowrate_kg_per_s, 
@@ -261,7 +261,7 @@ pub fn hot_leg_validation_set_c5(){
     let insulation_thickness_cm_for_regression_testing = 0.24;
 
     let dhx_inlet_regression_temperature_degc = 
-        96.64;
+        96.48;
 
     pri_loop_hot_leg_insulation_thickness_calibration_validation_test_v1(
         experimental_primary_mass_flowrate_kg_per_s, 
@@ -292,7 +292,7 @@ pub fn hot_leg_validation_set_c6(){
     let insulation_thickness_cm_for_regression_testing = 0.24;
 
     let dhx_inlet_regression_temperature_degc = 
-        101.54;
+        101.38;
 
     pri_loop_hot_leg_insulation_thickness_calibration_validation_test_v1(
         experimental_primary_mass_flowrate_kg_per_s, 
@@ -320,7 +320,7 @@ pub fn hot_leg_validation_set_c7(){
     let insulation_thickness_cm_for_regression_testing = 0.24;
 
     let dhx_inlet_regression_temperature_degc = 
-        106.58;
+        106.41;
 
     pri_loop_hot_leg_insulation_thickness_calibration_validation_test_v1(
         experimental_primary_mass_flowrate_kg_per_s, 
@@ -348,7 +348,7 @@ pub fn hot_leg_validation_set_c8(){
     let insulation_thickness_cm_for_regression_testing = 0.24;
 
     let dhx_inlet_regression_temperature_degc = 
-        111.59;
+        111.41;
 
     pri_loop_hot_leg_insulation_thickness_calibration_validation_test_v1(
         experimental_primary_mass_flowrate_kg_per_s, 
@@ -376,7 +376,7 @@ pub fn hot_leg_validation_set_c9(){
     let insulation_thickness_cm_for_regression_testing = 0.24;
 
     let dhx_inlet_regression_temperature_degc = 
-        115.81;
+        115.63;
 
     pri_loop_hot_leg_insulation_thickness_calibration_validation_test_v1(
         experimental_primary_mass_flowrate_kg_per_s, 
