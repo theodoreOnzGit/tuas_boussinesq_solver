@@ -14,7 +14,7 @@ pub fn regression_long_test_calibrated_ver6_set_c1(){
         experimental_pri_mass_flowrate_kg_per_s,
         simulated_expected_dracs_mass_flowrate_kg_per_s,
         simulated_expected_pri_mass_flowrate_kg_per_s) 
-        = (841.02, 40.0, 2.6860e-2, 2.0030e-2, 2.5772e-2, 2.0823e-2);
+        = (841.02, 40.0, 2.6860e-2, 2.0030e-2, 2.5263e-2, 2.0594e-2);
 
 
     let (shell_side_to_tubes_nusselt_number_correction_factor,
@@ -38,7 +38,7 @@ pub fn regression_long_test_calibrated_ver6_set_c1(){
         expt_heater_surf_temp_avg_degc,
         simulated_expected_heater_surf_temp_degc,
         heater_surface_temp_tolerance_degc) = 
-        (1.08,86.80711,86.8,0.5);
+        (1.08,86.80711,86.49,0.5);
 
 
     regression_coupled_dracs_loop_version_6(
@@ -83,7 +83,7 @@ pub fn regression_long_test_calibrated_ver6_set_c2(){
         experimental_pri_mass_flowrate_kg_per_s,
         simulated_expected_dracs_mass_flowrate_kg_per_s,
         simulated_expected_pri_mass_flowrate_kg_per_s) 
-        = (1158.69, 40.0, 3.0550e-2, 2.3670e-2, 3.0766e-2, 2.4531e-2);
+        = (1158.69, 40.0, 3.0550e-2, 2.3670e-2, 3.0377e-2, 2.4344e-2);
 
 
     let (shell_side_to_tubes_nusselt_number_correction_factor,
@@ -107,7 +107,7 @@ pub fn regression_long_test_calibrated_ver6_set_c2(){
         expt_heater_surf_temp_avg_degc,
         simulated_expected_heater_surf_temp_degc,
         heater_surface_temp_tolerance_degc) = 
-        (1.28,96.92,96.55,0.5);
+        (1.27,96.92,96.65,0.5);
 
 
     regression_coupled_dracs_loop_version_6(
@@ -177,7 +177,7 @@ pub fn regression_long_test_calibrated_ver6_set_c3(){
         expt_heater_surf_temp_avg_degc,
         simulated_expected_heater_surf_temp_degc,
         heater_surface_temp_tolerance_degc) = 
-        (1.38,105.23,105.51,0.5);
+        (1.38,105.23,104.96,0.5);
 
 
     regression_coupled_dracs_loop_version_6(
@@ -363,7 +363,7 @@ pub fn regression_long_test_calibrated_ver6_set_c6(){
         experimental_pri_mass_flowrate_kg_per_s,
         simulated_expected_dracs_mass_flowrate_kg_per_s,
         simulated_expected_pri_mass_flowrate_kg_per_s) 
-        = (2288.83, 40.0, 4.1150e-2, 3.4120e-2, 4.2892e-2, 3.4096e-2);
+        = (2288.83, 40.0, 4.1150e-2, 3.4120e-2, 4.2673e-2, 3.3956e-2);
 
 
     let (shell_side_to_tubes_nusselt_number_correction_factor,
@@ -387,7 +387,7 @@ pub fn regression_long_test_calibrated_ver6_set_c6(){
         expt_heater_surf_temp_avg_degc,
         simulated_expected_heater_surf_temp_degc,
         heater_surface_temp_tolerance_degc) = 
-        (1.79,130.37,130.48,0.5);
+        (1.77,130.37,130.07,0.5);
 
 
     regression_coupled_dracs_loop_version_6(
@@ -457,7 +457,7 @@ pub fn regression_long_test_calibrated_ver6_set_c7(){
         expt_heater_surf_temp_avg_degc,
         simulated_expected_heater_surf_temp_degc,
         heater_surface_temp_tolerance_degc) = 
-        (1.78,138.12,137.78,0.5);
+        (1.78,138.12,138.10,0.5);
 
 
     regression_coupled_dracs_loop_version_6(
