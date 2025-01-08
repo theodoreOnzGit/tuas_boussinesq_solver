@@ -1,3 +1,6 @@
+/// this gives some basic tests to see what is optimal for parasitic heat loss
+pub mod preliminaries;
+
 /// For the InsulatedFluidComponents, and porous media counterparts
 /// one useful verification test is the log-mean-temp-diff test.
 /// 
@@ -24,4 +27,6 @@
 /// 
 /// This provides a simple analytical solution for which to test the 
 /// components
-pub mod preliminaries;
+///
+/// we vary lengths from 1 to 10m here
+pub mod length_tests;
