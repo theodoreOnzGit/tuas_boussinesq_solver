@@ -29,4 +29,10 @@ pub mod preliminaries;
 /// components
 ///
 /// we vary lengths from 1 to 10m here
+///
+/// all agree to within 0.3K.
+/// But I wonder why it's slightly off. 
+/// Mesh refinement doesn't help 
+/// and extra time doesn't help to reach a steady state either
+///
 pub mod length_tests;
