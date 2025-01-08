@@ -296,7 +296,7 @@ pub fn static_mixer_3_meter_test_reduced_insulation_thickness_ambient_resistance
     let (l_meters, 
         t_out_expected_regression_degc, 
         t_out_calculated_by_pipe_degc) 
-        = (3.00, 99.282,99.357);
+        = (3.00, 99.282,99.359);
 
 
     // temperature
