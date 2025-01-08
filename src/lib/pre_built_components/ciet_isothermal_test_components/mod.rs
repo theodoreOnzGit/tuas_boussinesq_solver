@@ -6,8 +6,10 @@ use uom::si::area::square_meter;
 /// builds ciet branches for the isothermal test
 pub mod ciet_branch_builders_isothermal;
 
+#[cfg(test)]
 /// tests for the heater branch and ctah branch only
 pub mod isothermal_ctah_heater_branch_test;
+#[cfg(test)]
 /// tests for the heater branch, ctah branch and dhx branch
 pub mod isothermal_ctah_heater_dhx_branch_test;
 

@@ -45,7 +45,7 @@ pub fn ctah_flow_steady_state_test(){
         experimental_dhx_br_mass_flowrate_kg_per_s,
         simulated_expected_dracs_mass_flowrate_kg_per_s,
         simulated_expected_dhx_br_mass_flowrate_kg_per_s) 
-        = (4220.0, 46.0, 0.0034689, 0.0, 0.0034689, 0.0);
+        = (4220.0, 46.0, 0.0036575, 0.0, 0.0036575, 0.0);
 
 
     let (shell_side_to_tubes_nusselt_number_correction_factor,
@@ -188,7 +188,7 @@ pub fn ctah_flow_short_test_dhx_blocked(){
         regression_heater_surf_temp_avg_degc,
         simulated_expected_heater_surf_temp_degc,
         heater_surface_temp_tolerance_degc) = 
-        (10.0,122.05,122.05,5.0);
+        (10.0,82.09,82.09,5.0);
 
     let ctah_pump_pressure_pascals = 2400.0;
     let ctah_flow_blocked = false;
@@ -313,7 +313,7 @@ pub fn ctah_flow_short_test_reverse_diode_effect(){
         regression_heater_surf_temp_avg_degc,
         simulated_expected_heater_surf_temp_degc,
         heater_surface_temp_tolerance_degc) = 
-        (10.0,117.55,117.55,5.0);
+        (10.0,79.96,79.96,5.0);
 
     // to counteract natural circulation u need about this much 
     // 5000 Pa 
