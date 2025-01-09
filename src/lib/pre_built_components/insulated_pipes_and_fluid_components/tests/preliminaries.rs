@@ -85,7 +85,7 @@ pub fn calc_overall_thermal_resistance_for_pipe(
 
     // convective resistance to pipe
     let convective_thermal_resistance_to_pipe 
-        = (fluid_htc_to_pipe * PI * insulation_od * pipe_length).recip();
+        = (fluid_htc_to_pipe * PI * shell_id * pipe_length).recip();
 
 
     // insulation resistance
