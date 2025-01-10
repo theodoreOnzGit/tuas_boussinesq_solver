@@ -1,7 +1,5 @@
 use std::ops::{DerefMut, Deref};
 use std::sync::{Arc, Mutex};
-use std::thread;
-
 use peroxide::prelude::erfc;
 use crate::array_control_vol_and_fluid_component_collections::one_d_solid_array_with_lateral_coupling::SolidColumn;
 use crate::boundary_conditions::BCType;

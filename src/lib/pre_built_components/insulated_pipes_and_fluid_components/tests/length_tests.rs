@@ -7,7 +7,6 @@ use crate::heat_transfer_correlations::nusselt_number_correlations::enums::Nusse
 use crate::pre_built_components::insulated_pipes_and_fluid_components::tests::preliminaries::calc_overall_thermal_resistance_for_pipe;
 use crate::pre_built_components::insulated_pipes_and_fluid_components::InsulatedFluidComponent;
 use crate::pre_built_components::heat_transfer_entities::HeatTransferEntity;
-use ndarray::Array1;
 use uom::si::angle::degree;
 use uom::si::area::square_meter;
 use uom::si::ratio::ratio;

@@ -35,9 +35,25 @@ pub mod preliminaries;
 /// Mesh refinement doesn't help 
 /// and extra time doesn't help to reach a steady state either
 ///
+/// Based on the axial_conduction_verification set of tests 
+/// I found that the differences here are due to axial conduction
+/// absent within the analytical solution
+///
+///
 pub mod length_tests;
 
 /// there is quite some discrepancy between 
 /// the analytical solution and the calculated solution
 /// this debugging process is meant to try and resolve that
+///
+/// This is done by first removing the insulation and pipe solid arrays 
+/// out of the picture, and just performing connections with the fluid 
+/// array.
+///
+/// then when adding back the insulation array without the pipe array,
+/// the large discrepancy of 1K in outlet temperature was observed.
+/// This was due to axial conduction in the SolidColumn
+///
+/// the SolidColumn was already verified against analytical solution 
+/// (I added a test)
 pub mod axial_conduction_verification;
