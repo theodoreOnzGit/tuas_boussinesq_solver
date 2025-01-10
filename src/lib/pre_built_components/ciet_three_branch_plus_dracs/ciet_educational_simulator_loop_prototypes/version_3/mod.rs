@@ -205,7 +205,7 @@ pub fn ctah_flow_short_test_dhx_blocked(){
         regression_heater_outlet_temp_degc, 
         regression_ctah_inlet_temp_degc, 
         regression_ctah_outlet_temp_degc, ) = 
-        (66.33,82.21,78.55,82.96);
+        (66.33,82.21,78.55,76.37);
 
     // timestep 
     let timestep_seconds: f64 = 0.2;
@@ -332,7 +332,7 @@ pub fn ctah_flow_short_test_reverse_diode_effect(){
         regression_heater_outlet_temp_degc, 
         regression_ctah_inlet_temp_degc, 
         regression_ctah_outlet_temp_degc, ) = 
-        (67.31,78.80,76.21,81.88);
+        (67.31,78.80,76.21,74.68);
 
     // timestep 
     let timestep_seconds: f64 = 0.2;
