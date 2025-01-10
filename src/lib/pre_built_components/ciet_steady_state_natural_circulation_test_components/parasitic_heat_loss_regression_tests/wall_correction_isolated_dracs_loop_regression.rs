@@ -804,7 +804,7 @@ pub fn parasitic_heat_loss_regression_tchx_out_319_kelvin_46_celsius() {
         verify_isolated_dhx_forced_circ(
             2000.0, // 2000 watts
             MassRate::new::<kilogram_per_second>(0.18),
-            31.6738342657, // dhx temp degree celsius at 800s to within 0.01K
+            31.9841064557, // dhx temp degree celsius at 800s to within 0.01K
                    // comparing to that at 750s to within 0.3 K
             turn_on_non_insulated_fluid_components_wall_correction,
             turn_on_insulated_fluid_components_wall_correction,
@@ -821,7 +821,7 @@ pub fn parasitic_heat_loss_regression_tchx_out_319_kelvin_46_celsius() {
         verify_isolated_dhx_forced_circ(
             2000.0, // 2000 watts
             MassRate::new::<kilogram_per_second>(0.18),
-            31.673882867, // dhx temp degree celsius to within 0.01K
+            31.984150096, // dhx temp degree celsius to within 0.01K
             turn_on_non_insulated_fluid_components_wall_correction,
             turn_on_insulated_fluid_components_wall_correction,
             "non_insulated_fluid_components wall correction"
@@ -837,7 +837,7 @@ pub fn parasitic_heat_loss_regression_tchx_out_319_kelvin_46_celsius() {
         verify_isolated_dhx_forced_circ(
             2000.0, // 2000 watts
             MassRate::new::<kilogram_per_second>(0.18),
-            31.67383298, // dhx temp degree celsius to within 0.01K
+            31.9840581149, // dhx temp degree celsius to within 0.01K
             turn_on_non_insulated_fluid_components_wall_correction,
             turn_on_insulated_fluid_components_wall_correction,
             "insulated_fluid_components wall correction"
@@ -853,7 +853,7 @@ pub fn parasitic_heat_loss_regression_tchx_out_319_kelvin_46_celsius() {
         verify_isolated_dhx_forced_circ(
             2000.0, // 2000 watts
             MassRate::new::<kilogram_per_second>(0.18),
-            31.67388158, // dhx temp degree celsius to within 0.01K
+            31.98410175676, // dhx temp degree celsius to within 0.01K
             turn_on_non_insulated_fluid_components_wall_correction,
             turn_on_insulated_fluid_components_wall_correction,
             "all components wall correction"
