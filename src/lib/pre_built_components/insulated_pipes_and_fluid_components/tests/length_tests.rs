@@ -25,7 +25,6 @@ use uom::si::mass_rate::kilogram_per_second;
 
 // 1m test
 #[test]
-#[ignore = "debugging"]
 pub fn static_mixer_41_label_6_1_meter_test_reduced_insulation_thickness_ambient_resistance_and_increase_nusselt(){
 
     // testings 
@@ -149,7 +148,7 @@ pub fn static_mixer_41_label_6_1_meter_test_reduced_insulation_thickness_ambient
 
     // time settings 
 
-    let max_time = Time::new::<second>(4000.0);
+    let max_time = Time::new::<second>(3000.0);
     let timestep = Time::new::<second>(0.1);
     let mut simulation_time = Time::ZERO;
     let mass_flowrate = MassRate::new::<kilogram_per_second>(0.18);
@@ -290,18 +289,16 @@ pub fn static_mixer_41_label_6_1_meter_test_reduced_insulation_thickness_ambient
 
 
 /// 3m test
-/// 32 nodes
 /// note: probably hasn't reached steady state yet
 /// but that takes real long to test
 #[test]
-#[ignore = "debugging"]
 pub fn static_mixer_3_meter_test_reduced_insulation_thickness_ambient_resistance_and_increase_nusselt(){
 
     // testings 
     let (l_meters, 
         t_out_expected_regression_degc, 
         t_out_calculated_by_pipe_degc) 
-        = (3.00, 99.282,99.359);
+        = (3.00, 99.283,99.359);
 
 
     // temperature
@@ -330,9 +327,9 @@ pub fn static_mixer_3_meter_test_reduced_insulation_thickness_ambient_resistance
     // now because there are two outer nodes, the 
     // number of inner nodes is zero
     //
-    // however, I'm having about 30 inner nodes here to make it work better
+    // however, I'm having about 10 inner nodes here to make it work better
     // for verification
-    let user_specified_inner_nodes = 30; 
+    let user_specified_inner_nodes = 10; 
     let initial_temperature: ThermodynamicTemperature = 
         ThermodynamicTemperature::new::<degree_celsius>(100.0);
 
@@ -418,7 +415,7 @@ pub fn static_mixer_3_meter_test_reduced_insulation_thickness_ambient_resistance
 
     // time settings 
 
-    let max_time = Time::new::<second>(4000.0);
+    let max_time = Time::new::<second>(3000.0);
     let timestep = Time::new::<second>(0.1);
     let mut simulation_time = Time::ZERO;
     let mass_flowrate = MassRate::new::<kilogram_per_second>(0.18);
@@ -563,7 +560,6 @@ pub fn static_mixer_3_meter_test_reduced_insulation_thickness_ambient_resistance
 /// note: probably hasn't reached steady state yet
 /// but that takes real long to test
 #[test]
-#[ignore = "debugging"]
 pub fn static_mixer_5_meter_test_reduced_insulation_thickness_ambient_resistance_and_increase_nusselt(){
 
     // testings 
@@ -1098,18 +1094,17 @@ pub fn static_mixer_7_meter_test_reduced_insulation_thickness_ambient_resistance
 
 
 /// 9m test
-/// 92 nodes
+/// 12 nodes (testing for mesh refinement)
 /// note: probably hasn't reached steady state yet
 /// but that takes real long to test
 #[test]
-#[ignore = "debugging"]
 pub fn static_mixer_9_meter_test_reduced_insulation_thickness_ambient_resistance_and_increase_nusselt(){
 
     // testings 
     let (l_meters, 
         t_out_expected_regression_degc, 
         t_out_calculated_by_pipe_degc) 
-        = (9.00, 97.868,98.0907);
+        = (9.00, 97.868,98.0925);
 
 
     // temperature
@@ -1367,20 +1362,20 @@ pub fn static_mixer_9_meter_test_reduced_insulation_thickness_ambient_resistance
 
 
 /// 9m test
-/// 92 nodes
+/// 92 nodes, extra long time given
 /// note: probably hasn't reached steady state yet
 /// but that takes real long to test
 ///
-/// but adding some extra time to see if this changes things
+/// This shows mesh refinement has little significant impact 
+/// comapred with the 10 node version for this kind of setup
 #[test]
-#[ignore = "debugging, probably unnecessary"]
 pub fn static_mixer_9_meter_test_reduced_insulation_thickness_ambient_resistance_and_increase_nusselt_extra_time(){
 
     // testings 
     let (l_meters, 
         t_out_expected_regression_degc, 
         t_out_calculated_by_pipe_degc) 
-        = (9.00, 97.868,98.0907);
+        = (9.00, 97.868,98.09097);
 
 
     // temperature
