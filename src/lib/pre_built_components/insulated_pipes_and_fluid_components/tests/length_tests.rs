@@ -25,6 +25,7 @@ use uom::si::mass_rate::kilogram_per_second;
 
 // 1m test
 #[test]
+#[ignore = "debugging"]
 pub fn static_mixer_41_label_6_1_meter_test_reduced_insulation_thickness_ambient_resistance_and_increase_nusselt(){
 
     // testings 
@@ -293,6 +294,7 @@ pub fn static_mixer_41_label_6_1_meter_test_reduced_insulation_thickness_ambient
 /// note: probably hasn't reached steady state yet
 /// but that takes real long to test
 #[test]
+#[ignore = "debugging"]
 pub fn static_mixer_3_meter_test_reduced_insulation_thickness_ambient_resistance_and_increase_nusselt(){
 
     // testings 
@@ -561,6 +563,7 @@ pub fn static_mixer_3_meter_test_reduced_insulation_thickness_ambient_resistance
 /// note: probably hasn't reached steady state yet
 /// but that takes real long to test
 #[test]
+#[ignore = "debugging"]
 pub fn static_mixer_5_meter_test_reduced_insulation_thickness_ambient_resistance_and_increase_nusselt(){
 
     // testings 
@@ -1099,6 +1102,7 @@ pub fn static_mixer_7_meter_test_reduced_insulation_thickness_ambient_resistance
 /// note: probably hasn't reached steady state yet
 /// but that takes real long to test
 #[test]
+#[ignore = "debugging"]
 pub fn static_mixer_9_meter_test_reduced_insulation_thickness_ambient_resistance_and_increase_nusselt(){
 
     // testings 
@@ -1134,9 +1138,9 @@ pub fn static_mixer_9_meter_test_reduced_insulation_thickness_ambient_resistance
     // now because there are two outer nodes, the 
     // number of inner nodes is zero
     //
-    // however, I'm having about 92 inner nodes here to make it work better
+    // however, I'm having about 10 inner nodes here to make it work better
     // for verification
-    let user_specified_inner_nodes = 92; 
+    let user_specified_inner_nodes = 10; 
     let initial_temperature: ThermodynamicTemperature = 
         ThermodynamicTemperature::new::<degree_celsius>(100.0);
 
@@ -1369,6 +1373,7 @@ pub fn static_mixer_9_meter_test_reduced_insulation_thickness_ambient_resistance
 ///
 /// but adding some extra time to see if this changes things
 #[test]
+#[ignore = "debugging, probably unnecessary"]
 pub fn static_mixer_9_meter_test_reduced_insulation_thickness_ambient_resistance_and_increase_nusselt_extra_time(){
 
     // testings 

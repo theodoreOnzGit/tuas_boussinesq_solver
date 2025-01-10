@@ -164,7 +164,7 @@ pub fn test_to_assert_if_conductance_from_insulation_to_ambient_is_correct(){
 
         let ambient_to_insulation_conductance_without_inner_annular_pipe  
             = heater_v1_without_inner_annular_pipe
-            .get_ambient_surroundings_to_insulation_thermal_conductance(
+            .get_ambient_surroundings_to_insulation_nodalised_thermal_conductance(
                 htc_to_ambient).unwrap();
         // heater v2 insulated next
 

@@ -109,7 +109,7 @@ impl InsulatedFluidComponent {
 
 
         let insulation_to_air_nodal_conductance: ThermalConductance 
-        = self.get_ambient_surroundings_to_insulation_thermal_conductance(
+        = self.get_ambient_surroundings_to_insulation_nodalised_thermal_conductance(
             heat_transfer_to_ambient
         )?;
 
@@ -307,7 +307,7 @@ impl InsulatedFluidComponent {
     ///
     /// it goes roughly to the middle of the insulation
     #[inline]
-    pub fn get_ambient_surroundings_to_insulation_thermal_conductance(&mut self,
+    pub fn get_ambient_surroundings_to_insulation_nodalised_thermal_conductance(&mut self,
     h_air_to_pipe_surf: HeatTransfer) 
         -> Result<ThermalConductance,TuasLibError> {
         // first, let's get a clone of the pipe_shell shell surface
