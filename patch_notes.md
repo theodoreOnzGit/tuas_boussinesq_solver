@@ -1,3 +1,25 @@
+## v 0.0.6 
+
+For this version, there were key bugfixes and enhancements 
+for the CIET Educational Simulator,
+and also for all components within CIET. The mistake was that the
+shell outer diameter for all components in CIET was calculated by adding the 
+thickness to the shell inner diameter when it should have been two 
+times the thickness. As a result, all coupled natural circulation 
+regression tests had to be changed. Thankfully in the tests, they were still 
+largely correct and within the 6.2% error bounds of experimental data.
+
+Additionally, the MX-10 and CIET Heater v2 have been converted to 
+NonInsulatedPorousMediaFluidComponent and InsulatedPorousMediaFluidComponent 
+structs respectively. Regression and validation were performed for both.
+Moreover, additional validation tests using CIET heater data were 
+performed on NonInsulatedFluidComponent and verification using an analytical 
+solution was performed on the InsulatedFluidComponent structs. 
+
+Also now, the CIET Educational Simulator again works natively on windows.
+
+
+
 ## v 0.0.5 
 
 For this version, the key thing is the addition of the CIET educational
