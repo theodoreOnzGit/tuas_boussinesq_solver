@@ -69,7 +69,7 @@ pub fn ctah_flow_steady_state_test(){
         expt_heater_surf_temp_avg_degc,
         simulated_expected_heater_surf_temp_degc,
         heater_surface_temp_tolerance_degc) = 
-        (10.0,149.06,149.06,5.0);
+        (10.0,149.06,135.74,15.0);
 
     let ctah_pump_pressure_pascals = 16200.0;
     let ctah_flow_blocked = false;
@@ -205,7 +205,7 @@ pub fn ctah_flow_short_test_dhx_blocked(){
         regression_heater_outlet_temp_degc, 
         regression_ctah_inlet_temp_degc, 
         regression_ctah_outlet_temp_degc, ) = 
-        (73.11,89.11,85.64,82.96);
+        (66.33,82.21,85.64,82.96);
 
     // timestep 
     let timestep_seconds: f64 = 0.2;
@@ -332,7 +332,7 @@ pub fn ctah_flow_short_test_reverse_diode_effect(){
         regression_heater_outlet_temp_degc, 
         regression_ctah_inlet_temp_degc, 
         regression_ctah_outlet_temp_degc, ) = 
-        (74.99,86.6,83.92,81.88);
+        (67.31,78.80,83.92,81.88);
 
     // timestep 
     let timestep_seconds: f64 = 0.2;

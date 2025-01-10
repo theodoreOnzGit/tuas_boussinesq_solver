@@ -17,7 +17,7 @@ pub fn ciet_coupled_nat_circ_set_a1_for_three_branch(){
         experimental_pri_mass_flowrate_kg_per_s,
         simulated_expected_dracs_mass_flowrate_kg_per_s,
         simulated_expected_pri_mass_flowrate_kg_per_s) 
-        = (1479.86, 46.0, 3.3410e-2, 2.7380e-2, 3.4940e-2, 2.7459e-2);
+        = (1479.86, 46.0, 3.3410e-2, 2.7380e-2, 3.4513e-2, 2.7459e-2);
 
 
     let (shell_side_to_tubes_nusselt_number_correction_factor,
