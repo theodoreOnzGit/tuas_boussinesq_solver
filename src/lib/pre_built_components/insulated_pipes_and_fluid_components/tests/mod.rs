@@ -36,3 +36,8 @@ pub mod preliminaries;
 /// and extra time doesn't help to reach a steady state either
 ///
 pub mod length_tests;
+
+/// there is quite some discrepancy between 
+/// the analytical solution and the calculated solution
+/// this debugging process is meant to try and resolve that
+pub mod axial_conduction_verification;
