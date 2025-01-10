@@ -1660,7 +1660,7 @@ pub fn static_mixer_41_label_6_1_meter_test_reduced_thickness_increased_ua(){
     let (l_meters, 
         t_out_expected_regression_degc, 
         t_out_calculated_by_pipe_degc) 
-        = (1.00, 88.589, 89.616);
+        = (1.00, 88.622, 89.616);
 
 
     // temperature
@@ -1735,7 +1735,7 @@ pub fn static_mixer_41_label_6_1_meter_test_reduced_thickness_increased_ua(){
     // first calculate analytical solution
 
     let average_expected_temp = 
-        ThermodynamicTemperature::new::<degree_celsius>(100.0);
+        ThermodynamicTemperature::new::<degree_celsius>(95.0);
     let total_thermal_resistance_estimate = 
         calc_overall_thermal_resistance_for_pipe(
             htc_to_ambient, 
