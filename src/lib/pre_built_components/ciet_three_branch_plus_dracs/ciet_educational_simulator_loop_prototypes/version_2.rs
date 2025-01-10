@@ -186,7 +186,7 @@ pub fn ctah_flow_short_test_dhx_blocked(){
         regression_heater_surf_temp_avg_degc,
         simulated_expected_heater_surf_temp_degc,
         heater_surface_temp_tolerance_degc) = 
-        (10.0,122.05,122.05,5.0);
+        (10.0,82.09,82.09,5.0);
 
     let ctah_pump_pressure_pascals = 2400.0;
     let ctah_flow_blocked = false;
@@ -203,7 +203,7 @@ pub fn ctah_flow_short_test_dhx_blocked(){
         regression_heater_outlet_temp_degc, 
         regression_ctah_inlet_temp_degc, 
         regression_ctah_outlet_temp_degc, ) = 
-        (73.11,89.11,85.64,82.96);
+        (66.33,82.21,78.55,76.37);
 
     // timestep 
     let timestep_seconds: f64 = 0.2;
@@ -297,7 +297,7 @@ pub fn ctah_flow_short_test_reverse_diode_effect(){
         regression_heater_surf_temp_avg_degc,
         simulated_expected_heater_surf_temp_degc,
         heater_surface_temp_tolerance_degc) = 
-        (10.0,117.55,117.55,5.0);
+        (10.0,79.96,79.96,5.0);
 
     // to counteract natural circulation u need about this much 
     // 5000 Pa 
@@ -316,7 +316,7 @@ pub fn ctah_flow_short_test_reverse_diode_effect(){
         regression_heater_outlet_temp_degc, 
         regression_ctah_inlet_temp_degc, 
         regression_ctah_outlet_temp_degc, ) = 
-        (74.99,86.6,83.92,81.88);
+        (67.31,78.80,76.21,74.68);
 
     // timestep 
     let timestep_seconds: f64 = 0.2;
@@ -548,7 +548,7 @@ pub fn three_branch_ciet_ver2(
         let mut pipe_2a = new_pipe_2a(initial_temperature);
         let mut static_mixer_10_label_2 = new_static_mixer_10_label_2(initial_temperature);
         let mut heater_top_head_1a = new_heater_top_head_1a(initial_temperature);
-        let mut heater_ver_1 = new_heated_section_version_1_label_1(initial_temperature);
+        let mut heater_ver_1 = new_heated_section_version_1_label_1_without_inner_annular_pipe(initial_temperature);
         let mut heater_bottom_head_1b = new_heater_bottom_head_1b(initial_temperature);
         let mut pipe_18 = new_pipe_18(initial_temperature);
 

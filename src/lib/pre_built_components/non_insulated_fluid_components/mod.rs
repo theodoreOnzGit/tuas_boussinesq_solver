@@ -3,10 +3,18 @@ use crate::array_control_vol_and_fluid_component_collections::one_d_fluid_array_
 use crate::array_control_vol_and_fluid_component_collections::one_d_solid_array_with_lateral_coupling::SolidColumn;
 use crate::boussinesq_thermophysical_properties::SolidMaterial;
 use crate::boussinesq_thermophysical_properties::LiquidMaterial;
+use crate::heat_transfer_correlations::nusselt_number_correlations::enums::NusseltCorrelation;
+use crate::heat_transfer_correlations::nusselt_number_correlations::input_structs::NusseltPrandtlReynoldsData;
 
 use super::heat_transfer_entities::cv_types::CVType;
 use super::heat_transfer_entities::HeatTransferEntity;
+use uom::si::area::square_meter;
 use uom::si::f64::*;
+use uom::si::heat_transfer::watt_per_square_meter_kelvin;
+use uom::si::length::meter;
+use uom::si::pressure::atmosphere;
+use uom::si::ratio::ratio;
+use uom::ConstZero;
 
 /// The simplest component is a non insulated pipe
 ///
@@ -150,6 +158,103 @@ impl NonInsulatedFluidComponent {
             custom_component_loss_correlation,
         };
     }
+
+
+    /// constructs a new heater v2 based on de wet's model,
+    /// but without the inner twisted tape 
+    pub fn new_dewet_model_heater_v2_no_twisted_tape(
+        initial_temperature: ThermodynamicTemperature,
+        ambient_temperature: ThermodynamicTemperature,
+        user_specified_inner_nodes: usize) -> Self {
+
+        let flow_area = Area::new::<square_meter>(0.00105);
+        let heated_length = Length::new::<meter>(1.6383);
+        let atmospheric_pressure = Pressure::new::<atmosphere>(1.0);
+        let hydraulic_diameter = Length::new::<meter>(0.01467);
+
+        // heater is inclined 90 degrees upwards, not that this is 
+        // particularly important for this scenario
+
+        let pipe_incline_angle = Angle::new::<uom::si::angle::degree>(90.0);
+
+        // default is a 20 W/(m^2 K) callibrated heat transfer coeff 
+        // theoretically it's 6 W/(m^2 K) but then we'll have to manually 
+        // input wall structures for additional heat loss
+        //
+        let h_to_air: HeatTransfer = 
+        HeatTransfer::new::<watt_per_square_meter_kelvin>(20.0);
+        let steel_shell_id = Length::new::<meter>(0.0381);
+        let steel_shell_od = Length::new::<meter>(0.04);
+
+
+        // inner therminol array 
+        //
+        // the darcy loss correlation is f = 17.9 *Re^{-0.34}
+        // accurate to within 4% (Lukas et al)
+        // Improved Heat Transfer and Volume Scaling through 
+        // Novel Heater Design
+        // 
+
+        let a = Ratio::ZERO;
+        let b = Ratio::new::<ratio>(17.9);
+        let c: f64  = -0.34;
+        let mut therminol_array: FluidArray = 
+        FluidArray::new_custom_component(
+            heated_length,
+            hydraulic_diameter,
+            flow_area,
+            initial_temperature,
+            atmospheric_pressure,
+            LiquidMaterial::TherminolVP1,
+            a,
+            b,
+            c,
+            user_specified_inner_nodes,
+            pipe_incline_angle
+        );
+
+        // the therminol array nusselt correlation should be that of the 
+        // heater 
+
+        let heater_prandtl_reynolds_data: NusseltPrandtlReynoldsData 
+        = NusseltPrandtlReynoldsData::default();
+        therminol_array.nusselt_correlation = 
+            NusseltCorrelation::CIETHeaterVersion2(
+                heater_prandtl_reynolds_data
+                );
+
+        let darcy_loss_correlation = 
+            therminol_array.fluid_component_loss_properties.clone();
+
+        // now the outer steel array
+        let steel_shell_array = 
+        SolidColumn::new_cylindrical_shell(
+            heated_length,
+            steel_shell_id,
+            steel_shell_od,
+            initial_temperature,
+            atmospheric_pressure,
+            SolidMaterial::SteelSS304L,
+            user_specified_inner_nodes 
+        );
+
+
+
+
+
+        return Self { inner_nodes: user_specified_inner_nodes, 
+            pipe_shell: steel_shell_array.into(), 
+            pipe_fluid_array: therminol_array.into(), 
+            ambient_temperature, 
+            heat_transfer_to_ambient: h_to_air, 
+            od: steel_shell_od, 
+            id: steel_shell_id, 
+            flow_area, 
+            custom_component_loss_correlation: darcy_loss_correlation 
+        };
+
+    }
+
     /// constructs a new insulated pipe
     ///
     /// you need to supply the initial temperature, ambient temperature
@@ -255,3 +360,7 @@ pub mod type_conversion;
 /// calibration, for calibrating thickness or nusselt correlation 
 /// (incomplete)
 pub mod calibration;
+
+/// validation and verification tests 
+#[cfg(test)]
+pub mod tests;

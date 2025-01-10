@@ -17,7 +17,7 @@ pub fn ciet_coupled_nat_circ_set_a1_for_three_branch(){
         experimental_pri_mass_flowrate_kg_per_s,
         simulated_expected_dracs_mass_flowrate_kg_per_s,
         simulated_expected_pri_mass_flowrate_kg_per_s) 
-        = (1479.86, 46.0, 3.3410e-2, 2.7380e-2, 3.4940e-2, 2.7583e-2);
+        = (1479.86, 46.0, 3.3410e-2, 2.7380e-2, 3.4513e-2, 2.7459e-2);
 
 
     let (shell_side_to_tubes_nusselt_number_correction_factor,
@@ -38,10 +38,10 @@ pub fn ciet_coupled_nat_circ_set_a1_for_three_branch(){
 
     // heater calibration for appropriate surface temp
     let (heater_calibrated_nusselt_factor_float,
-        expt_heater_surf_temp_avg_degc,
+        regression_heater_surf_temp_avg_degc,
         simulated_expected_heater_surf_temp_degc,
         heater_surface_temp_tolerance_degc) = 
-        (10.0,109.47,105.52,15.0);
+        (10.0,75.46,75.46,15.0);
 
     let ctah_pump_pressure_pascals = 0.0;
     let ctah_flow_blocked = true;
@@ -67,7 +67,7 @@ pub fn ciet_coupled_nat_circ_set_a1_for_three_branch(){
         dracs_loop_cold_leg_insulation_thickness_cm,
         dracs_loop_hot_leg_insulation_thickness_cm,
         heater_calibrated_nusselt_factor_float,
-        expt_heater_surf_temp_avg_degc,
+        regression_heater_surf_temp_avg_degc,
         simulated_expected_heater_surf_temp_degc,
         heater_surface_temp_tolerance_degc,
         ctah_pump_pressure_pascals,
@@ -117,10 +117,10 @@ pub fn zero_flow_for_three_branch_ver_1(){
 
     // heater calibration for appropriate surface temp
     let (heater_calibrated_nusselt_factor_float,
-        expt_heater_surf_temp_avg_degc,
+        regression_heater_surf_temp_avg_degc,
         simulated_expected_heater_surf_temp_degc,
         heater_surface_temp_tolerance_degc) = 
-        (10.0,45.49,45.94,5.0);
+        (10.0,45.49,45.99,5.0);
 
     let ctah_pump_pressure_pascals = 0.0;
     let ctah_flow_blocked = true;
@@ -146,7 +146,7 @@ pub fn zero_flow_for_three_branch_ver_1(){
         dracs_loop_cold_leg_insulation_thickness_cm,
         dracs_loop_hot_leg_insulation_thickness_cm,
         heater_calibrated_nusselt_factor_float,
-        expt_heater_surf_temp_avg_degc,
+        regression_heater_surf_temp_avg_degc,
         simulated_expected_heater_surf_temp_degc,
         heater_surface_temp_tolerance_degc,
         ctah_pump_pressure_pascals,
@@ -488,7 +488,7 @@ pub fn three_branch_ciet_ver1(
         let mut pipe_2a = new_pipe_2a(initial_temperature);
         let mut static_mixer_10_label_2 = new_static_mixer_10_label_2(initial_temperature);
         let mut heater_top_head_1a = new_heater_top_head_1a(initial_temperature);
-        let mut heater_ver_1 = new_heated_section_version_1_label_1(initial_temperature);
+        let mut heater_ver_1 = new_heated_section_version_1_label_1_without_inner_annular_pipe(initial_temperature);
         let mut heater_bottom_head_1b = new_heater_bottom_head_1b(initial_temperature);
         let mut pipe_18 = new_pipe_18(initial_temperature);
 

@@ -51,7 +51,7 @@ pub fn hot_leg_htc_to_ambient_calibration_v1_failed(){
                 0.0;
 
             let dhx_inlet_regression_temperature_degc = 
-                74.6;
+                74.31;
 
             hot_leg_htc_to_ambient_calibration_regression_test_v1_failed(
                 experimental_primary_mass_flowrate_kg_per_s, 

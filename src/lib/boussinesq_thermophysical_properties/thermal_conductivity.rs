@@ -68,6 +68,29 @@ pub fn try_get_kappa_thermal_conductivity(material: Material,
 }
 
 
+impl Material {
+    /// allows you to get thermal conductivity straight from 
+    /// material
+    #[inline]
+    pub fn try_get_thermal_conductivity(&self,
+        temperature: ThermodynamicTemperature,)
+        -> Result<ThermalConductivity,TuasLibError>{
+
+            match self {
+                Material::Solid(_) => {
+                    solid_thermal_conductivity(
+                        *self, temperature)
+                },
+                Material::Liquid(_) => {
+                    liquid_thermal_conductivity(
+                        *self, temperature)
+                },
+            }
+
+        }
+}
+
+
 
 // should the material happen to be a solid, use this function
 fn solid_thermal_conductivity(material: Material,

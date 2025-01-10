@@ -493,7 +493,8 @@ impl SimpleShellAndTubeHeatExchanger {
                     node_length.into())
             );
 
-        let outer_node_air_nodal_thermal_conductance: ThermalConductance = try_get_thermal_conductance_based_on_interaction(
+        let outer_node_air_nodal_thermal_conductance: ThermalConductance 
+            = try_get_thermal_conductance_based_on_interaction(
             self.ambient_temperature,
             outer_node_temperature,
             outer_solid_array_clone.pressure_control_volume,

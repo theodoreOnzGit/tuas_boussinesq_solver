@@ -25,7 +25,7 @@ use uom::si::time::second;
 
 
 /// This is an example of transient conduction case where analytical 
-/// solutions have been well know 
+/// solutions have been well known
 ///
 /// This is conduction in a semi infinite medium with constant 
 /// temperature boundary conditions 

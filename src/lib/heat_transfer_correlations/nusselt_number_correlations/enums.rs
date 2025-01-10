@@ -217,7 +217,7 @@ impl NusseltCorrelation {
 
 
     /// gets the nusselt based on user choice of of correlation
-    pub fn try_get(&self) -> Result<Ratio, TuasLibError> {
+    pub fn try_get_nusselt(&self) -> Result<Ratio, TuasLibError> {
         let nusselt_number: Ratio = 
         match self {
             NusseltCorrelation::PipeGnielinskiGeneric(data) => {

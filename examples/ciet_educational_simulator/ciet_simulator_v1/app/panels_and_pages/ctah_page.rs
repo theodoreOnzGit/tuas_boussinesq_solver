@@ -6,26 +6,71 @@ use uom::si::{f64::*, heat_transfer::watt_per_square_meter_kelvin, thermodynamic
 use egui_plot::{Legend, Line, Plot, PlotPoints};
 
 
-use super::ciet_data::{PagePlotData, NUM_DATA_PTS_IN_PLOTS};
+use super::ciet_data::PagePlotData;
 impl CIETApp {
 
     pub fn ciet_sim_ctah_page_csv(&mut self, ui: &mut Ui){
         // show this on the side panel
 
         let local_ciet_plot: PagePlotData = 
-            self.ciet_plot_data;
+            self.ciet_plot_data.clone();
 
-        let latest_ctah_data: [(Time,HeatTransfer,ThermodynamicTemperature,ThermodynamicTemperature
-            ,ThermodynamicTemperature); NUM_DATA_PTS_IN_PLOTS] = 
+        let latest_ctah_data: Vec<(Time,HeatTransfer,ThermodynamicTemperature,ThermodynamicTemperature
+            ,ThermodynamicTemperature)> = 
             local_ciet_plot.ctah_plot_data;
 
         // left panel
         egui::ScrollArea::both().show(ui, |ui| {
 
 
+            // obtain a lock for the ciet data 
+            // ptr 
+            let mut ciet_data_global_ptr_lock = 
+                self.ciet_plot_data_mutex_ptr_for_parallel_data_transfer
+                .lock().unwrap();
+            
+            // allows user to control recording interval
+            let record_interval_seconds_slider = egui::Slider::new(
+                &mut ciet_data_global_ptr_lock.graph_data_record_interval_seconds, 
+                0.05..=1000.0)
+                .logarithmic(true)
+                .text("Graph Data Recording Interval (Seconds)")
+                .drag_value_speed(0.001);
+
+            ui.add(record_interval_seconds_slider);
+
+            // allows user to control csv display interval 
+
+            let csv_display_interval_seconds_slider = egui::Slider::new(
+                &mut ciet_data_global_ptr_lock.csv_display_interval_seconds, 
+                0.1..=1000.0)
+                .logarithmic(true)
+                .text("CSV Display Interval (Seconds)")
+                .drag_value_speed(0.001);
+
+            ui.add(csv_display_interval_seconds_slider);
+
+            let csv_display_interval_seconds = 
+                ciet_data_global_ptr_lock.csv_display_interval_seconds;
+            let graph_data_record_interval_seconds = 
+                ciet_data_global_ptr_lock.graph_data_record_interval_seconds;
+
+            // now, we filter data every x number of rows based on the ratio 
+            // of these two 
+
+            let csv_data_display_interval: i32 = 
+                (csv_display_interval_seconds/graph_data_record_interval_seconds)
+                .ceil() as i32;
+
+
+            // now we display rows every 
+            // csv_display_interval_seconds 
+            // rows
+
+            let mut display_counter: i32 = 0;
 
             ui.label("Time (s), CTAH htc (watts per m2 kelvin), BT-43 Inlet (degC), BT-41 Outlet (degC), BT-41 setpt (degC)");
-            latest_ctah_data.map(|data_tuple|{
+            latest_ctah_data.iter().for_each(|data_tuple|{
                 let (time, ctah_htc, bt43, bt41,bt41_setpt) = 
                     data_tuple;
 
@@ -51,10 +96,26 @@ impl CIETApp {
                     + &bt41_setpt_degc.to_string() + "," 
                     ;
 
+                let data_display_remainder = 
+                    display_counter.rem_euclid(csv_data_display_interval);
+
+                let data_display_modulus_zero: bool = 
+                    data_display_remainder == 0;
+
+                let blank_data_row = 
+                    time_seconds.round() as u32 != 0;
+
+
+
                 // only add the label if heater time is not equal zero 
-                if time_seconds.round() as u32 != 0 {
+                // AND the data display remainder is = 0
+                if blank_data_row && data_display_modulus_zero {
                     ui.label(ctah_data_row);
                 }
+
+                display_counter += 1;
+                // if the remainder of the display counter is zero 
+                // then we show data 
 
 
             });
@@ -125,15 +186,15 @@ impl CIETApp {
             bt43_bt41_temp_plot.show(ui, |plot_ui| {
                 plot_ui.line(Line::new(PlotPoints::from(
                             time_bt43_vec.clone()
-                )).name("bt43 (ctah inlet) temperature deg C"));
+                )).name("bt43 (ctah inlet in fwd flow) temperature deg C"));
                 plot_ui.line(Line::new(PlotPoints::from(
                             time_bt41_vec.clone()
-                )).name("bt41 (ctah outlet) temperature deg C"));
+                )).name("bt41 (ctah outlet in fwd flow) temperature deg C"));
 
 
                 plot_ui.line(Line::new(PlotPoints::from(
                             time_bt41_setpt_vec.clone()
-                )).name("bt41 (ctah outlet) set pt deg C"));
+                )).name("bt41 (ctah outlet in fwd flow) set pt deg C"));
                 //plot_ui.line(Line::new(PlotPoints::from(
                 //            time_simulated_reactor_feedback_outlet_temp_vec.clone()
                 //)).name("simulated reactivity bt12 (heater outlet) temperature deg C"));

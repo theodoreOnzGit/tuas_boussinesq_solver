@@ -29,4 +29,5 @@ pub mod heat_transfer_geometry;
 pub mod heat_transfer_interaction_enums;
 
 /// unit tests for heat transfer interactions
+#[cfg(test)]
 pub mod tests;

@@ -1,4 +1,4 @@
-# tuas
+# TUAS
 Thermo-hydraulic Uniphase Advection and Convection Solver for Salt Flows
 
 It contains traits for fluid mechanics and heat transfer 
@@ -30,6 +30,14 @@ Once inside the simulator folder, run:
 ```bash 
 cargo run --example ciet_educational_simulator --release
 ```
+
+Note that for Linux and MacOS, you will need to install OpenBLAS.
+
+Also please go to the examples folder to find source code and more README.md 
+for the CIET Educational Simulator.
+
+As of v0.0.6, there are binaries available, so for those who don't want 
+to use Rust, just download the simulator and run it.
 
 If you want to run it continuously using cargo-watch:
 ```bash 

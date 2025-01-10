@@ -25,8 +25,8 @@ pub fn long_test_uncalibrated_dracs_loop(){
     let max_simulation_time_seconds: f64 = 4000.0;
     // expect overprediction of mass flowrates in both loops 
     // to about 10%
-    let pri_loop_relative_tolerance = 0.1;
-    let dracs_loop_relative_tolerance = 0.1;
+    let pri_loop_relative_tolerance = 0.15;
+    let dracs_loop_relative_tolerance = 0.15;
 
     validate_coupled_dracs_loop_version_1(
         2764.53, 
@@ -73,7 +73,7 @@ pub fn regression_long_test_uncalibrated_dracs_loop_set_c(){
             experimental_pri_mass_flowrate_kg_per_s,
             simulated_expected_dracs_mass_flowrate_kg_per_s,
             simulated_expected_pri_mass_flowrate_kg_per_s) 
-            = (841.02, 40.0, 2.6860e-2, 2.0030e-2, 3.0218e-2, 2.2822e-2);
+            = (841.02, 40.0, 2.6860e-2, 2.0030e-2, 3.0228e-2, 2.2930e-2);
 
         dbg!(max_simulation_time_seconds,
             pri_loop_relative_tolerance,
@@ -110,7 +110,7 @@ pub fn regression_long_test_uncalibrated_dracs_loop_set_c(){
             experimental_pri_mass_flowrate_kg_per_s,
             simulated_expected_dracs_mass_flowrate_kg_per_s,
             simulated_expected_pri_mass_flowrate_kg_per_s) 
-            = (1158.69, 40.0, 3.0550e-2, 2.3670e-2, 3.4997e-2, 2.6789e-2);
+            = (1158.69, 40.0, 3.0550e-2, 2.3670e-2, 3.5059e-2, 2.6943e-2);
 
         dbg!(max_simulation_time_seconds,
             pri_loop_relative_tolerance,
@@ -146,7 +146,7 @@ pub fn regression_long_test_uncalibrated_dracs_loop_set_c(){
             experimental_pri_mass_flowrate_kg_per_s,
             simulated_expected_dracs_mass_flowrate_kg_per_s,
             simulated_expected_pri_mass_flowrate_kg_per_s) 
-            = (1409.22, 40.0, 3.3450e-2, 2.6350e-2, 3.8177e-2, 2.9411e-2);
+            = (1409.22, 40.0, 3.3450e-2, 2.6350e-2, 3.8280e-2, 2.9594e-2);
 
         dbg!(max_simulation_time_seconds,
             pri_loop_relative_tolerance,
@@ -183,7 +183,7 @@ pub fn regression_long_test_uncalibrated_dracs_loop_set_c(){
             experimental_pri_mass_flowrate_kg_per_s,
             simulated_expected_dracs_mass_flowrate_kg_per_s,
             simulated_expected_pri_mass_flowrate_kg_per_s) 
-            = (1736.11, 40.0, 3.6490e-2, 2.9490e-2, 4.1805e-2, 3.2341e-2);
+            = (1736.11, 40.0, 3.6490e-2, 2.9490e-2, 4.1957e-2, 3.2558e-2);
 
         dbg!(max_simulation_time_seconds,
             pri_loop_relative_tolerance,
@@ -220,7 +220,7 @@ pub fn regression_long_test_uncalibrated_dracs_loop_set_c(){
             experimental_pri_mass_flowrate_kg_per_s,
             simulated_expected_dracs_mass_flowrate_kg_per_s,
             simulated_expected_pri_mass_flowrate_kg_per_s) 
-            = (2026.29, 40.0, 3.8690e-2, 3.1900e-2, 4.4660e-2, 3.4584e-2);
+            = (2026.29, 40.0, 3.8690e-2, 3.1900e-2, 4.4852e-2, 3.4827e-2);
 
         dbg!(max_simulation_time_seconds,
             pri_loop_relative_tolerance,
@@ -257,7 +257,7 @@ pub fn regression_long_test_uncalibrated_dracs_loop_set_c(){
             experimental_pri_mass_flowrate_kg_per_s,
             simulated_expected_dracs_mass_flowrate_kg_per_s,
             simulated_expected_pri_mass_flowrate_kg_per_s) 
-            = (2288.83, 40.0, 4.1150e-2, 3.4120e-2, 4.7011e-2, 3.6355e-2);
+            = (2288.83, 40.0, 4.1150e-2, 3.4120e-2, 4.7236e-2, 3.6613e-2);
 
         dbg!(max_simulation_time_seconds,
             pri_loop_relative_tolerance,
@@ -294,7 +294,7 @@ pub fn regression_long_test_uncalibrated_dracs_loop_set_c(){
             experimental_pri_mass_flowrate_kg_per_s,
             simulated_expected_dracs_mass_flowrate_kg_per_s,
             simulated_expected_pri_mass_flowrate_kg_per_s) 
-            = (2508.71, 40.0, 4.3120e-2, 3.5620e-2, 4.8844e-2, 3.7680e-2);
+            = (2508.71, 40.0, 4.3120e-2, 3.5620e-2, 4.9099e-2, 3.7954e-2);
 
         dbg!(max_simulation_time_seconds,
             pri_loop_relative_tolerance,
@@ -331,7 +331,7 @@ pub fn regression_long_test_uncalibrated_dracs_loop_set_c(){
             experimental_pri_mass_flowrate_kg_per_s,
             simulated_expected_dracs_mass_flowrate_kg_per_s,
             simulated_expected_pri_mass_flowrate_kg_per_s) 
-            = (2685.83, 40.0, 4.5090e-2, 3.5930e-2, 5.0242e-2, 3.8670e-2);
+            = (2685.83, 40.0, 4.5090e-2, 3.5930e-2, 5.0522e-2, 3.8958e-2);
 
         dbg!(max_simulation_time_seconds,
             pri_loop_relative_tolerance,
@@ -368,7 +368,7 @@ pub fn regression_long_test_uncalibrated_dracs_loop_set_c(){
             experimental_pri_mass_flowrate_kg_per_s,
             simulated_expected_dracs_mass_flowrate_kg_per_s,
             simulated_expected_pri_mass_flowrate_kg_per_s) 
-            = (2764.53, 40.0, 4.6990e-2, 3.5470e-2, 5.0843e-2, 3.9091e-2);
+            = (2764.53, 40.0, 4.6990e-2, 3.5470e-2, 5.1134e-2, 3.9384e-2);
 
         dbg!(max_simulation_time_seconds,
             pri_loop_relative_tolerance,

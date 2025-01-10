@@ -46,13 +46,7 @@ pub mod shell_and_tube_heat_exchanger;
 /// represents one dimensional solid structure
 pub mod one_d_solid_structure;
 
-/// represents the old CIET heater version 2 based on 
-/// https://escholarship.org/uc/item/0362h3zf
-///
-/// Ong, T. K. C. (2024). Digital Twins as 
-/// Testbeds for Iterative Simulated Neutronics Feedback 
-/// Controller Development (Doctoral dissertation, UC Berkeley).
-pub mod ciet_heater_version_2_bare;
+
 
 /// represents the old CIET struct support codes based on
 /// https://escholarship.org/uc/item/0362h3zf
@@ -71,13 +65,29 @@ pub mod ciet_struct_supports;
 pub mod ciet_heater_top_and_bottom_head_bare;
 
 
+/// insulated porous media pipes are basically insulated pipes with 
+/// some things lodged inside. It could be a packed bed, or an annular inner pipe 
+/// Some of the code 
 /// represents the CIET static mixer codes based on
 /// https://escholarship.org/uc/item/0362h3zf
 ///
 /// Ong, T. K. C. (2024). Digital Twins as 
 /// Testbeds for Iterative Simulated Neutronics Feedback 
 /// Controller Development (Doctoral dissertation, UC Berkeley).
-pub mod ciet_static_mixers;
+pub mod insulated_porous_media_fluid_components;
+
+
+/// non insulated porous media pipes are basically non insulated pipes with 
+/// some things lodged inside. It could be a packed bed, or an annular inner pipe 
+/// Some of the code 
+/// this can be used to represent non insulated porous media pipes such as 
+/// such as the old CIET heater version 2 based on 
+/// https://escholarship.org/uc/item/0362h3zf
+///
+/// Ong, T. K. C. (2024). Digital Twins as 
+/// Testbeds for Iterative Simulated Neutronics Feedback 
+/// Controller Development (Doctoral dissertation, UC Berkeley).
+pub mod non_insulated_porous_media_fluid_components;
 
 /// ciet components for pipes and valves for use in the isothermal test
 ///

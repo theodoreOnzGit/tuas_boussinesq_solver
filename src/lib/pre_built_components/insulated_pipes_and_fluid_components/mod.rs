@@ -318,3 +318,7 @@ pub mod type_conversion;
 /// calibration functions for heat transfer coefficients to ambient 
 /// nusselt number and insulation thickness 
 pub mod calibration;
+
+/// validation and verification tests for this component 
+#[cfg(test)]
+mod tests;

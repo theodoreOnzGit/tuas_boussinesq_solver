@@ -13,7 +13,7 @@ pub fn cold_leg_regression_set_c1(){
 
     // regression performed to within 0.05K
     let heater_inlet_regression_temperature_degc = 
-        50.69;
+        50.55;
 
     cold_leg_insulation_thickness_validation_test_v1(
         experimental_primary_mass_flowrate_kg_per_s, 
@@ -43,7 +43,7 @@ pub fn cold_leg_regression_set_c2(){
 
     // regression performed to within 0.05K
     let heater_inlet_regression_temperature_degc = 
-        54.07;
+        53.91;
 
     cold_leg_insulation_thickness_validation_test_v1(
         experimental_primary_mass_flowrate_kg_per_s, 
@@ -70,7 +70,7 @@ pub fn cold_leg_validation_set_c3(){
 
     // regression performed to within 0.05K
     let heater_inlet_regression_temperature_degc = 
-        57.14;
+        57.00;
 
     cold_leg_insulation_thickness_validation_test_v1(
         experimental_primary_mass_flowrate_kg_per_s, 
@@ -97,7 +97,7 @@ pub fn cold_leg_validation_set_c4(){
 
     // regression performed to within 0.05K
     let heater_inlet_regression_temperature_degc = 
-        61.31;
+        61.16;
 
     cold_leg_insulation_thickness_validation_test_v1(
         experimental_primary_mass_flowrate_kg_per_s, 
@@ -124,7 +124,7 @@ pub fn cold_leg_validation_set_c5(){
 
     // regression performed to within 0.05K
     let heater_inlet_regression_temperature_degc = 
-        64.41;
+        64.25;
 
     cold_leg_insulation_thickness_validation_test_v1(
         experimental_primary_mass_flowrate_kg_per_s, 
@@ -151,7 +151,7 @@ pub fn cold_leg_validation_set_c6(){
 
     // regression performed to within 0.05K
     let heater_inlet_regression_temperature_degc = 
-        67.27;
+        67.07;
 
     cold_leg_insulation_thickness_validation_test_v1(
         experimental_primary_mass_flowrate_kg_per_s, 
@@ -178,7 +178,7 @@ pub fn cold_leg_validation_set_c7(){
 
     // regression performed to within 0.05K
     let heater_inlet_regression_temperature_degc = 
-        70.57;
+        70.36;
 
     cold_leg_insulation_thickness_validation_test_v1(
         experimental_primary_mass_flowrate_kg_per_s, 
@@ -205,7 +205,7 @@ pub fn cold_leg_validation_set_c8(){
 
     // regression performed to within 0.05K
     let heater_inlet_regression_temperature_degc = 
-        73.38;
+        73.16;
 
     cold_leg_insulation_thickness_validation_test_v1(
         experimental_primary_mass_flowrate_kg_per_s, 
@@ -219,6 +219,7 @@ pub fn cold_leg_validation_set_c8(){
 }
 /// dataset number,pri loop mass flowrate (kg/s),DHX shell bottom (DegC),Heater inlet (DegC),
 /// C-9,0.03547,79.02407,76.54479,
+///
 #[test]
 pub fn cold_leg_validation_set_c9(){
 
@@ -228,11 +229,12 @@ pub fn cold_leg_validation_set_c9(){
         (0.03547,79.02407,76.54479);
     let max_time_seconds = 500.0;
     // temperatures are validated to within 0.5 K
-    let insulation_thickness_cm_for_regression_testing = 0.15;
+    // for c9 specifically, we needed slightly more insulation thickness
+    let insulation_thickness_cm_for_regression_testing = 0.20;
 
     // regression performed to within 0.05K
     let heater_inlet_regression_temperature_degc = 
-        76.05;
+        76.14;
 
     cold_leg_insulation_thickness_validation_test_v1(
         experimental_primary_mass_flowrate_kg_per_s, 

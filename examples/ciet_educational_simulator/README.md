@@ -8,6 +8,7 @@
 
 - Rust 1.81
 - a fast enough CPU to run in real-time (i7-10875H was good)
+- 8 GB RAM, which is kind of the minimum for laptops in 2024
 - 1920 x 1080 screen resolution (otherwise the full main page won't show properly)
 
 # Basic installs before you run cargo run 
@@ -23,6 +24,8 @@ you need, on ubuntu, basic dependencies besides the GUI
 sudo apt install gcc libssl-dev pkg-config
 ```
 
+Also, you need OpenBLAS in both MacOS and Linux.
+
 
 
 # Todo List 
@@ -35,11 +38,6 @@ machine... not sure why. I think it's just
 my pc, some WSL versions don't have this 
 problem It can run on native windows though, but WSL is problematic.
 
-## stack overflow on native windows
-
-Native windows cannot really run this due to stack overflow problems.
-Your best bet on a windows machine is via a virtual machine or WSL
-(which is also a virtual machine as of WSL 2).
 
 ## Performance
 
@@ -63,10 +61,6 @@ This should change to be able to simulate negative flowrates.
 - branch blocking should be on the main page. perhaps it makes it easier?
 use a radio button rather than a toggle button
 
-- rather than paint the components at a specific pixel, use relative pixels.
-This is because, the simulator won't work for resolutions other than 
-1920 x 1080.
-
 
 ## Features
 
@@ -78,7 +72,6 @@ This is because, the simulator won't work for resolutions other than
 
 ### forced circulation 
 
-- mesh refinement study for heater transient using Zweibaum's expt data (roughly using graph reader)
 - validation for natural circulation 
 - frequency response testing using (De Wet's Bode Plots)
 - frequency response testing using (Poresky's Bode and Time Domain Plots)

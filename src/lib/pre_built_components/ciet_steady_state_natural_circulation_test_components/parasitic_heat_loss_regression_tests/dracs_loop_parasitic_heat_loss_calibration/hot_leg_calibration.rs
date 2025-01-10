@@ -13,7 +13,7 @@ pub fn hot_leg_regression_set_c1(){
 
     // regression performed to within 0.05K
     let tchx_inlet_regression_temperature_degc = 
-        51.76;
+        51.81;
 
     dracs_hot_leg_insulation_thickness_calibration_validation_test_v1(
         experimental_dracs_mass_flowrate_kg_per_s, 
@@ -40,7 +40,7 @@ pub fn hot_leg_regression_set_c2(){
 
     // regression performed to within 0.05K
     let tchx_inlet_regression_temperature_degc = 
-        54.12;
+        54.17;
 
     dracs_hot_leg_insulation_thickness_calibration_validation_test_v1(
         experimental_dracs_mass_flowrate_kg_per_s, 

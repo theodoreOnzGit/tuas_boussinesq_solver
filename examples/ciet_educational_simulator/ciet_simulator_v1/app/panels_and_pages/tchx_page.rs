@@ -4,26 +4,71 @@ use crate::ciet_simulator_v1::CIETApp;
 
 use uom::si::{f64::*, heat_transfer::watt_per_square_meter_kelvin, thermodynamic_temperature::degree_celsius, time::second};
 use egui_plot::{Legend, Line, Plot, PlotPoints};
-use super::ciet_data::{PagePlotData, NUM_DATA_PTS_IN_PLOTS};
+use super::ciet_data::PagePlotData;
 
 impl CIETApp {
     pub fn ciet_sim_tchx_page_csv(&mut self, ui: &mut Ui){
         // show this on the side panel
 
         let local_ciet_plot: PagePlotData = 
-            self.ciet_plot_data;
+            self.ciet_plot_data.clone();
 
-        let latest_tchx_data: [(Time,HeatTransfer,ThermodynamicTemperature,ThermodynamicTemperature
-            ,ThermodynamicTemperature); NUM_DATA_PTS_IN_PLOTS] = 
-            local_ciet_plot.tchx_plot_data;
+        let latest_tchx_data: Vec<(Time, HeatTransfer,
+        ThermodynamicTemperature,ThermodynamicTemperature,ThermodynamicTemperature)> 
+        = local_ciet_plot.tchx_plot_data;
 
         // left panel
         egui::ScrollArea::both().show(ui, |ui| {
 
 
+            // obtain a lock for the ciet data 
+            // ptr 
+            let mut ciet_data_global_ptr_lock = 
+                self.ciet_plot_data_mutex_ptr_for_parallel_data_transfer
+                .lock().unwrap();
+            
+            // allows user to control recording interval
+            let record_interval_seconds_slider = egui::Slider::new(
+                &mut ciet_data_global_ptr_lock.graph_data_record_interval_seconds, 
+                0.05..=1000.0)
+                .logarithmic(true)
+                .text("Graph Data Recording Interval (Seconds)")
+                .drag_value_speed(0.001);
+
+            ui.add(record_interval_seconds_slider);
+
+            // allows user to control csv display interval 
+
+            let csv_display_interval_seconds_slider = egui::Slider::new(
+                &mut ciet_data_global_ptr_lock.csv_display_interval_seconds, 
+                0.1..=1000.0)
+                .logarithmic(true)
+                .text("CSV Display Interval (Seconds)")
+                .drag_value_speed(0.001);
+
+            ui.add(csv_display_interval_seconds_slider);
+
+            let csv_display_interval_seconds = 
+                ciet_data_global_ptr_lock.csv_display_interval_seconds;
+            let graph_data_record_interval_seconds = 
+                ciet_data_global_ptr_lock.graph_data_record_interval_seconds;
+
+            // now, we filter data every x number of rows based on the ratio 
+            // of these two 
+
+            let csv_data_display_interval: i32 = 
+                (csv_display_interval_seconds/graph_data_record_interval_seconds)
+                .ceil() as i32;
+
+
+            // now we display rows every 
+            // csv_display_interval_seconds 
+            // rows
+
+            let mut display_counter: i32 = 0;
 
             ui.label("Time (s), TCHX htc (watts per m2 kelvin), BT-65 Inlet (degC), BT-66 Outlet (degC), BT-66 setpt (degC)");
-            latest_tchx_data.map(|data_tuple|{
+            latest_tchx_data.iter().for_each(|data_tuple|{
                 let (time, tchx_htc, bt65, bt66,bt66_setpt) = 
                     data_tuple;
 
@@ -49,10 +94,26 @@ impl CIETApp {
                     + &bt66_setpt_degc.to_string() + "," 
                     ;
 
+                let data_display_remainder = 
+                    display_counter.rem_euclid(csv_data_display_interval);
+
+                let data_display_modulus_zero: bool = 
+                    data_display_remainder == 0;
+
+                let blank_data_row = 
+                    time_seconds.round() as u32 != 0;
+
+
+
                 // only add the label if heater time is not equal zero 
-                if time_seconds.round() as u32 != 0 {
+                // AND the data display remainder is = 0
+                if blank_data_row && data_display_modulus_zero {
                     ui.label(tchx_data_row);
                 }
+
+                display_counter += 1;
+                // if the remainder of the display counter is zero 
+                // then we show data 
 
 
             });

@@ -1,6 +1,6 @@
 use std::{sync::{Arc,Mutex}, thread, time::Duration};
 
-use panels_and_pages::{ciet_data::{CIETState, PagePlotData}, full_simulation::educational_ciet_loop_version_3, heater_ctrl_and_frequency_response::FreqResponseSettings, Panel};
+use panels_and_pages::{ciet_data::{CIETState, PagePlotData}, frequency_response_and_transients::FreqResponseAndTransientSettings, full_simulation::educational_ciet_loop_version_4, online_calibration::HeaterType, Panel};
 use uom::si::{power::kilowatt, time::second};
 use useful_functions::update_ciet_plot_from_ciet_state;
 use uom::si::f64::*;
@@ -31,7 +31,16 @@ pub struct CIETApp {
     ciet_plot_data: PagePlotData,
 
     #[serde(skip)]
-    frequency_response_settings: FreqResponseSettings,
+    frequency_response_settings: FreqResponseAndTransientSettings,
+
+    // checks whether user wants fast fwd or slow motion
+    user_wants_fast_fwd_on: bool,
+    // checks whether user wants fast fwd or slow motion
+    user_wants_slow_motion_on: bool,
+
+    // for the user to select the heater type desierd
+    #[serde(skip)]
+    user_desired_heater_type: HeaterType,
 
 }
 
@@ -53,7 +62,10 @@ impl Default for CIETApp {
             ciet_state,
             ciet_plot_data_mutex_ptr_for_parallel_data_transfer: ciet_plot_data,
             ciet_plot_data: PagePlotData::default(),
-            frequency_response_settings: FreqResponseSettings::default(),
+            frequency_response_settings: FreqResponseAndTransientSettings::default(),
+            user_wants_fast_fwd_on: false,
+            user_wants_slow_motion_on: false,
+            user_desired_heater_type: HeaterType::InsulatedHeaterV1Fine15Mesh,
 
         }
     }
@@ -91,7 +103,7 @@ impl CIETApp {
         // now spawn a thread moving in the pointer 
         //
         thread::spawn(move ||{
-            educational_ciet_loop_version_3(ciet_state_ptr);
+            educational_ciet_loop_version_4(ciet_state_ptr);
         });
 
         // spawn a thread to update the plotting bits
@@ -139,8 +151,9 @@ impl eframe::App for CIETApp {
                     ui.selectable_value(&mut self.open_panel, Panel::CTAHPump, "CTAH Pump"); 
                     ui.selectable_value(&mut self.open_panel, Panel::TCHX, "TCHX"); 
                     ui.selectable_value(&mut self.open_panel, Panel::DHX, "DHX STHE"); 
-                    ui.selectable_value(&mut self.open_panel, Panel::HeaterAndFrequencyResponse, "Frequency Response"); 
-                    ui.selectable_value(&mut self.open_panel, Panel::NodalisedDiagram, "CIET NodalisedDiagram Diagram"); 
+                    ui.selectable_value(&mut self.open_panel, Panel::FrequencyResponseAndTransients, "Frequency Response and Transients"); 
+                    ui.selectable_value(&mut self.open_panel, Panel::OnlineCalibration, "Online Calibration"); 
+                    ui.selectable_value(&mut self.open_panel, Panel::NodalisedDiagram, "CIET Nodalised Diagram"); 
             }
             );
             ui.separator();
@@ -149,8 +162,10 @@ impl eframe::App for CIETApp {
         egui::SidePanel::right("Supplementary Info").show(ctx, |ui|{
             match self.open_panel {
                 Panel::MainPage => {
-                    self.ciet_main_page_side_panel(ui);
-                    self.citation_disclaimer_and_acknowledgements(ui);
+                    egui::ScrollArea::both().show(ui, |ui| {
+                        self.ciet_main_page_side_panel(ui);
+                        self.citation_disclaimer_and_acknowledgements(ui);
+                    });
                 },
                 Panel::CTAHPump => {
                     self.ciet_sim_ctah_pump_page_csv(ui);
@@ -170,11 +185,13 @@ impl eframe::App for CIETApp {
                 Panel::TCHX => {
                     self.ciet_sim_tchx_page_csv(ui);
                 },
-                Panel::HeaterAndFrequencyResponse => {
+                Panel::FrequencyResponseAndTransients => {
 
                     self.ciet_sim_heater_page_csv(ui);
                 },
                 Panel::NodalisedDiagram => {},
+                Panel::OnlineCalibration => {},
+
             }
         });
 
@@ -188,12 +205,12 @@ impl eframe::App for CIETApp {
             // show correct panel or page based on user selection
 
             match self.open_panel {
-                Panel::HeaterAndFrequencyResponse => {
+                Panel::FrequencyResponseAndTransients => {
                     // enables scrolling within the image
                     //egui::ScrollArea::both().show(ui, |ui| {
                     //    ui.image(egui::include_image!("ciet_gui_schematics.png"));
                     //});
-                    self.ciet_sim_freq_response_page(ui);
+                    self.ciet_sim_transients_and_freq_response_page(ui);
 
                     
                 },
@@ -222,6 +239,11 @@ impl eframe::App for CIETApp {
                         ui.image(egui::include_image!("ciet_sam_diagram_replica.jpg"));
                     });
                 },
+                Panel::OnlineCalibration => {
+                    self.ciet_sim_online_calibration_page(ui);
+
+                },
+
             }
 
             ui.add(egui::github_link_file!(
@@ -242,24 +264,64 @@ impl eframe::App for CIETApp {
             });
 
         });
-        
-        // frequency response controls
-        // first get current state
-        let mut ciet_state_local: CIETState 
-            = self.ciet_state.lock().unwrap().clone();
-        let current_sim_time = 
-            Time::new::<second>(
-                ciet_state_local.simulation_time_seconds
-            );
 
-        let total_heater_power_kw = 
-            self.frequency_response_settings
-            .get_frequency_response_signal(current_sim_time)
-            .get::<kilowatt>();
-        ciet_state_local.heater_power_kilowatts = 
-            total_heater_power_kw;
-        // update frequency response back into state 
-        self.ciet_state.lock().unwrap().overwrite_state(ciet_state_local);
+        
+
+        // frequency response should only switch on IF 
+        // both advanced heater control and frequency response are 
+        // switched on
+        if self.frequency_response_settings.advanced_heater_control_switched_on
+            && self.frequency_response_settings.frequency_response_switched_on {
+
+                // frequency response controls
+                // first get current state
+                let mut ciet_state_local: CIETState 
+                    = self.ciet_state.lock().unwrap().clone();
+                let current_sim_time = 
+                    Time::new::<second>(
+                        ciet_state_local.simulation_time_seconds
+                    );
+
+                let total_heater_power_kw = 
+                    self.frequency_response_settings
+                    .get_frequency_response_signal(current_sim_time)
+                    .get::<kilowatt>();
+                ciet_state_local.heater_power_kilowatts = 
+                    total_heater_power_kw;
+                // update frequency response back into state 
+                self.ciet_state.lock().unwrap().overwrite_state(ciet_state_local);
+        } else if self.frequency_response_settings.advanced_heater_control_switched_on
+            && !self.frequency_response_settings.frequency_response_switched_on {
+                // if advanced heater control is switched on and 
+                // frequency response off, only take steady 
+                // state power
+
+                // frequency response controls
+                // first get current state
+                let mut ciet_state_local: CIETState 
+                    = self.ciet_state.lock().unwrap().clone();
+
+                let total_heater_power_kw = 
+                    self.frequency_response_settings
+                    .get_steady_state_power_signal()
+                    .get::<kilowatt>();
+
+                ciet_state_local.heater_power_kilowatts = 
+                    total_heater_power_kw;
+                // update frequency response back into state 
+                self.ciet_state.lock().unwrap().overwrite_state(ciet_state_local);
+        }
+
+        // now for calibration functions, eg. heater type 
+
+        {
+            let user_desired_heater_type: HeaterType = self.user_desired_heater_type;
+
+            let mut ciet_state_local: CIETState 
+                = self.ciet_state.lock().unwrap().clone();
+            ciet_state_local.current_heater_type = user_desired_heater_type;
+            self.ciet_state.lock().unwrap().overwrite_state(ciet_state_local);
+        }
 
         // request update every 0.1 s 
 

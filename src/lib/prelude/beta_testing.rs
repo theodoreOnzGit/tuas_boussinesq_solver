@@ -20,8 +20,8 @@ pub use crate::single_control_vol::SingleCVNode;
 // pre built CIET components
 pub use crate::pre_built_components::ciet_heater_top_and_bottom_head_bare::HeaterTopBottomHead;
 pub use crate::pre_built_components::ciet_struct_supports::StructuralSupport;
-pub use crate::pre_built_components::ciet_static_mixers::StaticMixers;
-pub use crate::pre_built_components::ciet_heater_version_2_bare::HeaterVersion2Bare;
+pub use crate::pre_built_components::insulated_porous_media_fluid_components::InsulatedPorousMediaFluidComponent;
+pub use crate::pre_built_components::non_insulated_porous_media_fluid_components::NonInsulatedPorousMediaFluidComponent;
 pub use crate::pre_built_components::heat_transfer_entities::preprocessing::link_heat_transfer_entity;
 
 

@@ -4,6 +4,7 @@
 ///
 /// eg. natural circulation loop
 ///
+#[cfg(test)]
 pub mod regression_tests;
 
 
@@ -13,6 +14,7 @@ pub mod regression_tests;
 ///
 /// it works well enough, but the CTAH branch controller 
 /// is not configured yet
+#[cfg(test)]
 pub mod version_1;
 
 #[cfg(test)]
@@ -23,6 +25,7 @@ pub use version_1::*;
 ///
 /// It runs in a single threaded manner. 
 ///
+#[cfg(test)]
 pub mod version_2;
 
 /// version 3 adds parallelism to version 2,

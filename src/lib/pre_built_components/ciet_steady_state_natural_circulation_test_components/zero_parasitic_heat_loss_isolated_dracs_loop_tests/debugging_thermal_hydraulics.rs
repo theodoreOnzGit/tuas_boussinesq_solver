@@ -665,13 +665,13 @@ pub fn dracs_natural_circ_thermal_hydraulics_regression_test_prototype_2(){
 
         // if this is the last loop, 
         // assert that mass flowrate is equal some value 
-        // 0.008090506 kg/s
+        // 0.0109001415 kg/s
         if iteration_idx_i == 99 {
 
             use approx::assert_abs_diff_eq;
             assert_abs_diff_eq!(
                 mass_flowrate_absolute.get::<uom::si::mass_rate::kilogram_per_second>(),
-                0.008090506,
+                0.0109001415,
                 epsilon = 1e-7);
         }
 

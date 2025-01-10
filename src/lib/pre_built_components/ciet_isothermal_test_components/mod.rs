@@ -6,8 +6,10 @@ use uom::si::area::square_meter;
 /// builds ciet branches for the isothermal test
 pub mod ciet_branch_builders_isothermal;
 
+#[cfg(test)]
 /// tests for the heater branch and ctah branch only
 pub mod isothermal_ctah_heater_branch_test;
+#[cfg(test)]
 /// tests for the heater branch, ctah branch and dhx branch
 pub mod isothermal_ctah_heater_dhx_branch_test;
 
@@ -60,7 +62,7 @@ pub mod isothermal_ctah_heater_dhx_branch_test;
 // Professor Per F. Peterson
 use uom::si::f64::*;
 use uom::si::heat_transfer::watt_per_square_meter_kelvin;
-use uom::si::length::{meter, millimeter};
+use uom::si::length::{inch, meter, millimeter};
 use uom::si::ratio::ratio;
 use uom::si::thermodynamic_temperature::degree_celsius;
 use uom::si::pressure::atmosphere;
@@ -102,7 +104,7 @@ pub fn new_pipe_6a(initial_temperature: ThermodynamicTemperature) -> InsulatedFl
     let surface_roughness = Length::new::<millimeter>(0.015);
     let shell_id = hydraulic_diameter;
     let pipe_thickness = Length::new::<meter>(0.0027686);
-    let shell_od = shell_id + pipe_thickness;
+    let shell_od = shell_id + 2.0 * pipe_thickness;
     let insulation_thickness = Length::new::<meter>(0.0508);
     let pipe_shell_material = SolidMaterial::SteelSS304L;
     let insulation_material = SolidMaterial::Fiberglass;
@@ -179,7 +181,7 @@ pub fn new_static_mixer_41_label_6(initial_temperature: ThermodynamicTemperature
     //but i need to fill in)
     let shell_id = hydraulic_diameter;
     let pipe_thickness = Length::new::<meter>(0.0027686);
-    let shell_od = shell_id + pipe_thickness;
+    let shell_od = shell_id + 2.0 * pipe_thickness;
     let insulation_thickness = Length::new::<meter>(0.0508);
     let pipe_shell_material = SolidMaterial::SteelSS304L;
     let insulation_material = SolidMaterial::Fiberglass;
@@ -254,7 +256,7 @@ NonInsulatedFluidComponent {
     let surface_roughness = Length::new::<millimeter>(0.015);
     let id = hydraulic_diameter;
     let pipe_thickness = Length::new::<meter>(0.000406);
-    let od = id + pipe_thickness;
+    let od = id + 2.0 * pipe_thickness;
     let pipe_shell_material = SolidMaterial::SteelSS304L;
     let pipe_fluid = LiquidMaterial::TherminolVP1;
     let htc_to_ambient = HeatTransfer::new::<watt_per_square_meter_kelvin>(20.0);
@@ -332,7 +334,7 @@ pub fn new_inactive_ctah_horizontal(initial_temperature: ThermodynamicTemperatur
     //but i need to fill in)
     let shell_id = hydraulic_diameter;
     let pipe_thickness = Length::new::<meter>(0.000406);
-    let shell_od = shell_id + pipe_thickness;
+    let shell_od = shell_id + 2.0 * pipe_thickness;
     let pipe_shell_material = SolidMaterial::SteelSS304L;
     let pipe_fluid = LiquidMaterial::TherminolVP1;
     let htc_to_ambient = HeatTransfer::new::<watt_per_square_meter_kelvin>(20.0);
@@ -395,7 +397,7 @@ pub fn new_pipe_8a(initial_temperature: ThermodynamicTemperature) -> InsulatedFl
     let surface_roughness = Length::new::<millimeter>(0.015);
     let shell_id = hydraulic_diameter;
     let pipe_thickness = Length::new::<meter>(0.0027686);
-    let shell_od = shell_id + pipe_thickness;
+    let shell_od = shell_id + 2.0 * pipe_thickness;
     let insulation_thickness = Length::new::<meter>(0.0381);
     let pipe_shell_material = SolidMaterial::SteelSS304L;
     let insulation_material = SolidMaterial::Fiberglass;
@@ -464,7 +466,7 @@ pub fn new_static_mixer_40_label_8(initial_temperature: ThermodynamicTemperature
     //but i need to fill in)
     let shell_id = hydraulic_diameter;
     let pipe_thickness = Length::new::<meter>(0.0027686);
-    let shell_od = shell_id + pipe_thickness;
+    let shell_od = shell_id + 2.0 * pipe_thickness;
     let pipe_shell_material = SolidMaterial::SteelSS304L;
     let pipe_fluid = LiquidMaterial::TherminolVP1;
     let htc_to_ambient = HeatTransfer::new::<watt_per_square_meter_kelvin>(20.0);
@@ -531,7 +533,7 @@ pub fn new_pipe_9(initial_temperature: ThermodynamicTemperature) -> InsulatedFlu
     let surface_roughness = Length::new::<millimeter>(0.015);
     let shell_id = hydraulic_diameter;
     let pipe_thickness = Length::new::<meter>(0.0027686);
-    let shell_od = shell_id + pipe_thickness;
+    let shell_od = shell_id + 2.0 * pipe_thickness;
     let insulation_thickness = Length::new::<meter>(0.0381);
     let pipe_shell_material = SolidMaterial::SteelSS304L;
     let insulation_material = SolidMaterial::Fiberglass;
@@ -593,7 +595,7 @@ pub fn new_pipe_10(initial_temperature: ThermodynamicTemperature) -> InsulatedFl
     let surface_roughness = Length::new::<millimeter>(0.015);
     let shell_id = hydraulic_diameter;
     let pipe_thickness = Length::new::<meter>(0.0027686);
-    let shell_od = shell_id + pipe_thickness;
+    let shell_od = shell_id + 2.0 * pipe_thickness;
     let insulation_thickness = Length::new::<meter>(0.0381);
     let pipe_shell_material = SolidMaterial::SteelSS304L;
     let insulation_material = SolidMaterial::Fiberglass;
@@ -655,7 +657,7 @@ pub fn new_pipe_11(initial_temperature: ThermodynamicTemperature) -> InsulatedFl
     let surface_roughness = Length::new::<millimeter>(0.015);
     let shell_id = hydraulic_diameter;
     let pipe_thickness = Length::new::<meter>(0.0027686);
-    let shell_od = shell_id + pipe_thickness;
+    let shell_od = shell_id + 2.0 * pipe_thickness;
     let insulation_thickness = Length::new::<meter>(0.0381);
     let pipe_shell_material = SolidMaterial::SteelSS304L;
     let insulation_material = SolidMaterial::Fiberglass;
@@ -718,7 +720,7 @@ pub fn new_pipe_12(initial_temperature: ThermodynamicTemperature) -> InsulatedFl
     let surface_roughness = Length::new::<millimeter>(0.015);
     let shell_id = hydraulic_diameter;
     let pipe_thickness = Length::new::<meter>(0.0027686);
-    let shell_od = shell_id + pipe_thickness;
+    let shell_od = shell_id + 2.0 * pipe_thickness;
     let insulation_thickness = Length::new::<meter>(0.0508);
     let pipe_shell_material = SolidMaterial::SteelSS304L;
     let insulation_material = SolidMaterial::Fiberglass;
@@ -785,7 +787,7 @@ pub fn new_ctah_pump(initial_temperature: ThermodynamicTemperature) -> NonInsula
     //but i need to fill in)
     let shell_id = hydraulic_diameter;
     let pipe_thickness = Length::new::<meter>(0.0027686);
-    let shell_od = shell_id + pipe_thickness;
+    let shell_od = shell_id + 2.0 * pipe_thickness;
     let pipe_shell_material = SolidMaterial::SteelSS304L;
     let pipe_fluid = LiquidMaterial::TherminolVP1;
     let htc_to_ambient = HeatTransfer::new::<watt_per_square_meter_kelvin>(20.0);
@@ -851,7 +853,7 @@ pub fn new_pipe_13(initial_temperature: ThermodynamicTemperature) -> InsulatedFl
     let surface_roughness = Length::new::<millimeter>(0.015);
     let shell_id = hydraulic_diameter;
     let pipe_thickness = Length::new::<meter>(0.0027686);
-    let shell_od = shell_id + pipe_thickness;
+    let shell_od = shell_id + 2.0 * pipe_thickness;
     let insulation_thickness = Length::new::<meter>(0.0508);
     let pipe_shell_material = SolidMaterial::SteelSS304L;
     let insulation_material = SolidMaterial::Fiberglass;
@@ -922,7 +924,7 @@ pub fn new_pipe_14(initial_temperature: ThermodynamicTemperature) -> InsulatedFl
     let surface_roughness = Length::new::<millimeter>(0.015);
     let shell_id = hydraulic_diameter;
     let pipe_thickness = Length::new::<meter>(0.0027686);
-    let shell_od = shell_id + pipe_thickness;
+    let shell_od = shell_id + 2.0 * pipe_thickness;
     let insulation_thickness = Length::new::<meter>(0.0508);
     let pipe_shell_material = SolidMaterial::SteelSS304L;
     let insulation_material = SolidMaterial::Fiberglass;
@@ -991,7 +993,7 @@ pub fn new_flowmeter_40_14a(initial_temperature: ThermodynamicTemperature) -> No
     //but i need to fill in)
     let shell_id = hydraulic_diameter;
     let pipe_thickness = Length::new::<meter>(0.0027686);
-    let shell_od = shell_id + pipe_thickness;
+    let shell_od = shell_id + 2.0 * pipe_thickness;
     let pipe_shell_material = SolidMaterial::SteelSS304L;
     let pipe_fluid = LiquidMaterial::TherminolVP1;
     let htc_to_ambient = HeatTransfer::new::<watt_per_square_meter_kelvin>(20.0);
@@ -1061,7 +1063,7 @@ pub fn new_pipe_15(initial_temperature: ThermodynamicTemperature) -> InsulatedFl
     let surface_roughness = Length::new::<millimeter>(0.015);
     let shell_id = hydraulic_diameter;
     let pipe_thickness = Length::new::<meter>(0.0027686);
-    let shell_od = shell_id + pipe_thickness;
+    let shell_od = shell_id + 2.0 * pipe_thickness;
     let insulation_thickness = Length::new::<meter>(0.0508);
     let pipe_shell_material = SolidMaterial::SteelSS304L;
     let insulation_material = SolidMaterial::Fiberglass;
@@ -1131,7 +1133,7 @@ pub fn new_pipe_16(initial_temperature: ThermodynamicTemperature) -> InsulatedFl
     let surface_roughness = Length::new::<millimeter>(0.015);
     let shell_id = hydraulic_diameter;
     let pipe_thickness = Length::new::<meter>(0.0027686);
-    let shell_od = shell_id + pipe_thickness;
+    let shell_od = shell_id + 2.0 * pipe_thickness;
     let insulation_thickness = Length::new::<meter>(0.0508);
     let pipe_shell_material = SolidMaterial::SteelSS304L;
     let insulation_material = SolidMaterial::Fiberglass;
@@ -1207,7 +1209,7 @@ pub fn new_branch_17(initial_temperature: ThermodynamicTemperature) -> Insulated
     let surface_roughness = Length::new::<millimeter>(0.015);
     let shell_id = hydraulic_diameter;
     let pipe_thickness = Length::new::<meter>(0.0027686);
-    let shell_od = shell_id + pipe_thickness;
+    let shell_od = shell_id + 2.0 * pipe_thickness;
     let insulation_thickness = Length::new::<meter>(0.0508);
     let pipe_shell_material = SolidMaterial::SteelSS304L;
     let insulation_material = SolidMaterial::Fiberglass;
@@ -1268,7 +1270,7 @@ pub fn new_branch_17b(initial_temperature: ThermodynamicTemperature) -> Insulate
     let surface_roughness = Length::new::<millimeter>(0.015);
     let shell_id = hydraulic_diameter;
     let pipe_thickness = Length::new::<meter>(0.0027686);
-    let shell_od = shell_id + pipe_thickness;
+    let shell_od = shell_id + 2.0 * pipe_thickness;
     let insulation_thickness = Length::new::<meter>(0.0508);
     let pipe_shell_material = SolidMaterial::SteelSS304L;
     let insulation_material = SolidMaterial::Fiberglass;
@@ -1329,7 +1331,7 @@ pub fn new_branch_17a(initial_temperature: ThermodynamicTemperature) -> Insulate
     let surface_roughness = Length::new::<millimeter>(0.015);
     let shell_id = hydraulic_diameter;
     let pipe_thickness = Length::new::<meter>(0.0027686);
-    let shell_od = shell_id + pipe_thickness;
+    let shell_od = shell_id + 2.0 * pipe_thickness;
     let insulation_thickness = Length::new::<meter>(0.0508);
     let pipe_shell_material = SolidMaterial::SteelSS304L;
     let insulation_material = SolidMaterial::Fiberglass;
@@ -1405,7 +1407,7 @@ pub fn new_branch_5a(initial_temperature: ThermodynamicTemperature) -> Insulated
     let surface_roughness = Length::new::<millimeter>(0.015);
     let shell_id = hydraulic_diameter;
     let pipe_thickness = Length::new::<meter>(0.0027686);
-    let shell_od = shell_id + pipe_thickness;
+    let shell_od = shell_id + 2.0 * pipe_thickness;
     let insulation_thickness = Length::new::<meter>(0.0508);
     let pipe_shell_material = SolidMaterial::SteelSS304L;
     let insulation_material = SolidMaterial::Fiberglass;
@@ -1483,7 +1485,7 @@ pub fn new_branch_5b(initial_temperature: ThermodynamicTemperature) -> Insulated
     let surface_roughness = Length::new::<millimeter>(0.015);
     let shell_id = hydraulic_diameter;
     let pipe_thickness = Length::new::<meter>(0.0027686);
-    let shell_od = shell_id + pipe_thickness;
+    let shell_od = shell_id + 2.0 * pipe_thickness;
     let insulation_thickness = Length::new::<meter>(0.0508);
     let pipe_shell_material = SolidMaterial::SteelSS304L;
     let insulation_material = SolidMaterial::Fiberglass;
@@ -1579,7 +1581,7 @@ pub fn new_branch_5(initial_temperature: ThermodynamicTemperature) -> InsulatedF
     let surface_roughness = Length::new::<millimeter>(0.015);
     let shell_id = hydraulic_diameter;
     let pipe_thickness = Length::new::<meter>(0.0027686);
-    let shell_od = shell_id + pipe_thickness;
+    let shell_od = shell_id + 2.0 * pipe_thickness;
     let insulation_thickness = Length::new::<meter>(0.0508);
     let pipe_shell_material = SolidMaterial::SteelSS304L;
     let insulation_material = SolidMaterial::Fiberglass;
@@ -1648,7 +1650,7 @@ pub fn new_pipe_4(initial_temperature: ThermodynamicTemperature) -> InsulatedFlu
     let surface_roughness = Length::new::<millimeter>(0.015);
     let shell_id = hydraulic_diameter;
     let pipe_thickness = Length::new::<meter>(0.0027686);
-    let shell_od = shell_id + pipe_thickness;
+    let shell_od = shell_id + 2.0 * pipe_thickness;
     let insulation_thickness = Length::new::<meter>(0.0508);
     let pipe_shell_material = SolidMaterial::SteelSS304L;
     let insulation_material = SolidMaterial::Fiberglass;
@@ -1717,7 +1719,7 @@ pub fn new_pipe_3_relap_model(initial_temperature: ThermodynamicTemperature) -> 
     let surface_roughness = Length::new::<millimeter>(0.015);
     let shell_id = hydraulic_diameter;
     let pipe_thickness = Length::new::<meter>(0.0027686);
-    let shell_od = shell_id + pipe_thickness;
+    let shell_od = shell_id + 2.0 * pipe_thickness;
     let insulation_thickness = Length::new::<meter>(0.0508);
     let pipe_shell_material = SolidMaterial::SteelSS304L;
     let insulation_material = SolidMaterial::Fiberglass;
@@ -1781,7 +1783,7 @@ pub fn new_pipe_3_sam_model(initial_temperature: ThermodynamicTemperature) -> In
     let surface_roughness = Length::new::<millimeter>(0.015);
     let shell_id = hydraulic_diameter;
     let pipe_thickness = Length::new::<meter>(0.0027686);
-    let shell_od = shell_id + pipe_thickness;
+    let shell_od = shell_id + 2.0 * pipe_thickness;
     let insulation_thickness = Length::new::<meter>(0.0508);
     let pipe_shell_material = SolidMaterial::SteelSS304L;
     let insulation_material = SolidMaterial::Fiberglass;
@@ -1858,7 +1860,7 @@ pub fn new_static_mixer_10_label_2(initial_temperature: ThermodynamicTemperature
     //but i need to fill in)
     let shell_id = hydraulic_diameter;
     let pipe_thickness = Length::new::<meter>(0.0027686);
-    let shell_od = shell_id + pipe_thickness;
+    let shell_od = shell_id + 2.0 * pipe_thickness;
     let pipe_shell_material = SolidMaterial::SteelSS304L;
     let pipe_fluid = LiquidMaterial::TherminolVP1;
     let htc_to_ambient = HeatTransfer::new::<watt_per_square_meter_kelvin>(20.0);
@@ -1932,7 +1934,7 @@ pub fn new_pipe_2a(initial_temperature: ThermodynamicTemperature) -> InsulatedFl
     let surface_roughness = Length::new::<millimeter>(0.015);
     let shell_id = hydraulic_diameter;
     let pipe_thickness = Length::new::<meter>(0.0027686);
-    let shell_od = shell_id + pipe_thickness;
+    let shell_od = shell_id + 2.0 * pipe_thickness;
     let insulation_thickness = Length::new::<meter>(0.0508);
     let pipe_shell_material = SolidMaterial::SteelSS304L;
     let insulation_material = SolidMaterial::Fiberglass;
@@ -2000,7 +2002,7 @@ pub fn new_heater_top_head_1a(initial_temperature: ThermodynamicTemperature) -> 
     let surface_roughness = Length::new::<millimeter>(0.015);
     let shell_id = hydraulic_diameter;
     let pipe_thickness = Length::new::<meter>(0.001905);
-    let shell_od = shell_id + pipe_thickness;
+    let shell_od = shell_id + 2.0 * pipe_thickness;
     let insulation_thickness = Length::new::<meter>(0.0508);
     let pipe_shell_material = SolidMaterial::SteelSS304L;
     let insulation_material = SolidMaterial::Fiberglass;
@@ -2060,7 +2062,7 @@ pub fn new_heater_top_head_1a(initial_temperature: ThermodynamicTemperature) -> 
 /// fluoride-salt-cooled, high-temperature reactors. University of 
 /// California, Berkeley, 2015.
 /// Argonne, IL (United States), 2019.
-pub fn new_heated_section_version_1_label_1(initial_temperature: ThermodynamicTemperature) -> InsulatedFluidComponent {
+pub fn new_heated_section_version_1_label_1_without_inner_annular_pipe(initial_temperature: ThermodynamicTemperature) -> InsulatedFluidComponent {
     let ambient_temperature = ThermodynamicTemperature::new::<degree_celsius>(20.0);
     let fluid_pressure = Pressure::new::<atmosphere>(1.0);
     let solid_pressure = Pressure::new::<atmosphere>(1.0);
@@ -2072,9 +2074,9 @@ pub fn new_heated_section_version_1_label_1(initial_temperature: ThermodynamicTe
     //estimated component wall roughness (doesn't matter here,
     //but i need to fill in)
     let surface_roughness = Length::new::<millimeter>(0.015);
-    let shell_id = hydraulic_diameter;
+    let shell_id = Length::new::<inch>(1.51);
     let pipe_thickness = Length::new::<meter>(0.001905);
-    let shell_od = shell_id + pipe_thickness;
+    let shell_od = shell_id + 2.0 * pipe_thickness;
     let insulation_thickness = Length::new::<meter>(0.0508);
     let pipe_shell_material = SolidMaterial::SteelSS304L;
     let insulation_material = SolidMaterial::Fiberglass;
@@ -2142,7 +2144,7 @@ pub fn new_heater_bottom_head_1b(initial_temperature: ThermodynamicTemperature) 
     let surface_roughness = Length::new::<millimeter>(0.015);
     let shell_id = hydraulic_diameter;
     let pipe_thickness = Length::new::<meter>(0.001905);
-    let shell_od = shell_id + pipe_thickness;
+    let shell_od = shell_id + 2.0 * pipe_thickness;
     let insulation_thickness = Length::new::<meter>(0.0508);
     let pipe_shell_material = SolidMaterial::SteelSS304L;
     let insulation_material = SolidMaterial::Fiberglass;
@@ -2209,7 +2211,7 @@ pub fn new_pipe_18(initial_temperature: ThermodynamicTemperature) -> InsulatedFl
     let surface_roughness = Length::new::<millimeter>(0.015);
     let shell_id = hydraulic_diameter;
     let pipe_thickness = Length::new::<meter>(0.0027686);
-    let shell_od = shell_id + pipe_thickness;
+    let shell_od = shell_id + 2.0 * pipe_thickness;
     let insulation_thickness = Length::new::<meter>(0.0508);
     let pipe_shell_material = SolidMaterial::SteelSS304L;
     let insulation_material = SolidMaterial::Fiberglass;
@@ -2278,7 +2280,7 @@ pub fn new_pipe_26(initial_temperature: ThermodynamicTemperature) -> InsulatedFl
     let surface_roughness = Length::new::<millimeter>(0.015);
     let shell_id = hydraulic_diameter;
     let pipe_thickness = Length::new::<meter>(0.0027686);
-    let shell_od = shell_id + pipe_thickness;
+    let shell_od = shell_id + 2.0 * pipe_thickness;
     let insulation_thickness = Length::new::<meter>(0.0508);
     let pipe_shell_material = SolidMaterial::SteelSS304L;
     let insulation_material = SolidMaterial::Fiberglass;
@@ -2341,7 +2343,7 @@ pub fn new_pipe_25a(initial_temperature: ThermodynamicTemperature) -> InsulatedF
     let surface_roughness = Length::new::<millimeter>(0.015);
     let shell_id = hydraulic_diameter;
     let pipe_thickness = Length::new::<meter>(0.0027686);
-    let shell_od = shell_id + pipe_thickness;
+    let shell_od = shell_id + 2.0 * pipe_thickness;
     let insulation_thickness = Length::new::<meter>(0.0381);
     let pipe_shell_material = SolidMaterial::SteelSS304L;
     let insulation_material = SolidMaterial::Fiberglass;
@@ -2418,7 +2420,7 @@ pub fn new_static_mixer_21_label_25(initial_temperature: ThermodynamicTemperatur
     //but i need to fill in)
     let shell_id = hydraulic_diameter;
     let pipe_thickness = Length::new::<meter>(0.0027686);
-    let shell_od = shell_id + pipe_thickness;
+    let shell_od = shell_id + 2.0 * pipe_thickness;
     let pipe_shell_material = SolidMaterial::SteelSS304L;
     let pipe_fluid = LiquidMaterial::TherminolVP1;
     let htc_to_ambient = HeatTransfer::new::<watt_per_square_meter_kelvin>(20.0);
@@ -2492,7 +2494,7 @@ pub fn new_inactive_dhx_shell_side_heat_exchanger(initial_temperature: Thermodyn
     let surface_roughness = Length::new::<millimeter>(0.015);
     let shell_id = hydraulic_diameter;
     let pipe_thickness = Length::new::<meter>(0.0016);
-    let shell_od = shell_id + pipe_thickness;
+    let shell_od = shell_id + 2.0 * pipe_thickness;
     let insulation_thickness = Length::new::<meter>(0.0508);
     let pipe_shell_material = SolidMaterial::SteelSS304L;
     let insulation_material = SolidMaterial::Fiberglass;
@@ -2556,7 +2558,7 @@ pub fn new_pipe_23a(initial_temperature: ThermodynamicTemperature) -> InsulatedF
     let surface_roughness = Length::new::<millimeter>(0.015);
     let shell_id = hydraulic_diameter;
     let pipe_thickness = Length::new::<meter>(0.0027686);
-    let shell_od = shell_id + pipe_thickness;
+    let shell_od = shell_id + 2.0 * pipe_thickness;
     let insulation_thickness = Length::new::<meter>(0.0381);
     let pipe_shell_material = SolidMaterial::SteelSS304L;
     let insulation_material = SolidMaterial::Fiberglass;
@@ -2636,7 +2638,7 @@ pub fn new_static_mixer_20_label_23(initial_temperature: ThermodynamicTemperatur
     //but i need to fill in)
     let shell_id = hydraulic_diameter;
     let pipe_thickness = Length::new::<meter>(0.0027686);
-    let shell_od = shell_id + pipe_thickness;
+    let shell_od = shell_id + 2.0 * pipe_thickness;
     let pipe_shell_material = SolidMaterial::SteelSS304L;
     let pipe_fluid = LiquidMaterial::TherminolVP1;
     let htc_to_ambient = HeatTransfer::new::<watt_per_square_meter_kelvin>(20.0);
@@ -2705,7 +2707,7 @@ pub fn new_pipe_22_sam_model(initial_temperature: ThermodynamicTemperature) -> I
     let surface_roughness = Length::new::<millimeter>(0.015);
     let shell_id = hydraulic_diameter;
     let pipe_thickness = Length::new::<meter>(0.0027686);
-    let shell_od = shell_id + pipe_thickness;
+    let shell_od = shell_id + 2.0 * pipe_thickness;
     let insulation_thickness = Length::new::<meter>(0.0508);
     let pipe_shell_material = SolidMaterial::SteelSS304L;
     let insulation_material = SolidMaterial::Fiberglass;
@@ -2770,7 +2772,7 @@ pub fn new_pipe_22_relap_model(initial_temperature: ThermodynamicTemperature) ->
     let surface_roughness = Length::new::<millimeter>(0.015);
     let shell_id = hydraulic_diameter;
     let pipe_thickness = Length::new::<meter>(0.0027686);
-    let shell_od = shell_id + pipe_thickness;
+    let shell_od = shell_id + 2.0 * pipe_thickness;
     let insulation_thickness = Length::new::<meter>(0.0508);
     let pipe_shell_material = SolidMaterial::SteelSS304L;
     let insulation_material = SolidMaterial::Fiberglass;
@@ -2849,7 +2851,7 @@ pub fn new_flowmeter_20_label_21a(initial_temperature: ThermodynamicTemperature)
     //but i need to fill in)
     let shell_id = hydraulic_diameter;
     let pipe_thickness = Length::new::<meter>(0.0027686);
-    let shell_od = shell_id + pipe_thickness;
+    let shell_od = shell_id + 2.0 * pipe_thickness;
     let pipe_shell_material = SolidMaterial::SteelSS304L;
     let pipe_fluid = LiquidMaterial::TherminolVP1;
     let htc_to_ambient = HeatTransfer::new::<watt_per_square_meter_kelvin>(20.0);
@@ -2913,7 +2915,7 @@ pub fn new_pipe_21(initial_temperature: ThermodynamicTemperature) -> InsulatedFl
     let surface_roughness = Length::new::<millimeter>(0.015);
     let shell_id = hydraulic_diameter;
     let pipe_thickness = Length::new::<meter>(0.0027686);
-    let shell_od = shell_id + pipe_thickness;
+    let shell_od = shell_id + 2.0 * pipe_thickness;
     let insulation_thickness = Length::new::<meter>(0.0508);
     let pipe_shell_material = SolidMaterial::SteelSS304L;
     let insulation_material = SolidMaterial::Fiberglass;
@@ -2977,7 +2979,7 @@ pub fn new_pipe_20(initial_temperature: ThermodynamicTemperature) -> InsulatedFl
     let surface_roughness = Length::new::<millimeter>(0.015);
     let shell_id = hydraulic_diameter;
     let pipe_thickness = Length::new::<meter>(0.0027686);
-    let shell_od = shell_id + pipe_thickness;
+    let shell_od = shell_id + 2.0 * pipe_thickness;
     let insulation_thickness = Length::new::<meter>(0.0508);
     let pipe_shell_material = SolidMaterial::SteelSS304L;
     let insulation_material = SolidMaterial::Fiberglass;
@@ -3041,7 +3043,7 @@ pub fn new_pipe_19(initial_temperature: ThermodynamicTemperature) -> InsulatedFl
     let surface_roughness = Length::new::<millimeter>(0.015);
     let shell_id = hydraulic_diameter;
     let pipe_thickness = Length::new::<meter>(0.0027686);
-    let shell_od = shell_id + pipe_thickness;
+    let shell_od = shell_id + 2.0 * pipe_thickness;
     let insulation_thickness = Length::new::<meter>(0.0508);
     let pipe_shell_material = SolidMaterial::SteelSS304L;
     let insulation_material = SolidMaterial::Fiberglass;
