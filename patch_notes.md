@@ -1,3 +1,12 @@
+## v 0.0.8 
+
+Updating regression testing for CIET coupled natural circulation.
+
+## v 0.0.7
+
+Mostly tweaks and improvements for the CIET Educational Simulator.
+Can't quite remember.
+
 ## v 0.0.6 
 
 For this version, there were key bugfixes and enhancements 
