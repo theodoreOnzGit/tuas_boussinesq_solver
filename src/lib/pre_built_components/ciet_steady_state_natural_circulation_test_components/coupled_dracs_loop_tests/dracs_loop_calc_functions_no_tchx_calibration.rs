@@ -553,3 +553,44 @@ pub fn dracs_loop_dhx_tube_temperature_diagnostics(
     return ((bt_60,wt_61),(bt_23,wt_22));
 
 }
+
+
+/// these are temperature diagnostic 
+/// functions to check bulk and wall temperature before and after 
+/// the tchx
+/// 
+/// 
+pub fn dracs_loop_tchx_temperature_diagnostics(
+    dhx_tube_side_30a: &mut NonInsulatedFluidComponent,
+    dhx_tube_side_30b: &mut NonInsulatedFluidComponent,
+    print_debug_results: bool)
+-> ((ThermodynamicTemperature,ThermodynamicTemperature),
+(ThermodynamicTemperature,ThermodynamicTemperature)){
+
+    // bulk and wall temperatures before entering dhx_tube
+    let bt_60 = dhx_tube_side_30a.
+        pipe_fluid_array.try_get_bulk_temperature().unwrap();
+    let wt_61 = dhx_tube_side_30a.
+        pipe_shell.try_get_bulk_temperature().unwrap();
+
+    // bulk and wall temperatures after entering dhx_tube
+    let bt_23 = dhx_tube_side_30b.
+        pipe_fluid_array.try_get_bulk_temperature().unwrap();
+    let wt_22 = dhx_tube_side_30b 
+        .pipe_shell.try_get_bulk_temperature().unwrap();
+
+    // debug 
+    if print_debug_results {
+        dbg!(&(
+                "bulk and wall temp degC, before and after dhx_tube respectively",
+                bt_60.get::<degree_celsius>(),
+                wt_61.get::<degree_celsius>(),
+                bt_23.get::<degree_celsius>(),
+                wt_22.get::<degree_celsius>(),
+                ));
+    }
+
+
+    return ((bt_60,wt_61),(bt_23,wt_22));
+
+}

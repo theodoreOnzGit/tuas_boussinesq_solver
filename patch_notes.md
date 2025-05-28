@@ -1,6 +1,10 @@
 ## v 0.0.8 
 
-Updating regression testing for CIET coupled natural circulation.
+Updating regression testing for CIET coupled natural circulation. This will 
+include temperature data for DHX STHE, Heater and TCHX for comparison 
+with experimental data.
+
+Also adding documentation for tests.
 
 ## v 0.0.7
 
