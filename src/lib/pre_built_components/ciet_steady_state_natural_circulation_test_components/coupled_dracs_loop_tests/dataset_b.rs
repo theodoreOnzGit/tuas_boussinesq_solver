@@ -1,6 +1,10 @@
 
 
 /// test series took about 250 s at timestep size 0.4s
+///
+/// with configuration:
+/// 0.131 cm dhx loss to ambient, flowrate underpredicted by -6.21%
+///
 #[test] 
 pub fn ciet_coupled_nat_circ_set_b1(){
 
@@ -643,6 +647,9 @@ pub fn ciet_coupled_nat_circ_set_b7(){
 ///
 /// power in 2874.03 Watts
 /// TCHX outlet temperature at 35 degrees C
+///
+/// at dhx thickness 0.131 cm, 
+/// flowrate overpredicted by 7.4%
 ///
 #[test] 
 pub fn ciet_coupled_nat_circ_set_b8(){
