@@ -739,8 +739,6 @@ pub fn ciet_coupled_nat_circ_set_b9(){
 
 
     let max_simulation_time_seconds: f64 = 6300.0;
-    // expect overprediction of mass flowrates in both loops 
-    // to about 8.5%
     let pri_loop_relative_tolerance = 0.061;
     let dracs_loop_relative_tolerance = 0.062;
 
