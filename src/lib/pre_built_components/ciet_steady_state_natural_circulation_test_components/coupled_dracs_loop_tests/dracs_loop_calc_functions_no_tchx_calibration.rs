@@ -11,8 +11,6 @@ array_control_vol_and_fluid_component_collections::
 fluid_component_collection::
 fluid_component_collection::FluidComponentCollectionMethods;
 use crate::pre_built_components::shell_and_tube_heat_exchanger::SimpleShellAndTubeHeatExchanger;
-use crate::prelude::beta_testing::FluidArray;
-use crate::prelude::beta_testing::SolidColumn;
 use uom::ConstZero;
 
 use uom::si::thermodynamic_temperature::degree_celsius;

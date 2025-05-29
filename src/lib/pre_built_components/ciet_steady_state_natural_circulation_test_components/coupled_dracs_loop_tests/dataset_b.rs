@@ -1907,34 +1907,16 @@ Result<(),crate::tuas_lib_error::TuasLibError>{
 
         let tchx_outlet_temperature: ThermodynamicTemperature = {
 
-            // the front of the tchx is connected to static mixer 
+            // the outlet of the tchx is connected to static mixer 
             // 60 label 36
-            let tchx_35_b2_pipe_fluid_array_clone: FluidArray = 
-                tchx_35b_2.pipe_fluid_array
-                .clone()
-                .try_into()
+            
+            let tchx_outlet_fluid_temperature = 
+                static_mixer_60_label_36 
+                .pipe_fluid_array
+                .try_get_bulk_temperature()
                 .unwrap();
 
-            // take the front single cv temperature 
-            //
-            // front single cv temperature is defunct
-            // probably need to debug this
-
-            let tchx_35_b2_front_single_cv_temperature: ThermodynamicTemperature 
-                = tchx_35_b2_pipe_fluid_array_clone
-                .front_single_cv
-                .temperature;
-
-
-
-            let _tchx_35b_2_array_temperature: Vec<ThermodynamicTemperature>
-                = tchx_35b_2
-                .pipe_fluid_array_temperature()
-                .unwrap();
-
-            //dbg!(&tchx_35b_array_temperature);
-
-            tchx_35_b2_front_single_cv_temperature
+            tchx_outlet_fluid_temperature
 
         };
 
@@ -2326,7 +2308,7 @@ Result<(),crate::tuas_lib_error::TuasLibError>{
         epsilon=0.01);
 
     approx::assert_abs_diff_eq!(
-        regression_dhx_tube_outlet_temp_degc,
+        regression_tchx_outlet_temp_degc,
         bt_66.get::<degree_celsius>(),
         epsilon=0.01);
 
