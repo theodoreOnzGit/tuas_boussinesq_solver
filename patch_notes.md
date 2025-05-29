@@ -5,6 +5,9 @@ include temperature data for DHX STHE, Heater and TCHX for comparison
 with experimental data. Minor correction to TCHX controller in coupled nat 
 circ loop, to use pipe 34 as bulk temperature for controller measurement.
 
+This is also done for isolated dracs loop. However, changing the TCHX 
+measurements makes no differnce to the test, it still passes.
+
 Also adding documentation for tests.
 
 ## v 0.0.7
