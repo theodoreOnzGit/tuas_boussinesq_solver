@@ -75,7 +75,6 @@ pub fn case_b_tchx_out_308_kelvin_35_celsius(){
         heat_transfer_interaction_enums::HeatTransferInteractionType;
     use uom::si::heat_transfer::watt_per_square_meter_kelvin;
     use uom::si::time::second;
-    use crate::array_control_vol_and_fluid_component_collections::one_d_fluid_array_with_lateral_coupling::FluidArray;
 
 
     use chem_eng_real_time_process_control_simulator::alpha_nightly::transfer_fn_wrapper_and_enums::TransferFnTraits;
