@@ -563,8 +563,8 @@ pub fn dracs_loop_dhx_tube_temperature_diagnostics(
 /// 
 /// 
 pub fn dracs_loop_tchx_temperature_diagnostics(
-    tchx_35a: &mut NonInsulatedFluidComponent,
-    tchx_35b_2: &mut NonInsulatedFluidComponent,
+    pipe_34: &mut NonInsulatedFluidComponent,
+    static_mixer_60_label_36: &mut NonInsulatedFluidComponent,
     print_debug_results: bool)
 -> ((ThermodynamicTemperature,ThermodynamicTemperature),
 (ThermodynamicTemperature,ThermodynamicTemperature)){
@@ -573,40 +573,25 @@ pub fn dracs_loop_tchx_temperature_diagnostics(
         tchx_wall_outlet_temperature): (ThermodynamicTemperature,
         ThermodynamicTemperature)= {
 
-            // the front of the tchx is connected to static mixer 
+            // the outlet of the tchx is connected to static mixer 
             // 60 label 36
-            let tchx_35_b2_pipe_fluid_array_clone: FluidArray = 
-                tchx_35b_2.pipe_fluid_array
-                .clone()
-                .try_into()
+            
+            let tchx_outlet_fluid_temperature = 
+                static_mixer_60_label_36 
+                .pipe_fluid_array
+                .try_get_bulk_temperature()
                 .unwrap();
 
-            // take the front single cv temperature 
-            //
-            // front single cv temperature is defunct
-            // probably need to debug this
-
-            let tchx_35_b2_front_single_cv_fluid_temperature: ThermodynamicTemperature 
-                = tchx_35_b2_pipe_fluid_array_clone
-                .front_single_cv
-                .temperature;
-
-            let tchx_35_b2_pipe_shell_clone: SolidColumn = 
-                tchx_35b_2.pipe_shell
-                .clone()
-                .try_into()
+            let tchx_outlet_wall_temperature = 
+                static_mixer_60_label_36 
+                .pipe_shell
+                .try_get_bulk_temperature()
                 .unwrap();
 
-            let tchx_35_b2_front_single_cv_wall_temperature: ThermodynamicTemperature 
-                = tchx_35_b2_pipe_shell_clone
-                .front_single_cv
-                .temperature;
 
 
-
-
-            (tchx_35_b2_front_single_cv_fluid_temperature,
-             tchx_35_b2_front_single_cv_wall_temperature)
+            (tchx_outlet_fluid_temperature,
+             tchx_outlet_wall_temperature)
 
     };
 
@@ -614,38 +599,23 @@ pub fn dracs_loop_tchx_temperature_diagnostics(
         tchx_wall_inlet_temperature,
     ): (ThermodynamicTemperature, ThermodynamicTemperature) = {
 
-        // the front of the tchx is connected to static mixer 
-        // 60 label 36
-        let tchx_35a_pipe_fluid_array_clone: FluidArray = 
-            tchx_35a.pipe_fluid_array
-            .clone()
-            .try_into()
+        // the inlet of the tchx is connected to static mixer 
+        // pipe 34
+
+        let tchx_inlet_fluid_temperature = 
+            pipe_34 
+            .pipe_fluid_array
+            .try_get_bulk_temperature()
             .unwrap();
 
-        // take the back single cv temperature 
-        //
-        // back single cv temperature is defunct
-        // probably need to debug this
-
-        let tchx_35a_back_single_cv_fluid_temperature: ThermodynamicTemperature 
-            = tchx_35a_pipe_fluid_array_clone
-            .back_single_cv
-            .temperature;
-
-        let tchx_35a_pipe_shell_clone: SolidColumn = 
-            tchx_35a.pipe_shell
-            .clone()
-            .try_into()
+        let tchx_inlet_wall_temperature = 
+            pipe_34 
+            .pipe_shell
+            .try_get_bulk_temperature()
             .unwrap();
 
-        let tchx_35a_back_single_cv_wall_temperature: ThermodynamicTemperature 
-            = tchx_35a_pipe_shell_clone
-            .back_single_cv
-            .temperature;
-
-
-        (tchx_35a_back_single_cv_fluid_temperature,
-         tchx_35a_back_single_cv_wall_temperature)
+        (tchx_inlet_fluid_temperature,
+         tchx_inlet_wall_temperature)
 
     };
 

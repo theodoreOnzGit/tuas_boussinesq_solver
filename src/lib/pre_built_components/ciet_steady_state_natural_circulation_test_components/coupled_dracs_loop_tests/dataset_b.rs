@@ -89,6 +89,11 @@ pub fn ciet_coupled_nat_circ_set_b1(){
 
 
 }
+/// natural circulation test for CIET 
+///
+/// power in 1054.32 Watts
+/// TCHX outlet temperature at 35 degrees C
+///
 #[test] 
 pub fn ciet_coupled_nat_circ_set_b2(){
 
@@ -141,7 +146,7 @@ pub fn ciet_coupled_nat_circ_set_b2(){
         regression_dhx_tube_outlet_temp_degc,
         regression_tchx_inlet_temp_degc,
         regression_tchx_outlet_temp_degc,
-    ) = ( 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,);
+    ) = (39.81, 66.75, 64.19, 41.44, 25.37, 42.14, 41.30, 35.25);
 
     regression_coupled_dracs_loop_version_7(
         heater_power_watts, 
@@ -265,6 +270,13 @@ pub fn ciet_coupled_nat_circ_set_b3(){
 
 
 }
+/// natural circulation test for CIET 
+///
+/// power in 1685.62 Watts
+/// TCHX outlet temperature at 35 degrees C
+///
+/// not quite steady state, but a regression test nonetheless
+///
 #[test] 
 pub fn ciet_coupled_nat_circ_set_b4(){
 
@@ -317,7 +329,7 @@ pub fn ciet_coupled_nat_circ_set_b4(){
         regression_dhx_tube_outlet_temp_degc,
         regression_tchx_inlet_temp_degc,
         regression_tchx_outlet_temp_degc,
-    ) = ( 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,);
+    ) = (49.28, 82.63, 79.92, 51.15, 25.29, 47.17, 46.37, 37.81);
 
     regression_coupled_dracs_loop_version_7(
         heater_power_watts, 
@@ -532,6 +544,13 @@ pub fn ciet_coupled_nat_circ_set_b6(){
 
 }
 
+/// natural circulation test for CIET 
+///
+/// power in 2546.60 Watts
+/// TCHX outlet temperature at 35 degrees C
+///
+/// not quite steady state, but a regression test nonetheless
+///
 #[test] 
 pub fn ciet_coupled_nat_circ_set_b7(){
 
@@ -584,7 +603,7 @@ pub fn ciet_coupled_nat_circ_set_b7(){
         regression_dhx_tube_outlet_temp_degc,
         regression_tchx_inlet_temp_degc,
         regression_tchx_outlet_temp_degc,
-    ) = ( 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,);
+    ) = (62.27, 102.83, 99.87, 64.50, 26.05, 53.54, 52.74, 41.67);
 
     regression_coupled_dracs_loop_version_7(
         heater_power_watts, 
