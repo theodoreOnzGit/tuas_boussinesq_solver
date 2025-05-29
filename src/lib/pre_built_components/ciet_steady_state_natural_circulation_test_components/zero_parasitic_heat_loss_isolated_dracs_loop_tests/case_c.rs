@@ -598,34 +598,16 @@ pub fn case_c_tchx_out_313_kelvin_40_celsius(){
 
                 let tchx_outlet_temperature: ThermodynamicTemperature = {
 
-                    // the front of the tchx is connected to static mixer 
+                    // the outlet of the tchx is connected to static mixer 
                     // 60 label 36
-                    let tchx35b_pipe_fluid_array_clone: FluidArray = 
-                        tchx_35b.pipe_fluid_array
-                        .clone()
-                        .try_into()
+
+                    let tchx_outlet_fluid_temperature = 
+                        static_mixer_60_label_36 
+                        .pipe_fluid_array
+                        .try_get_bulk_temperature()
                         .unwrap();
 
-                    // take the front single cv temperature 
-                    //
-                    // front single cv temperature is defunct
-                    // probably need to debug this
-
-                    let tchx_35b_front_single_cv_temperature: ThermodynamicTemperature 
-                        = tchx35b_pipe_fluid_array_clone
-                        .front_single_cv
-                        .temperature;
-
-
-
-                    let _tchx_35b_array_temperature: Vec<ThermodynamicTemperature>
-                        = tchx_35b
-                        .pipe_fluid_array_temperature()
-                        .unwrap();
-
-                    //dbg!(&tchx_35b_array_temperature);
-
-                    tchx_35b_front_single_cv_temperature
+                    tchx_outlet_fluid_temperature
 
                 };
 

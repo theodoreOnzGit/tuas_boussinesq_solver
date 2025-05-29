@@ -2,7 +2,8 @@
 
 Updating regression testing for CIET coupled natural circulation. This will 
 include temperature data for DHX STHE, Heater and TCHX for comparison 
-with experimental data.
+with experimental data. Minor correction to TCHX controller in coupled nat 
+circ loop, to use pipe 34 as bulk temperature for controller measurement.
 
 Also adding documentation for tests.
 
