@@ -11,6 +11,8 @@ array_control_vol_and_fluid_component_collections::
 fluid_component_collection::
 fluid_component_collection::FluidComponentCollectionMethods;
 use crate::pre_built_components::shell_and_tube_heat_exchanger::SimpleShellAndTubeHeatExchanger;
+use crate::prelude::beta_testing::FluidArray;
+use crate::prelude::beta_testing::SolidColumn;
 use uom::ConstZero;
 
 use uom::si::thermodynamic_temperature::degree_celsius;
@@ -561,36 +563,109 @@ pub fn dracs_loop_dhx_tube_temperature_diagnostics(
 /// 
 /// 
 pub fn dracs_loop_tchx_temperature_diagnostics(
-    dhx_tube_side_30a: &mut NonInsulatedFluidComponent,
-    dhx_tube_side_30b: &mut NonInsulatedFluidComponent,
+    tchx_35a: &mut NonInsulatedFluidComponent,
+    tchx_35b_2: &mut NonInsulatedFluidComponent,
     print_debug_results: bool)
 -> ((ThermodynamicTemperature,ThermodynamicTemperature),
 (ThermodynamicTemperature,ThermodynamicTemperature)){
 
-    // bulk and wall temperatures before entering dhx_tube
-    let bt_60 = dhx_tube_side_30a.
-        pipe_fluid_array.try_get_bulk_temperature().unwrap();
-    let wt_61 = dhx_tube_side_30a.
-        pipe_shell.try_get_bulk_temperature().unwrap();
+    let (tchx_bulk_outlet_temperature,
+        tchx_wall_outlet_temperature): (ThermodynamicTemperature,
+        ThermodynamicTemperature)= {
 
-    // bulk and wall temperatures after entering dhx_tube
-    let bt_23 = dhx_tube_side_30b.
-        pipe_fluid_array.try_get_bulk_temperature().unwrap();
-    let wt_22 = dhx_tube_side_30b 
-        .pipe_shell.try_get_bulk_temperature().unwrap();
+            // the front of the tchx is connected to static mixer 
+            // 60 label 36
+            let tchx_35_b2_pipe_fluid_array_clone: FluidArray = 
+                tchx_35b_2.pipe_fluid_array
+                .clone()
+                .try_into()
+                .unwrap();
+
+            // take the front single cv temperature 
+            //
+            // front single cv temperature is defunct
+            // probably need to debug this
+
+            let tchx_35_b2_front_single_cv_fluid_temperature: ThermodynamicTemperature 
+                = tchx_35_b2_pipe_fluid_array_clone
+                .front_single_cv
+                .temperature;
+
+            let tchx_35_b2_pipe_shell_clone: SolidColumn = 
+                tchx_35b_2.pipe_shell
+                .clone()
+                .try_into()
+                .unwrap();
+
+            let tchx_35_b2_front_single_cv_wall_temperature: ThermodynamicTemperature 
+                = tchx_35_b2_pipe_shell_clone
+                .front_single_cv
+                .temperature;
+
+
+
+
+            (tchx_35_b2_front_single_cv_fluid_temperature,
+             tchx_35_b2_front_single_cv_wall_temperature)
+
+    };
+
+    let (tchx_bulk_inlet_temperature,
+        tchx_wall_inlet_temperature,
+    ): (ThermodynamicTemperature, ThermodynamicTemperature) = {
+
+        // the front of the tchx is connected to static mixer 
+        // 60 label 36
+        let tchx_35a_pipe_fluid_array_clone: FluidArray = 
+            tchx_35a.pipe_fluid_array
+            .clone()
+            .try_into()
+            .unwrap();
+
+        // take the back single cv temperature 
+        //
+        // back single cv temperature is defunct
+        // probably need to debug this
+
+        let tchx_35a_back_single_cv_fluid_temperature: ThermodynamicTemperature 
+            = tchx_35a_pipe_fluid_array_clone
+            .back_single_cv
+            .temperature;
+
+        let tchx_35a_pipe_shell_clone: SolidColumn = 
+            tchx_35a.pipe_shell
+            .clone()
+            .try_into()
+            .unwrap();
+
+        let tchx_35a_back_single_cv_wall_temperature: ThermodynamicTemperature 
+            = tchx_35a_pipe_shell_clone
+            .back_single_cv
+            .temperature;
+
+
+        (tchx_35a_back_single_cv_fluid_temperature,
+         tchx_35a_back_single_cv_wall_temperature)
+
+    };
+
+    let bt_65 = tchx_bulk_inlet_temperature;
+    let wt_64 = tchx_wall_inlet_temperature;
+    let bt_66 = tchx_bulk_outlet_temperature;
+    let wt_67 = tchx_wall_outlet_temperature;
 
     // debug 
     if print_debug_results {
         dbg!(&(
-                "bulk and wall temp degC, before and after dhx_tube respectively",
-                bt_60.get::<degree_celsius>(),
-                wt_61.get::<degree_celsius>(),
-                bt_23.get::<degree_celsius>(),
-                wt_22.get::<degree_celsius>(),
-                ));
+                "bulk and wall temp degC, before and after tchx respectively",
+                bt_65.get::<degree_celsius>(),
+                wt_64.get::<degree_celsius>(),
+                bt_66.get::<degree_celsius>(),
+                wt_67.get::<degree_celsius>(),
+        ));
     }
 
 
-    return ((bt_60,wt_61),(bt_23,wt_22));
+    return ((bt_65,wt_64),(bt_66,wt_67));
 
 }

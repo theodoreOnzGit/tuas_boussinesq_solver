@@ -1578,7 +1578,7 @@ Result<(),crate::tuas_lib_error::TuasLibError>{
     use crate::heat_transfer_correlations::nusselt_number_correlations::enums::NusseltCorrelation;
     use crate::pre_built_components::ciet_isothermal_test_components::*;
     use crate::pre_built_components::ciet_steady_state_natural_circulation_test_components::coupled_dracs_loop_tests::dhx_constructor::new_dhx_sthe_version_1;
-    use crate::pre_built_components::ciet_steady_state_natural_circulation_test_components::coupled_dracs_loop_tests::dracs_loop_calc_functions_no_tchx_calibration::dracs_loop_dhx_tube_temperature_diagnostics;
+    use crate::pre_built_components::ciet_steady_state_natural_circulation_test_components::coupled_dracs_loop_tests::dracs_loop_calc_functions_no_tchx_calibration::{dracs_loop_dhx_tube_temperature_diagnostics, dracs_loop_tchx_temperature_diagnostics};
     use crate::pre_built_components::ciet_steady_state_natural_circulation_test_components::coupled_dracs_loop_tests::dracs_loop_calc_functions_sam_tchx_calibration::{coupled_dracs_fluid_mechanics_calc_abs_mass_rate_sam_tchx_calibration, coupled_dracs_loop_link_up_components_sam_tchx_calibration, dracs_loop_advance_timestep_except_dhx_sam_tchx_calibration};
     use crate::pre_built_components::ciet_steady_state_natural_circulation_test_components::coupled_dracs_loop_tests::pri_loop_calc_functions::{coupled_dracs_pri_loop_branches_fluid_mechanics_calc_abs_mass_rate, coupled_dracs_pri_loop_dhx_heater_link_up_components, pri_loop_advance_timestep_dhx_br_and_heater_br_except_dhx, pri_loop_dhx_shell_temperature_diagnostics, pri_loop_heater_temperature_diagnostics};
     use crate::pre_built_components::
@@ -1919,39 +1919,6 @@ Result<(),crate::tuas_lib_error::TuasLibError>{
 
         };
 
-        let tchx_inlet_temperature: ThermodynamicTemperature = {
-
-            // the front of the tchx is connected to static mixer 
-            // 60 label 36
-            let tchx_35_b2_pipe_fluid_array_clone: FluidArray = 
-                tchx_35b_2.pipe_fluid_array
-                .clone()
-                .try_into()
-                .unwrap();
-
-            // take the back single cv temperature 
-            //
-            // back single cv temperature is defunct
-            // probably need to debug this
-
-            let tchx_35_b2_back_single_cv_temperature: ThermodynamicTemperature 
-                = tchx_35_b2_pipe_fluid_array_clone
-                .back_single_cv
-                .temperature;
-
-
-
-            let _tchx_35b_2_array_temperature: Vec<ThermodynamicTemperature>
-                = tchx_35b_2
-                .pipe_fluid_array_temperature()
-                .unwrap();
-
-            //dbg!(&tchx_35b_array_temperature);
-
-            tchx_35_b2_back_single_cv_temperature
-
-        };
-
         // we will need to change the tchx heat transfer coefficient 
         // using the PID controller
         //
@@ -2204,6 +2171,12 @@ Result<(),crate::tuas_lib_error::TuasLibError>{
                     &mut dhx_tube_side_30a, 
                     &mut dhx_tube_side_30b, 
                     debug_settings);
+            // temperatures before and after tchx 
+            let ((_bt_65, _wt_64),(_bt_66, _wt_67))
+                = dracs_loop_tchx_temperature_diagnostics(
+                    &mut tchx_35a, 
+                    &mut tchx_35b_2, 
+                    debug_settings);
         }
 
         
@@ -2230,6 +2203,12 @@ Result<(),crate::tuas_lib_error::TuasLibError>{
         dracs_loop_dhx_tube_temperature_diagnostics(
             &mut dhx_tube_side_30a, 
             &mut dhx_tube_side_30b, 
+            display_temperatures);
+    // temperatures before and after tchx 
+    let ((bt_65, _wt_64),(bt_66, _wt_67))
+        = dracs_loop_tchx_temperature_diagnostics(
+            &mut tchx_35a, 
+            &mut tchx_35b_2, 
             display_temperatures);
 
     // heater average surface temp 
@@ -2324,12 +2303,12 @@ Result<(),crate::tuas_lib_error::TuasLibError>{
 
     approx::assert_abs_diff_eq!(
         regression_tchx_inlet_temp_degc,
-        bt_60.get::<degree_celsius>(),
+        bt_65.get::<degree_celsius>(),
         epsilon=0.01);
 
     approx::assert_abs_diff_eq!(
         regression_dhx_tube_outlet_temp_degc,
-        bt_23.get::<degree_celsius>(),
+        bt_66.get::<degree_celsius>(),
         epsilon=0.01);
 
     Ok(())
