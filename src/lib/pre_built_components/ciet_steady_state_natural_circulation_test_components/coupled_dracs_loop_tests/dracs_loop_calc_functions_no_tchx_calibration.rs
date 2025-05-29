@@ -563,8 +563,8 @@ pub fn dracs_loop_dhx_tube_temperature_diagnostics(
 /// 
 /// 
 pub fn dracs_loop_tchx_temperature_diagnostics(
-    pipe_34: &mut NonInsulatedFluidComponent,
-    static_mixer_60_label_36: &mut NonInsulatedFluidComponent,
+    pipe_34: &mut InsulatedFluidComponent,
+    static_mixer_60_label_36: &mut InsulatedFluidComponent,
     print_debug_results: bool)
 -> ((ThermodynamicTemperature,ThermodynamicTemperature),
 (ThermodynamicTemperature,ThermodynamicTemperature)){

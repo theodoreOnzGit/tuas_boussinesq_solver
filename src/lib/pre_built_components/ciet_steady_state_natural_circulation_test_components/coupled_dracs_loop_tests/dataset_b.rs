@@ -2193,8 +2193,8 @@ Result<(),crate::tuas_lib_error::TuasLibError>{
             // temperatures before and after tchx 
             let ((_bt_65, _wt_64),(_bt_66, _wt_67))
                 = dracs_loop_tchx_temperature_diagnostics(
-                    &mut tchx_35a, 
-                    &mut tchx_35b_2, 
+                    &mut pipe_34, 
+                    &mut static_mixer_60_label_36, 
                     debug_settings);
         }
 
@@ -2226,8 +2226,8 @@ Result<(),crate::tuas_lib_error::TuasLibError>{
     // temperatures before and after tchx 
     let ((bt_65, _wt_64),(bt_66, _wt_67))
         = dracs_loop_tchx_temperature_diagnostics(
-            &mut tchx_35a, 
-            &mut tchx_35b_2, 
+            &mut pipe_34, 
+            &mut static_mixer_60_label_36, 
             display_temperatures);
 
     // heater average surface temp 
