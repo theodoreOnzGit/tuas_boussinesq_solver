@@ -116,7 +116,12 @@ pub mod dataset_c;
 /// not well calibrated because there may be lower resistance compared 
 /// to the SAM model 
 /// might want to do calibration of dracs loop resistances first 
-pub mod dracs_loop_resistance_calibration;
+///
+/// This was according to the TUAS paper, where there was a systematic 
+/// overprediction of flowrates for a given driving force
+///
+/// I want to correct that... it was giving problems
+pub mod isolated_dracs_loop_resistance_calibration;
 
 
 
