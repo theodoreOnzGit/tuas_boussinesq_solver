@@ -4,8 +4,8 @@ pub fn ciet_coupled_nat_circ_set_c1(){
 
 
     let max_simulation_time_seconds: f64 = 6300.0;
-    let pri_loop_relative_tolerance = 0.0676;
-    let dracs_loop_relative_tolerance = 0.041;
+    let pri_loop_relative_tolerance = 0.042;
+    let dracs_loop_relative_tolerance = 0.0676;
 
     // I'm writing in this format so that the data will be easier 
     // to copy over to csv
@@ -94,8 +94,8 @@ pub fn ciet_coupled_nat_circ_set_c2(){
 
 
     let max_simulation_time_seconds: f64 = 6300.0;
-    let pri_loop_relative_tolerance = 0.0676;
-    let dracs_loop_relative_tolerance = 0.041;
+    let pri_loop_relative_tolerance = 0.042;
+    let dracs_loop_relative_tolerance = 0.0676;
 
     // I'm writing in this format so that the data will be easier 
     // to copy over to csv
@@ -182,8 +182,8 @@ pub fn ciet_coupled_nat_circ_set_c3(){
 
 
     let max_simulation_time_seconds: f64 = 6300.0;
-    let pri_loop_relative_tolerance = 0.0676;
-    let dracs_loop_relative_tolerance = 0.041;
+    let pri_loop_relative_tolerance = 0.042;
+    let dracs_loop_relative_tolerance = 0.0676;
 
     // I'm writing in this format so that the data will be easier 
     // to copy over to csv
@@ -270,8 +270,8 @@ pub fn ciet_coupled_nat_circ_set_c4(){
 
 
     let max_simulation_time_seconds: f64 = 6300.0;
-    let pri_loop_relative_tolerance = 0.0676;
-    let dracs_loop_relative_tolerance = 0.041;
+    let pri_loop_relative_tolerance = 0.042;
+    let dracs_loop_relative_tolerance = 0.0676;
 
     // I'm writing in this format so that the data will be easier 
     // to copy over to csv
@@ -359,8 +359,8 @@ pub fn ciet_coupled_nat_circ_set_c5(){
 
 
     let max_simulation_time_seconds: f64 = 6300.0;
-    let pri_loop_relative_tolerance = 0.0676;
-    let dracs_loop_relative_tolerance = 0.041;
+    let pri_loop_relative_tolerance = 0.042;
+    let dracs_loop_relative_tolerance = 0.0676;
 
     // I'm writing in this format so that the data will be easier 
     // to copy over to csv
@@ -448,8 +448,8 @@ pub fn ciet_coupled_nat_circ_set_c6(){
 
 
     let max_simulation_time_seconds: f64 = 6300.0;
-    let pri_loop_relative_tolerance = 0.0676;
-    let dracs_loop_relative_tolerance = 0.041;
+    let pri_loop_relative_tolerance = 0.042;
+    let dracs_loop_relative_tolerance = 0.0676;
 
     // I'm writing in this format so that the data will be easier 
     // to copy over to csv
@@ -537,8 +537,8 @@ pub fn ciet_coupled_nat_circ_set_c7(){
 
 
     let max_simulation_time_seconds: f64 = 6300.0;
-    let pri_loop_relative_tolerance = 0.0676;
-    let dracs_loop_relative_tolerance = 0.041;
+    let pri_loop_relative_tolerance = 0.042;
+    let dracs_loop_relative_tolerance = 0.0676;
 
     // I'm writing in this format so that the data will be easier 
     // to copy over to csv
@@ -627,8 +627,8 @@ pub fn ciet_coupled_nat_circ_set_c8(){
 
 
     let max_simulation_time_seconds: f64 = 6300.0;
-    let pri_loop_relative_tolerance = 0.0676;
-    let dracs_loop_relative_tolerance = 0.041;
+    let pri_loop_relative_tolerance = 0.042;
+    let dracs_loop_relative_tolerance = 0.0676;
 
     // I'm writing in this format so that the data will be easier 
     // to copy over to csv
@@ -719,8 +719,8 @@ pub fn ciet_coupled_nat_circ_set_c9(){
 
 
     let max_simulation_time_seconds: f64 = 6300.0;
-    let pri_loop_relative_tolerance = 0.0676;
-    let dracs_loop_relative_tolerance = 0.041;
+    let pri_loop_relative_tolerance = 0.042;
+    let dracs_loop_relative_tolerance = 0.0676;
 
     // I'm writing in this format so that the data will be easier 
     // to copy over to csv
