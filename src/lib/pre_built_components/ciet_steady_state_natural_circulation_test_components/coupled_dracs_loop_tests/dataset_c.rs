@@ -4,8 +4,8 @@ pub fn ciet_coupled_nat_circ_set_c1(){
 
 
     let max_simulation_time_seconds: f64 = 6300.0;
-    let pri_loop_relative_tolerance = 0.062;
-    let dracs_loop_relative_tolerance = 0.061;
+    let pri_loop_relative_tolerance = 0.0676;
+    let dracs_loop_relative_tolerance = 0.041;
 
     // I'm writing in this format so that the data will be easier 
     // to copy over to csv
@@ -22,7 +22,7 @@ pub fn ciet_coupled_nat_circ_set_c1(){
         insulation_thickness_regression_cm,
         shell_side_to_ambient_nusselt_correction_factor,
         dhx_heat_loss_to_ambient_watts_per_m2_kelvin) 
-        = (4.7,0.131,10.3,45.0);
+        = (4.7,0.091,10.3,45.0);
 
     let ( pri_loop_cold_leg_insulation_thickness_cm,
         pri_loop_hot_leg_insulation_thickness_cm,
@@ -94,8 +94,8 @@ pub fn ciet_coupled_nat_circ_set_c2(){
 
 
     let max_simulation_time_seconds: f64 = 6300.0;
-    let pri_loop_relative_tolerance = 0.062;
-    let dracs_loop_relative_tolerance = 0.061;
+    let pri_loop_relative_tolerance = 0.0676;
+    let dracs_loop_relative_tolerance = 0.041;
 
     // I'm writing in this format so that the data will be easier 
     // to copy over to csv
@@ -112,7 +112,7 @@ pub fn ciet_coupled_nat_circ_set_c2(){
         insulation_thickness_regression_cm,
         shell_side_to_ambient_nusselt_correction_factor,
         dhx_heat_loss_to_ambient_watts_per_m2_kelvin) 
-        = (4.7,0.131,10.3,45.0);
+        = (4.7,0.091,10.3,45.0);
 
     let ( pri_loop_cold_leg_insulation_thickness_cm,
         pri_loop_hot_leg_insulation_thickness_cm,
@@ -182,8 +182,8 @@ pub fn ciet_coupled_nat_circ_set_c3(){
 
 
     let max_simulation_time_seconds: f64 = 6300.0;
-    let pri_loop_relative_tolerance = 0.062;
-    let dracs_loop_relative_tolerance = 0.061;
+    let pri_loop_relative_tolerance = 0.0676;
+    let dracs_loop_relative_tolerance = 0.041;
 
     // I'm writing in this format so that the data will be easier 
     // to copy over to csv
@@ -200,7 +200,7 @@ pub fn ciet_coupled_nat_circ_set_c3(){
         insulation_thickness_regression_cm,
         shell_side_to_ambient_nusselt_correction_factor,
         dhx_heat_loss_to_ambient_watts_per_m2_kelvin) 
-        = (4.7,0.131,10.3,45.0);
+        = (4.7,0.091,10.3,45.0);
 
     let ( pri_loop_cold_leg_insulation_thickness_cm,
         pri_loop_hot_leg_insulation_thickness_cm,
@@ -270,8 +270,8 @@ pub fn ciet_coupled_nat_circ_set_c4(){
 
 
     let max_simulation_time_seconds: f64 = 6300.0;
-    let pri_loop_relative_tolerance = 0.062;
-    let dracs_loop_relative_tolerance = 0.061;
+    let pri_loop_relative_tolerance = 0.0676;
+    let dracs_loop_relative_tolerance = 0.041;
 
     // I'm writing in this format so that the data will be easier 
     // to copy over to csv
@@ -288,7 +288,7 @@ pub fn ciet_coupled_nat_circ_set_c4(){
         insulation_thickness_regression_cm,
         shell_side_to_ambient_nusselt_correction_factor,
         dhx_heat_loss_to_ambient_watts_per_m2_kelvin) 
-        = (4.7,0.131,10.3,45.0);
+        = (4.7,0.091,10.3,45.0);
 
     let ( pri_loop_cold_leg_insulation_thickness_cm,
         pri_loop_hot_leg_insulation_thickness_cm,
@@ -359,8 +359,8 @@ pub fn ciet_coupled_nat_circ_set_c5(){
 
 
     let max_simulation_time_seconds: f64 = 6300.0;
-    let pri_loop_relative_tolerance = 0.062;
-    let dracs_loop_relative_tolerance = 0.061;
+    let pri_loop_relative_tolerance = 0.0676;
+    let dracs_loop_relative_tolerance = 0.041;
 
     // I'm writing in this format so that the data will be easier 
     // to copy over to csv
@@ -377,7 +377,7 @@ pub fn ciet_coupled_nat_circ_set_c5(){
         insulation_thickness_regression_cm,
         shell_side_to_ambient_nusselt_correction_factor,
         dhx_heat_loss_to_ambient_watts_per_m2_kelvin) 
-        = (4.7,0.131,10.3,45.0);
+        = (4.7,0.091,10.3,45.0);
 
     let ( pri_loop_cold_leg_insulation_thickness_cm,
         pri_loop_hot_leg_insulation_thickness_cm,
@@ -448,8 +448,8 @@ pub fn ciet_coupled_nat_circ_set_c6(){
 
 
     let max_simulation_time_seconds: f64 = 6300.0;
-    let pri_loop_relative_tolerance = 0.062;
-    let dracs_loop_relative_tolerance = 0.061;
+    let pri_loop_relative_tolerance = 0.0676;
+    let dracs_loop_relative_tolerance = 0.041;
 
     // I'm writing in this format so that the data will be easier 
     // to copy over to csv
@@ -466,7 +466,7 @@ pub fn ciet_coupled_nat_circ_set_c6(){
         insulation_thickness_regression_cm,
         shell_side_to_ambient_nusselt_correction_factor,
         dhx_heat_loss_to_ambient_watts_per_m2_kelvin) 
-        = (4.7,0.131,10.3,45.0);
+        = (4.7,0.091,10.3,45.0);
 
     let ( pri_loop_cold_leg_insulation_thickness_cm,
         pri_loop_hot_leg_insulation_thickness_cm,
@@ -537,8 +537,8 @@ pub fn ciet_coupled_nat_circ_set_c7(){
 
 
     let max_simulation_time_seconds: f64 = 6300.0;
-    let pri_loop_relative_tolerance = 0.062;
-    let dracs_loop_relative_tolerance = 0.061;
+    let pri_loop_relative_tolerance = 0.0676;
+    let dracs_loop_relative_tolerance = 0.041;
 
     // I'm writing in this format so that the data will be easier 
     // to copy over to csv
@@ -555,7 +555,7 @@ pub fn ciet_coupled_nat_circ_set_c7(){
         insulation_thickness_regression_cm,
         shell_side_to_ambient_nusselt_correction_factor,
         dhx_heat_loss_to_ambient_watts_per_m2_kelvin) 
-        = (4.7,0.131,10.3,45.0);
+        = (4.7,0.091,10.3,45.0);
 
     let ( pri_loop_cold_leg_insulation_thickness_cm,
         pri_loop_hot_leg_insulation_thickness_cm,
@@ -627,8 +627,8 @@ pub fn ciet_coupled_nat_circ_set_c8(){
 
 
     let max_simulation_time_seconds: f64 = 6300.0;
-    let pri_loop_relative_tolerance = 0.062;
-    let dracs_loop_relative_tolerance = 0.061;
+    let pri_loop_relative_tolerance = 0.0676;
+    let dracs_loop_relative_tolerance = 0.041;
 
     // I'm writing in this format so that the data will be easier 
     // to copy over to csv
@@ -645,7 +645,7 @@ pub fn ciet_coupled_nat_circ_set_c8(){
         insulation_thickness_regression_cm,
         shell_side_to_ambient_nusselt_correction_factor,
         dhx_heat_loss_to_ambient_watts_per_m2_kelvin) 
-        = (4.7,0.131,10.3,45.0);
+        = (4.7,0.091,10.3,45.0);
 
     let ( pri_loop_cold_leg_insulation_thickness_cm,
         pri_loop_hot_leg_insulation_thickness_cm,
@@ -719,8 +719,8 @@ pub fn ciet_coupled_nat_circ_set_c9(){
 
 
     let max_simulation_time_seconds: f64 = 6300.0;
-    let pri_loop_relative_tolerance = 0.062;
-    let dracs_loop_relative_tolerance = 0.061;
+    let pri_loop_relative_tolerance = 0.0676;
+    let dracs_loop_relative_tolerance = 0.041;
 
     // I'm writing in this format so that the data will be easier 
     // to copy over to csv
@@ -737,7 +737,7 @@ pub fn ciet_coupled_nat_circ_set_c9(){
         insulation_thickness_regression_cm,
         shell_side_to_ambient_nusselt_correction_factor,
         dhx_heat_loss_to_ambient_watts_per_m2_kelvin) 
-        = (4.7,0.131,10.3,45.0);
+        = (4.7,0.091,10.3,45.0);
 
     let ( pri_loop_cold_leg_insulation_thickness_cm,
         pri_loop_hot_leg_insulation_thickness_cm,
@@ -1473,9 +1473,10 @@ Result<(),crate::tuas_lib_error::TuasLibError>{
 
     dbg!(&(
             input_power,
-            final_mass_flowrate_pri_loop,
             final_mass_flowrate_dracs_loop,
-            simulated_heater_avg_surf_temp_degc
+            final_mass_flowrate_pri_loop,
+            simulated_heater_avg_surf_temp_degc,
+            dhx_insulation_thickness_regression_cm,
             ));
 
     
