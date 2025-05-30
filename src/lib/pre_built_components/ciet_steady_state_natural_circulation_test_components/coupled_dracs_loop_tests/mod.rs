@@ -32,6 +32,8 @@ pub mod dracs_loop_calc_functions_sam_tchx_calibration;
 /// Note: heater v1.0 is used
 pub mod pri_loop_calc_functions;
 
+/// these are calibration 
+
 /// We use:
 ///
 /// Zou, L., Hu, G., O'Grady, D., & Hu, R. (2021). Code validation of 
@@ -109,6 +111,12 @@ pub mod dataset_b;
 ///
 pub mod dataset_c;
 
+
+/// looks like the dracs loop from the original isolated loop is 
+/// not well calibrated because there may be lower resistance compared 
+/// to the SAM model 
+/// might want to do calibration of dracs loop resistances first 
+pub mod dracs_loop_resistance_calibration;
 
 
 

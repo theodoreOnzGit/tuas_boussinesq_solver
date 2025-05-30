@@ -55,6 +55,7 @@ pub mod zero_parasitic_heat_loss_isolated_dracs_loop_tests;
 pub mod parasitic_heat_loss_regression_tests;
 
 
+#[cfg(test)]
 /// For validation, real tests were done for the dracs loop coupled 
 /// with the DHX and Heater branches in CIET
 ///
@@ -74,6 +75,7 @@ pub mod parasitic_heat_loss_regression_tests;
 ///
 /// SAM max error threshold is about 6.76%
 /// that is (m_SAM - m_experimental)/m_experimental
+///
 ///
 pub mod coupled_dracs_loop_tests;
 
