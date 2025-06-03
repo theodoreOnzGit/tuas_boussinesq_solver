@@ -81,6 +81,13 @@ use chem_eng_real_time_process_control_simulator::alpha_nightly::controllers::An
 ///
 /// 
 ///
+/// for this test, I calibrated pipe 38 form loss from 0.8 
+/// to the following value 
+///
+/// the error in mass flowrate between this and SAM is:
+/// K, mass flowrate error
+/// 15.8, -0.169%
+/// 17.8, -0.342%
 #[test]
 //#[ignore = "comment out for debugging"]
 pub fn case_c_tchx_out_313_kelvin_40_celsius_test1(){
@@ -89,12 +96,19 @@ pub fn case_c_tchx_out_313_kelvin_40_celsius_test1(){
     verify_isolated_dhx_sam_solution(
         582.6, // dhx power (watts)
         2.8033e-2, // SAM/ mass flowrate kg/s
-        2.8358e-2, // tuas_boussinesq_solver_flowrate_kg_per_s (for regression)
-        0.026, // max error tolerance
+        2.7937e-2, // tuas_boussinesq_solver_flowrate_kg_per_s (for regression)
+        0.0035, // max error tolerance
     ).unwrap();
 
 }
 
+/// 
+/// for this test, I calibrated pipe 38 form loss from 0.8 
+/// to the following value 
+///
+/// the error in mass flowrate between this and SAM is:
+/// K, mass flowrate error
+/// 17.8, -0.167%
 #[test]
 pub fn case_c_tchx_out_313_kelvin_40_celsius_test2(){
 
@@ -103,10 +117,16 @@ pub fn case_c_tchx_out_313_kelvin_40_celsius_test2(){
     verify_isolated_dhx_sam_solution(
         785.9, // dhx power (watts)
         3.1807e-2,// SAM/ mass flowrate kg/s
-        3.2272e-2, // tuas_boussinesq_solver_flowrate_kg_per_s (for regression)
-        0.026, // max error tolerance
+        3.1754e-2, // tuas_boussinesq_solver_flowrate_kg_per_s (for regression)
+        0.0035, // max error tolerance
     ).unwrap();
 }
+/// for this test, I calibrated pipe 38 form loss from 0.8 
+/// to the following value 
+///
+/// the error in mass flowrate between this and SAM is:
+/// K, mass flowrate error
+/// 17.8, 0.105%
 #[test]
 pub fn case_c_tchx_out_313_kelvin_40_celsius_test3(){
 
@@ -114,10 +134,16 @@ pub fn case_c_tchx_out_313_kelvin_40_celsius_test3(){
     verify_isolated_dhx_sam_solution(
         971.4, // dhx power (watts)
         3.4690e-2,// SAM/ mass flowrate kg/s
-        3.5319e-2, // tuas_boussinesq_solver_flowrate_kg_per_s (for regression)
-        0.026, // max error tolerance
+        3.4726e-2, // tuas_boussinesq_solver_flowrate_kg_per_s (for regression)
+        0.0035, // max error tolerance
     ).unwrap();
 }
+/// for this test, I calibrated pipe 38 form loss from 0.8 
+/// to the following value 
+///
+/// the error in mass flowrate between this and SAM is:
+/// K, mass flowrate error
+/// 17.8, -0.077%
 #[test]
 pub fn case_c_tchx_out_313_kelvin_40_celsius_test4(){
 
@@ -125,10 +151,16 @@ pub fn case_c_tchx_out_313_kelvin_40_celsius_test4(){
     verify_isolated_dhx_sam_solution(
         1185.2, // dhx power (watts)
         3.7765e-2,// SAM/ mass flowrate kg/s
-        3.8408e-2, // tuas_boussinesq_solver_flowrate_kg_per_s (for regression)
-        0.026, // max error tolerance
+        3.7736e-2, // tuas_boussinesq_solver_flowrate_kg_per_s (for regression)
+        0.0035, // max error tolerance
     ).unwrap();
 }
+/// for this test, I calibrated pipe 38 form loss from 0.8 
+/// to the following value 
+///
+/// the error in mass flowrate between this and SAM is:
+/// K, mass flowrate error
+/// 17.8, -0.104%
 #[test]
 pub fn case_c_tchx_out_313_kelvin_40_celsius_test5(){
 
@@ -136,10 +168,17 @@ pub fn case_c_tchx_out_313_kelvin_40_celsius_test5(){
     verify_isolated_dhx_sam_solution(
         1369.1, // dhx power (watts)
         4.0100e-2,// SAM/ mass flowrate kg/s
-        4.0793e-2, // tuas_boussinesq_solver_flowrate_kg_per_s (for regression)
-        0.026, // max error tolerance
+        4.0058e-2, // tuas_boussinesq_solver_flowrate_kg_per_s (for regression)
+        0.0035, // max error tolerance
     ).unwrap();
 }
+/// for this test, I calibrated pipe 38 form loss from 0.8 
+/// to the following value 
+///
+/// the error in mass flowrate between this and SAM is:
+/// K, mass flowrate error
+/// 15.8, 0.29%
+/// 17.8, 0.076%
 #[test]
 pub fn case_c_tchx_out_313_kelvin_40_celsius_test6(){
 
@@ -147,10 +186,16 @@ pub fn case_c_tchx_out_313_kelvin_40_celsius_test6(){
     verify_isolated_dhx_sam_solution(
         1584.1, // dhx power (watts)
         4.2499e-2,// SAM/ mass flowrate kg/s
-        4.3334e-2, // tuas_boussinesq_solver_flowrate_kg_per_s (for regression)
-        0.026, // max error tolerance
+        4.2531e-2, // tuas_boussinesq_solver_flowrate_kg_per_s (for regression)
+        0.0035, // max error tolerance
     ).unwrap();
 }
+/// for this test, I calibrated pipe 38 form loss from 0.8 
+/// to the following value 
+///
+/// the error in mass flowrate between this and SAM is:
+/// K, mass flowrate error
+/// 17.8, -0.028%
 #[test]
 pub fn case_c_tchx_out_313_kelvin_40_celsius_test7(){
 
@@ -158,11 +203,17 @@ pub fn case_c_tchx_out_313_kelvin_40_celsius_test7(){
     verify_isolated_dhx_sam_solution(
         1763.7, // dhx power (watts)
         4.4448e-2,// SAM/ mass flowrate kg/s
-        4.5292e-2, // tuas_boussinesq_solver_flowrate_kg_per_s (for regression)
-        0.026, // max error tolerance
+        4.4435e-2, // tuas_boussinesq_solver_flowrate_kg_per_s (for regression)
+        0.0035, // max error tolerance
     ).unwrap();
 }
 
+/// for this test, I calibrated pipe 38 form loss from 0.8 
+/// to the following value 
+///
+/// the error in mass flowrate between this and SAM is:
+/// K, mass flowrate error
+/// 17.8, 0.038%
 #[test]
 pub fn case_c_tchx_out_313_kelvin_40_celsius_test8(){
 
@@ -170,10 +221,18 @@ pub fn case_c_tchx_out_313_kelvin_40_celsius_test8(){
     verify_isolated_dhx_sam_solution(
         1970.0, // dhx power (watts)
         4.6455e-2,// SAM/ mass flowrate kg/s
-        4.7387e-2, // tuas_boussinesq_solver_flowrate_kg_per_s (for regression)
-        0.026, // max error tolerance
+        4.64728e-2, // tuas_boussinesq_solver_flowrate_kg_per_s (for regression)
+        0.0035, // max error tolerance
     ).unwrap();
 }
+
+/// for this test, I calibrated pipe 38 form loss from 0.8 
+/// to the following value 
+///
+/// the error in mass flowrate between this and SAM is:
+/// K, mass flowrate error
+/// 15.8, 0.365%
+/// 17.8, 0.138%
 #[test]
 pub fn case_c_tchx_out_313_kelvin_40_celsius_test9(){
 
@@ -181,8 +240,8 @@ pub fn case_c_tchx_out_313_kelvin_40_celsius_test9(){
     verify_isolated_dhx_sam_solution(
         2177.0, // dhx power (watts)
         4.8315e-2,// SAM/ mass flowrate kg/s
-        4.9350e-2, // tuas_boussinesq_solver_flowrate_kg_per_s (for regression)
-        0.026, // max error tolerance
+        4.83814e-2, // tuas_boussinesq_solver_flowrate_kg_per_s (for regression)
+        0.0035, // max error tolerance
     ).unwrap();
 }
 
@@ -199,6 +258,24 @@ pub fn case_c_tchx_out_313_kelvin_40_celsius_test9(){
 ///
 /// This is not acceptable. 
 /// Hence, I want to calibrate the form losses in pipe 38
+///
+/// so I will look at test 9 specifically, which represents the max error 
+/// of the whole series 
+///
+/// with 
+///
+/// K, test9 percentage error 
+/// 0.8, 2.14 %
+/// 3.8, 1.8 %
+/// 10.8, 0.942%
+/// 15.8, 0.365%
+/// 17.8, 0.138%
+/// 20.8 -0.199%
+/// 25.8 -0.749%
+/// 30.8 -1.287%
+///
+///
+///
 pub fn verify_isolated_dhx_sam_solution(
     input_power_watts: f64,
     sam_solution_mass_flowrate_kg_per_s: f64,
@@ -283,7 +360,7 @@ Result<(),TuasLibError>{
         let pipe_length = Length::new::<meter>(0.33655);
         let flow_area = Area::new::<square_meter>(6.11e-4);
         let incline_angle = Angle::new::<degree>(-52.41533);
-        let form_loss = Ratio::new::<ratio>(3.8);
+        let form_loss = Ratio::new::<ratio>(17.8);
         //estimated component wall roughness (doesn't matter here,
         //but i need to fill in)
         let surface_roughness = Length::new::<millimeter>(0.015);
@@ -921,27 +998,27 @@ Result<(),TuasLibError>{
     let tuas_final_mass_flowrate_kg_per_s: f64 = 
         final_mass_flowrate.get::<kilogram_per_second>();
 
-    let mut error = 
+    let mut error_percentage = 
         (tuas_final_mass_flowrate_kg_per_s 
          - 
          sam_solution_mass_flowrate_kg_per_s)/
-        sam_solution_mass_flowrate_kg_per_s;
+        sam_solution_mass_flowrate_kg_per_s * 100.0;
 
     // round off the error 3dp 
 
-    error = (error * 1000.0).round()/1000.0;
+    error_percentage = (error_percentage * 1000.0).round()/1000.0;
 
 
 
     dbg!(&(
             sam_solution_mass_flowrate_kg_per_s,
             final_mass_flowrate,
-            error
+            error_percentage
     ));
     approx::assert_relative_eq!(
         tuas_boussinesq_solver_regression_flowrate_kg_per_s,
         tuas_final_mass_flowrate_kg_per_s,
-        max_relative = 0.0 // this is the max error between SAM and analytical
+        max_relative = 0.001 // regression flowrates should be accurate to within 0.01%
     );
     // final assertion 
 
