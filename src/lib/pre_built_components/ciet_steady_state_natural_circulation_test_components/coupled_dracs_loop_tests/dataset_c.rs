@@ -846,6 +846,7 @@ Result<(),crate::tuas_lib_error::TuasLibError>{
 
     use uom::si::{frequency::hertz, ratio::ratio, time::millisecond};
 
+    use crate::boussinesq_thermophysical_properties::{LiquidMaterial, SolidMaterial};
     use crate::heat_transfer_correlations::nusselt_number_correlations::enums::NusseltCorrelation;
     use crate::pre_built_components::ciet_isothermal_test_components::*;
     use crate::pre_built_components::ciet_steady_state_natural_circulation_test_components::coupled_dracs_loop_tests::dhx_constructor::new_dhx_sthe_version_1;
@@ -854,6 +855,7 @@ Result<(),crate::tuas_lib_error::TuasLibError>{
     use crate::pre_built_components::ciet_steady_state_natural_circulation_test_components::coupled_dracs_loop_tests::pri_loop_calc_functions::{coupled_dracs_pri_loop_branches_fluid_mechanics_calc_abs_mass_rate, coupled_dracs_pri_loop_dhx_heater_link_up_components, pri_loop_advance_timestep_dhx_br_and_heater_br_except_dhx, pri_loop_dhx_shell_temperature_diagnostics, pri_loop_heater_temperature_diagnostics};
     use crate::pre_built_components::
         ciet_steady_state_natural_circulation_test_components::dracs_loop_components::*;
+    use crate::pre_built_components::insulated_pipes_and_fluid_components::InsulatedFluidComponent;
     use crate::prelude::beta_testing::FluidArray;
     use uom::ConstZero;
 
@@ -963,7 +965,58 @@ Result<(),crate::tuas_lib_error::TuasLibError>{
     let mut pipe_36a = new_pipe_36a(initial_temperature);
     let mut pipe_37 = new_pipe_37(initial_temperature);
     let mut flowmeter_60_37a = new_flowmeter_60_37a(initial_temperature);
-    let mut pipe_38 = new_pipe_38(initial_temperature);
+    use uom::si::angle::degree;
+    use uom::si::area::square_meter;
+    use uom::si::length::{meter, millimeter};
+    use uom::si::pressure::atmosphere;
+    fn new_calibrated_pipe_38(initial_temperature: ThermodynamicTemperature) -> InsulatedFluidComponent {
+        let ambient_temperature = ThermodynamicTemperature::new::<degree_celsius>(20.0);
+        let fluid_pressure = Pressure::new::<atmosphere>(1.0);
+        let solid_pressure = Pressure::new::<atmosphere>(1.0);
+        let hydraulic_diameter = Length::new::<meter>(2.79e-2);
+        let pipe_length = Length::new::<meter>(0.33655);
+        let flow_area = Area::new::<square_meter>(6.11e-4);
+        let incline_angle = Angle::new::<degree>(-52.41533);
+        let form_loss = Ratio::new::<ratio>(17.8);
+        //estimated component wall roughness (doesn't matter here,
+        //but i need to fill in)
+        let surface_roughness = Length::new::<millimeter>(0.015);
+        let shell_id = hydraulic_diameter;
+        let pipe_thickness = Length::new::<meter>(0.0027686);
+        let shell_od = shell_id + 2.0 * pipe_thickness;
+        let insulation_thickness = Length::new::<meter>(0.0508);
+        let pipe_shell_material = SolidMaterial::SteelSS304L;
+        let insulation_material = SolidMaterial::Fiberglass;
+        let pipe_fluid = LiquidMaterial::TherminolVP1;
+        let htc_to_ambient = HeatTransfer::new::<watt_per_square_meter_kelvin>(20.0);
+        // from SAM nodalisation, we have 3 nodes only, 
+        // now because there are two outer nodes, the 
+        // number of inner nodes is 3-2
+        let user_specified_inner_nodes = 3-2; 
+
+        let insulated_component = InsulatedFluidComponent::new_insulated_pipe(
+            initial_temperature, 
+            ambient_temperature, 
+            fluid_pressure, 
+            solid_pressure, 
+            flow_area, 
+            incline_angle, 
+            form_loss, 
+            shell_id, 
+            shell_od, 
+            insulation_thickness, 
+            pipe_length, 
+            hydraulic_diameter, 
+            pipe_shell_material, 
+            insulation_material, 
+            pipe_fluid, 
+            htc_to_ambient, 
+            user_specified_inner_nodes, 
+            surface_roughness);
+
+        insulated_component
+    }
+    let mut pipe_38 = new_calibrated_pipe_38(initial_temperature);
     let mut pipe_39 = new_pipe_39(initial_temperature);
 
     // pri loop dhx branch top to bottom 5a to 17b 
@@ -1471,12 +1524,44 @@ Result<(),crate::tuas_lib_error::TuasLibError>{
     let simulated_heater_avg_surf_temp_degc: f64 = 
         heater_avg_surf_temp.get::<degree_celsius>();
 
+    // i want the relative error as well 
+
+    // dracs loop
+    let tuas_dracs_final_mass_flowrate_kg_per_s: f64 = 
+        final_mass_flowrate_dracs_loop.get::<kilogram_per_second>();
+
+    let mut dracs_error_percentage = 
+        (tuas_dracs_final_mass_flowrate_kg_per_s 
+         - 
+         experimental_dracs_mass_flowrate_kg_per_s)/
+        experimental_dracs_mass_flowrate_kg_per_s * 100.0;
+
+    // round off the error 3dp 
+
+    dracs_error_percentage = (dracs_error_percentage * 1000.0).round()/1000.0;
+    // pri loop
+    let tuas_pri_final_mass_flowrate_kg_per_s: f64 = 
+        final_mass_flowrate_pri_loop.get::<kilogram_per_second>();
+
+    let mut pri_error_percentage = 
+        (tuas_pri_final_mass_flowrate_kg_per_s 
+         - 
+         experimental_primary_mass_flowrate_kg_per_s)/
+        experimental_primary_mass_flowrate_kg_per_s * 100.0;
+
+    // round off the error 3dp 
+
+    pri_error_percentage = (pri_error_percentage * 1000.0).round()/1000.0;
+
+    // debug for easy error analysis
     dbg!(&(
             input_power,
             final_mass_flowrate_dracs_loop,
             final_mass_flowrate_pri_loop,
             simulated_heater_avg_surf_temp_degc,
             dhx_insulation_thickness_regression_cm,
+            dracs_error_percentage,
+            pri_error_percentage
             ));
 
     

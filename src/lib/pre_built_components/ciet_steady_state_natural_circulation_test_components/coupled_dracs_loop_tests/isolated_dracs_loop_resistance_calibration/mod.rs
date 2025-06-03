@@ -1,7 +1,3 @@
-use uom::si::angle::degree;
-use uom::si::area::square_meter;
-use uom::si::length::{meter, millimeter};
-use uom::si::pressure::atmosphere;
 use uom::si::{frequency::hertz, ratio::ratio, time::millisecond};
 use uom::si::thermodynamic_temperature::kelvin;
 use uom::si::f64::*;
@@ -351,6 +347,11 @@ Result<(),TuasLibError>{
     let mut pipe_36a = new_pipe_36a(initial_temperature);
     let mut pipe_37 = new_pipe_37(initial_temperature);
     let mut flowmeter_60_37a = new_flowmeter_60_37a(initial_temperature);
+
+    use uom::si::angle::degree;
+    use uom::si::area::square_meter;
+    use uom::si::length::{meter, millimeter};
+    use uom::si::pressure::atmosphere;
 
     fn new_calibrated_pipe_38(initial_temperature: ThermodynamicTemperature) -> InsulatedFluidComponent {
         let ambient_temperature = ThermodynamicTemperature::new::<degree_celsius>(20.0);
