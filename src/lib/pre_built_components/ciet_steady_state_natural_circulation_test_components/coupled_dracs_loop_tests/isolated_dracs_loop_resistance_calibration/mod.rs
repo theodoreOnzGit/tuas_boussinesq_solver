@@ -1,3 +1,7 @@
+use uom::si::angle::degree;
+use uom::si::area::square_meter;
+use uom::si::length::{meter, millimeter};
+use uom::si::pressure::atmosphere;
 use uom::si::{frequency::hertz, ratio::ratio, time::millisecond};
 use uom::si::thermodynamic_temperature::kelvin;
 use uom::si::f64::*;
@@ -29,7 +33,7 @@ insulated_pipes_and_fluid_components::InsulatedFluidComponent;
 use crate::pre_built_components::
 non_insulated_fluid_components::NonInsulatedFluidComponent;
 
-use crate::boussinesq_thermophysical_properties::LiquidMaterial;
+use crate::boussinesq_thermophysical_properties::{LiquidMaterial, SolidMaterial};
 use crate::heat_transfer_correlations::heat_transfer_interactions::
 heat_transfer_interaction_enums::HeatTransferInteractionType;
 use uom::si::heat_transfer::watt_per_square_meter_kelvin;
@@ -182,10 +186,23 @@ pub fn case_c_tchx_out_313_kelvin_40_celsius_test9(){
     ).unwrap();
 }
 
-fn verify_isolated_dhx_sam_solution(
+/// in TUAS 
+/// Ong, T. K. C., Xiao, S., & Peterson, P. F. (2024). An open-source 
+/// Thermo-hydraulic Uniphase Advection and Convection Solver for 
+/// Salt Flows (TUAS). International Journal of Advanced Nuclear 
+/// Reactor Design and Technology, 6(4), 281-301.
+///
+/// The DRACS verification effort had some kind of systematic error
+/// 
+/// ie with increasing flowrate, there is increased overprediction of 
+/// natural circulation mass flowrate 
+///
+/// This is not acceptable. 
+/// Hence, I want to calibrate the form losses in pipe 38
+pub fn verify_isolated_dhx_sam_solution(
     input_power_watts: f64,
-    sam_solution_mass_flowrate_kg_per_sm: f64,
-    tuas_boussinesq_solver_flowrate_kg_per_s_at_4000s_time: f64,
+    sam_solution_mass_flowrate_kg_per_s: f64,
+    tuas_boussinesq_solver_regression_flowrate_kg_per_s: f64,
     max_error_tolerance_fraction: f64) -> 
 Result<(),TuasLibError>{
 
@@ -257,7 +274,57 @@ Result<(),TuasLibError>{
     let mut pipe_36a = new_pipe_36a(initial_temperature);
     let mut pipe_37 = new_pipe_37(initial_temperature);
     let mut flowmeter_60_37a = new_flowmeter_60_37a(initial_temperature);
-    let mut pipe_38 = new_pipe_38(initial_temperature);
+
+    fn new_calibrated_pipe_38(initial_temperature: ThermodynamicTemperature) -> InsulatedFluidComponent {
+        let ambient_temperature = ThermodynamicTemperature::new::<degree_celsius>(20.0);
+        let fluid_pressure = Pressure::new::<atmosphere>(1.0);
+        let solid_pressure = Pressure::new::<atmosphere>(1.0);
+        let hydraulic_diameter = Length::new::<meter>(2.79e-2);
+        let pipe_length = Length::new::<meter>(0.33655);
+        let flow_area = Area::new::<square_meter>(6.11e-4);
+        let incline_angle = Angle::new::<degree>(-52.41533);
+        let form_loss = Ratio::new::<ratio>(3.8);
+        //estimated component wall roughness (doesn't matter here,
+        //but i need to fill in)
+        let surface_roughness = Length::new::<millimeter>(0.015);
+        let shell_id = hydraulic_diameter;
+        let pipe_thickness = Length::new::<meter>(0.0027686);
+        let shell_od = shell_id + 2.0 * pipe_thickness;
+        let insulation_thickness = Length::new::<meter>(0.0508);
+        let pipe_shell_material = SolidMaterial::SteelSS304L;
+        let insulation_material = SolidMaterial::Fiberglass;
+        let pipe_fluid = LiquidMaterial::TherminolVP1;
+        let htc_to_ambient = HeatTransfer::new::<watt_per_square_meter_kelvin>(20.0);
+        // from SAM nodalisation, we have 3 nodes only, 
+        // now because there are two outer nodes, the 
+        // number of inner nodes is 3-2
+        let user_specified_inner_nodes = 3-2; 
+
+        let insulated_component = InsulatedFluidComponent::new_insulated_pipe(
+            initial_temperature, 
+            ambient_temperature, 
+            fluid_pressure, 
+            solid_pressure, 
+            flow_area, 
+            incline_angle, 
+            form_loss, 
+            shell_id, 
+            shell_od, 
+            insulation_thickness, 
+            pipe_length, 
+            hydraulic_diameter, 
+            pipe_shell_material, 
+            insulation_material, 
+            pipe_fluid, 
+            htc_to_ambient, 
+            user_specified_inner_nodes, 
+            surface_roughness);
+
+        insulated_component
+    }
+
+
+    let mut pipe_38 = new_calibrated_pipe_38(initial_temperature);
     let mut pipe_39 = new_pipe_39(initial_temperature);
 
     // fluid mechanics bit 
@@ -848,18 +915,39 @@ Result<(),TuasLibError>{
     // panic to see debug messages
 
     //panic!();
-    dbg!(&(sam_solution_mass_flowrate_kg_per_sm,final_mass_flowrate));
 
+    // i want the relative error as well 
+
+    let tuas_final_mass_flowrate_kg_per_s: f64 = 
+        final_mass_flowrate.get::<kilogram_per_second>();
+
+    let mut error = 
+        (tuas_final_mass_flowrate_kg_per_s 
+         - 
+         sam_solution_mass_flowrate_kg_per_s)/
+        sam_solution_mass_flowrate_kg_per_s;
+
+    // round off the error 3dp 
+
+    error = (error * 1000.0).round()/1000.0;
+
+
+
+    dbg!(&(
+            sam_solution_mass_flowrate_kg_per_s,
+            final_mass_flowrate,
+            error
+    ));
     approx::assert_relative_eq!(
-        tuas_boussinesq_solver_flowrate_kg_per_s_at_4000s_time,
-        final_mass_flowrate.get::<kilogram_per_second>(),
-        max_relative = 0.44e-2 // this is the max error between SAM and analytical
+        tuas_boussinesq_solver_regression_flowrate_kg_per_s,
+        tuas_final_mass_flowrate_kg_per_s,
+        max_relative = 0.0 // this is the max error between SAM and analytical
     );
     // final assertion 
 
     approx::assert_relative_eq!(
-        sam_solution_mass_flowrate_kg_per_sm,
-        final_mass_flowrate.get::<kilogram_per_second>(),
+        sam_solution_mass_flowrate_kg_per_s,
+        tuas_final_mass_flowrate_kg_per_s,
         max_relative = max_error_tolerance
     );
 
