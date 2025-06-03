@@ -1,11 +1,16 @@
 /// test series took about 230 s
 /// 
 ///
-/// at insulation thickness of 10.3 cm,
+/// at insulation thickness of 0.091 cm,
 /// K = 17.8
 ///
-/// dracs flowrate error is -8.112%
-/// pri flowrate error is  3.997%
+/// dracs flowrate error percentage is -8.112%
+/// pri flowrate error percentage is  3.997%
+///
+/// at K = 17.8 
+///
+/// insulation thickness, dracs flowrate error percentage, pri flowrate error percentage:
+/// 0.091, -8.112, 3.997
 #[test] 
 pub fn ciet_coupled_nat_circ_set_c1(){
 
@@ -96,6 +101,11 @@ pub fn ciet_coupled_nat_circ_set_c1(){
 
 
 }
+/// calibration results:
+/// at K = 17.8 
+///
+/// insulation thickness, dracs flowrate error percentage, pri flowrate error percentage:
+/// 0.091, -2.495, 3.424
 #[test] 
 pub fn ciet_coupled_nat_circ_set_c2(){
 
@@ -184,6 +194,9 @@ pub fn ciet_coupled_nat_circ_set_c2(){
 
 
 }
+/// at K = 17.8
+/// insulation thickness, dracs flowrate error percentage, pri flowrate error percentage:
+/// 0.091, -1.019, 2.144
 #[test] 
 pub fn ciet_coupled_nat_circ_set_c3(){
 
@@ -272,6 +285,13 @@ pub fn ciet_coupled_nat_circ_set_c3(){
 
 
 }
+/// calibration procedure 
+/// nusselt number is fixed and all 
+///
+/// i'm calibrating dhx loss to ambient coeff in W/(m^2 K)
+/// at K = 17.8
+/// insulation thickness, dracs flowrate error percentage, pri flowrate error percentage:
+/// 0.091, 0.972, 0.626
 #[test] 
 pub fn ciet_coupled_nat_circ_set_c4(){
 
@@ -361,6 +381,9 @@ pub fn ciet_coupled_nat_circ_set_c4(){
 
 }
 
+/// at K = 17.8
+/// insulation thickness, dracs flowrate error percentage, pri flowrate error percentage:
+/// 0.091, 2.756, -0.242
 #[test] 
 pub fn ciet_coupled_nat_circ_set_c5(){
 
@@ -450,6 +473,9 @@ pub fn ciet_coupled_nat_circ_set_c5(){
 
 }
 /// took about 131 s on the i5-13500H 
+/// at K = 17.8
+/// insulation thickness, dracs flowrate error percentage, pri flowrate error percentage:
+/// 0.091, 2.414, -1.601
 #[test] 
 pub fn ciet_coupled_nat_circ_set_c6(){
 
@@ -539,6 +565,9 @@ pub fn ciet_coupled_nat_circ_set_c6(){
 
 }
 
+/// at K = 17.8
+/// insulation thickness, dracs flowrate error percentage, pri flowrate error percentage:
+/// 0.091, 2.033, -1.957
 #[test] 
 pub fn ciet_coupled_nat_circ_set_c7(){
 
@@ -629,6 +658,11 @@ pub fn ciet_coupled_nat_circ_set_c7(){
 }
 //
 //
+/// calibration results:
+/// at K = 17.8 
+///
+/// insulation thickness, dracs flowrate error percentage, pri flowrate error percentage:
+/// 0.091, 0.703, 0.033
 #[test] 
 pub fn ciet_coupled_nat_circ_set_c8(){
 
@@ -721,6 +755,9 @@ pub fn ciet_coupled_nat_circ_set_c8(){
 /// nusselt number is fixed and all 
 ///
 /// i'm calibrating dhx loss to ambient coeff in W/(m^2 K)
+/// at K = 17.8
+/// insulation thickness, dracs flowrate error percentage, pri flowrate error percentage:
+/// 0.091, 2.033, -1.957
 #[test] 
 pub fn ciet_coupled_nat_circ_set_c9(){
 
