@@ -1,4 +1,11 @@
 /// test series took about 230 s
+/// 
+///
+/// at insulation thickness of 10.3 cm,
+/// K = 17.8
+///
+/// dracs flowrate error is -8.112%
+/// pri flowrate error is  3.997%
 #[test] 
 pub fn ciet_coupled_nat_circ_set_c1(){
 
