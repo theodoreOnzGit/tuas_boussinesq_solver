@@ -1584,7 +1584,7 @@ Result<(),crate::tuas_lib_error::TuasLibError>{
         max_relative=dracs_loop_relative_tolerance);
 
     // check flowrates for regression 
-    let assert_regression_mass_flowrates = false;
+    let assert_regression_mass_flowrates = true;
 
     if assert_regression_mass_flowrates {
         // this asserts the final mass flowrate against experimental flowrate 
