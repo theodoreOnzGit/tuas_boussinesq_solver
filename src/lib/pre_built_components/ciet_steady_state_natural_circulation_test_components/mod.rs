@@ -55,7 +55,6 @@ pub mod zero_parasitic_heat_loss_isolated_dracs_loop_tests;
 pub mod parasitic_heat_loss_regression_tests;
 
 
-#[cfg(test)]
 /// For validation, real tests were done for the dracs loop coupled 
 /// with the DHX and Heater branches in CIET
 ///

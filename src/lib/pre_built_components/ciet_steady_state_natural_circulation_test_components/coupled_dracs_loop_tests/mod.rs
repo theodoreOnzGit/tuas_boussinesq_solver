@@ -50,6 +50,7 @@ pub mod pri_loop_calc_functions;
 /// Table 4 provides the data we use here
 /// 
 ///
+#[cfg(test)]
 pub mod dataset_a;
 
 
@@ -80,6 +81,7 @@ pub mod dataset_a;
 /// Table 3 also provides the data 
 /// 
 ///
+#[cfg(test)]
 pub mod dataset_b;
 
 /// In the original SAM publication
@@ -109,6 +111,7 @@ pub mod dataset_b;
 /// Table 3 also provides the data 
 /// 
 ///
+#[cfg(test)]
 pub mod dataset_c;
 
 
@@ -121,6 +124,7 @@ pub mod dataset_c;
 /// overprediction of flowrates for a given driving force
 ///
 /// I want to correct that... it was giving problems
+#[cfg(test)]
 pub mod isolated_dracs_loop_resistance_calibration;
 
 
