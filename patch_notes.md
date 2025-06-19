@@ -5,10 +5,17 @@ include temperature data for DHX STHE, Heater and TCHX for comparison
 with experimental data. Minor correction to TCHX controller in coupled nat 
 circ loop, to use pipe 34 as bulk temperature for controller measurement.
 
+Regression is still IN PROGRESS, this is NOT completed or tested properly.
+
 This is also done for isolated dracs loop. However, changing the TCHX 
 measurements makes no differnce to the test, it still passes.
 
-Also adding documentation for tests.
+The most important change is change the trait implementation for 
+"calculate_mass_flowrate_from_pressure_change". The previous mass flowrate 
+iteration bounds were from -10 kg/s to 10 kg/s. This is okay for CIET, but 
+for FHRs, which have flowrates about 1200 kg/s as for the gFHR, this algorithm 
+crashes. To enable convergence for the FHRs, I increased the bounds to 
+100,000 kg/s.
 
 ## v 0.0.7
 
