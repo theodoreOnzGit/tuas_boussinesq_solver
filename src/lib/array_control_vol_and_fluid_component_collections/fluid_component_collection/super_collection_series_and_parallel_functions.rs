@@ -552,10 +552,14 @@ pub trait FluidComponentSuperCollectionSeriesAssociatedFunctions {
         let mut mass_flowrate_result =
             if forward_flow_true != true {
 
-                // i will search between -10 and 0 for the bracketing
+                // i will search between -100,000 and 0 for the bracketing
+                // in kg/s
+                //
+                // I'll increase to 100,000 kg/s
+                // or 1e5
                 let mass_flowrate_result 
                     = find_root_brent(
-                        -10_f64,
+                        -1e5_f64,
                         -0_f64,
                         &mass_flow_from_pressure_chg_root,
                         &mut convergency);
@@ -565,9 +569,11 @@ pub trait FluidComponentSuperCollectionSeriesAssociatedFunctions {
                 mass_flowrate_result
 
             } else {
+                // i will search between 10 and 0 for the bracketing
+                // in kg/s
                 let mass_flowrate_result 
                     = find_root_brent(
-                        10_f64,
+                        1e5_f64,
                         0_f64,
                         &mass_flow_from_pressure_chg_root,
                         &mut convergency);

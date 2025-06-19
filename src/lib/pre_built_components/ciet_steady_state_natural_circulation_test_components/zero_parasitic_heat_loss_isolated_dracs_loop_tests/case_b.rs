@@ -75,7 +75,6 @@ pub fn case_b_tchx_out_308_kelvin_35_celsius(){
         heat_transfer_interaction_enums::HeatTransferInteractionType;
     use uom::si::heat_transfer::watt_per_square_meter_kelvin;
     use uom::si::time::second;
-    use crate::array_control_vol_and_fluid_component_collections::one_d_fluid_array_with_lateral_coupling::FluidArray;
 
 
     use chem_eng_real_time_process_control_simulator::alpha_nightly::transfer_fn_wrapper_and_enums::TransferFnTraits;
@@ -595,34 +594,16 @@ pub fn case_b_tchx_out_308_kelvin_35_celsius(){
 
                 let tchx_outlet_temperature: ThermodynamicTemperature = {
 
-                    // the front of the tchx is connected to static mixer 
+                    // the outlet of the tchx is connected to static mixer 
                     // 60 label 36
-                    let tchx35b_pipe_fluid_array_clone: FluidArray = 
-                        tchx_35b.pipe_fluid_array
-                        .clone()
-                        .try_into()
+
+                    let tchx_outlet_fluid_temperature = 
+                        static_mixer_60_label_36 
+                        .pipe_fluid_array
+                        .try_get_bulk_temperature()
                         .unwrap();
 
-                    // take the front single cv temperature 
-                    //
-                    // front single cv temperature is defunct
-                    // probably need to debug this
-
-                    let tchx_35b_front_single_cv_temperature: ThermodynamicTemperature 
-                        = tchx35b_pipe_fluid_array_clone
-                        .front_single_cv
-                        .temperature;
-
-
-
-                    let _tchx_35b_array_temperature: Vec<ThermodynamicTemperature>
-                        = tchx_35b
-                        .pipe_fluid_array_temperature()
-                        .unwrap();
-
-                    //dbg!(&tchx_35b_array_temperature);
-
-                    tchx_35b_front_single_cv_temperature
+                    tchx_outlet_fluid_temperature
 
                 };
 

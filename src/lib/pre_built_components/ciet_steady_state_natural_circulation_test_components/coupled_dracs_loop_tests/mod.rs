@@ -32,6 +32,8 @@ pub mod dracs_loop_calc_functions_sam_tchx_calibration;
 /// Note: heater v1.0 is used
 pub mod pri_loop_calc_functions;
 
+/// these are calibration 
+
 /// We use:
 ///
 /// Zou, L., Hu, G., O'Grady, D., & Hu, R. (2021). Code validation of 
@@ -48,6 +50,7 @@ pub mod pri_loop_calc_functions;
 /// Table 4 provides the data we use here
 /// 
 ///
+#[cfg(test)]
 pub mod dataset_a;
 
 
@@ -78,6 +81,7 @@ pub mod dataset_a;
 /// Table 3 also provides the data 
 /// 
 ///
+#[cfg(test)]
 pub mod dataset_b;
 
 /// In the original SAM publication
@@ -107,8 +111,21 @@ pub mod dataset_b;
 /// Table 3 also provides the data 
 /// 
 ///
+#[cfg(test)]
 pub mod dataset_c;
 
+
+/// looks like the dracs loop from the original isolated loop is 
+/// not well calibrated because there may be lower resistance compared 
+/// to the SAM model 
+/// might want to do calibration of dracs loop resistances first 
+///
+/// This was according to the TUAS paper, where there was a systematic 
+/// overprediction of flowrates for a given driving force
+///
+/// I want to correct that... it was giving problems
+#[cfg(test)]
+pub mod isolated_dracs_loop_resistance_calibration;
 
 
 

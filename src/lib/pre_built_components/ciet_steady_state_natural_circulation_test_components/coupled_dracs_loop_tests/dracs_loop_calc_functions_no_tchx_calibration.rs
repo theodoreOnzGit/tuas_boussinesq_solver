@@ -553,3 +553,87 @@ pub fn dracs_loop_dhx_tube_temperature_diagnostics(
     return ((bt_60,wt_61),(bt_23,wt_22));
 
 }
+
+
+/// these are temperature diagnostic 
+/// functions to check bulk and wall temperature before and after 
+/// the tchx
+/// 
+/// 
+pub fn dracs_loop_tchx_temperature_diagnostics(
+    pipe_34: &mut InsulatedFluidComponent,
+    static_mixer_60_label_36: &mut InsulatedFluidComponent,
+    print_debug_results: bool)
+-> ((ThermodynamicTemperature,ThermodynamicTemperature),
+(ThermodynamicTemperature,ThermodynamicTemperature)){
+
+    let (tchx_bulk_outlet_temperature,
+        tchx_wall_outlet_temperature): (ThermodynamicTemperature,
+        ThermodynamicTemperature)= {
+
+            // the outlet of the tchx is connected to static mixer 
+            // 60 label 36
+            
+            let tchx_outlet_fluid_temperature = 
+                static_mixer_60_label_36 
+                .pipe_fluid_array
+                .try_get_bulk_temperature()
+                .unwrap();
+
+            let tchx_outlet_wall_temperature = 
+                static_mixer_60_label_36 
+                .pipe_shell
+                .try_get_bulk_temperature()
+                .unwrap();
+
+
+
+            (tchx_outlet_fluid_temperature,
+             tchx_outlet_wall_temperature)
+
+    };
+
+    let (tchx_bulk_inlet_temperature,
+        tchx_wall_inlet_temperature,
+    ): (ThermodynamicTemperature, ThermodynamicTemperature) = {
+
+        // the inlet of the tchx is connected to static mixer 
+        // pipe 34
+
+        let tchx_inlet_fluid_temperature = 
+            pipe_34 
+            .pipe_fluid_array
+            .try_get_bulk_temperature()
+            .unwrap();
+
+        let tchx_inlet_wall_temperature = 
+            pipe_34 
+            .pipe_shell
+            .try_get_bulk_temperature()
+            .unwrap();
+
+        (tchx_inlet_fluid_temperature,
+         tchx_inlet_wall_temperature)
+
+    };
+
+    let bt_65 = tchx_bulk_inlet_temperature;
+    let wt_64 = tchx_wall_inlet_temperature;
+    let bt_66 = tchx_bulk_outlet_temperature;
+    let wt_67 = tchx_wall_outlet_temperature;
+
+    // debug 
+    if print_debug_results {
+        dbg!(&(
+                "bulk and wall temp degC, before and after tchx respectively",
+                bt_65.get::<degree_celsius>(),
+                wt_64.get::<degree_celsius>(),
+                bt_66.get::<degree_celsius>(),
+                wt_67.get::<degree_celsius>(),
+        ));
+    }
+
+
+    return ((bt_65,wt_64),(bt_66,wt_67));
+
+}

@@ -75,6 +75,7 @@ pub mod parasitic_heat_loss_regression_tests;
 /// SAM max error threshold is about 6.76%
 /// that is (m_SAM - m_experimental)/m_experimental
 ///
+///
 pub mod coupled_dracs_loop_tests;
 
 /// components for the DRACS loop

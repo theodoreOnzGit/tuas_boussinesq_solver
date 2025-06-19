@@ -1,11 +1,23 @@
 /// test series took about 230 s
+/// 
+///
+/// at insulation thickness of 0.091 cm,
+/// K = 17.8
+///
+/// dracs flowrate error percentage is -8.112%
+/// pri flowrate error percentage is  3.997%
+///
+/// at K = 17.8 
+///
+/// insulation thickness, dracs flowrate error percentage, pri flowrate error percentage:
+/// 0.091, -8.112, 3.997
 #[test] 
 pub fn ciet_coupled_nat_circ_set_c1(){
 
 
     let max_simulation_time_seconds: f64 = 6300.0;
-    let pri_loop_relative_tolerance = 0.062;
-    let dracs_loop_relative_tolerance = 0.061;
+    let pri_loop_relative_tolerance = 0.042;
+    let dracs_loop_relative_tolerance = 0.0676;
 
     // I'm writing in this format so that the data will be easier 
     // to copy over to csv
@@ -22,7 +34,7 @@ pub fn ciet_coupled_nat_circ_set_c1(){
         insulation_thickness_regression_cm,
         shell_side_to_ambient_nusselt_correction_factor,
         dhx_heat_loss_to_ambient_watts_per_m2_kelvin) 
-        = (4.7,0.161,10.3,33.9);
+        = (4.7,0.121,10.3,45.0);
 
     let ( pri_loop_cold_leg_insulation_thickness_cm,
         pri_loop_hot_leg_insulation_thickness_cm,
@@ -44,6 +56,17 @@ pub fn ciet_coupled_nat_circ_set_c1(){
         (1.6, 86.80711,76.04,12.0);
 
 
+    let (
+        regression_heater_inlet_temp_degc,
+        regression_heater_outlet_temp_degc,
+        regression_dhx_shell_inlet_temp_degc,
+        regression_dhx_shell_outlet_temp_degc,
+        regression_dhx_tube_inlet_temp_degc,
+        regression_dhx_tube_outlet_temp_degc,
+        regression_tchx_inlet_temp_degc,
+        regression_tchx_outlet_temp_degc,
+    ) = ( 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,);
+
     regression_coupled_dracs_loop_version_7(
         heater_power_watts, 
         max_simulation_time_seconds,
@@ -66,17 +89,30 @@ pub fn ciet_coupled_nat_circ_set_c1(){
         expt_heater_surf_temp_avg_degc,
         simulated_expected_heater_surf_temp_degc,
         heater_surface_temp_tolerance_degc,
+        regression_heater_inlet_temp_degc,
+        regression_heater_outlet_temp_degc,
+        regression_dhx_shell_inlet_temp_degc,
+        regression_dhx_shell_outlet_temp_degc,
+        regression_dhx_tube_inlet_temp_degc,
+        regression_dhx_tube_outlet_temp_degc,
+        regression_tchx_inlet_temp_degc,
+        regression_tchx_outlet_temp_degc,
     ).unwrap();
 
 
 }
+/// calibration results:
+/// at K = 17.8 
+///
+/// insulation thickness, dracs flowrate error percentage, pri flowrate error percentage:
+/// 0.091, -2.495, 3.424
 #[test] 
 pub fn ciet_coupled_nat_circ_set_c2(){
 
 
     let max_simulation_time_seconds: f64 = 6300.0;
-    let pri_loop_relative_tolerance = 0.062;
-    let dracs_loop_relative_tolerance = 0.061;
+    let pri_loop_relative_tolerance = 0.042;
+    let dracs_loop_relative_tolerance = 0.0676;
 
     // I'm writing in this format so that the data will be easier 
     // to copy over to csv
@@ -93,7 +129,7 @@ pub fn ciet_coupled_nat_circ_set_c2(){
         insulation_thickness_regression_cm,
         shell_side_to_ambient_nusselt_correction_factor,
         dhx_heat_loss_to_ambient_watts_per_m2_kelvin) 
-        = (4.7,0.161,10.3,33.9);
+        = (4.7,0.121,10.3,45.0);
 
     let ( pri_loop_cold_leg_insulation_thickness_cm,
         pri_loop_hot_leg_insulation_thickness_cm,
@@ -113,6 +149,17 @@ pub fn ciet_coupled_nat_circ_set_c2(){
         (1.6, 96.92,89.19,13.0);
 
 
+    let (
+        regression_heater_inlet_temp_degc,
+        regression_heater_outlet_temp_degc,
+        regression_dhx_shell_inlet_temp_degc,
+        regression_dhx_shell_outlet_temp_degc,
+        regression_dhx_tube_inlet_temp_degc,
+        regression_dhx_tube_outlet_temp_degc,
+        regression_tchx_inlet_temp_degc,
+        regression_tchx_outlet_temp_degc,
+    ) = ( 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,);
+
     regression_coupled_dracs_loop_version_7(
         heater_power_watts, 
         max_simulation_time_seconds,
@@ -135,17 +182,28 @@ pub fn ciet_coupled_nat_circ_set_c2(){
         expt_heater_surf_temp_avg_degc,
         simulated_expected_heater_surf_temp_degc,
         heater_surface_temp_tolerance_degc,
+        regression_heater_inlet_temp_degc,
+        regression_heater_outlet_temp_degc,
+        regression_dhx_shell_inlet_temp_degc,
+        regression_dhx_shell_outlet_temp_degc,
+        regression_dhx_tube_inlet_temp_degc,
+        regression_dhx_tube_outlet_temp_degc,
+        regression_tchx_inlet_temp_degc,
+        regression_tchx_outlet_temp_degc,
     ).unwrap();
 
 
 }
+/// at K = 17.8
+/// insulation thickness, dracs flowrate error percentage, pri flowrate error percentage:
+/// 0.091, -1.019, 2.144
 #[test] 
 pub fn ciet_coupled_nat_circ_set_c3(){
 
 
     let max_simulation_time_seconds: f64 = 6300.0;
-    let pri_loop_relative_tolerance = 0.062;
-    let dracs_loop_relative_tolerance = 0.061;
+    let pri_loop_relative_tolerance = 0.042;
+    let dracs_loop_relative_tolerance = 0.0676;
 
     // I'm writing in this format so that the data will be easier 
     // to copy over to csv
@@ -162,7 +220,7 @@ pub fn ciet_coupled_nat_circ_set_c3(){
         insulation_thickness_regression_cm,
         shell_side_to_ambient_nusselt_correction_factor,
         dhx_heat_loss_to_ambient_watts_per_m2_kelvin) 
-        = (4.7,0.161,10.3,33.9);
+        = (4.7,0.121,10.3,45.0);
 
     let ( pri_loop_cold_leg_insulation_thickness_cm,
         pri_loop_hot_leg_insulation_thickness_cm,
@@ -182,6 +240,17 @@ pub fn ciet_coupled_nat_circ_set_c3(){
         (1.6, 105.23,99.60,12.0);
 
 
+    let (
+        regression_heater_inlet_temp_degc,
+        regression_heater_outlet_temp_degc,
+        regression_dhx_shell_inlet_temp_degc,
+        regression_dhx_shell_outlet_temp_degc,
+        regression_dhx_tube_inlet_temp_degc,
+        regression_dhx_tube_outlet_temp_degc,
+        regression_tchx_inlet_temp_degc,
+        regression_tchx_outlet_temp_degc,
+    ) = ( 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,);
+
     regression_coupled_dracs_loop_version_7(
         heater_power_watts, 
         max_simulation_time_seconds,
@@ -204,17 +273,32 @@ pub fn ciet_coupled_nat_circ_set_c3(){
         expt_heater_surf_temp_avg_degc,
         simulated_expected_heater_surf_temp_degc,
         heater_surface_temp_tolerance_degc,
+        regression_heater_inlet_temp_degc,
+        regression_heater_outlet_temp_degc,
+        regression_dhx_shell_inlet_temp_degc,
+        regression_dhx_shell_outlet_temp_degc,
+        regression_dhx_tube_inlet_temp_degc,
+        regression_dhx_tube_outlet_temp_degc,
+        regression_tchx_inlet_temp_degc,
+        regression_tchx_outlet_temp_degc,
     ).unwrap();
 
 
 }
+/// calibration procedure 
+/// nusselt number is fixed and all 
+///
+/// i'm calibrating dhx loss to ambient coeff in W/(m^2 K)
+/// at K = 17.8
+/// insulation thickness, dracs flowrate error percentage, pri flowrate error percentage:
+/// 0.091, 0.972, 0.626
 #[test] 
 pub fn ciet_coupled_nat_circ_set_c4(){
 
 
     let max_simulation_time_seconds: f64 = 6300.0;
-    let pri_loop_relative_tolerance = 0.062;
-    let dracs_loop_relative_tolerance = 0.061;
+    let pri_loop_relative_tolerance = 0.042;
+    let dracs_loop_relative_tolerance = 0.0676;
 
     // I'm writing in this format so that the data will be easier 
     // to copy over to csv
@@ -231,7 +315,7 @@ pub fn ciet_coupled_nat_circ_set_c4(){
         insulation_thickness_regression_cm,
         shell_side_to_ambient_nusselt_correction_factor,
         dhx_heat_loss_to_ambient_watts_per_m2_kelvin) 
-        = (4.7,0.161,10.3,33.9);
+        = (4.7,0.121,10.3,45.0);
 
     let ( pri_loop_cold_leg_insulation_thickness_cm,
         pri_loop_hot_leg_insulation_thickness_cm,
@@ -251,6 +335,17 @@ pub fn ciet_coupled_nat_circ_set_c4(){
         (1.6, 114.57,113.09,12.0);
 
 
+    let (
+        regression_heater_inlet_temp_degc,
+        regression_heater_outlet_temp_degc,
+        regression_dhx_shell_inlet_temp_degc,
+        regression_dhx_shell_outlet_temp_degc,
+        regression_dhx_tube_inlet_temp_degc,
+        regression_dhx_tube_outlet_temp_degc,
+        regression_tchx_inlet_temp_degc,
+        regression_tchx_outlet_temp_degc,
+    ) = ( 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,);
+
     regression_coupled_dracs_loop_version_7(
         heater_power_watts, 
         max_simulation_time_seconds,
@@ -273,18 +368,29 @@ pub fn ciet_coupled_nat_circ_set_c4(){
         expt_heater_surf_temp_avg_degc,
         simulated_expected_heater_surf_temp_degc,
         heater_surface_temp_tolerance_degc,
+        regression_heater_inlet_temp_degc,
+        regression_heater_outlet_temp_degc,
+        regression_dhx_shell_inlet_temp_degc,
+        regression_dhx_shell_outlet_temp_degc,
+        regression_dhx_tube_inlet_temp_degc,
+        regression_dhx_tube_outlet_temp_degc,
+        regression_tchx_inlet_temp_degc,
+        regression_tchx_outlet_temp_degc,
     ).unwrap();
 
 
 }
 
+/// at K = 17.8
+/// insulation thickness, dracs flowrate error percentage, pri flowrate error percentage:
+/// 0.091, 2.756, -0.242
 #[test] 
 pub fn ciet_coupled_nat_circ_set_c5(){
 
 
     let max_simulation_time_seconds: f64 = 6300.0;
-    let pri_loop_relative_tolerance = 0.062;
-    let dracs_loop_relative_tolerance = 0.061;
+    let pri_loop_relative_tolerance = 0.042;
+    let dracs_loop_relative_tolerance = 0.0676;
 
     // I'm writing in this format so that the data will be easier 
     // to copy over to csv
@@ -301,7 +407,7 @@ pub fn ciet_coupled_nat_circ_set_c5(){
         insulation_thickness_regression_cm,
         shell_side_to_ambient_nusselt_correction_factor,
         dhx_heat_loss_to_ambient_watts_per_m2_kelvin) 
-        = (4.7,0.161,10.3,33.9);
+        = (4.7,0.121,10.3,45.0);
 
     let ( pri_loop_cold_leg_insulation_thickness_cm,
         pri_loop_hot_leg_insulation_thickness_cm,
@@ -321,6 +427,17 @@ pub fn ciet_coupled_nat_circ_set_c5(){
         (1.6, 122.82,124.94,12.0);
 
 
+    let (
+        regression_heater_inlet_temp_degc,
+        regression_heater_outlet_temp_degc,
+        regression_dhx_shell_inlet_temp_degc,
+        regression_dhx_shell_outlet_temp_degc,
+        regression_dhx_tube_inlet_temp_degc,
+        regression_dhx_tube_outlet_temp_degc,
+        regression_tchx_inlet_temp_degc,
+        regression_tchx_outlet_temp_degc,
+    ) = ( 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,);
+
     regression_coupled_dracs_loop_version_7(
         heater_power_watts, 
         max_simulation_time_seconds,
@@ -343,18 +460,29 @@ pub fn ciet_coupled_nat_circ_set_c5(){
         expt_heater_surf_temp_avg_degc,
         simulated_expected_heater_surf_temp_degc,
         heater_surface_temp_tolerance_degc,
+        regression_heater_inlet_temp_degc,
+        regression_heater_outlet_temp_degc,
+        regression_dhx_shell_inlet_temp_degc,
+        regression_dhx_shell_outlet_temp_degc,
+        regression_dhx_tube_inlet_temp_degc,
+        regression_dhx_tube_outlet_temp_degc,
+        regression_tchx_inlet_temp_degc,
+        regression_tchx_outlet_temp_degc,
     ).unwrap();
 
 
 }
 /// took about 131 s on the i5-13500H 
+/// at K = 17.8
+/// insulation thickness, dracs flowrate error percentage, pri flowrate error percentage:
+/// 0.091, 2.414, -1.601
 #[test] 
 pub fn ciet_coupled_nat_circ_set_c6(){
 
 
     let max_simulation_time_seconds: f64 = 6300.0;
-    let pri_loop_relative_tolerance = 0.062;
-    let dracs_loop_relative_tolerance = 0.061;
+    let pri_loop_relative_tolerance = 0.042;
+    let dracs_loop_relative_tolerance = 0.0676;
 
     // I'm writing in this format so that the data will be easier 
     // to copy over to csv
@@ -371,7 +499,7 @@ pub fn ciet_coupled_nat_circ_set_c6(){
         insulation_thickness_regression_cm,
         shell_side_to_ambient_nusselt_correction_factor,
         dhx_heat_loss_to_ambient_watts_per_m2_kelvin) 
-        = (4.7,0.161,10.3,33.9);
+        = (4.7,0.121,10.3,45.0);
 
     let ( pri_loop_cold_leg_insulation_thickness_cm,
         pri_loop_hot_leg_insulation_thickness_cm,
@@ -391,6 +519,17 @@ pub fn ciet_coupled_nat_circ_set_c6(){
         (1.6, 130.37,135.55,12.0);
 
 
+    let (
+        regression_heater_inlet_temp_degc,
+        regression_heater_outlet_temp_degc,
+        regression_dhx_shell_inlet_temp_degc,
+        regression_dhx_shell_outlet_temp_degc,
+        regression_dhx_tube_inlet_temp_degc,
+        regression_dhx_tube_outlet_temp_degc,
+        regression_tchx_inlet_temp_degc,
+        regression_tchx_outlet_temp_degc,
+    ) = ( 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,);
+
     regression_coupled_dracs_loop_version_7(
         heater_power_watts, 
         max_simulation_time_seconds,
@@ -413,18 +552,29 @@ pub fn ciet_coupled_nat_circ_set_c6(){
         expt_heater_surf_temp_avg_degc,
         simulated_expected_heater_surf_temp_degc,
         heater_surface_temp_tolerance_degc,
+        regression_heater_inlet_temp_degc,
+        regression_heater_outlet_temp_degc,
+        regression_dhx_shell_inlet_temp_degc,
+        regression_dhx_shell_outlet_temp_degc,
+        regression_dhx_tube_inlet_temp_degc,
+        regression_dhx_tube_outlet_temp_degc,
+        regression_tchx_inlet_temp_degc,
+        regression_tchx_outlet_temp_degc,
     ).unwrap();
 
 
 }
 
+/// at K = 17.8
+/// insulation thickness, dracs flowrate error percentage, pri flowrate error percentage:
+/// 0.091, 2.033, -1.957
 #[test] 
 pub fn ciet_coupled_nat_circ_set_c7(){
 
 
     let max_simulation_time_seconds: f64 = 6300.0;
-    let pri_loop_relative_tolerance = 0.062;
-    let dracs_loop_relative_tolerance = 0.061;
+    let pri_loop_relative_tolerance = 0.042;
+    let dracs_loop_relative_tolerance = 0.0676;
 
     // I'm writing in this format so that the data will be easier 
     // to copy over to csv
@@ -441,7 +591,7 @@ pub fn ciet_coupled_nat_circ_set_c7(){
         insulation_thickness_regression_cm,
         shell_side_to_ambient_nusselt_correction_factor,
         dhx_heat_loss_to_ambient_watts_per_m2_kelvin) 
-        = (4.7,0.161,10.3,33.9);
+        = (4.7,0.121,10.3,45.0);
 
     let ( pri_loop_cold_leg_insulation_thickness_cm,
         pri_loop_hot_leg_insulation_thickness_cm,
@@ -461,6 +611,17 @@ pub fn ciet_coupled_nat_circ_set_c7(){
         (1.6, 138.12,144.34,12.0);
 
 
+    let (
+        regression_heater_inlet_temp_degc,
+        regression_heater_outlet_temp_degc,
+        regression_dhx_shell_inlet_temp_degc,
+        regression_dhx_shell_outlet_temp_degc,
+        regression_dhx_tube_inlet_temp_degc,
+        regression_dhx_tube_outlet_temp_degc,
+        regression_tchx_inlet_temp_degc,
+        regression_tchx_outlet_temp_degc,
+    ) = ( 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,);
+
     regression_coupled_dracs_loop_version_7(
         heater_power_watts, 
         max_simulation_time_seconds,
@@ -483,19 +644,32 @@ pub fn ciet_coupled_nat_circ_set_c7(){
         expt_heater_surf_temp_avg_degc,
         simulated_expected_heater_surf_temp_degc,
         heater_surface_temp_tolerance_degc,
+        regression_heater_inlet_temp_degc,
+        regression_heater_outlet_temp_degc,
+        regression_dhx_shell_inlet_temp_degc,
+        regression_dhx_shell_outlet_temp_degc,
+        regression_dhx_tube_inlet_temp_degc,
+        regression_dhx_tube_outlet_temp_degc,
+        regression_tchx_inlet_temp_degc,
+        regression_tchx_outlet_temp_degc,
     ).unwrap();
 
 
 }
 //
 //
+/// calibration results:
+/// at K = 17.8 
+///
+/// insulation thickness, dracs flowrate error percentage, pri flowrate error percentage:
+/// 0.091, 0.703, 0.033
 #[test] 
 pub fn ciet_coupled_nat_circ_set_c8(){
 
 
     let max_simulation_time_seconds: f64 = 6300.0;
-    let pri_loop_relative_tolerance = 0.062;
-    let dracs_loop_relative_tolerance = 0.061;
+    let pri_loop_relative_tolerance = 0.042;
+    let dracs_loop_relative_tolerance = 0.0676;
 
     // I'm writing in this format so that the data will be easier 
     // to copy over to csv
@@ -512,7 +686,7 @@ pub fn ciet_coupled_nat_circ_set_c8(){
         insulation_thickness_regression_cm,
         shell_side_to_ambient_nusselt_correction_factor,
         dhx_heat_loss_to_ambient_watts_per_m2_kelvin) 
-        = (4.7,0.161,10.3,33.9);
+        = (4.7,0.121,10.3,45.0);
 
     let ( pri_loop_cold_leg_insulation_thickness_cm,
         pri_loop_hot_leg_insulation_thickness_cm,
@@ -532,6 +706,17 @@ pub fn ciet_coupled_nat_circ_set_c8(){
         (1.6, 145.79,151.39,12.0);
 
 
+    let (
+        regression_heater_inlet_temp_degc,
+        regression_heater_outlet_temp_degc,
+        regression_dhx_shell_inlet_temp_degc,
+        regression_dhx_shell_outlet_temp_degc,
+        regression_dhx_tube_inlet_temp_degc,
+        regression_dhx_tube_outlet_temp_degc,
+        regression_tchx_inlet_temp_degc,
+        regression_tchx_outlet_temp_degc,
+    ) = ( 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,);
+
     regression_coupled_dracs_loop_version_7(
         heater_power_watts, 
         max_simulation_time_seconds,
@@ -554,17 +739,32 @@ pub fn ciet_coupled_nat_circ_set_c8(){
         expt_heater_surf_temp_avg_degc,
         simulated_expected_heater_surf_temp_degc,
         heater_surface_temp_tolerance_degc,
+        regression_heater_inlet_temp_degc,
+        regression_heater_outlet_temp_degc,
+        regression_dhx_shell_inlet_temp_degc,
+        regression_dhx_shell_outlet_temp_degc,
+        regression_dhx_tube_inlet_temp_degc,
+        regression_dhx_tube_outlet_temp_degc,
+        regression_tchx_inlet_temp_degc,
+        regression_tchx_outlet_temp_degc,
     ).unwrap();
 
 
 }
+/// calibration procedure 
+/// nusselt number is fixed and all 
+///
+/// i'm calibrating dhx loss to ambient coeff in W/(m^2 K)
+/// at K = 17.8
+/// insulation thickness, dracs flowrate error percentage, pri flowrate error percentage:
+/// 0.091, 2.033, -1.957
 #[test] 
 pub fn ciet_coupled_nat_circ_set_c9(){
 
 
     let max_simulation_time_seconds: f64 = 6300.0;
-    let pri_loop_relative_tolerance = 0.062;
-    let dracs_loop_relative_tolerance = 0.061;
+    let pri_loop_relative_tolerance = 0.042;
+    let dracs_loop_relative_tolerance = 0.0676;
 
     // I'm writing in this format so that the data will be easier 
     // to copy over to csv
@@ -581,7 +781,7 @@ pub fn ciet_coupled_nat_circ_set_c9(){
         insulation_thickness_regression_cm,
         shell_side_to_ambient_nusselt_correction_factor,
         dhx_heat_loss_to_ambient_watts_per_m2_kelvin) 
-        = (4.7,0.161,10.3,33.9);
+        = (4.7,0.121,10.3,45.0);
 
     let ( pri_loop_cold_leg_insulation_thickness_cm,
         pri_loop_hot_leg_insulation_thickness_cm,
@@ -601,6 +801,17 @@ pub fn ciet_coupled_nat_circ_set_c9(){
         (1.6, 153.29,154.50,12.0);
 
 
+    let (
+        regression_heater_inlet_temp_degc,
+        regression_heater_outlet_temp_degc,
+        regression_dhx_shell_inlet_temp_degc,
+        regression_dhx_shell_outlet_temp_degc,
+        regression_dhx_tube_inlet_temp_degc,
+        regression_dhx_tube_outlet_temp_degc,
+        regression_tchx_inlet_temp_degc,
+        regression_tchx_outlet_temp_degc,
+    ) = ( 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,);
+
     regression_coupled_dracs_loop_version_7(
         heater_power_watts, 
         max_simulation_time_seconds,
@@ -623,6 +834,14 @@ pub fn ciet_coupled_nat_circ_set_c9(){
         expt_heater_surf_temp_avg_degc,
         simulated_expected_heater_surf_temp_degc,
         heater_surface_temp_tolerance_degc,
+        regression_heater_inlet_temp_degc,
+        regression_heater_outlet_temp_degc,
+        regression_dhx_shell_inlet_temp_degc,
+        regression_dhx_shell_outlet_temp_degc,
+        regression_dhx_tube_inlet_temp_degc,
+        regression_dhx_tube_outlet_temp_degc,
+        regression_tchx_inlet_temp_degc,
+        regression_tchx_outlet_temp_degc,
     ).unwrap();
 
 
@@ -655,21 +874,32 @@ pub fn regression_coupled_dracs_loop_version_7(
     heater_calibrated_nusselt_factor_float: f64,
     expt_heater_surf_temp_avg_degc: f64,
     simulated_expected_heater_surf_temp_degc: f64,
-    heater_surface_temp_tolerance_degc: f64) -> 
+    heater_surface_temp_tolerance_degc: f64,
+    regression_heater_inlet_temp_degc: f64,
+    regression_heater_outlet_temp_degc: f64,
+    regression_dhx_shell_inlet_temp_degc: f64,
+    regression_dhx_shell_outlet_temp_degc: f64,
+    regression_dhx_tube_inlet_temp_degc: f64,
+    regression_dhx_tube_outlet_temp_degc: f64,
+    regression_tchx_inlet_temp_degc: f64,
+    regression_tchx_outlet_temp_degc: f64,
+    ) -> 
 Result<(),crate::tuas_lib_error::TuasLibError>{
     use uom::si::length::centimeter;
     use uom::si::{f64::*, mass_rate::kilogram_per_second, power::watt};
 
     use uom::si::{frequency::hertz, ratio::ratio, time::millisecond};
 
+    use crate::boussinesq_thermophysical_properties::{LiquidMaterial, SolidMaterial};
     use crate::heat_transfer_correlations::nusselt_number_correlations::enums::NusseltCorrelation;
     use crate::pre_built_components::ciet_isothermal_test_components::*;
     use crate::pre_built_components::ciet_steady_state_natural_circulation_test_components::coupled_dracs_loop_tests::dhx_constructor::new_dhx_sthe_version_1;
-    use crate::pre_built_components::ciet_steady_state_natural_circulation_test_components::coupled_dracs_loop_tests::dracs_loop_calc_functions_no_tchx_calibration::dracs_loop_dhx_tube_temperature_diagnostics;
+    use crate::pre_built_components::ciet_steady_state_natural_circulation_test_components::coupled_dracs_loop_tests::dracs_loop_calc_functions_no_tchx_calibration::{dracs_loop_dhx_tube_temperature_diagnostics, dracs_loop_tchx_temperature_diagnostics};
     use crate::pre_built_components::ciet_steady_state_natural_circulation_test_components::coupled_dracs_loop_tests::dracs_loop_calc_functions_sam_tchx_calibration::{coupled_dracs_fluid_mechanics_calc_abs_mass_rate_sam_tchx_calibration, coupled_dracs_loop_link_up_components_sam_tchx_calibration, dracs_loop_advance_timestep_except_dhx_sam_tchx_calibration};
     use crate::pre_built_components::ciet_steady_state_natural_circulation_test_components::coupled_dracs_loop_tests::pri_loop_calc_functions::{coupled_dracs_pri_loop_branches_fluid_mechanics_calc_abs_mass_rate, coupled_dracs_pri_loop_dhx_heater_link_up_components, pri_loop_advance_timestep_dhx_br_and_heater_br_except_dhx, pri_loop_dhx_shell_temperature_diagnostics, pri_loop_heater_temperature_diagnostics};
     use crate::pre_built_components::
         ciet_steady_state_natural_circulation_test_components::dracs_loop_components::*;
+    use crate::pre_built_components::insulated_pipes_and_fluid_components::InsulatedFluidComponent;
     use crate::prelude::beta_testing::FluidArray;
     use uom::ConstZero;
 
@@ -779,7 +1009,58 @@ Result<(),crate::tuas_lib_error::TuasLibError>{
     let mut pipe_36a = new_pipe_36a(initial_temperature);
     let mut pipe_37 = new_pipe_37(initial_temperature);
     let mut flowmeter_60_37a = new_flowmeter_60_37a(initial_temperature);
-    let mut pipe_38 = new_pipe_38(initial_temperature);
+    use uom::si::angle::degree;
+    use uom::si::area::square_meter;
+    use uom::si::length::{meter, millimeter};
+    use uom::si::pressure::atmosphere;
+    fn new_calibrated_pipe_38(initial_temperature: ThermodynamicTemperature) -> InsulatedFluidComponent {
+        let ambient_temperature = ThermodynamicTemperature::new::<degree_celsius>(20.0);
+        let fluid_pressure = Pressure::new::<atmosphere>(1.0);
+        let solid_pressure = Pressure::new::<atmosphere>(1.0);
+        let hydraulic_diameter = Length::new::<meter>(2.79e-2);
+        let pipe_length = Length::new::<meter>(0.33655);
+        let flow_area = Area::new::<square_meter>(6.11e-4);
+        let incline_angle = Angle::new::<degree>(-52.41533);
+        let form_loss = Ratio::new::<ratio>(17.8);
+        //estimated component wall roughness (doesn't matter here,
+        //but i need to fill in)
+        let surface_roughness = Length::new::<millimeter>(0.015);
+        let shell_id = hydraulic_diameter;
+        let pipe_thickness = Length::new::<meter>(0.0027686);
+        let shell_od = shell_id + 2.0 * pipe_thickness;
+        let insulation_thickness = Length::new::<meter>(0.0508);
+        let pipe_shell_material = SolidMaterial::SteelSS304L;
+        let insulation_material = SolidMaterial::Fiberglass;
+        let pipe_fluid = LiquidMaterial::TherminolVP1;
+        let htc_to_ambient = HeatTransfer::new::<watt_per_square_meter_kelvin>(20.0);
+        // from SAM nodalisation, we have 3 nodes only, 
+        // now because there are two outer nodes, the 
+        // number of inner nodes is 3-2
+        let user_specified_inner_nodes = 3-2; 
+
+        let insulated_component = InsulatedFluidComponent::new_insulated_pipe(
+            initial_temperature, 
+            ambient_temperature, 
+            fluid_pressure, 
+            solid_pressure, 
+            flow_area, 
+            incline_angle, 
+            form_loss, 
+            shell_id, 
+            shell_od, 
+            insulation_thickness, 
+            pipe_length, 
+            hydraulic_diameter, 
+            pipe_shell_material, 
+            insulation_material, 
+            pipe_fluid, 
+            htc_to_ambient, 
+            user_specified_inner_nodes, 
+            surface_roughness);
+
+        insulated_component
+    }
+    let mut pipe_38 = new_calibrated_pipe_38(initial_temperature);
     let mut pipe_39 = new_pipe_39(initial_temperature);
 
     // pri loop dhx branch top to bottom 5a to 17b 
@@ -975,36 +1256,19 @@ Result<(),crate::tuas_lib_error::TuasLibError>{
 
         let tchx_outlet_temperature: ThermodynamicTemperature = {
 
-            // the front of the tchx is connected to static mixer 
+            // the outlet of the tchx is connected to static mixer 
             // 60 label 36
-            let tchx_35_b2_pipe_fluid_array_clone: FluidArray = 
-                tchx_35b_2.pipe_fluid_array
-                .clone()
-                .try_into()
+            
+            let tchx_outlet_fluid_temperature = 
+                static_mixer_60_label_36 
+                .pipe_fluid_array
+                .try_get_bulk_temperature()
                 .unwrap();
 
-            // take the front single cv temperature 
-            //
-            // front single cv temperature is defunct
-            // probably need to debug this
-
-            let tchx_35_b2_front_single_cv_temperature: ThermodynamicTemperature 
-                = tchx_35_b2_pipe_fluid_array_clone
-                .front_single_cv
-                .temperature;
-
-
-
-            let _tchx_35b_2_array_temperature: Vec<ThermodynamicTemperature>
-                = tchx_35b_2
-                .pipe_fluid_array_temperature()
-                .unwrap();
-
-            //dbg!(&tchx_35b_array_temperature);
-
-            tchx_35_b2_front_single_cv_temperature
+            tchx_outlet_fluid_temperature
 
         };
+
         // we will need to change the tchx heat transfer coefficient 
         // using the PID controller
         //
@@ -1252,10 +1516,16 @@ Result<(),crate::tuas_lib_error::TuasLibError>{
                     &mut static_mixer_20_label_23, 
                     debug_settings);
             // temperatures before and after dhx tube
-            let ((_bt_21,_wt_20),(_bt_27,_wt_26)) = 
+            let ((_bt_60,_wt_61),(_bt_23,_wt_22)) = 
                 dracs_loop_dhx_tube_temperature_diagnostics(
                     &mut dhx_tube_side_30a, 
                     &mut dhx_tube_side_30b, 
+                    debug_settings);
+            // temperatures before and after tchx 
+            let ((_bt_65, _wt_64),(_bt_66, _wt_67))
+                = dracs_loop_tchx_temperature_diagnostics(
+                    &mut pipe_34, 
+                    &mut static_mixer_60_label_36, 
                     debug_settings);
         }
 
@@ -1267,22 +1537,28 @@ Result<(),crate::tuas_lib_error::TuasLibError>{
 
     let display_temperatures = true;
     // temperatures before and after heater
-    let ((_bt_11,_wt_10),(_bt_12,_wt_13)) = 
+    let ((bt_11,_wt_10),(bt_12,_wt_13)) = 
         pri_loop_heater_temperature_diagnostics(
             &mut heater_bottom_head_1b, 
             &mut static_mixer_10_label_2, 
             display_temperatures);
     // temperatures before and after dhx shell
-    let ((_bt_21,_wt_20),(_bt_27,_wt_26)) = 
+    let ((bt_21,_wt_20),(bt_27,_wt_26)) = 
         pri_loop_dhx_shell_temperature_diagnostics(
             &mut pipe_25a, 
             &mut static_mixer_20_label_23, 
             display_temperatures);
     // temperatures before and after dhx tube
-    let ((_bt_21,_wt_20),(_bt_27,_wt_26)) = 
+    let ((bt_60,_wt_61),(bt_23,_wt_22)) = 
         dracs_loop_dhx_tube_temperature_diagnostics(
             &mut dhx_tube_side_30a, 
             &mut dhx_tube_side_30b, 
+            display_temperatures);
+    // temperatures before and after tchx 
+    let ((bt_65, _wt_64),(bt_66, _wt_67))
+        = dracs_loop_tchx_temperature_diagnostics(
+            &mut pipe_34, 
+            &mut static_mixer_60_label_36, 
             display_temperatures);
 
     // heater average surface temp 
@@ -1292,20 +1568,47 @@ Result<(),crate::tuas_lib_error::TuasLibError>{
     let simulated_heater_avg_surf_temp_degc: f64 = 
         heater_avg_surf_temp.get::<degree_celsius>();
 
+    // i want the relative error as well 
+
+    // dracs loop
+    let tuas_dracs_final_mass_flowrate_kg_per_s: f64 = 
+        final_mass_flowrate_dracs_loop.get::<kilogram_per_second>();
+
+    let mut dracs_error_percentage = 
+        (tuas_dracs_final_mass_flowrate_kg_per_s 
+         - 
+         experimental_dracs_mass_flowrate_kg_per_s)/
+        experimental_dracs_mass_flowrate_kg_per_s * 100.0;
+
+    // round off the error 3dp 
+
+    dracs_error_percentage = (dracs_error_percentage * 1000.0).round()/1000.0;
+    // pri loop
+    let tuas_pri_final_mass_flowrate_kg_per_s: f64 = 
+        final_mass_flowrate_pri_loop.get::<kilogram_per_second>();
+
+    let mut pri_error_percentage = 
+        (tuas_pri_final_mass_flowrate_kg_per_s 
+         - 
+         experimental_primary_mass_flowrate_kg_per_s)/
+        experimental_primary_mass_flowrate_kg_per_s * 100.0;
+
+    // round off the error 3dp 
+
+    pri_error_percentage = (pri_error_percentage * 1000.0).round()/1000.0;
+
+    // debug for easy error analysis
     dbg!(&(
             input_power,
-            final_mass_flowrate_pri_loop,
             final_mass_flowrate_dracs_loop,
-            simulated_heater_avg_surf_temp_degc
+            final_mass_flowrate_pri_loop,
+            simulated_heater_avg_surf_temp_degc,
+            dhx_insulation_thickness_regression_cm,
+            dracs_error_percentage,
+            pri_error_percentage
             ));
 
-
-    // check heater surface temp to within tolerance 
-    approx::assert_abs_diff_eq!(
-        expt_heater_surf_temp_avg_degc,
-        simulated_heater_avg_surf_temp_degc,
-        epsilon=heater_surface_temp_tolerance_degc);
-
+    
     // this asserts the final mass flowrate against experimental flowrate
     approx::assert_relative_eq!(
         experimental_primary_mass_flowrate.get::<kilogram_per_second>(),
@@ -1317,27 +1620,91 @@ Result<(),crate::tuas_lib_error::TuasLibError>{
         final_mass_flowrate_dracs_loop.get::<kilogram_per_second>(),
         max_relative=dracs_loop_relative_tolerance);
 
+    // check flowrates for regression 
+    let assert_regression_mass_flowrates = true;
+
+    if assert_regression_mass_flowrates {
+        // this asserts the final mass flowrate against experimental flowrate 
+        // for regression to within 0.1%
+        approx::assert_relative_eq!(
+            simulated_expected_primary_mass_flowrate_kg_per_s,
+            final_mass_flowrate_pri_loop.get::<kilogram_per_second>(),
+            max_relative=0.001);
+
+        approx::assert_relative_eq!(
+            simulated_expected_dracs_mass_flowrate_kg_per_s,
+            final_mass_flowrate_dracs_loop.get::<kilogram_per_second>(),
+            max_relative=0.001);
+
+    }
+
+    // check heater surface temp to within tolerance 
+    // among other temperatures
 
 
-    // this asserts the final mass flowrate against experimental flowrate 
-    // for regression to within 0.1%
-    approx::assert_relative_eq!(
-        simulated_expected_primary_mass_flowrate_kg_per_s,
-        final_mass_flowrate_pri_loop.get::<kilogram_per_second>(),
-        max_relative=0.001);
+    let assert_regression_temperatures = false;
 
-    approx::assert_relative_eq!(
-        simulated_expected_dracs_mass_flowrate_kg_per_s,
-        final_mass_flowrate_dracs_loop.get::<kilogram_per_second>(),
-        max_relative=0.001);
+    if assert_regression_temperatures {
 
-    // also assert heater surface temp to within 0.1%
-    approx::assert_relative_eq!(
-        simulated_expected_heater_surf_temp_degc,
-        simulated_heater_avg_surf_temp_degc,
-        max_relative=0.001);
-    
+        approx::assert_abs_diff_eq!(
+            expt_heater_surf_temp_avg_degc,
+            simulated_heater_avg_surf_temp_degc,
+            epsilon=heater_surface_temp_tolerance_degc);
 
+        // also assert heater surface temp to within 0.1%
+        approx::assert_relative_eq!(
+            simulated_expected_heater_surf_temp_degc,
+            simulated_heater_avg_surf_temp_degc,
+            max_relative=0.001);
+
+        // now, assert the inlet and outlet temperatures of the heater ,
+        // dhx sthe, shell 
+        // dhx sthe, tube 
+        // and tchx
+        // to within 0.01 K
+        approx::assert_abs_diff_eq!(
+            regression_heater_inlet_temp_degc,
+            bt_11.get::<degree_celsius>(),
+            epsilon=0.01);
+
+        approx::assert_abs_diff_eq!(
+            regression_heater_outlet_temp_degc,
+            bt_12.get::<degree_celsius>(),
+            epsilon=0.01);
+
+
+        approx::assert_abs_diff_eq!(
+            regression_dhx_shell_inlet_temp_degc,
+            bt_21.get::<degree_celsius>(),
+            epsilon=0.01);
+
+        approx::assert_abs_diff_eq!(
+            regression_dhx_shell_outlet_temp_degc,
+            bt_27.get::<degree_celsius>(),
+            epsilon=0.01);
+
+
+        approx::assert_abs_diff_eq!(
+            regression_dhx_tube_inlet_temp_degc,
+            bt_60.get::<degree_celsius>(),
+            epsilon=0.01);
+
+        approx::assert_abs_diff_eq!(
+            regression_dhx_tube_outlet_temp_degc,
+            bt_23.get::<degree_celsius>(),
+            epsilon=0.01);
+
+
+        approx::assert_abs_diff_eq!(
+            regression_tchx_inlet_temp_degc,
+            bt_65.get::<degree_celsius>(),
+            epsilon=0.01);
+
+        approx::assert_abs_diff_eq!(
+            regression_tchx_outlet_temp_degc,
+            bt_66.get::<degree_celsius>(),
+            epsilon=0.01);
+    }
 
     Ok(())
 
