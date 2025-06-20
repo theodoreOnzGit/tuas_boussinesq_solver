@@ -152,5 +152,8 @@ pub mod ciet_three_branch_plus_dracs;
 /// expected. These series of tests is meant to ensure that pipes,
 /// individual branches and parallel branches work correctly in this 
 /// flow regime
+///
+/// These test check for flow in both FLiBe and HITEC pipes
+/// FLiNaK is not tested
 #[cfg(test)]
-pub mod gfhr_flibe_pipe_tests;
+pub mod gfhr_pipe_tests;
