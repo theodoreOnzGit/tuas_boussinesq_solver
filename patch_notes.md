@@ -1,3 +1,15 @@
+## v 0.0.9
+
+Major thing in this release is the testing of FLiBe piping for FHRs. 
+This is because flowrates in the gFHR core are about 1173 kg/s. However,
+initial tests showed that fluid mechanics calculations (ie mass flowrates 
+in parallel branches) in this flowrate range caused non convergence in the 
+solver.
+
+Hence, I've opted to use this version to do test piping components in gFHR 
+type piping.
+
+
 ## v 0.0.8 
 
 Updating regression testing for CIET coupled natural circulation. This will 

@@ -146,3 +146,11 @@ pub mod uw_madison_flibe_loop_components;
 /// data (No. ANL/NSE-19/11). Argonne National 
 /// Lab.(ANL), Argonne, IL (United States).
 pub mod ciet_three_branch_plus_dracs;
+
+
+/// based on schematics of gFHR, flowrates of around 1173 kg/s are 
+/// expected. These series of tests is meant to ensure that pipes,
+/// individual branches and parallel branches work correctly in this 
+/// flow regime
+#[cfg(test)]
+pub mod gfhr_flibe_pipe_tests;
