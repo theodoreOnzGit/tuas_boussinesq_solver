@@ -155,5 +155,6 @@ pub mod ciet_three_branch_plus_dracs;
 ///
 /// These test check for flow in both FLiBe and HITEC pipes
 /// FLiNaK is not tested
+/// radiation heat transfer is not tested here either
 #[cfg(test)]
 pub mod gfhr_pipe_tests;
