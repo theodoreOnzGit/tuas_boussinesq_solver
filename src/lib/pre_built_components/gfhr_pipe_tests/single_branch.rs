@@ -10,7 +10,7 @@ use uom::si::f64::*;
 /// including the pipe representing flow through the reactor core, 
 /// which is pipe 1
 #[test]
-pub fn reactor_branch_test(){
+pub fn reactor_branch_test_get_pressure_change_from_mass_flowrate(){
 
     let initial_temperature = 
         ThermodynamicTemperature::new::<degree_celsius>(500.0);
@@ -28,6 +28,16 @@ pub fn reactor_branch_test(){
     approx::assert_relative_eq!(
         pressure_chg_front.get::<pascal>(),
         -983020.7855354407,
+        max_relative=1e-5
+        );
+    let mass_flowrate_back = MassRate::new::<kilogram_per_second>(-1200.0);
+
+    let pressure_chg_back = 
+        reactor_branch.get_pressure_change(mass_flowrate_back);
+
+    approx::assert_relative_eq!(
+        pressure_chg_back.get::<pascal>(),
+        943070.5448316006,
         max_relative=1e-5
         );
 }
