@@ -15,6 +15,10 @@ use uom::si::pressure::pascal;
 use uom::ConstZero;
 use uom::si::f64::*;
 
+/// for the gFHR primary loop,
+/// there are four branches that need to be solved for flowrate 
+///
+/// this code handles the solution procedure
 pub fn four_branch_pri_loop_flowrates_parallel(
     pump_pressure: Pressure,
     // reactor branch

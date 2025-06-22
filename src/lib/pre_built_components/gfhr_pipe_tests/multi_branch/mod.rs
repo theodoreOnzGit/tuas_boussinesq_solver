@@ -1,1 +1,43 @@
+/// contains code for fluid mechanics solvers 
+/// for the gFHR branches
 pub mod fluid_mechanics_solvers;
+
+use fluid_mechanics_solvers::four_branch_pri_loop_flowrates_parallel;
+use uom::si::pressure::kilopascal;
+use uom::si::thermodynamic_temperature::degree_celsius;
+
+use crate::pre_built_components::gfhr_pipe_tests::components::{new_downcomer_pipe_2, new_downcomer_pipe_3, new_fhr_pipe_4, new_fhr_pri_loop_pump, new_reactor_vessel_pipe_1};
+use uom::si::f64::*;
+
+/// supposing the pump applies 1 kPa of absolute pressure to this loop,
+/// solve for flow within each of the branches.
+///
+/// at v0.0.7, this code crashes.
+///
+/// This is here to debug what is wrong with the parallel branch flow solver
+#[test]
+pub fn test_fhr_four_branch_solver(){
+
+    let initial_temperature = 
+        ThermodynamicTemperature::new::<degree_celsius>(500.0);
+    let reactor_pipe_1 = new_reactor_vessel_pipe_1(initial_temperature);
+    let downcomer_pipe_2 = new_downcomer_pipe_2(initial_temperature);
+    let downcomer_pipe_3 = new_downcomer_pipe_3(initial_temperature);
+    let fhr_pipe_4 = new_fhr_pipe_4(initial_temperature);
+    let fhr_pri_loop_pump = new_fhr_pri_loop_pump(initial_temperature);
+
+
+    let pump_pressure = Pressure::new::<kilopascal>(1.0);
+
+    let (_reactor_flow, _downcomer_branch_1_flow, 
+        _downcomer_branch_2_flow, _intermediate_heat_exchanger_branch_flow)
+        = four_branch_pri_loop_flowrates_parallel(
+            pump_pressure, 
+            &reactor_pipe_1, 
+            &downcomer_pipe_2, 
+            &downcomer_pipe_3, 
+            &fhr_pipe_4, 
+            &fhr_pri_loop_pump);
+}
+
+
