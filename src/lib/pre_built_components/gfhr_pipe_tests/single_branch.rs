@@ -153,6 +153,14 @@ pub fn ihx_branch_test_get_pressure_change_from_mass_flowrate(){
 ///
 /// this test checks if getting pressure change given a fixed mass flowrate 
 /// works for large flowrates, eg 1200 kg/s
+///
+/// note: if you set pump pressure to zero pascals, 
+/// and then try to impose a pressure change of 
+/// -9847 Pa, we obtain a no convergence error.
+///
+/// which means that outside certain pressure ranges, 
+/// imposed pressure changes cause no convergency errors. Perhaps 
+/// because mass flowrates are too high or low...
 #[test]
 pub fn ihx_branch_test_get_mass_flowrate_from_pressure_change(){
     // set initial temp 
@@ -162,6 +170,7 @@ pub fn ihx_branch_test_get_mass_flowrate_from_pressure_change(){
     let pipe_4 = new_fhr_pipe_4(initial_temperature);
     let mut pump_5 = new_fhr_pri_loop_pump(initial_temperature);
     let pump_pressure = Pressure::new::<kilopascal>(15.0);
+    pump_5.set_internal_pressure_source(pump_pressure);
 
 
     let mut ihx_branch = 
