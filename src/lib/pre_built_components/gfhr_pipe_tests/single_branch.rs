@@ -161,6 +161,13 @@ pub fn ihx_branch_test_get_pressure_change_from_mass_flowrate(){
 /// which means that outside certain pressure ranges, 
 /// imposed pressure changes cause no convergency errors. Perhaps 
 /// because mass flowrates are too high or low...
+///
+/// it is likely that at such ranges, the mass flowrates required to get 
+/// the pressure changes are quite unphysical
+///
+/// therefore, when an outer iterator loop guesses these pressure changes,
+/// we might get unphysical guesses and results, which do not help  
+/// the solver converge.
 #[test]
 pub fn ihx_branch_test_get_mass_flowrate_from_pressure_change(){
     // set initial temp 
