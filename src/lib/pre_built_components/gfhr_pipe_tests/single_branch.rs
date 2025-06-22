@@ -9,6 +9,9 @@ use uom::si::f64::*;
 /// for the reactor branch, there are some pipes involved, 
 /// including the pipe representing flow through the reactor core, 
 /// which is pipe 1
+///
+/// this test checks if getting pressure change given a fixed mass flowrate 
+/// works for large flowrates, eg 1200 kg/s
 #[test]
 pub fn reactor_branch_test_get_pressure_change_from_mass_flowrate(){
 
@@ -40,4 +43,51 @@ pub fn reactor_branch_test_get_pressure_change_from_mass_flowrate(){
         943070.5448316006,
         max_relative=1e-5
         );
+}
+
+
+/// for the reactor branch, there are some pipes involved, 
+/// including the pipe representing flow through the reactor core, 
+/// which is pipe 1
+///
+///
+/// this test checks if iteratively getting mass flowrate from pressure change
+/// works for large flowrates, eg 1200 kg/s
+#[test]
+pub fn reactor_branch_test_get_mass_flowrate_from_pressure_change(){
+    // set initial temp 
+    let initial_temperature = 
+        ThermodynamicTemperature::new::<degree_celsius>(500.0);
+    let reactor_pipe_1 = new_reactor_vessel_pipe_1(initial_temperature);
+
+    let mut reactor_branch = 
+        FluidComponentCollection::new_series_component_collection();
+    reactor_branch.clone_and_add_component(&reactor_pipe_1);
+    // mass flowrate 
+    let mass_flowrate_front_ref = MassRate::new::<kilogram_per_second>(1200.0);
+    let pressure_chg_frontal = Pressure::new::<pascal>(-983020.7855354407);
+    let mass_flowrate_front = 
+        reactor_branch.get_mass_flowrate_from_pressure_change(pressure_chg_frontal);
+
+
+    approx::assert_relative_eq!(
+        mass_flowrate_front.get::<kilogram_per_second>(),
+        mass_flowrate_front_ref.get::<kilogram_per_second>(),
+        max_relative=1e-5
+        );
+
+
+    let mass_flowrate_back_ref = MassRate::new::<kilogram_per_second>(-1200.0);
+
+    let pressure_chg_back = Pressure::new::<pascal>(943070.5448316006);
+    let mass_flowrate_back = 
+        reactor_branch.
+        get_mass_flowrate_from_pressure_change(pressure_chg_back);
+
+    approx::assert_relative_eq!(
+        mass_flowrate_back.get::<kilogram_per_second>(),
+        mass_flowrate_back_ref.get::<kilogram_per_second>(),
+        max_relative=1e-5
+        );
+
 }
