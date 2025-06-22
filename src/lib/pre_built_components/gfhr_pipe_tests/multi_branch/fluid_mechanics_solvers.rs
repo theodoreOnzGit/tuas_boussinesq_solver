@@ -74,11 +74,14 @@ pub fn four_branch_pri_loop_flowrates_parallel(
     let mut intermediate_heat_exchanger_branch =
         FluidComponentCollection::new_series_component_collection();
 
-    intermediate_heat_exchanger_branch.clone_and_add_component(fhr_pipe_4);
-    let mut fhr_pump_clone: NonInsulatedFluidComponent 
-        = fhr_pri_loop_pump.clone();
-    fhr_pump_clone.set_internal_pressure_source(pump_pressure);
-    intermediate_heat_exchanger_branch.clone_and_add_component(&fhr_pump_clone);
+    let mut fhr_pipe_4_clone = fhr_pipe_4.clone();
+    fhr_pipe_4_clone.set_internal_pressure_source(pump_pressure);
+    intermediate_heat_exchanger_branch.clone_and_add_component(&fhr_pipe_4_clone);
+    //let mut fhr_pump_clone: NonInsulatedFluidComponent 
+    //    = fhr_pri_loop_pump.clone();
+    //fhr_pump_clone.set_internal_pressure_source(pump_pressure);
+    //intermediate_heat_exchanger_branch.clone_and_add_component(&fhr_pump_clone);
+
 
     
 
@@ -654,7 +657,8 @@ pub fn calculate_pressure_change_using_guessed_branch_mass_flowrate_fhr_sim_v1_c
                 calculate_mass_flowrate_from_pressure_change_for_parallel_branches(
                     iterated_pressure, 
                     fluid_component_collection_vector);
-            dbg!(&iterated_mass_flowrate);
+            dbg!(&(iterated_pressure,iterated_mass_flowrate));
+            
 
 
 
@@ -738,6 +742,7 @@ pub fn calculate_pressure_change_using_guessed_branch_mass_flowrate_fhr_sim_v1_c
     // 
     //
 
+    
     let pressure_change_pascals_result_user_specified_flow
         = find_root_brent(
             user_specified_pressure_upper_bound.value,

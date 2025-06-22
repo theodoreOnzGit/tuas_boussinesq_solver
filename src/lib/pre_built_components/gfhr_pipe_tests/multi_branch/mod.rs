@@ -15,6 +15,11 @@ use uom::si::f64::*;
 /// at v0.0.7, this code crashes.
 ///
 /// This is here to debug what is wrong with the parallel branch flow solver
+///
+/// the solver iterates constantly between -38 kg/s and 12 kg/s overall 
+/// flowrate... unsure why
+///
+/// function appears to not be smooth in that regard
 #[test]
 pub fn test_fhr_four_branch_solver(){
 
@@ -27,7 +32,7 @@ pub fn test_fhr_four_branch_solver(){
     let fhr_pri_loop_pump = new_fhr_pri_loop_pump(initial_temperature);
 
 
-    let pump_pressure = Pressure::new::<kilopascal>(1.0);
+    let pump_pressure = Pressure::new::<kilopascal>(15.0);
 
     let (reactor_flow, downcomer_branch_1_flow, 
         downcomer_branch_2_flow, intermediate_heat_exchanger_branch_flow)
