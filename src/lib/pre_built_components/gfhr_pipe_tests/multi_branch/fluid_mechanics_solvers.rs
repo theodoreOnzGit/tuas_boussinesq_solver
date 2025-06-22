@@ -719,7 +719,7 @@ pub fn calculate_pressure_change_using_guessed_branch_mass_flowrate_fhr_sim_v1_c
     //
     let mut convergency = SimpleConvergency { 
         eps:1e-15_f64, 
-        max_iter: 700
+        max_iter: 70
     };
 
     dbg!(&(user_specified_pressure_upper_bound,
