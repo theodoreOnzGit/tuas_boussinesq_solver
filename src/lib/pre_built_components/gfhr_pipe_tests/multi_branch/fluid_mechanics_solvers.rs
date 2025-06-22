@@ -220,7 +220,6 @@ pub fn calculate_iterative_mass_flowrate_across_branches_for_fhr_sim_v1(
             // the easiest solution is each branch has zero mass flowrate
 
 
-            dbg!("mass flowrate thru branches near zero");
             // however, more often than not, the trivial solution doesn't work
             // I then need to obtain the largest difference in pressure changes 
             // between each branch if it has zero flow rate
@@ -242,9 +241,6 @@ pub fn calculate_iterative_mass_flowrate_across_branches_for_fhr_sim_v1(
                 calculate_maximum_mass_flowrate_given_pressure_drop_across_each_branch(
                     max_pressure_change_between_branches, 
                     &fluid_component_collection_vector);
-            dbg!(&(max_pressure_change_between_branches,
-                    max_mass_flowrate_across_each_branch
-            ));
 
             // with a hypothetical mass flowrate across each branch 
             //
@@ -265,7 +261,6 @@ pub fn calculate_iterative_mass_flowrate_across_branches_for_fhr_sim_v1(
                     user_requested_mass_flowrate, 
                     &fluid_component_collection_vector);
 
-            dbg!(&(pressure_change));
 
 
             let mut mass_flowrate_vector: Vec<MassRate> =
@@ -402,7 +397,6 @@ pub fn calculate_iterative_mass_flowrate_across_branches_for_fhr_sim_v1(
 
         if internal_circulation_dominant {
 
-            dbg!("internal circulation dominant");
             // in this case, the average mass flowrate through each of these
             // loops is very close to zero,
             // therefore zero flowrate is supplied
@@ -488,7 +482,6 @@ pub fn calculate_iterative_mass_flowrate_across_branches_for_fhr_sim_v1(
         // value
         //
 
-        dbg!("generic solver (non implemented) employed");
 
         let external_circulation_dominant = 
             internal_circulation_driving_force_scale.value * 10.0 
@@ -605,7 +598,6 @@ pub fn calculate_pressure_change_using_guessed_branch_mass_flowrate_fhr_sim_v1_c
         [pressure_change_est_vector_forward_direction,
         pressure_change_est_vector_backward_direction].concat();
 
-    dbg!(&pressure_change_forward_and_backward_est_vector);
 
     let average_pressure_at_guessed_average_flow: Pressure = 
         <FluidComponentSuperCollection as FluidComponentSuperCollectionParallelAssociatedFunctions>::
@@ -658,17 +650,12 @@ pub fn calculate_pressure_change_using_guessed_branch_mass_flowrate_fhr_sim_v1_c
 
             let iterated_pressure = 
                 Pressure::new::<pascal>(branch_pressure_change_pascals);
-            dbg!("starting mass flowrate iterations");
-
-            dbg!(&(iterated_pressure));
             let iterated_mass_flowrate = 
                 calculate_mass_flowrate_from_pressure_change_for_parallel_branches(
                     iterated_pressure, 
                     fluid_component_collection_vector);
+            dbg!(&iterated_mass_flowrate);
 
-            dbg!(&(iterated_pressure,iterated_mass_flowrate));
-
-            dbg!("completed mass flowrate iterations");
 
 
             let mass_flowrate_error = 
@@ -722,8 +709,6 @@ pub fn calculate_pressure_change_using_guessed_branch_mass_flowrate_fhr_sim_v1_c
         max_iter: 70
     };
 
-    dbg!(&(user_specified_pressure_upper_bound,
-            user_specified_pressure_lower_bound));
     // basically with the pressure bounds
     // 
     // [examples/fhr_sim_v1/app/thermal_hydraulics_backend/pri_loop_fluid_mechanics_calc_fns/parallel_branch_flow_calculator.rs:599:5] &(user_specified_pressure_upper_bound, user_specified_pressure_lower_bound) = (
@@ -993,9 +978,6 @@ fn calculate_mass_flowrate_from_pressure_change_for_single_branch(
                 ::calculate_pressure_change_from_mass_flowrate(
                     mass_rate, 
                     fluid_component_vector);
-            dbg!(&mass_rate);
-            dbg!(&pressure_change_tested);
-
             // now i've obtained the pressure change, i convert it to f64
 
             let pressure_change_user_stipulated_pascals_f64 = 
