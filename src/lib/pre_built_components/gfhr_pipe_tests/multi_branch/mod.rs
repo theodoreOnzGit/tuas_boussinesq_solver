@@ -32,7 +32,7 @@ pub fn test_fhr_four_branch_solver(){
     let fhr_pri_loop_pump = new_fhr_pri_loop_pump(initial_temperature);
 
 
-    let pump_pressure = Pressure::new::<kilopascal>(15.0);
+    let pump_pressure = Pressure::new::<kilopascal>(115.0);
 
     let (reactor_flow, downcomer_branch_1_flow, 
         downcomer_branch_2_flow, intermediate_heat_exchanger_branch_flow)

@@ -627,14 +627,6 @@ pub fn calculate_pressure_change_using_guessed_branch_mass_flowrate_fhr_sim_v1_c
     let mut static_pressure_variation_estimate = 
         pressure_diff_at_guessed_average_flow;
 
-    // do not expect this variation to go beyond 1 bar 
-    let max_static_pressure_variation = 
-        Pressure::new::<bar>(1.0);
-
-    if static_pressure_variation_estimate.abs() > max_static_pressure_variation {
-        static_pressure_variation_estimate = max_static_pressure_variation
-    }
-
 
     // with my upper and lower bounds
     // i can now define the root function for pressure
