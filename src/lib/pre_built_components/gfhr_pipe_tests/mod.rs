@@ -1,3 +1,9 @@
+/// contains the code for single pipes and other components in 
+/// primary and intermediate loop of what could be used to cool the gFHR
+///
+/// generic (Fluoride Salt Cooled High Temperature Reactor)
+///
+/// Note: Radiation Heat Transfer (RHT) NOT accounted for
 pub mod components;
 /// first, single pipe tests 
 ///
@@ -7,4 +13,6 @@ pub mod components;
 pub mod single_pipe_tests;
 
 
+/// second, tests across individual branches
+pub mod single_branch;
 

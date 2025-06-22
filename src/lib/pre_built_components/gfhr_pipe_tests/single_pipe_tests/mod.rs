@@ -20,7 +20,6 @@ pub fn single_pipe_flibe_mass_flow_1200_kg_per_s(){
 
     let pressure_chg_front = pipe_1.get_pressure_change_immutable(mass_flowrate_front);
 
-    dbg!(&(mass_flowrate_front,pressure_chg_front));
 
     approx::assert_relative_eq!(
         pressure_chg_front.get::<pascal>(),
@@ -33,7 +32,6 @@ pub fn single_pipe_flibe_mass_flow_1200_kg_per_s(){
 
     let pressure_chg_back = pipe_1.get_pressure_change_immutable(mass_flowrate_back);
 
-    dbg!(&(mass_flowrate_back,pressure_chg_back));
     approx::assert_relative_eq!(
         pressure_chg_back.get::<pascal>(),
         943070.5448316006,
@@ -62,7 +60,6 @@ pub fn single_pipe_flibe_pressure_drop_for_mass_flow_1200_kg_per_s(){
         pressure_chg_frontal);
 
 
-    dbg!(&(pressure_chg_frontal,mass_flowrate_front));
 
     approx::assert_relative_eq!(
         mass_flowrate_front.get::<kilogram_per_second>(),
@@ -77,7 +74,6 @@ pub fn single_pipe_flibe_pressure_drop_for_mass_flow_1200_kg_per_s(){
     let mass_flowrate_back = pipe_1.get_mass_flowrate_from_pressure_change_immutable(
         pressure_chg_back);
 
-    dbg!(&(mass_flowrate_back,pressure_chg_back));
     approx::assert_relative_eq!(
         mass_flowrate_back.get::<kilogram_per_second>(),
         mass_flowrate_back_ref.get::<kilogram_per_second>(),
