@@ -9,8 +9,9 @@ use crate::pre_built_components::insulated_pipes_and_fluid_components::Insulated
 use crate::pre_built_components::non_insulated_fluid_components::NonInsulatedFluidComponent;
 use roots::find_root_brent;
 use roots::SimpleConvergency;
+use uom::si::mass_rate::kilogram_per_day;
+use uom::si::mass_rate::kilogram_per_hour;
 use uom::si::mass_rate::kilogram_per_second;
-use uom::si::pressure::bar;
 use uom::si::pressure::pascal;
 use uom::si::ratio::ratio;
 use uom::ConstZero;
@@ -244,9 +245,12 @@ pub fn calculate_iterative_mass_flowrate_across_branches_for_fhr_sim_v1(
             dbg!("calculating max flow between brances");
 
             let debugging = true;
+            // TODO: this is a temp fix
+            let mut max_mass_flowrate_across_each_branch = 
+                MassRate::new::<kilogram_per_second>(5000.0);
             // TODO: this is the buggy spot
             if !debugging {
-                let max_mass_flowrate_across_each_branch = 
+                max_mass_flowrate_across_each_branch = 
                     <FluidComponentSuperCollection as FluidComponentSuperCollectionParallelAssociatedFunctions>:: 
                     calculate_maximum_mass_flowrate_given_pressure_drop_across_each_branch(
                         max_pressure_change_between_branches, 
@@ -260,9 +264,6 @@ pub fn calculate_iterative_mass_flowrate_across_branches_for_fhr_sim_v1(
             // to avoid this issue, i can comment this out and set 
             // an upper limit of 5000 kg/s 
 
-            // TODO: this is a temp fix
-            let max_mass_flowrate_across_each_branch = 
-                MassRate::new::<kilogram_per_second>(5000.0);
 
 
 
@@ -692,7 +693,7 @@ pub fn calculate_pressure_change_using_guessed_branch_mass_flowrate_fhr_sim_v1_c
             let mass_flowrate_error_normalised: Ratio = 
                 mass_flowrate_error/individual_branch_guess_upper_bound_mass_flowrate;
 
-            return mass_flowrate_error_normalised.get::<ratio>();
+            return mass_flowrate_error.get::<kilogram_per_day>();
 
         };
 

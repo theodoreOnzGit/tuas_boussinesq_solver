@@ -19,7 +19,14 @@ use uom::si::f64::*;
 /// the solver iterates constantly between -38 kg/s and 12 kg/s overall 
 /// flowrate... unsure why
 ///
+/// another one:
+///
+/// pressure across four branches oscillates between -5053.0145 and 
+/// -5010, whereas mass flowrate oscillates between 7.105e-13 kg/s and 
+/// -50.059 kg/s... I wonder why it is so sudden...
+///
 /// function appears to not be smooth in that regard
+///
 #[test]
 pub fn test_fhr_four_branch_solver(){
 
