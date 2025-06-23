@@ -12,6 +12,7 @@ use roots::SimpleConvergency;
 use uom::si::mass_rate::kilogram_per_second;
 use uom::si::pressure::bar;
 use uom::si::pressure::pascal;
+use uom::si::ratio::ratio;
 use uom::ConstZero;
 use uom::si::f64::*;
 
@@ -242,12 +243,28 @@ pub fn calculate_iterative_mass_flowrate_across_branches_for_fhr_sim_v1(
             dbg!(&max_pressure_change_between_branches);
             dbg!("calculating max flow between brances");
 
+            let debugging = true;
             // TODO: this is the buggy spot
+            if !debugging {
+                let max_mass_flowrate_across_each_branch = 
+                    <FluidComponentSuperCollection as FluidComponentSuperCollectionParallelAssociatedFunctions>:: 
+                    calculate_maximum_mass_flowrate_given_pressure_drop_across_each_branch(
+                        max_pressure_change_between_branches, 
+                        &fluid_component_collection_vector);
+            }
+            // the above is an algorithm which allows us to calculate an 
+            // upper limit for mass flowrate across each branch
+            //
+            // this may fail (or not) given a pressure bound 
+            //
+            // to avoid this issue, i can comment this out and set 
+            // an upper limit of 5000 kg/s 
+
+            // TODO: this is a temp fix
             let max_mass_flowrate_across_each_branch = 
-                <FluidComponentSuperCollection as FluidComponentSuperCollectionParallelAssociatedFunctions>:: 
-                calculate_maximum_mass_flowrate_given_pressure_drop_across_each_branch(
-                    max_pressure_change_between_branches, 
-                    &fluid_component_collection_vector);
+                MassRate::new::<kilogram_per_second>(5000.0);
+
+
 
             // with a hypothetical mass flowrate across each branch 
             //
@@ -264,6 +281,15 @@ pub fn calculate_iterative_mass_flowrate_across_branches_for_fhr_sim_v1(
             //
 
             dbg!("calculating pressure chg through branches..");
+            // now with pressure change through the branches... 
+            // I'm getting an oscillation issue
+            // we do get to about zero 
+            // -5.68e-13 and 7.105e-13 
+            //
+            // this is indeed about zero but not quite
+            // I think for large mass flowrates, the tolerance is too tight
+            //
+            // I think normalisation would work. 
             let pressure_change = 
                 calculate_pressure_change_using_guessed_branch_mass_flowrate_fhr_sim_v1_custom(
                     max_mass_flowrate_across_each_branch, 
@@ -630,10 +656,6 @@ pub fn calculate_pressure_change_using_guessed_branch_mass_flowrate_fhr_sim_v1_c
 
 
 
-    let mut static_pressure_variation_estimate = 
-        pressure_diff_at_guessed_average_flow;
-
-
     // with my upper and lower bounds
     // i can now define the root function for pressure
     // we are iterating pressure across each branch
@@ -665,8 +687,12 @@ pub fn calculate_pressure_change_using_guessed_branch_mass_flowrate_fhr_sim_v1_c
             let mass_flowrate_error = 
                 iterated_mass_flowrate -
                 user_specified_mass_flowrate;
+            // now, this error I want to scale by the maximum flowrate 
+            // so we don't get numerical convergence issues
+            let mass_flowrate_error_normalised: Ratio = 
+                mass_flowrate_error/individual_branch_guess_upper_bound_mass_flowrate;
 
-            return mass_flowrate_error.get::<kilogram_per_second>();
+            return mass_flowrate_error_normalised.get::<ratio>();
 
         };
 
@@ -677,11 +703,11 @@ pub fn calculate_pressure_change_using_guessed_branch_mass_flowrate_fhr_sim_v1_c
 
     let mut user_specified_pressure_upper_bound = 
         average_pressure_at_guessed_average_flow 
-        + static_pressure_variation_estimate;
+        + pressure_diff_at_guessed_average_flow;
 
     let mut user_specified_pressure_lower_bound =
         average_pressure_at_guessed_average_flow 
-        - static_pressure_variation_estimate;
+        - pressure_diff_at_guessed_average_flow;
 
     // now if the upper and lower bounds are the same,
     // then we will add a 5 Pa difference to them
