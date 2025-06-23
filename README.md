@@ -5,6 +5,9 @@ It contains traits for fluid mechanics and heat transfer
 for thermal hydraulics system level calculation. It is still 
 in development and not fully featured yet.
 
+Bugfix: setting internal pressure source in InsulatedFluidComponents should 
+work correctly now.
+
 The crate contains many useful traits and examples of how to use 
 those traits for your own projects.
 
