@@ -210,6 +210,7 @@ pub fn calculate_iterative_mass_flowrate_across_branches_for_fhr_sim_v1(
         // through them
         if user_requested_mass_flowrate.value.abs() < 1e-9_f64 {
 
+            dbg!("zero flowrate through parallel branches");
             // in this case, the average mass flowrate through each of these
             // loops is very close to zero,
             //
@@ -238,7 +239,10 @@ pub fn calculate_iterative_mass_flowrate_across_branches_for_fhr_sim_v1(
 
             // with this max pressure change, we can guess a maximum 
             // flowrate across each branch
+            dbg!(&max_pressure_change_between_branches);
+            dbg!("calculating max flow between brances");
 
+            // TODO: this is the buggy spot
             let max_mass_flowrate_across_each_branch = 
                 <FluidComponentSuperCollection as FluidComponentSuperCollectionParallelAssociatedFunctions>:: 
                 calculate_maximum_mass_flowrate_given_pressure_drop_across_each_branch(
@@ -257,7 +261,9 @@ pub fn calculate_iterative_mass_flowrate_across_branches_for_fhr_sim_v1(
             //
             // this is giving me problems here!
             // calculate_pressure_change_using_guessed_branch_mass_flowrate
+            //
 
+            dbg!("calculating pressure chg through branches..");
             let pressure_change = 
                 calculate_pressure_change_using_guessed_branch_mass_flowrate_fhr_sim_v1_custom(
                     max_mass_flowrate_across_each_branch, 
@@ -645,6 +651,8 @@ pub fn calculate_pressure_change_using_guessed_branch_mass_flowrate_fhr_sim_v1_c
 
             let iterated_pressure = 
                 Pressure::new::<pascal>(branch_pressure_change_pascals);
+            dbg!(&iterated_pressure);
+            // this is the buggy step
             let iterated_mass_flowrate = 
                 calculate_mass_flowrate_from_pressure_change_for_parallel_branches(
                     iterated_pressure, 
