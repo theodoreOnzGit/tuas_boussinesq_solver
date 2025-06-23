@@ -693,7 +693,15 @@ pub fn calculate_pressure_change_using_guessed_branch_mass_flowrate_fhr_sim_v1_c
             let mass_flowrate_error_normalised: Ratio = 
                 mass_flowrate_error/individual_branch_guess_upper_bound_mass_flowrate;
 
-            return mass_flowrate_error.get::<kilogram_per_day>();
+            let debugging = false; 
+            if debugging {
+                //return mass_flowrate_error.get::<kilogram_per_day>();
+                // doing it in ratio form makes the solver less sensitive 
+                // making it take big jumps in pressure.. not good
+                return mass_flowrate_error_normalised.get::<ratio>();
+            } else {
+                return mass_flowrate_error.get::<kilogram_per_second>();
+            }
 
         };
 
@@ -735,10 +743,20 @@ pub fn calculate_pressure_change_using_guessed_branch_mass_flowrate_fhr_sim_v1_c
 
     // i can't use a convergency value too strict, perhaps 1e-9 will do!
     //
+    let debugging = true;
     let mut convergency = SimpleConvergency { 
         eps:1e-15_f64, 
         max_iter: 70
     };
+    if debugging {
+
+        // the system is quite stiff here... 
+        // think the secant method may not work
+        convergency = SimpleConvergency { 
+            eps:1e-12_f64, 
+            max_iter: 70
+        };
+    }
 
     // basically with the pressure bounds
     // 
@@ -769,6 +787,9 @@ pub fn calculate_pressure_change_using_guessed_branch_mass_flowrate_fhr_sim_v1_c
     // 
     //
 
+    
+    // i'm going to try different root finding algorithms if the first 
+    //
     
     let pressure_change_pascals_result_user_specified_flow
         = find_root_brent(
