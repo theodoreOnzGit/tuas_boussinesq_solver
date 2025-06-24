@@ -457,8 +457,8 @@ pub fn new_fhr_pipe_8(initial_temperature: ThermodynamicTemperature) -> Insulate
     insulated_component
 }
 
-/// fhr pipe 8,
-/// flow direction going up by 3.1
+/// fhr pipe 7,
+/// flow direction going up by 3.1m
 pub fn new_fhr_pipe_7(initial_temperature: ThermodynamicTemperature) -> InsulatedFluidComponent {
     let ambient_temperature = ThermodynamicTemperature::new::<degree_celsius>(20.0);
     let fluid_pressure = Pressure::new::<atmosphere>(1.0);
@@ -597,35 +597,37 @@ pub fn new_fhr_pipe_7_old(initial_temperature: ThermodynamicTemperature) -> Insu
 /// constructs a new instance of the shell and tube 
 /// heat exchanger for the IHX 
 /// FLiBe on shell side (prevents freezing)
-/// and HITEC on time sude
+/// and HITEC on tube side
+///
+/// flow direction going up by 1m on both shell and tube side
 pub fn new_ihx_sthe_6_version_1(initial_temperature: ThermodynamicTemperature
     ) -> SimpleShellAndTubeHeatExchanger {
 
     let insulation_thickness: Length = Length::new::<meter>(0.0508);
-    let copper = SolidMaterial::SteelSS304L;
+    let steel = SolidMaterial::SteelSS304L;
     let fluid_pressure = Pressure::new::<atmosphere>(1.0);
     let solid_pressure = Pressure::new::<atmosphere>(1.0);
-    let sthe_length = Length::new::<meter>(1.18745);
+    let sthe_length = Length::new::<meter>(1.0);
     // tube side
     //
-    // this is labelled 30 and within DRACS loop
+    // this is labelled 6 within the pri loop and intermediate loop diagram
     let number_of_tubes = 19;
     //from Zou's publication, DHX tube side and shell side have 11 nodes 
     let number_of_inner_nodes = 11 - 2;
 
-    let tube_side_id = Length::new::<meter>(0.00635);
-    let tube_side_od = Length::new::<meter>(0.00794);
+    let tube_side_id = Length::new::<meter>(0.0635);
+    let tube_side_od = Length::new::<meter>(0.0794);
     // wall thickness is 7.95e-4 meters 
     // this is (OD-ID)/2 which i verified in Libreoffice Calc 
     let tube_side_hydraulic_diameter = tube_side_id;
     let tube_side_flow_area_single_tube = 
-        Area::new::<square_meter>(6.0172e-4) / 
+        Area::new::<square_centimeter>(80.0) / 
         number_of_tubes as f64;
 
     let tube_side_form_loss = Ratio::new::<ratio>(3.3);
-    let tube_side_incline_angle = Angle::new::<degree>(-90.0);
+    let tube_side_incline_angle = Angle::new::<degree>(90.0);
     let tube_side_liquid = LiquidMaterial::HITEC;
-    let inner_tube_material = copper;
+    let inner_tube_material = steel;
     let tube_side_initial_temperature = initial_temperature;
     let tube_loss_correlations: DimensionlessDarcyLossCorrelations
         = DimensionlessDarcyLossCorrelations::new_pipe(
@@ -657,12 +659,12 @@ pub fn new_ihx_sthe_6_version_1(initial_temperature: ThermodynamicTemperature
     let shell_side_id = Length::new::<meter>(0.0508);
     let shell_side_wall_thickness = Length::new::<meter>(0.0016);
     let shell_side_od = shell_side_id + 2.0 * shell_side_wall_thickness;
-    let shell_side_hydraulic_diameter = Length::new::<meter>(6.857144e-3);
-    let shell_side_flow_area = Area::new::<square_meter>(1.086058e-3);
+    let shell_side_hydraulic_diameter = Length::new::<meter>(6.857144e-2);
+    let shell_side_flow_area = Area::new::<square_centimeter>(160.0);
     let shell_side_form_loss = Ratio::new::<ratio>(23.9);
-    let shell_side_incline_angle = Angle::new::<degree>(-90.0);
+    let shell_side_incline_angle = Angle::new::<degree>(90.0);
     let shell_side_liquid = LiquidMaterial::FLiBe;
-    let outer_tube_material = copper;
+    let outer_tube_material = steel;
     let shell_side_initial_temperature = initial_temperature;
     let shell_loss_correlations: DimensionlessDarcyLossCorrelations
         = DimensionlessDarcyLossCorrelations::new_pipe(
@@ -699,7 +701,7 @@ pub fn new_ihx_sthe_6_version_1(initial_temperature: ThermodynamicTemperature
 
     
 
-    let dhx_sthe_ver_1 = SimpleShellAndTubeHeatExchanger::new_custom_circular_single_pass_sthe_with_insulation(
+    let gfhr_ihx_sthe_ver_1 = SimpleShellAndTubeHeatExchanger::new_custom_circular_single_pass_sthe_with_insulation(
         number_of_tubes, 
         number_of_inner_nodes, 
         fluid_pressure,  // for the sake of fluid property calculations, not hydrostatic pressure
@@ -734,6 +736,108 @@ pub fn new_ihx_sthe_6_version_1(initial_temperature: ThermodynamicTemperature
         shell_side_nusselt_correlation_to_tubes, 
         shell_side_nusselt_correlation_to_outer_shell);
 
-    dhx_sthe_ver_1
+    gfhr_ihx_sthe_ver_1
 }
 
+
+
+/// fhr pipe 5,
+/// flow direction going left by 10m
+pub fn new_fhr_pipe_5(initial_temperature: ThermodynamicTemperature) -> InsulatedFluidComponent {
+    let ambient_temperature = ThermodynamicTemperature::new::<degree_celsius>(20.0);
+    let fluid_pressure = Pressure::new::<atmosphere>(1.0);
+    let solid_pressure = Pressure::new::<atmosphere>(1.0);
+    let hydraulic_diameter = Length::new::<centimeter>(5.0);
+    let pipe_length = Length::new::<meter>(10.0);
+    let flow_area = Area::new::<square_centimeter>(19.0);
+    let incline_angle = Angle::new::<degree>(0.0);
+    // not putting in ergun equation yet
+    let form_loss = Ratio::new::<ratio>(1.05);
+    let surface_roughness = Length::new::<millimeter>(0.015);
+    let shell_id = hydraulic_diameter;
+
+    let pipe_thickness = Length::new::<centimeter>(4.0);
+    let shell_od = shell_id + 2.0 * pipe_thickness;
+    let insulation_thickness = Length::new::<meter>(0.0508);
+    let pipe_shell_material = SolidMaterial::SteelSS304L;
+    let insulation_material = SolidMaterial::Fiberglass;
+    let pipe_fluid = LiquidMaterial::FLiBe;
+    // I just made this side more conductive to environment
+    let htc_to_ambient = HeatTransfer::new::<watt_per_square_meter_kelvin>(20.0);
+    // 2 total nodes
+    // that is two outer nodes plus 1.0
+    let user_specified_inner_nodes = 0; 
+
+    let insulated_component = InsulatedFluidComponent::new_insulated_pipe(
+        initial_temperature, 
+        ambient_temperature, 
+        fluid_pressure, 
+        solid_pressure, 
+        flow_area, 
+        incline_angle, 
+        form_loss, 
+        shell_id, 
+        shell_od, 
+        insulation_thickness, 
+        pipe_length, 
+        hydraulic_diameter, 
+        pipe_shell_material, 
+        insulation_material, 
+        pipe_fluid, 
+        htc_to_ambient, 
+        user_specified_inner_nodes, 
+        surface_roughness);
+
+    insulated_component
+}
+
+
+/// fhr pipe 4,
+/// flow direction going downwards by 1m
+pub fn new_fhr_pipe_4(initial_temperature: ThermodynamicTemperature) -> InsulatedFluidComponent {
+    let ambient_temperature = ThermodynamicTemperature::new::<degree_celsius>(20.0);
+    let fluid_pressure = Pressure::new::<atmosphere>(1.0);
+    let solid_pressure = Pressure::new::<atmosphere>(1.0);
+    let hydraulic_diameter = Length::new::<centimeter>(5.0);
+    let pipe_length = Length::new::<meter>(1.0);
+    let flow_area = Area::new::<square_centimeter>(19.0);
+    let incline_angle = Angle::new::<degree>(-90.0);
+    // not putting in ergun equation yet
+    let form_loss = Ratio::new::<ratio>(1.05);
+    let surface_roughness = Length::new::<millimeter>(0.015);
+    let shell_id = hydraulic_diameter;
+
+    let pipe_thickness = Length::new::<centimeter>(4.0);
+    let shell_od = shell_id + 2.0 * pipe_thickness;
+    let insulation_thickness = Length::new::<meter>(0.0508);
+    let pipe_shell_material = SolidMaterial::SteelSS304L;
+    let insulation_material = SolidMaterial::Fiberglass;
+    let pipe_fluid = LiquidMaterial::FLiBe;
+    // I just made this side more conductive to environment
+    let htc_to_ambient = HeatTransfer::new::<watt_per_square_meter_kelvin>(20.0);
+    // 2 total nodes
+    // that is two outer nodes plus 1.0
+    let user_specified_inner_nodes = 0; 
+
+    let insulated_component = InsulatedFluidComponent::new_insulated_pipe(
+        initial_temperature, 
+        ambient_temperature, 
+        fluid_pressure, 
+        solid_pressure, 
+        flow_area, 
+        incline_angle, 
+        form_loss, 
+        shell_id, 
+        shell_od, 
+        insulation_thickness, 
+        pipe_length, 
+        hydraulic_diameter, 
+        pipe_shell_material, 
+        insulation_material, 
+        pipe_fluid, 
+        htc_to_ambient, 
+        user_specified_inner_nodes, 
+        surface_roughness);
+
+    insulated_component
+}
