@@ -1,7 +1,7 @@
 /// contains code for fluid mechanics solvers 
 /// for the gFHR branches
 pub mod fluid_mechanics_solvers;
-use fluid_mechanics_solvers::four_branch_pri_loop_flowrates_parallel;
+use fluid_mechanics_solvers::four_branch_pri_loop_flowrates_parallel_debug;
 
 /// contains code iterative solution across multiple branches
 pub mod multi_branch_solvers;
@@ -50,7 +50,7 @@ pub fn test_fhr_four_branch_solver_debug(){
 
     let (reactor_flow, downcomer_branch_1_flow, 
         downcomer_branch_2_flow, intermediate_heat_exchanger_branch_flow)
-        = four_branch_pri_loop_flowrates_parallel(
+        = four_branch_pri_loop_flowrates_parallel_debug(
             pump_pressure, 
             &reactor_pipe_1, 
             &downcomer_pipe_2, 
@@ -64,22 +64,22 @@ pub fn test_fhr_four_branch_solver_debug(){
 
     approx::assert_relative_eq!(
         reactor_flow.get::<kilogram_per_second>(),
-        -149.022,
+        -147.871,
         max_relative=1e-5
         );
     approx::assert_relative_eq!(
         downcomer_branch_1_flow.get::<kilogram_per_second>(),
-        -1.05030,
+        -1.04956,
         max_relative=1e-5
         );
     approx::assert_relative_eq!(
         downcomer_branch_2_flow.get::<kilogram_per_second>(),
-        -1.05030,
+        -1.04956,
         max_relative=1e-5
         );
     approx::assert_relative_eq!(
         intermediate_heat_exchanger_branch_flow.get::<kilogram_per_second>(),
-        151.1227,
+        149.9704,
         max_relative=1e-5
         );
 }

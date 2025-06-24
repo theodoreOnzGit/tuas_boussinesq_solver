@@ -15,7 +15,7 @@ use uom::si::f64::*;
 /// there are four branches that need to be solved for flowrate 
 ///
 /// this code handles the solution procedure
-pub fn four_branch_pri_loop_flowrates_parallel(
+pub fn four_branch_pri_loop_flowrates_parallel_debug(
     pump_pressure: Pressure,
     // reactor branch
     reactor_pipe_1: &InsulatedFluidComponent,

@@ -40,7 +40,7 @@ pub fn new_reactor_vessel_pipe_1(initial_temperature: ThermodynamicTemperature) 
     // = 4 * void frac/(1-void frac)
     // = 2.67 cm
     let hydraulic_diameter = Length::new::<centimeter>(2.67);
-    let pipe_length = Length::new::<meter>(1.0);
+    let pipe_length = Length::new::<meter>(3.10);
     // area of a 120 cm radius circle is about 11310 cm^2 
     // assume 60% filled by pebbles 
     // we get about 4523 cm2
@@ -117,10 +117,7 @@ pub fn new_downcomer_pipe_2(initial_temperature: ThermodynamicTemperature) -> In
     let fluid_pressure = Pressure::new::<atmosphere>(1.0);
     let solid_pressure = Pressure::new::<atmosphere>(1.0);
     let hydraulic_diameter = Length::new::<centimeter>(5.0);
-    let pipe_length = Length::new::<meter>(1.0);
-    // area of a 120 cm radius circle is about 11310 cm^2 
-    // assume 60% filled by pebbles 
-    // we get about 4523 cm2
+    let pipe_length = Length::new::<meter>(3.10);
     let flow_area = Area::new::<square_centimeter>(100.0);
     let incline_angle = Angle::new::<degree>(90.0);
     // not putting in ergun equation yet
@@ -198,10 +195,7 @@ pub fn new_downcomer_pipe_3(initial_temperature: ThermodynamicTemperature) -> In
     let fluid_pressure = Pressure::new::<atmosphere>(1.0);
     let solid_pressure = Pressure::new::<atmosphere>(1.0);
     let hydraulic_diameter = Length::new::<centimeter>(5.0);
-    let pipe_length = Length::new::<meter>(1.0);
-    // area of a 120 cm radius circle is about 11310 cm^2 
-    // assume 60% filled by pebbles 
-    // we get about 4523 cm2
+    let pipe_length = Length::new::<meter>(3.10);
     let flow_area = Area::new::<square_centimeter>(100.0);
     let incline_angle = Angle::new::<degree>(90.0);
     // not putting in ergun equation yet
@@ -276,7 +270,7 @@ pub fn new_fhr_pipe_4(initial_temperature: ThermodynamicTemperature) -> Insulate
     let fluid_pressure = Pressure::new::<atmosphere>(1.0);
     let solid_pressure = Pressure::new::<atmosphere>(1.0);
     let hydraulic_diameter = Length::new::<centimeter>(5.0);
-    let pipe_length = Length::new::<meter>(1.0);
+    let pipe_length = Length::new::<meter>(3.10);
     let flow_area = Area::new::<square_meter>(20.0);
     let incline_angle = Angle::new::<degree>(90.0);
     // not putting in ergun equation yet
