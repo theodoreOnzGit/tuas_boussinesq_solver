@@ -841,3 +841,326 @@ pub fn new_fhr_pipe_4(initial_temperature: ThermodynamicTemperature) -> Insulate
 
     insulated_component
 }
+
+/// fhr pipe 17,
+/// flow direction going up by 4.1 m
+/// this is in the intermediate loop
+/// so it contains hitec
+pub fn new_fhr_pipe_17(initial_temperature: ThermodynamicTemperature) -> InsulatedFluidComponent {
+    let ambient_temperature = ThermodynamicTemperature::new::<degree_celsius>(20.0);
+    let fluid_pressure = Pressure::new::<atmosphere>(1.0);
+    let solid_pressure = Pressure::new::<atmosphere>(1.0);
+    let hydraulic_diameter = Length::new::<centimeter>(5.0);
+    let pipe_length = Length::new::<meter>(4.1);
+    let flow_area = Area::new::<square_centimeter>(19.0);
+    let incline_angle = Angle::new::<degree>(90.0);
+    // not putting in ergun equation yet
+    let form_loss = Ratio::new::<ratio>(1.05);
+    let surface_roughness = Length::new::<millimeter>(0.015);
+    let shell_id = hydraulic_diameter;
+
+    let pipe_thickness = Length::new::<centimeter>(4.0);
+    let shell_od = shell_id + 2.0 * pipe_thickness;
+    let insulation_thickness = Length::new::<meter>(0.0508);
+    let pipe_shell_material = SolidMaterial::SteelSS304L;
+    let insulation_material = SolidMaterial::Fiberglass;
+    let pipe_fluid = LiquidMaterial::HITEC;
+    // I just made this side more conductive to environment
+    let htc_to_ambient = HeatTransfer::new::<watt_per_square_meter_kelvin>(20.0);
+    // 2 total nodes
+    // that is two outer nodes plus 1.0
+    let user_specified_inner_nodes = 0; 
+
+    let insulated_component = InsulatedFluidComponent::new_insulated_pipe(
+        initial_temperature, 
+        ambient_temperature, 
+        fluid_pressure, 
+        solid_pressure, 
+        flow_area, 
+        incline_angle, 
+        form_loss, 
+        shell_id, 
+        shell_od, 
+        insulation_thickness, 
+        pipe_length, 
+        hydraulic_diameter, 
+        pipe_shell_material, 
+        insulation_material, 
+        pipe_fluid, 
+        htc_to_ambient, 
+        user_specified_inner_nodes, 
+        surface_roughness);
+
+    insulated_component
+}
+
+/// fhr pipe 12,
+/// flow direction going right by 4m
+/// this is in the intermediate loop
+/// so it contains hitec
+pub fn new_fhr_pipe_12(initial_temperature: ThermodynamicTemperature) -> InsulatedFluidComponent {
+    let ambient_temperature = ThermodynamicTemperature::new::<degree_celsius>(20.0);
+    let fluid_pressure = Pressure::new::<atmosphere>(1.0);
+    let solid_pressure = Pressure::new::<atmosphere>(1.0);
+    let hydraulic_diameter = Length::new::<centimeter>(5.0);
+    let pipe_length = Length::new::<meter>(4.0);
+    let flow_area = Area::new::<square_centimeter>(19.0);
+    let incline_angle = Angle::new::<degree>(0.0);
+    // not putting in ergun equation yet
+    let form_loss = Ratio::new::<ratio>(1.05);
+    let surface_roughness = Length::new::<millimeter>(0.015);
+    let shell_id = hydraulic_diameter;
+
+    let pipe_thickness = Length::new::<centimeter>(4.0);
+    let shell_od = shell_id + 2.0 * pipe_thickness;
+    let insulation_thickness = Length::new::<meter>(0.0508);
+    let pipe_shell_material = SolidMaterial::SteelSS304L;
+    let insulation_material = SolidMaterial::Fiberglass;
+    let pipe_fluid = LiquidMaterial::HITEC;
+    // I just made this side more conductive to environment
+    let htc_to_ambient = HeatTransfer::new::<watt_per_square_meter_kelvin>(20.0);
+    // 2 total nodes
+    // that is two outer nodes plus 1.0
+    let user_specified_inner_nodes = 0; 
+
+    let insulated_component = InsulatedFluidComponent::new_insulated_pipe(
+        initial_temperature, 
+        ambient_temperature, 
+        fluid_pressure, 
+        solid_pressure, 
+        flow_area, 
+        incline_angle, 
+        form_loss, 
+        shell_id, 
+        shell_od, 
+        insulation_thickness, 
+        pipe_length, 
+        hydraulic_diameter, 
+        pipe_shell_material, 
+        insulation_material, 
+        pipe_fluid, 
+        htc_to_ambient, 
+        user_specified_inner_nodes, 
+        surface_roughness);
+
+    insulated_component
+}
+
+
+
+/// creates a new pump component for the intermediate loop
+/// goes right 0.36m
+///
+/// note that the reference point for the intermediate loop is 
+/// between pipe 17 and pump 16
+pub fn new_fhr_intermediate_loop_pump_16(initial_temperature: ThermodynamicTemperature) -> NonInsulatedFluidComponent {
+    let ambient_temperature = ThermodynamicTemperature::new::<degree_celsius>(20.0);
+    let fluid_pressure = Pressure::new::<atmosphere>(1.0);
+    let solid_pressure = Pressure::new::<atmosphere>(1.0);
+    let hydraulic_diameter = Length::new::<meter>(5.0);
+    let component_length = Length::new::<meter>(0.36);
+    let flow_area = Area::new::<square_centimeter>(20.0);
+    let incline_angle = Angle::new::<degree>(0.0);
+    let form_loss = Ratio::new::<ratio>(0.0);
+    let reynolds_power = -1_f64;
+    let reynolds_coefficient = Ratio::new::<ratio>(0.0);
+    //estimated component wall roughness (doesn't matter here,
+    //but i need to fill in)
+    let shell_id = hydraulic_diameter;
+    let pipe_thickness = Length::new::<meter>(0.0027686);
+    let shell_od = shell_id + 2.0 * pipe_thickness;
+    let pipe_shell_material = SolidMaterial::SteelSS304L;
+    let pipe_fluid = LiquidMaterial::HITEC;
+    let htc_to_ambient = HeatTransfer::new::<watt_per_square_meter_kelvin>(20.0);
+    // from SAM nodalisation, we have 2 nodes only, 
+    // now because there are two outer nodes, we subtract 2
+    let user_specified_inner_nodes = 2-2; 
+
+
+
+    let non_insulated_component = NonInsulatedFluidComponent::
+        new_custom_component(
+            initial_temperature, 
+            ambient_temperature, 
+            fluid_pressure, 
+            solid_pressure, 
+            flow_area, 
+            incline_angle, 
+            form_loss, 
+            reynolds_coefficient, 
+            reynolds_power, 
+            shell_id, 
+            shell_od, 
+            component_length, 
+            hydraulic_diameter, 
+            pipe_shell_material, 
+            pipe_fluid, 
+            htc_to_ambient, 
+            user_specified_inner_nodes);
+
+    non_insulated_component
+
+}
+
+
+/// fhr pipe 15,
+/// flow direction going right by 4m
+/// this is in the intermediate loop
+/// so it contains hitec
+pub fn new_fhr_pipe_15(initial_temperature: ThermodynamicTemperature) -> InsulatedFluidComponent {
+    let ambient_temperature = ThermodynamicTemperature::new::<degree_celsius>(20.0);
+    let fluid_pressure = Pressure::new::<atmosphere>(1.0);
+    let solid_pressure = Pressure::new::<atmosphere>(1.0);
+    let hydraulic_diameter = Length::new::<centimeter>(5.0);
+    let pipe_length = Length::new::<meter>(4.0 - 0.36);
+    let flow_area = Area::new::<square_centimeter>(19.0);
+    let incline_angle = Angle::new::<degree>(0.0);
+    // not putting in ergun equation yet
+    let form_loss = Ratio::new::<ratio>(1.05);
+    let surface_roughness = Length::new::<millimeter>(0.015);
+    let shell_id = hydraulic_diameter;
+
+    let pipe_thickness = Length::new::<centimeter>(4.0);
+    let shell_od = shell_id + 2.0 * pipe_thickness;
+    let insulation_thickness = Length::new::<meter>(0.0508);
+    let pipe_shell_material = SolidMaterial::SteelSS304L;
+    let insulation_material = SolidMaterial::Fiberglass;
+    let pipe_fluid = LiquidMaterial::HITEC;
+    // I just made this side more conductive to environment
+    let htc_to_ambient = HeatTransfer::new::<watt_per_square_meter_kelvin>(20.0);
+    // 2 total nodes
+    // that is two outer nodes plus 1.0
+    let user_specified_inner_nodes = 0; 
+
+    let insulated_component = InsulatedFluidComponent::new_insulated_pipe(
+        initial_temperature, 
+        ambient_temperature, 
+        fluid_pressure, 
+        solid_pressure, 
+        flow_area, 
+        incline_angle, 
+        form_loss, 
+        shell_id, 
+        shell_od, 
+        insulation_thickness, 
+        pipe_length, 
+        hydraulic_diameter, 
+        pipe_shell_material, 
+        insulation_material, 
+        pipe_fluid, 
+        htc_to_ambient, 
+        user_specified_inner_nodes, 
+        surface_roughness);
+
+    insulated_component
+}
+
+
+/// creates a new steam_generator_shell_side component for the intermediate loop
+///
+/// it will be externally coupled to a steam loop solver where 
+/// heat loss is manually computed
+/// goes up by 1.0 m
+pub fn new_fhr_intermediate_loop_steam_generator_shell_side_14(initial_temperature: ThermodynamicTemperature) -> NonInsulatedFluidComponent {
+    let ambient_temperature = ThermodynamicTemperature::new::<degree_celsius>(20.0);
+    let fluid_pressure = Pressure::new::<atmosphere>(1.0);
+    let solid_pressure = Pressure::new::<atmosphere>(1.0);
+    let hydraulic_diameter = Length::new::<meter>(5.0);
+    let component_length = Length::new::<meter>(1.0);
+    let flow_area = Area::new::<square_centimeter>(20.0);
+    let incline_angle = Angle::new::<degree>(90.0);
+    let form_loss = Ratio::new::<ratio>(0.0);
+    let reynolds_power = -1_f64;
+    let reynolds_coefficient = Ratio::new::<ratio>(0.0);
+    //estimated component wall roughness (doesn't matter here,
+    //but i need to fill in)
+    let shell_id = hydraulic_diameter;
+    let pipe_thickness = Length::new::<meter>(0.0027686);
+    let shell_od = shell_id + 2.0 * pipe_thickness;
+    let pipe_shell_material = SolidMaterial::SteelSS304L;
+    let pipe_fluid = LiquidMaterial::HITEC;
+    let htc_to_ambient = HeatTransfer::new::<watt_per_square_meter_kelvin>(20.0);
+    // from SAM nodalisation, we have 2 nodes only, 
+    // now because there are two outer nodes, we subtract 2
+    let user_specified_inner_nodes = 2-2; 
+
+
+
+    let non_insulated_component = NonInsulatedFluidComponent::
+        new_custom_component(
+            initial_temperature, 
+            ambient_temperature, 
+            fluid_pressure, 
+            solid_pressure, 
+            flow_area, 
+            incline_angle, 
+            form_loss, 
+            reynolds_coefficient, 
+            reynolds_power, 
+            shell_id, 
+            shell_od, 
+            component_length, 
+            hydraulic_diameter, 
+            pipe_shell_material, 
+            pipe_fluid, 
+            htc_to_ambient, 
+            user_specified_inner_nodes);
+
+    non_insulated_component
+
+}
+
+
+/// fhr pipe 13,
+/// flow direction going up by 4.1m
+/// this is in the intermediate loop
+/// so it contains hitec
+///
+/// and it is angled 90 degrees upwards
+pub fn new_fhr_pipe_13(initial_temperature: ThermodynamicTemperature) -> InsulatedFluidComponent {
+    let ambient_temperature = ThermodynamicTemperature::new::<degree_celsius>(20.0);
+    let fluid_pressure = Pressure::new::<atmosphere>(1.0);
+    let solid_pressure = Pressure::new::<atmosphere>(1.0);
+    let hydraulic_diameter = Length::new::<centimeter>(5.0);
+    let pipe_length = Length::new::<meter>(4.1);
+    let flow_area = Area::new::<square_centimeter>(19.0);
+    let incline_angle = Angle::new::<degree>(90.0);
+    // not putting in ergun equation yet
+    let form_loss = Ratio::new::<ratio>(1.05);
+    let surface_roughness = Length::new::<millimeter>(0.015);
+    let shell_id = hydraulic_diameter;
+
+    let pipe_thickness = Length::new::<centimeter>(4.0);
+    let shell_od = shell_id + 2.0 * pipe_thickness;
+    let insulation_thickness = Length::new::<meter>(0.0508);
+    let pipe_shell_material = SolidMaterial::SteelSS304L;
+    let insulation_material = SolidMaterial::Fiberglass;
+    let pipe_fluid = LiquidMaterial::HITEC;
+    // I just made this side more conductive to environment
+    let htc_to_ambient = HeatTransfer::new::<watt_per_square_meter_kelvin>(20.0);
+    // 2 total nodes
+    // that is two outer nodes plus 1.0
+    let user_specified_inner_nodes = 0; 
+
+    let insulated_component = InsulatedFluidComponent::new_insulated_pipe(
+        initial_temperature, 
+        ambient_temperature, 
+        fluid_pressure, 
+        solid_pressure, 
+        flow_area, 
+        incline_angle, 
+        form_loss, 
+        shell_id, 
+        shell_od, 
+        insulation_thickness, 
+        pipe_length, 
+        hydraulic_diameter, 
+        pipe_shell_material, 
+        insulation_material, 
+        pipe_fluid, 
+        htc_to_ambient, 
+        user_specified_inner_nodes, 
+        surface_roughness);
+
+    insulated_component
+}

@@ -7,10 +7,125 @@ use crate::pre_built_components::gfhr_pipe_tests::multi_branch::multi_branch_sol
 use crate::pre_built_components::gfhr_pipe_tests::multi_branch::single_branch_solvers::calculate_mass_flowrate_from_pressure_change_for_single_branch_fhr_sim_custom;
 use crate::pre_built_components::insulated_pipes_and_fluid_components::InsulatedFluidComponent;
 use crate::pre_built_components::non_insulated_fluid_components::NonInsulatedFluidComponent;
+use crate::pre_built_components::shell_and_tube_heat_exchanger::SimpleShellAndTubeHeatExchanger;
 use uom::si::mass_rate::kilogram_per_second;
 use uom::ConstZero;
 use uom::si::f64::*;
 
+/// for the gFHR primary loop, and intermediate loop 
+/// there are four branches that need to be solved for flowrate 
+///
+/// this code handles the solution procedure
+/// using the tuas_boussinesq_solver library code
+///
+pub fn four_branch_pri_and_intermediate_loop(
+    pri_loop_pump_pressure: Pressure,
+    intrmd_loop_pump_pressure: Pressure,
+    // reactor branch
+    reactor_pipe_1: &InsulatedFluidComponent,
+    // downcomer branch 1
+    downcomer_pipe_2: &InsulatedFluidComponent,
+    // downcomer branch 2
+    downcomer_pipe_3: &InsulatedFluidComponent,
+    // Intermediate heat exchanger branch in pri loop
+    fhr_pipe_11: &InsulatedFluidComponent,
+    fhr_pipe_10: &InsulatedFluidComponent,
+    fhr_pri_loop_pump_9: &NonInsulatedFluidComponent,
+    fhr_pipe_8: &InsulatedFluidComponent,
+    fhr_pipe_7: &InsulatedFluidComponent,
+    ihx_sthe_6: &SimpleShellAndTubeHeatExchanger,
+    fhr_pipe_5: &InsulatedFluidComponent,
+    fhr_pipe_4: &InsulatedFluidComponent,
+    // intermediate loop ihx side
+    fhr_pipe_17: &InsulatedFluidComponent,
+    fhr_pipe_12: &InsulatedFluidComponent,
+    // intermediate loop steam generator side
+    fhr_int_loop_pump_16: &NonInsulatedFluidComponent,
+    fhr_pipe_15: &InsulatedFluidComponent,
+    fhr_steam_generator_shell_side_14: &NonInsulatedFluidComponent,
+    fhr_pipe_13: &InsulatedFluidComponent,
+
+    ) -> (MassRate, MassRate, MassRate, MassRate,){
+
+    // note: this crashes due to non convergency issues...
+    //thread '<unnamed>' panicked at C:\Users\fifad\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\tuas_boussinesq_solver-0.0.7\src\lib\array_control_vol_an
+    //d_fluid_component_collections\fluid_component_collection\collection_series_and_parallel_functions.rs:444:74:
+    //called `Result::unwrap()` on an `Err` value: NoConvergency
+    //note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+    //
+    //
+    //now, even by having more flowrate options, I'm still getting a no 
+    //convergency error especially once pump pressure exceeds 
+    // 10.0 - 13.0 Pa, and there is actually flowrate
+    // I'm getting flowrates in excess of 10 kg/s 
+    // 554 kg/s, and thats okay 
+    //
+    // but then I get NoConvergency errors
+
+    let mut reactor_branch = 
+        FluidComponentCollection::new_series_component_collection();
+
+    reactor_branch.clone_and_add_component(reactor_pipe_1);
+
+
+
+
+    let mut downcomer_branch_1 = 
+        FluidComponentCollection::new_series_component_collection();
+
+    downcomer_branch_1.clone_and_add_component(downcomer_pipe_2);
+
+
+
+
+    let mut downcomer_branch_2 = 
+        FluidComponentCollection::new_series_component_collection();
+
+    downcomer_branch_2.clone_and_add_component(downcomer_pipe_3);
+
+
+
+
+    let mut intermediate_heat_exchanger_branch =
+        FluidComponentCollection::new_series_component_collection();
+
+    let mut fhr_pipe_4_clone = fhr_pipe_7.clone();
+    fhr_pipe_4_clone.set_internal_pressure_source(pri_loop_pump_pressure);
+    intermediate_heat_exchanger_branch.clone_and_add_component(&fhr_pipe_4_clone);
+    //let mut fhr_pump_clone: NonInsulatedFluidComponent 
+    //    = fhr_pri_loop_pump.clone();
+    //fhr_pump_clone.set_internal_pressure_source(pump_pressure);
+    //intermediate_heat_exchanger_branch.clone_and_add_component(&fhr_pump_clone);
+
+
+    
+
+    let mut pri_loop_branches = 
+        FluidComponentSuperCollection::default();
+
+    pri_loop_branches.set_orientation_to_parallel();
+
+    pri_loop_branches.fluid_component_super_vector.push(reactor_branch);
+    pri_loop_branches.fluid_component_super_vector.push(downcomer_branch_1);
+    pri_loop_branches.fluid_component_super_vector.push(downcomer_branch_2);
+    pri_loop_branches.fluid_component_super_vector.push(intermediate_heat_exchanger_branch);
+
+    let pressure_change_across_each_branch = 
+        pri_loop_branches.get_pressure_change(MassRate::ZERO);
+
+    
+    let mass_rate_vector 
+        = pri_loop_branches.get_mass_flowrate_across_each_parallel_branch(
+            pressure_change_across_each_branch);
+
+    let (reactor_branch_flow, downcomer_branch_1_flow,
+        downcomer_branch_2_flow, intermediate_heat_exchanger_branch_flow)
+        = (mass_rate_vector[0], mass_rate_vector[1],
+            mass_rate_vector[2], mass_rate_vector[3]);
+
+    return (reactor_branch_flow, downcomer_branch_1_flow,
+        downcomer_branch_2_flow, intermediate_heat_exchanger_branch_flow);
+}
 /// for the gFHR primary loop,
 /// there are four branches that need to be solved for flowrate 
 ///
@@ -108,7 +223,7 @@ pub fn four_branch_pri_loop_flowrates_parallel_debug(
 /// using the tuas_boussinesq_solver library code
 ///
 /// I have tested that even with the change in the code 
-/// the tests still pass: 
+/// that all regression tests still pass: 
 /// 
 /// took 40 mins on my aftershock desktop
 /// note that the coupled 
