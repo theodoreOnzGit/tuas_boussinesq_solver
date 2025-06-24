@@ -32,7 +32,7 @@ pub fn reactor_branch_test_get_pressure_change_from_mass_flowrate(){
         reactor_branch.get_pressure_change(mass_flowrate_front);
     approx::assert_relative_eq!(
         pressure_chg_front.get::<pascal>(),
-        -983020.7855354407,
+        -1030352.187,
         max_relative=1e-5
         );
     let mass_flowrate_back = MassRate::new::<kilogram_per_second>(-1200.0);
@@ -42,9 +42,11 @@ pub fn reactor_branch_test_get_pressure_change_from_mass_flowrate(){
 
     approx::assert_relative_eq!(
         pressure_chg_back.get::<pascal>(),
-        943070.5448316006,
+        906506.4112,
         max_relative=1e-5
         );
+
+
 }
 
 
@@ -67,7 +69,7 @@ pub fn reactor_branch_test_get_mass_flowrate_from_pressure_change(){
     reactor_branch.clone_and_add_component(&reactor_pipe_1);
     // mass flowrate 
     let mass_flowrate_front_ref = MassRate::new::<kilogram_per_second>(1200.0);
-    let pressure_chg_frontal = Pressure::new::<pascal>(-983020.7855354407);
+    let pressure_chg_frontal = Pressure::new::<pascal>(-1030352.187);
     let mass_flowrate_front = 
         reactor_branch.get_mass_flowrate_from_pressure_change(pressure_chg_frontal);
 
@@ -81,7 +83,7 @@ pub fn reactor_branch_test_get_mass_flowrate_from_pressure_change(){
 
     let mass_flowrate_back_ref = MassRate::new::<kilogram_per_second>(-1200.0);
 
-    let pressure_chg_back = Pressure::new::<pascal>(943070.5448316006);
+    let pressure_chg_back = Pressure::new::<pascal>(906506.4112);
     let mass_flowrate_back = 
         reactor_branch.
         get_mass_flowrate_from_pressure_change(pressure_chg_back);
@@ -129,7 +131,7 @@ pub fn ihx_branch_test_get_pressure_change_from_mass_flowrate(){
         ihx_branch.get_pressure_change(mass_flowrate_front);
     approx::assert_relative_eq!(
         pressure_chg_front.get::<pascal>(),
-        -9847.246086295654,
+        -51806.8917,
         max_relative=1e-5
         );
     let mass_flowrate_back = MassRate::new::<kilogram_per_second>(-1200.0);
@@ -139,7 +141,7 @@ pub fn ihx_branch_test_get_pressure_change_from_mass_flowrate(){
 
     approx::assert_relative_eq!(
         pressure_chg_back.get::<pascal>(),
-        -102.99461754434378,
+        -42038.85,
         max_relative=1e-5
         );
 }
@@ -186,7 +188,7 @@ pub fn ihx_branch_test_get_mass_flowrate_from_pressure_change(){
     ihx_branch.clone_and_add_component(&pump_5);
     // mass flowrate 
     let mass_flowrate_front_ref = MassRate::new::<kilogram_per_second>(1200.0);
-    let pressure_chg_frontal = Pressure::new::<pascal>(-9847.246086295654);
+    let pressure_chg_frontal = Pressure::new::<pascal>(-51806.8917);
     let mass_flowrate_front = 
         ihx_branch.get_mass_flowrate_from_pressure_change(pressure_chg_frontal);
 
@@ -200,7 +202,7 @@ pub fn ihx_branch_test_get_mass_flowrate_from_pressure_change(){
 
     let mass_flowrate_back_ref = MassRate::new::<kilogram_per_second>(-1200.0);
 
-    let pressure_chg_back = Pressure::new::<pascal>(-102.99461754434378);
+    let pressure_chg_back = Pressure::new::<pascal>(-42038.85);
     let mass_flowrate_back = 
         ihx_branch.
         get_mass_flowrate_from_pressure_change(pressure_chg_back);

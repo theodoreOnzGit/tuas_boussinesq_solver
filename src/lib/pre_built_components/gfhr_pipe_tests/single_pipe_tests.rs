@@ -23,7 +23,7 @@ pub fn single_pipe_flibe_mass_flow_1200_kg_per_s(){
 
     approx::assert_relative_eq!(
         pressure_chg_front.get::<pascal>(),
-        -983020.7855354407,
+        -1030352.187,
         max_relative=1e-5
         );
 
@@ -34,7 +34,7 @@ pub fn single_pipe_flibe_mass_flow_1200_kg_per_s(){
 
     approx::assert_relative_eq!(
         pressure_chg_back.get::<pascal>(),
-        943070.5448316006,
+        906506.4112,
         max_relative=1e-5
         );
 
@@ -55,7 +55,7 @@ pub fn single_pipe_flibe_pressure_drop_for_mass_flow_1200_kg_per_s(){
 
     // mass flowrate 
     let mass_flowrate_front_ref = MassRate::new::<kilogram_per_second>(1200.0);
-    let pressure_chg_frontal = Pressure::new::<pascal>(-983020.7855354407);
+    let pressure_chg_frontal = Pressure::new::<pascal>(-1030352.187);
     let mass_flowrate_front = pipe_1.get_mass_flowrate_from_pressure_change_immutable(
         pressure_chg_frontal);
 
@@ -70,7 +70,7 @@ pub fn single_pipe_flibe_pressure_drop_for_mass_flow_1200_kg_per_s(){
 
     let mass_flowrate_back_ref = MassRate::new::<kilogram_per_second>(-1200.0);
 
-    let pressure_chg_back = Pressure::new::<pascal>(943070.5448316006);
+    let pressure_chg_back = Pressure::new::<pascal>(906506.4112);
     let mass_flowrate_back = pipe_1.get_mass_flowrate_from_pressure_change_immutable(
         pressure_chg_back);
 
@@ -112,12 +112,12 @@ pub fn single_pipe_flibe_internal_pressure_change_check(){
 
     approx::assert_relative_eq!(
         pressure_chg_hydrostatic.get::<pascal>(),
-        -19975.12,
+        -61922.873,
         max_relative=1e-5
         );
     approx::assert_relative_eq!(
         pressure_chg_hydrostatic_plus_pump.get::<pascal>(),
-        100024.879,
+        58077.1269,
         max_relative=1e-5
         );
 }

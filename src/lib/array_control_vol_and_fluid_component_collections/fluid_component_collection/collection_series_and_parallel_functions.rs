@@ -326,8 +326,12 @@ pub trait FluidComponentCollectionSeriesAssociatedFunctions {
         //
         // But having done so, I want to use the newton raphson method to
         // try and converge this result, hopefully within 30 iterations
+        //
+        // v0.0.9,
+        // reduced tolerance from 1e-15 to 1e-8 to ensure pipes with large flowrates 
+        // such as for flibe, do not get convergence issues
 
-        let mut convergency = SimpleConvergency { eps:1e-15f64, max_iter:70 };
+        let mut convergency = SimpleConvergency { eps:1e-8f64, max_iter:70 };
 
         let mut mass_flowrate_result =
             if forward_flow_true != true {
