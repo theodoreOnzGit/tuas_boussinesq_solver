@@ -25,7 +25,7 @@ pub fn four_branch_pri_loop_flowrates_parallel_debug(
     // downcomer branch 2
     downcomer_pipe_3: &InsulatedFluidComponent,
     // Intermediate heat exchanger branch 
-    fhr_pipe_4: &InsulatedFluidComponent,
+    fhr_pipe_7: &InsulatedFluidComponent,
     _fhr_pri_loop_pump: &NonInsulatedFluidComponent
     ) -> (MassRate, MassRate, MassRate, MassRate,){
 
@@ -71,7 +71,7 @@ pub fn four_branch_pri_loop_flowrates_parallel_debug(
     let mut intermediate_heat_exchanger_branch =
         FluidComponentCollection::new_series_component_collection();
 
-    let mut fhr_pipe_4_clone = fhr_pipe_4.clone();
+    let mut fhr_pipe_4_clone = fhr_pipe_7.clone();
     fhr_pipe_4_clone.set_internal_pressure_source(pump_pressure);
     intermediate_heat_exchanger_branch.clone_and_add_component(&fhr_pipe_4_clone);
     //let mut fhr_pump_clone: NonInsulatedFluidComponent 
@@ -121,7 +121,7 @@ pub fn four_branch_pri_loop_flowrates_parallel_debug_library(
     // downcomer branch 2
     downcomer_pipe_3: &InsulatedFluidComponent,
     // Intermediate heat exchanger branch 
-    fhr_pipe_4: &InsulatedFluidComponent,
+    fhr_pipe_7: &InsulatedFluidComponent,
     _fhr_pri_loop_pump: &NonInsulatedFluidComponent
     ) -> (MassRate, MassRate, MassRate, MassRate,){
 
@@ -167,7 +167,7 @@ pub fn four_branch_pri_loop_flowrates_parallel_debug_library(
     let mut intermediate_heat_exchanger_branch =
         FluidComponentCollection::new_series_component_collection();
 
-    let mut fhr_pipe_4_clone = fhr_pipe_4.clone();
+    let mut fhr_pipe_4_clone = fhr_pipe_7.clone();
     fhr_pipe_4_clone.set_internal_pressure_source(pump_pressure);
     intermediate_heat_exchanger_branch.clone_and_add_component(&fhr_pipe_4_clone);
     //let mut fhr_pump_clone: NonInsulatedFluidComponent 

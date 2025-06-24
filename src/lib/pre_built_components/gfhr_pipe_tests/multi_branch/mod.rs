@@ -13,7 +13,7 @@ pub mod single_branch_solvers;
 use uom::si::{mass_rate::kilogram_per_second, pressure::kilopascal};
 use uom::si::thermodynamic_temperature::degree_celsius;
 
-use crate::pre_built_components::gfhr_pipe_tests::components::{new_downcomer_pipe_2, new_downcomer_pipe_3, new_fhr_pipe_7_old, new_fhr_pri_loop_pump_8, new_reactor_vessel_pipe_1};
+use crate::pre_built_components::gfhr_pipe_tests::components::{new_downcomer_pipe_2, new_downcomer_pipe_3, new_fhr_pipe_7_old, new_fhr_pri_loop_pump_9, new_reactor_vessel_pipe_1};
 use crate::pre_built_components::gfhr_pipe_tests::multi_branch::fluid_mechanics_solvers::four_branch_pri_loop_flowrates_parallel_debug_library;
 use uom::si::f64::*;
 
@@ -43,8 +43,8 @@ pub fn test_fhr_four_branch_solver_debug(){
     let reactor_pipe_1 = new_reactor_vessel_pipe_1(initial_temperature);
     let downcomer_pipe_2 = new_downcomer_pipe_2(initial_temperature);
     let downcomer_pipe_3 = new_downcomer_pipe_3(initial_temperature);
-    let fhr_pipe_4 = new_fhr_pipe_7_old(initial_temperature);
-    let fhr_pri_loop_pump = new_fhr_pri_loop_pump_8(initial_temperature);
+    let fhr_pipe_7 = new_fhr_pipe_7_old(initial_temperature);
+    let fhr_pri_loop_pump = new_fhr_pri_loop_pump_9(initial_temperature);
 
 
     let pump_pressure = Pressure::new::<kilopascal>(15.0);
@@ -56,7 +56,7 @@ pub fn test_fhr_four_branch_solver_debug(){
             &reactor_pipe_1, 
             &downcomer_pipe_2, 
             &downcomer_pipe_3, 
-            &fhr_pipe_4, 
+            &fhr_pipe_7, 
             &fhr_pri_loop_pump);
 
     dbg!(&(reactor_flow, downcomer_branch_1_flow,
@@ -98,8 +98,8 @@ pub fn test_fhr_four_branch_solver_debug_library(){
     let reactor_pipe_1 = new_reactor_vessel_pipe_1(initial_temperature);
     let downcomer_pipe_2 = new_downcomer_pipe_2(initial_temperature);
     let downcomer_pipe_3 = new_downcomer_pipe_3(initial_temperature);
-    let fhr_pipe_4 = new_fhr_pipe_7_old(initial_temperature);
-    let fhr_pri_loop_pump = new_fhr_pri_loop_pump_8(initial_temperature);
+    let fhr_pipe_7 = new_fhr_pipe_7_old(initial_temperature);
+    let fhr_pri_loop_pump = new_fhr_pri_loop_pump_9(initial_temperature);
 
 
     let pump_pressure = Pressure::new::<kilopascal>(15.0);
@@ -111,7 +111,7 @@ pub fn test_fhr_four_branch_solver_debug_library(){
             &reactor_pipe_1, 
             &downcomer_pipe_2, 
             &downcomer_pipe_3, 
-            &fhr_pipe_4, 
+            &fhr_pipe_7, 
             &fhr_pri_loop_pump);
 
     dbg!(&(reactor_flow, downcomer_branch_1_flow,
