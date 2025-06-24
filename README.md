@@ -23,7 +23,11 @@ between 7.105e-13 kg/s and -50.059 kg/s. Thus, with higher
 error tolerance set, the brent Dekker algorithm yielded a larger error.
 After some reading of the Brent Dekker algorithm, I found that the 
 switch between secant method and bisection method was controlled by the 
-tolerance itself. For a more stable solution method, 
+tolerance itself. For a more stable solution method, I added the 
+regula falsi method to ensure that the oscillations stop. This is 
+because Brent Dekker uses secant method and inverse quadratic method.
+It may cause oscillations in some cases. Regula falsi has proven more 
+stable.
 
 
 The crate contains many useful traits and examples of how to use 
