@@ -35,7 +35,7 @@ use uom::si::f64::*;
 /// function appears to not be smooth in that regard
 ///
 #[test]
-pub fn test_fhr_four_branch_solver(){
+pub fn test_fhr_four_branch_solver_debug(){
 
     let initial_temperature = 
         ThermodynamicTemperature::new::<degree_celsius>(500.0);
@@ -64,22 +64,22 @@ pub fn test_fhr_four_branch_solver(){
 
     approx::assert_relative_eq!(
         reactor_flow.get::<kilogram_per_second>(),
-        -983020.7855354407,
+        -149.022,
         max_relative=1e-5
         );
     approx::assert_relative_eq!(
         downcomer_branch_1_flow.get::<kilogram_per_second>(),
-        -983020.7855354407,
+        -1.05030,
         max_relative=1e-5
         );
     approx::assert_relative_eq!(
         downcomer_branch_2_flow.get::<kilogram_per_second>(),
-        -983020.7855354407,
+        -1.05030,
         max_relative=1e-5
         );
     approx::assert_relative_eq!(
         intermediate_heat_exchanger_branch_flow.get::<kilogram_per_second>(),
-        -983020.7855354407,
+        151.1227,
         max_relative=1e-5
         );
 }
