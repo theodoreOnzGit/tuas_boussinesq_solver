@@ -694,19 +694,26 @@ pub fn calculate_pressure_change_using_guessed_branch_mass_flowrate_fhr_sim_v1_c
             let debugging = true; 
             if debugging {
 
-                //check if the absolute value of mass flowrate error is 
-                // less than 1e-12 kg/s 
-                // if so, just return zero
+                // I tried manually adjusting the error down to zero 
+                // here... 
                 //
+                // but the oscillations continue, and are made bigger with 
+                // bigger tolernaces (10:40am 24 jun 2025)
+                ////check if the absolute value of mass flowrate error is 
+                //// less than 1e-12 kg/s 
+                //// if so, just return zero
+                ////
 
-                if mass_flowrate_error.get::<kilogram_per_second>().abs() <1e-9 {
-                    return 0.0;
-                } else {
+                //if mass_flowrate_error.get::<kilogram_per_second>().abs() <1e-9 {
+                //    return 0.0;
+                //} else {
 
-                    return mass_flowrate_error.get::<kilogram_per_second>();
-                }
+                //    return mass_flowrate_error.get::<kilogram_per_second>();
+                //}
 
 
+
+                return mass_flowrate_error.get::<kilogram_per_second>();
 
 
             } else {
