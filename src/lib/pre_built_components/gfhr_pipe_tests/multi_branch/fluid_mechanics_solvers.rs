@@ -884,6 +884,8 @@ pub fn calculate_pressure_change_using_guessed_branch_mass_flowrate_fhr_sim_v1_c
 
         match pressure_change_pascals_result_user_specified_flow {
             Ok(pressure_change_pascals_user_specified_flow) => {
+                // note: this method is successful... I'm able to give the 
+                // pressure change required across all branches
                 dbg!("inverse quadratic algo successful");
                 return Pressure::new::<pascal>(pressure_change_pascals_user_specified_flow);
             },
