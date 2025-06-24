@@ -1,7 +1,7 @@
 use super::components::new_reactor_vessel_pipe_1;
 use crate::array_control_vol_and_fluid_component_collections::fluid_component_collection::fluid_component_collection::{FluidComponentCollection, FluidComponentCollectionMethods};
 use crate::array_control_vol_and_fluid_component_collections::fluid_component_collection::fluid_component_traits::FluidComponentTrait;
-use crate::pre_built_components::gfhr_pipe_tests::components::{new_fhr_pipe_4, new_fhr_pri_loop_pump};
+use crate::pre_built_components::gfhr_pipe_tests::components::{new_fhr_pipe_7_old, new_fhr_pri_loop_pump_8};
 use uom::si::mass_rate::kilogram_per_second;
 use uom::si::pressure::{kilopascal, pascal};
 use uom::si::thermodynamic_temperature::degree_celsius;
@@ -110,8 +110,8 @@ pub fn ihx_branch_test_get_pressure_change_from_mass_flowrate(){
 
     let initial_temperature = 
         ThermodynamicTemperature::new::<degree_celsius>(500.0);
-    let pipe_4 = new_fhr_pipe_4(initial_temperature);
-    let mut pump_5 = new_fhr_pri_loop_pump(initial_temperature);
+    let pipe_4 = new_fhr_pipe_7_old(initial_temperature);
+    let mut pump_5 = new_fhr_pri_loop_pump_8(initial_temperature);
     let pump_pressure = Pressure::new::<kilopascal>(15.0);
 
     pump_5.set_internal_pressure_source(pump_pressure);
@@ -176,8 +176,8 @@ pub fn ihx_branch_test_get_mass_flowrate_from_pressure_change(){
     let initial_temperature = 
         ThermodynamicTemperature::new::<degree_celsius>(500.0);
 
-    let pipe_4 = new_fhr_pipe_4(initial_temperature);
-    let mut pump_5 = new_fhr_pri_loop_pump(initial_temperature);
+    let pipe_4 = new_fhr_pipe_7_old(initial_temperature);
+    let mut pump_5 = new_fhr_pri_loop_pump_8(initial_temperature);
     let pump_pressure = Pressure::new::<kilopascal>(15.0);
     pump_5.set_internal_pressure_source(pump_pressure);
 

@@ -265,7 +265,12 @@ pub fn new_downcomer_pipe_3(initial_temperature: ThermodynamicTemperature) -> In
 /// https://kairospower.com/generic-fhr-core-model/
 ///
 /// we can scale it down
-pub fn new_fhr_pipe_4(initial_temperature: ThermodynamicTemperature) -> InsulatedFluidComponent {
+///
+/// note: i found that this had a flow area of 20 square meters... way too 
+/// big
+///
+/// Nevertheless, this component was useful for debugging
+pub fn new_fhr_pipe_7_old(initial_temperature: ThermodynamicTemperature) -> InsulatedFluidComponent {
     let ambient_temperature = ThermodynamicTemperature::new::<degree_celsius>(20.0);
     let fluid_pressure = Pressure::new::<atmosphere>(1.0);
     let solid_pressure = Pressure::new::<atmosphere>(1.0);
@@ -320,7 +325,7 @@ pub fn new_fhr_pipe_4(initial_temperature: ThermodynamicTemperature) -> Insulate
 
 
 /// creates a new pump component for the primary loop
-pub fn new_fhr_pri_loop_pump(initial_temperature: ThermodynamicTemperature) -> NonInsulatedFluidComponent {
+pub fn new_fhr_pri_loop_pump_8(initial_temperature: ThermodynamicTemperature) -> NonInsulatedFluidComponent {
     let ambient_temperature = ThermodynamicTemperature::new::<degree_celsius>(20.0);
     let fluid_pressure = Pressure::new::<atmosphere>(1.0);
     let solid_pressure = Pressure::new::<atmosphere>(1.0);

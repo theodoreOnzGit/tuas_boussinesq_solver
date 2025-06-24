@@ -49,6 +49,7 @@
 extern crate roots;
 use peroxide::fuga::Algorithm;
 use roots::find_root_brent;
+use roots::find_root_regula_falsi;
 use roots::SimpleConvergency;
 use uom::num_traits::ToPrimitive;
 use uom::si::f64::{Pressure, MassRate};
@@ -742,7 +743,8 @@ pub trait FluidComponentSuperCollectionParallelAssociatedFunctions {
     /// flowrate through a parallel collection of
     /// fluid pipes or components
     ///
-    /// TODO: needs work and testing, doesn't work now
+    /// v0.0.9: added regula falsi algorithm to ensure 
+    /// solver is more robust
     fn calculate_pressure_change_from_mass_flowrate(
         mass_flowrate: MassRate,
         fluid_component_collection_vector: 
@@ -1316,6 +1318,33 @@ pub trait FluidComponentSuperCollectionParallelAssociatedFunctions {
                 user_specified_pressure_lower_bound.value,
                 &pressure_change_from_mass_flowrate_root,
                 &mut convergency);
+
+        match pressure_change_pascals_result_user_specified_flow {
+            Ok(pressure_change_pascals_user_specified_flow) => {
+                return Pressure::new::<pascal>(pressure_change_pascals_user_specified_flow);
+            },
+            Err(_error_msg) => {
+                dbg!("Brent Dekker algo failed, trying regula falsi");
+            },
+        }
+
+        // try the regula falsi
+
+        pressure_change_pascals_result_user_specified_flow = 
+            find_root_regula_falsi(
+                user_specified_pressure_upper_bound.value,
+                user_specified_pressure_lower_bound.value,
+                &pressure_change_from_mass_flowrate_root,
+                &mut convergency);
+
+        match pressure_change_pascals_result_user_specified_flow {
+            Ok(pressure_change_pascals_user_specified_flow) => {
+                return Pressure::new::<pascal>(pressure_change_pascals_user_specified_flow);
+            },
+            Err(_error_msg) => {
+                dbg!("Regula falsi algo failed");
+            },
+        }
 
         let pressure_change_pascals_user_specified_flow: f64 = 
             pressure_change_pascals_result_user_specified_flow.unwrap();

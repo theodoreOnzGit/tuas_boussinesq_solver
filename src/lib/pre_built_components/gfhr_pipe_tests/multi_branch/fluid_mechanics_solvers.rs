@@ -15,6 +15,7 @@ use uom::si::f64::*;
 /// there are four branches that need to be solved for flowrate 
 ///
 /// this code handles the solution procedure
+/// using custom code
 pub fn four_branch_pri_loop_flowrates_parallel_debug(
     pump_pressure: Pressure,
     // reactor branch
@@ -25,7 +26,7 @@ pub fn four_branch_pri_loop_flowrates_parallel_debug(
     downcomer_pipe_3: &InsulatedFluidComponent,
     // Intermediate heat exchanger branch 
     fhr_pipe_4: &InsulatedFluidComponent,
-    fhr_pri_loop_pump: &NonInsulatedFluidComponent
+    _fhr_pri_loop_pump: &NonInsulatedFluidComponent
     ) -> (MassRate, MassRate, MassRate, MassRate,){
 
     // note: this crashes due to non convergency issues...
@@ -100,6 +101,106 @@ pub fn four_branch_pri_loop_flowrates_parallel_debug(
     return (reactor_branch_flow, downcomer_branch_1_flow,
         downcomer_branch_2_flow, intermediate_heat_exchanger_branch_flow);
 }
+/// for the gFHR primary loop,
+/// there are four branches that need to be solved for flowrate 
+///
+/// this code handles the solution procedure
+/// using the tuas_boussinesq_solver library code
+pub fn four_branch_pri_loop_flowrates_parallel_debug_library(
+    pump_pressure: Pressure,
+    // reactor branch
+    reactor_pipe_1: &InsulatedFluidComponent,
+    // downcomer branch 1
+    downcomer_pipe_2: &InsulatedFluidComponent,
+    // downcomer branch 2
+    downcomer_pipe_3: &InsulatedFluidComponent,
+    // Intermediate heat exchanger branch 
+    fhr_pipe_4: &InsulatedFluidComponent,
+    _fhr_pri_loop_pump: &NonInsulatedFluidComponent
+    ) -> (MassRate, MassRate, MassRate, MassRate,){
+
+    // note: this crashes due to non convergency issues...
+    //thread '<unnamed>' panicked at C:\Users\fifad\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\tuas_boussinesq_solver-0.0.7\src\lib\array_control_vol_an
+    //d_fluid_component_collections\fluid_component_collection\collection_series_and_parallel_functions.rs:444:74:
+    //called `Result::unwrap()` on an `Err` value: NoConvergency
+    //note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+    //
+    //
+    //now, even by having more flowrate options, I'm still getting a no 
+    //convergency error especially once pump pressure exceeds 
+    // 10.0 - 13.0 Pa, and there is actually flowrate
+    // I'm getting flowrates in excess of 10 kg/s 
+    // 554 kg/s, and thats okay 
+    //
+    // but then I get NoConvergency errors
+
+    let mut reactor_branch = 
+        FluidComponentCollection::new_series_component_collection();
+
+    reactor_branch.clone_and_add_component(reactor_pipe_1);
+
+
+
+
+    let mut downcomer_branch_1 = 
+        FluidComponentCollection::new_series_component_collection();
+
+    downcomer_branch_1.clone_and_add_component(downcomer_pipe_2);
+
+
+
+
+    let mut downcomer_branch_2 = 
+        FluidComponentCollection::new_series_component_collection();
+
+    downcomer_branch_2.clone_and_add_component(downcomer_pipe_3);
+
+
+
+
+    let mut intermediate_heat_exchanger_branch =
+        FluidComponentCollection::new_series_component_collection();
+
+    let mut fhr_pipe_4_clone = fhr_pipe_4.clone();
+    fhr_pipe_4_clone.set_internal_pressure_source(pump_pressure);
+    intermediate_heat_exchanger_branch.clone_and_add_component(&fhr_pipe_4_clone);
+    //let mut fhr_pump_clone: NonInsulatedFluidComponent 
+    //    = fhr_pri_loop_pump.clone();
+    //fhr_pump_clone.set_internal_pressure_source(pump_pressure);
+    //intermediate_heat_exchanger_branch.clone_and_add_component(&fhr_pump_clone);
+
+
+    
+
+    let mut pri_loop_branches = 
+        FluidComponentSuperCollection::default();
+
+    pri_loop_branches.set_orientation_to_parallel();
+
+    pri_loop_branches.fluid_component_super_vector.push(reactor_branch);
+    pri_loop_branches.fluid_component_super_vector.push(downcomer_branch_1);
+    pri_loop_branches.fluid_component_super_vector.push(downcomer_branch_2);
+    pri_loop_branches.fluid_component_super_vector.push(intermediate_heat_exchanger_branch);
+
+    let pressure_change_across_each_branch = 
+        pri_loop_branches.get_pressure_change(MassRate::ZERO);
+
+    
+    let mass_rate_vector 
+        = pri_loop_branches.get_mass_flowrate_across_each_parallel_branch(
+            pressure_change_across_each_branch);
+
+    let (reactor_branch_flow, downcomer_branch_1_flow,
+        downcomer_branch_2_flow, intermediate_heat_exchanger_branch_flow)
+        = (mass_rate_vector[0], mass_rate_vector[1],
+            mass_rate_vector[2], mass_rate_vector[3]);
+
+    return (reactor_branch_flow, downcomer_branch_1_flow,
+        downcomer_branch_2_flow, intermediate_heat_exchanger_branch_flow);
+}
+
+
+
 // debug log: 
 // 
 // thought it's a fluid properties bug
