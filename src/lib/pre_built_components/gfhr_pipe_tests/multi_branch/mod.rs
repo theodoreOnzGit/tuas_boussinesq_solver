@@ -89,7 +89,9 @@ pub fn test_fhr_four_branch_solver_pri_and_intrmd_loop(){
     let intrmd_loop_pump_pressure = Pressure::new::<kilopascal>(-15.0);
 
     let (reactor_flow, downcomer_branch_1_flow, 
-        downcomer_branch_2_flow, intermediate_heat_exchanger_branch_flow)
+        downcomer_branch_2_flow, intermediate_heat_exchanger_branch_flow,
+        intrmd_loop_ihx_br_flow,
+        intrmd_loop_steam_gen_br_flow)
         = four_branch_pri_and_intermediate_loop(
             pri_loop_pump_pressure, 
             intrmd_loop_pump_pressure, 
@@ -111,8 +113,10 @@ pub fn test_fhr_four_branch_solver_pri_and_intrmd_loop(){
             &fhr_steam_generator_shell_side_14, 
             &fhr_pipe_13);
 
-    dbg!(&(reactor_flow, downcomer_branch_1_flow,
-            downcomer_branch_2_flow, intermediate_heat_exchanger_branch_flow
+    dbg!(&(reactor_flow, downcomer_branch_1_flow, 
+            downcomer_branch_2_flow, intermediate_heat_exchanger_branch_flow,
+            intrmd_loop_ihx_br_flow,
+            intrmd_loop_steam_gen_br_flow    
     ));
 
     approx::assert_relative_eq!(
@@ -132,6 +136,16 @@ pub fn test_fhr_four_branch_solver_pri_and_intrmd_loop(){
         );
     approx::assert_relative_eq!(
         intermediate_heat_exchanger_branch_flow.get::<kilogram_per_second>(),
+        149.9704,
+        max_relative=1e-5
+        );
+    approx::assert_relative_eq!(
+        intrmd_loop_ihx_br_flow.get::<kilogram_per_second>(),
+        149.9704,
+        max_relative=1e-5
+        );
+    approx::assert_relative_eq!(
+        intrmd_loop_steam_gen_br_flow.get::<kilogram_per_second>(),
         149.9704,
         max_relative=1e-5
         );

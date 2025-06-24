@@ -40,102 +40,150 @@ pub fn four_branch_pri_and_intermediate_loop(
     fhr_pipe_17: &InsulatedFluidComponent,
     fhr_pipe_12: &InsulatedFluidComponent,
     // intermediate loop steam generator side
-    fhr_int_loop_pump_16: &NonInsulatedFluidComponent,
+    fhr_intrmd_loop_pump_16: &NonInsulatedFluidComponent,
     fhr_pipe_15: &InsulatedFluidComponent,
     fhr_steam_generator_shell_side_14: &NonInsulatedFluidComponent,
     fhr_pipe_13: &InsulatedFluidComponent,
 
-    ) -> (MassRate, MassRate, MassRate, MassRate,){
+    ) -> (MassRate, MassRate, MassRate, MassRate, MassRate, MassRate){
 
-    // note: this crashes due to non convergency issues...
-    //thread '<unnamed>' panicked at C:\Users\fifad\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\tuas_boussinesq_solver-0.0.7\src\lib\array_control_vol_an
-    //d_fluid_component_collections\fluid_component_collection\collection_series_and_parallel_functions.rs:444:74:
-    //called `Result::unwrap()` on an `Err` value: NoConvergency
-    //note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
-    //
-    //
-    //now, even by having more flowrate options, I'm still getting a no 
-    //convergency error especially once pump pressure exceeds 
-    // 10.0 - 13.0 Pa, and there is actually flowrate
-    // I'm getting flowrates in excess of 10 kg/s 
-    // 554 kg/s, and thats okay 
-    //
-    // but then I get NoConvergency errors
+        // pri loop
 
-    let mut reactor_branch = 
-        FluidComponentCollection::new_series_component_collection();
+        let mut reactor_branch = 
+            FluidComponentCollection::new_series_component_collection();
 
-    reactor_branch.clone_and_add_component(reactor_pipe_1);
+        reactor_branch.clone_and_add_component(reactor_pipe_1);
 
 
 
 
-    let mut downcomer_branch_1 = 
-        FluidComponentCollection::new_series_component_collection();
+        let mut pri_downcomer_branch_1 = 
+            FluidComponentCollection::new_series_component_collection();
 
-    downcomer_branch_1.clone_and_add_component(downcomer_pipe_2);
-
-
-
-
-    let mut downcomer_branch_2 = 
-        FluidComponentCollection::new_series_component_collection();
-
-    downcomer_branch_2.clone_and_add_component(downcomer_pipe_3);
+        pri_downcomer_branch_1.clone_and_add_component(downcomer_pipe_2);
 
 
 
 
-    let mut intermediate_heat_exchanger_branch =
-        FluidComponentCollection::new_series_component_collection();
+        let mut pri_downcomer_branch_2 = 
+            FluidComponentCollection::new_series_component_collection();
 
-    let mut fhr_pri_loop_pump_9_with_pressure_set = fhr_pri_loop_pump_9.clone();
-    fhr_pri_loop_pump_9_with_pressure_set.set_internal_pressure_source(pri_loop_pump_pressure);
-    let ihx_shell_side_6_clone = ihx_sthe_6.get_clone_of_shell_side_fluid_component();
+        pri_downcomer_branch_2.clone_and_add_component(downcomer_pipe_3);
 
-    intermediate_heat_exchanger_branch.clone_and_add_component(
-        fhr_pipe_11);
-    intermediate_heat_exchanger_branch.clone_and_add_component(
-        fhr_pipe_10);
-    intermediate_heat_exchanger_branch.clone_and_add_component(
-        &fhr_pri_loop_pump_9_with_pressure_set);
-    intermediate_heat_exchanger_branch.clone_and_add_component(
-        fhr_pipe_8);
-    intermediate_heat_exchanger_branch.clone_and_add_component(
-        fhr_pipe_7);
-    intermediate_heat_exchanger_branch.clone_and_add_component(
-        &ihx_shell_side_6_clone);
-    intermediate_heat_exchanger_branch.clone_and_add_component(
-        fhr_pipe_5);
-    intermediate_heat_exchanger_branch.clone_and_add_component(
-        fhr_pipe_4);
 
-    let mut pri_loop_branches = 
-        FluidComponentSuperCollection::default();
 
-    pri_loop_branches.set_orientation_to_parallel();
 
-    pri_loop_branches.fluid_component_super_vector.push(reactor_branch);
-    pri_loop_branches.fluid_component_super_vector.push(downcomer_branch_1);
-    pri_loop_branches.fluid_component_super_vector.push(downcomer_branch_2);
+        let mut pri_loop_intermediate_heat_exchanger_branch =
+            FluidComponentCollection::new_series_component_collection();
 
-    pri_loop_branches.fluid_component_super_vector.push(intermediate_heat_exchanger_branch);
+        let mut fhr_pri_loop_pump_9_with_pressure_set = fhr_pri_loop_pump_9.clone();
+        fhr_pri_loop_pump_9_with_pressure_set.set_internal_pressure_source(pri_loop_pump_pressure);
+        let ihx_shell_side_6_clone = ihx_sthe_6.get_clone_of_shell_side_fluid_component();
 
-    let pressure_change_across_each_branch = 
-        pri_loop_branches.get_pressure_change(MassRate::ZERO);
+        pri_loop_intermediate_heat_exchanger_branch.clone_and_add_component(
+            fhr_pipe_11);
+        pri_loop_intermediate_heat_exchanger_branch.clone_and_add_component(
+            fhr_pipe_10);
+        pri_loop_intermediate_heat_exchanger_branch.clone_and_add_component(
+            &fhr_pri_loop_pump_9_with_pressure_set);
+        pri_loop_intermediate_heat_exchanger_branch.clone_and_add_component(
+            fhr_pipe_8);
+        pri_loop_intermediate_heat_exchanger_branch.clone_and_add_component(
+            fhr_pipe_7);
+        pri_loop_intermediate_heat_exchanger_branch.clone_and_add_component(
+            &ihx_shell_side_6_clone);
+        pri_loop_intermediate_heat_exchanger_branch.clone_and_add_component(
+            fhr_pipe_5);
+        pri_loop_intermediate_heat_exchanger_branch.clone_and_add_component(
+            fhr_pipe_4);
 
-    
-    let mass_rate_vector 
-        = pri_loop_branches.get_mass_flowrate_across_each_parallel_branch(
-            pressure_change_across_each_branch);
 
-    let (reactor_branch_flow, downcomer_branch_1_flow,
-        downcomer_branch_2_flow, intermediate_heat_exchanger_branch_flow)
-        = (mass_rate_vector[0], mass_rate_vector[1],
-            mass_rate_vector[2], mass_rate_vector[3]);
 
-    return (reactor_branch_flow, downcomer_branch_1_flow,
-        downcomer_branch_2_flow, intermediate_heat_exchanger_branch_flow);
+
+        // intermediate loop
+        // ihx side
+
+        let mut intrmd_loop_intermediate_heat_exchanger_branch =
+            FluidComponentCollection::new_series_component_collection();
+
+        intrmd_loop_intermediate_heat_exchanger_branch.clone_and_add_component(
+            fhr_pipe_17);
+        intrmd_loop_intermediate_heat_exchanger_branch.clone_and_add_component(
+            &ihx_sthe_6.get_clone_of_tube_side_parallel_tube_fluid_component());
+        intrmd_loop_intermediate_heat_exchanger_branch.clone_and_add_component(
+            fhr_pipe_12);
+
+        // intermediate loop
+        // steam generator side
+
+        let mut intrmd_loop_steam_generator_branch =
+            FluidComponentCollection::new_series_component_collection();
+
+        let mut fhr_intrmd_loop_pump_16_with_pressure_set = 
+            fhr_intrmd_loop_pump_16.clone();
+        fhr_intrmd_loop_pump_16_with_pressure_set
+            .set_internal_pressure_source(intrmd_loop_pump_pressure);
+        intrmd_loop_steam_generator_branch.clone_and_add_component(
+            &fhr_intrmd_loop_pump_16_with_pressure_set);
+        intrmd_loop_steam_generator_branch.clone_and_add_component(
+            fhr_pipe_15);
+        intrmd_loop_steam_generator_branch.clone_and_add_component(
+            fhr_steam_generator_shell_side_14);
+        intrmd_loop_steam_generator_branch.clone_and_add_component(
+            fhr_pipe_13);
+
+
+        // calculate pri loop side fluid mechanics
+        let mut pri_loop_branches = 
+            FluidComponentSuperCollection::default();
+
+        pri_loop_branches.set_orientation_to_parallel();
+
+        pri_loop_branches.fluid_component_super_vector.push(reactor_branch);
+        pri_loop_branches.fluid_component_super_vector.push(pri_downcomer_branch_1);
+        pri_loop_branches.fluid_component_super_vector.push(pri_downcomer_branch_2);
+
+        pri_loop_branches.fluid_component_super_vector.push(pri_loop_intermediate_heat_exchanger_branch);
+
+        let pressure_change_across_each_branch_pri_loop = 
+            pri_loop_branches.get_pressure_change(MassRate::ZERO);
+
+
+        let pri_loop_mass_rate_vector 
+            = pri_loop_branches.get_mass_flowrate_across_each_parallel_branch(
+                pressure_change_across_each_branch_pri_loop);
+
+        let (reactor_branch_flow, downcomer_branch_1_flow,
+            downcomer_branch_2_flow, intermediate_heat_exchanger_branch_flow)
+            = (pri_loop_mass_rate_vector[0], pri_loop_mass_rate_vector[1],
+                pri_loop_mass_rate_vector[2], pri_loop_mass_rate_vector[3]);
+
+        // calculate intermediate loop side fluid mechanics
+
+        let mut intrmd_loop_branches = 
+            FluidComponentSuperCollection::default();
+
+        intrmd_loop_branches.set_orientation_to_parallel();
+
+        intrmd_loop_branches.fluid_component_super_vector.push(
+            intrmd_loop_intermediate_heat_exchanger_branch);
+        intrmd_loop_branches.fluid_component_super_vector.push(
+            intrmd_loop_steam_generator_branch);
+
+        let pressure_change_across_each_branch_intrmd_loop = 
+            intrmd_loop_branches.get_pressure_change(MassRate::ZERO);
+
+        let intrmd_loop_mass_rate_vector 
+            = intrmd_loop_branches.get_mass_flowrate_across_each_parallel_branch(
+                pressure_change_across_each_branch_intrmd_loop);
+        let (intrmd_loop_ihx_br_flow, intrmd_loop_steam_gen_br_flow) = 
+            (intrmd_loop_mass_rate_vector[0],
+             intrmd_loop_mass_rate_vector[1]);
+
+
+        return (reactor_branch_flow, downcomer_branch_1_flow,
+            downcomer_branch_2_flow, intermediate_heat_exchanger_branch_flow,
+            intrmd_loop_ihx_br_flow, intrmd_loop_steam_gen_br_flow);
 }
 /// for the gFHR primary loop,
 /// there are four branches that need to be solved for flowrate 
