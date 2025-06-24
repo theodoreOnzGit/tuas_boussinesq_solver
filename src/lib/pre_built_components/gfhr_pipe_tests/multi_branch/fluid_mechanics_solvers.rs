@@ -1,19 +1,13 @@
-use crate::array_control_vol_and_fluid_component_collections::fluid_component_collection::collection_series_and_parallel_functions::FluidComponentCollectionSeriesAssociatedFunctions;
-use crate::array_control_vol_and_fluid_component_collections::fluid_component_collection::fluid_component::FluidComponent;
 use crate::array_control_vol_and_fluid_component_collections::fluid_component_collection::fluid_component_collection::FluidComponentCollection;
 use crate::array_control_vol_and_fluid_component_collections::fluid_component_collection::fluid_component_collection::FluidComponentCollectionMethods;
 use crate::array_control_vol_and_fluid_component_collections::fluid_component_collection::fluid_component_super_collection::FluidComponentSuperCollection;
 use crate::array_control_vol_and_fluid_component_collections::fluid_component_collection::fluid_component_traits::FluidComponentTrait;
 use crate::array_control_vol_and_fluid_component_collections::fluid_component_collection::super_collection_series_and_parallel_functions::FluidComponentSuperCollectionParallelAssociatedFunctions;
 use crate::pre_built_components::gfhr_pipe_tests::multi_branch::multi_branch_solvers::calculate_pressure_change_using_guessed_branch_mass_flowrate_fhr_sim_v1_custom;
+use crate::pre_built_components::gfhr_pipe_tests::multi_branch::single_branch_solvers::calculate_mass_flowrate_from_pressure_change_for_single_branch_fhr_sim_custom;
 use crate::pre_built_components::insulated_pipes_and_fluid_components::InsulatedFluidComponent;
 use crate::pre_built_components::non_insulated_fluid_components::NonInsulatedFluidComponent;
-use roots::find_root_brent;
-use roots::find_root_inverse_quadratic;
-use roots::find_root_regula_falsi;
-use roots::SimpleConvergency;
 use uom::si::mass_rate::kilogram_per_second;
-use uom::si::pressure::pascal;
 use uom::ConstZero;
 use uom::si::f64::*;
 
@@ -332,9 +326,25 @@ pub fn calculate_iterative_mass_flowrate_across_branches_for_fhr_sim_v1(
                     dbg!("calculating mass flowrate for...");
                     dbg!(&fluid_component_collection);
 
-                    let fluid_component_mass_flowrate = 
-                        fluid_component_collection.get_mass_flowrate_from_pressure_change(
-                            pressure_change);
+                    // let me get the vector of fluid component 
+                    // for single branch first 
+                    let fluid_component_vector = 
+                        fluid_component_collection
+                        .get_immutable_fluid_component_vector();
+                    let fluid_component_mass_flowrate: MassRate;
+
+                    if !debugging {
+                        fluid_component_mass_flowrate = 
+                            fluid_component_collection.get_mass_flowrate_from_pressure_change(
+                                pressure_change);
+                    } else {
+                        fluid_component_mass_flowrate = 
+                            calculate_mass_flowrate_from_pressure_change_for_single_branch_fhr_sim_custom(
+                                pressure_change, 
+                                &fluid_component_vector);
+
+                    };
+
                     dbg!(&fluid_component_mass_flowrate);
 
                     mass_flowrate_vector[index] = 
@@ -351,250 +361,8 @@ pub fn calculate_iterative_mass_flowrate_across_branches_for_fhr_sim_v1(
         }
 
 
-        // if flow is non zero, then we will have to deal with 3 bounding cases
-        // so that we can guess the bounds of root finding
-        //
-        // First case is where 
-        // the internal circulation effect >> external flow 
-        //
-        // This will be similar to the zero pressure mass flowrate algorithm
-        //
-        // in that one can simply apply that mass flowrate
-        // to all the branches, 
-        //
-        // assume that the pressure change will lie somewhere between
-        // the pressure changes obtained in the various branches
-        //
-        // and use the maximum and minimum pressure changes to obtain bounds
-        // and the solution to the equation
-        //
-        // For this to work, we know that the scale of the internal circulation
-        // driving force is perhaps (max pressure change - min pressure change)
-        //
-        // if the maximum pressure loss caused by the flow is within 10% of
-        // this driving force, i can say that case 1 applies. This is just
-        // a guestimate
-        //
-        // So let's first get the zero mass flowrate pressure force measured
-
-
-        // step 1: let's first get the pressure changes at
-        // mass flowrate = 0.0
-        //
-
-
-        let zero_flow_pressure_change_est_vector = 
-            <FluidComponentSuperCollection as FluidComponentSuperCollectionParallelAssociatedFunctions>::
-            obtain_pressure_estimate_vector(
-                zero_mass_flowrate, 
-                &fluid_component_collection_vector);
-
-
-
-        let max_pressure_change_at_zero_flow = 
-            <FluidComponentSuperCollection as FluidComponentSuperCollectionParallelAssociatedFunctions>::
-            obtain_maximum_pressure_from_vector(
-                &zero_flow_pressure_change_est_vector);
-
-        let min_pressure_change_at_zero_flow = 
-            <FluidComponentSuperCollection as FluidComponentSuperCollectionParallelAssociatedFunctions>::
-            obtain_minimum_pressure_from_vector(
-                &zero_flow_pressure_change_est_vector);
-
-        let internal_circulation_driving_force_scale = 
-            max_pressure_change_at_zero_flow -
-            min_pressure_change_at_zero_flow;
-
-        // step 2: now i'll apply the user_specified flowrate to all the branches
-        // and calculate pressure loss
-
-        let user_specified_flow_pressure_loss_est_vector = 
-            <FluidComponentSuperCollection as FluidComponentSuperCollectionParallelAssociatedFunctions>::
-            obtain_pressure_loss_estimate_vector(
-                user_requested_mass_flowrate, 
-                &fluid_component_collection_vector);
-
-        // note that these pressure loss values are likely positive
-        // even if not though, what i'm looking for here is the
-        // largest magnitude of all these pressure losses
-
-        // to get a sense of the scale, i'm going to look for the average,
-        // minimum and maximum pressure drop
-
-        let user_specified_average_pressure_drop =
-            <FluidComponentSuperCollection as FluidComponentSuperCollectionParallelAssociatedFunctions>::
-            obtain_average_pressure_from_vector(
-                &user_specified_flow_pressure_loss_est_vector);
-
-
-
-        // now i can compare the magnitude of the internal driving force
-        // to the user_specified_average_pressure_drop
-        //
-        // if the average pressure drop is <10% or the internal driving force,
-        // then we can consider this a internal circulation dominant case
-
-        let internal_circulation_dominant = 
-            internal_circulation_driving_force_scale.value * 10.0 
-            > user_specified_average_pressure_drop.value.abs();
-
-        if internal_circulation_dominant {
-
-            // in this case, the average mass flowrate through each of these
-            // loops is very close to zero,
-            // therefore zero flowrate is supplied
-            // as a guess
-
-
-            // we can get the max pressure difference between each branch 
-            let max_pressure_change_between_branches: Pressure = 
-                <FluidComponentSuperCollection as FluidComponentSuperCollectionParallelAssociatedFunctions>:: 
-                calculate_maximum_pressure_difference_between_branches(
-                    zero_mass_flowrate, 
-                    &fluid_component_collection_vector
-                );
-
-            // with this max pressure change, we can guess a maximum 
-            // flowrate across each branch
-
-            let max_mass_flowrate_across_each_branch = 
-                <FluidComponentSuperCollection as FluidComponentSuperCollectionParallelAssociatedFunctions>:: 
-                calculate_maximum_mass_flowrate_given_pressure_drop_across_each_branch(
-                    max_pressure_change_between_branches, 
-                    &fluid_component_collection_vector);
-
-            // with this maximum mass flowrate, one should be able to get 
-            // pressure drop bounds for the branches
-
-            let pressure_change = 
-                <FluidComponentSuperCollection as FluidComponentSuperCollectionParallelAssociatedFunctions>::
-                calculate_pressure_change_using_guessed_branch_mass_flowrate(
-                    max_mass_flowrate_across_each_branch, 
-                    user_requested_mass_flowrate, 
-                    &fluid_component_collection_vector);
-            let mut mass_flowrate_vector: Vec<MassRate> =
-                vec![];
-
-            // the mass_flowrate vector will have a length
-            // equal to the fluid_component vector
-
-            let new_vector_length =
-                fluid_component_collection_vector.len();
-
-            let default_mass_flowrate_value = 
-                MassRate::new::<kilogram_per_second>(0.0);
-
-            mass_flowrate_vector.resize(
-                new_vector_length,
-                default_mass_flowrate_value
-            );
-
-            for (index,fluid_component_pointer) in 
-                fluid_component_collection_vector.iter().enumerate() {
-
-                    // first we get an immutable reference from
-                    // the mutable reference
-
-                    let fluid_component = 
-                        &*fluid_component_pointer;
-
-
-                    let fluid_component_mass_flowrate = 
-                        fluid_component.get_mass_flowrate_from_pressure_change(
-                            pressure_change);
-
-                    mass_flowrate_vector[index] = 
-                        fluid_component_mass_flowrate;
-
-                }
-
-            // for fhr, sim specifically, we have 4 branches
-
-            return (mass_flowrate_vector[0],
-                mass_flowrate_vector[1],
-                mass_flowrate_vector[2],
-                mass_flowrate_vector[3]);
-        }
-
-        // next we can go to the other extreme, where external flowrate is 
-        // dominant,
-        //
-        // in such a case, the internal circulation driving force (at zero flow)
-        // is much smaller <10% of the external pressure driving force
-        // which can be specified by the user specified average pressure drop
-        // value
-        //
-
-
-        let external_circulation_dominant = 
-            internal_circulation_driving_force_scale.value * 10.0 
-            < user_specified_average_pressure_drop.value.abs();
-
-        if external_circulation_dominant {
-
-            // in such a case, the average guessed flowrate should be 
-            // the total mass flowrate divided by the number of branches
-
-            // this is not implemented for this case
-
-            todo!();
-
-        }
-
-        // now that we've covered both of the extreme cases, we can check the third
-        // case where the internal circulation force and external circulation force
-        // both cannot be neglected
-        //
-        // in such a case, we expect the pressure change to be large enough
-        // to be able to block flow in any one of the tubes
-
-        // so it may be likely that flow in any one of those tubes is zero or
-        // close to zero because some of the flow in those tubes are blocked by
-        // the external pressure drop
-        //
-        // if scales are similar (and non zero, because we already handled the
-        // zero case)
-        //
-        // we can take the internal driving force as a reference scale
-        // calculate then 
-
-        let pressure_deviation_percentage_from_internal_driving_force =
-            (internal_circulation_driving_force_scale - 
-             user_specified_average_pressure_drop).value.abs()
-            /internal_circulation_driving_force_scale.value.abs()
-            *100.0_f64;
-
-        // if the deviation percentage is less than 80%, we can say they are quite
-        // in the same order of magnitude or similar
-
-        if pressure_deviation_percentage_from_internal_driving_force < 80.0 {
-
-
-            // in this case, the guessed mass flowrate through each of these
-            // loops can be very close to zero,
-            // therefore zero flowrate is supplied
-            // as a guess
-            // the algorithm is similar to the internal pressure dominant
-            // case,
-            // but the reasoning is different
-            //
-            // this is not implemented for this case
-
-            todo!();
-
-
-
-
-        }
-
-        // now if all of the cases are exhausted, we will just resort to a generic
-        // method where the guessed flowrate for each branch is the 
-        // user supplied mass flowrate/number of branches
-        //
-        // hopefully this will supply the correct pressure bounds to
-        // guess the pressure change
-        //
-        // this is not implemented for this case
+        // for any other flowrate cases, we are not debugging here 
+        // so I will leave this blank
 
         todo!();
 
