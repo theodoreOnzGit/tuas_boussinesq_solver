@@ -680,7 +680,6 @@ pub fn calculate_pressure_change_using_guessed_branch_mass_flowrate_fhr_sim_v1_c
                 calculate_mass_flowrate_from_pressure_change_for_parallel_branches(
                     iterated_pressure, 
                     fluid_component_collection_vector);
-            dbg!(&(iterated_pressure,iterated_mass_flowrate));
             
 
 
@@ -688,17 +687,28 @@ pub fn calculate_pressure_change_using_guessed_branch_mass_flowrate_fhr_sim_v1_c
             let mass_flowrate_error = 
                 iterated_mass_flowrate -
                 user_specified_mass_flowrate;
-            // now, this error I want to scale by the maximum flowrate 
-            // so we don't get numerical convergence issues
-            let mass_flowrate_error_normalised: Ratio = 
-                mass_flowrate_error/individual_branch_guess_upper_bound_mass_flowrate;
 
-            let debugging = false; 
+
+            dbg!(&(iterated_pressure,iterated_mass_flowrate,
+                    mass_flowrate_error));
+            let debugging = true; 
             if debugging {
-                //return mass_flowrate_error.get::<kilogram_per_day>();
-                // doing it in ratio form makes the solver less sensitive 
-                // making it take big jumps in pressure.. not good
-                return mass_flowrate_error_normalised.get::<ratio>();
+
+                //check if the absolute value of mass flowrate error is 
+                // less than 1e-12 kg/s 
+                // if so, just return zero
+                //
+
+                if mass_flowrate_error.get::<kilogram_per_second>().abs() <1e-9 {
+                    return 0.0;
+                } else {
+
+                    return mass_flowrate_error.get::<kilogram_per_second>();
+                }
+
+
+
+
             } else {
                 return mass_flowrate_error.get::<kilogram_per_second>();
             }
@@ -743,7 +753,7 @@ pub fn calculate_pressure_change_using_guessed_branch_mass_flowrate_fhr_sim_v1_c
 
     // i can't use a convergency value too strict, perhaps 1e-9 will do!
     //
-    let debugging = true;
+    let debugging = false;
     let mut convergency = SimpleConvergency { 
         eps:1e-15_f64, 
         max_iter: 70
@@ -789,6 +799,41 @@ pub fn calculate_pressure_change_using_guessed_branch_mass_flowrate_fhr_sim_v1_c
 
     
     // i'm going to try different root finding algorithms if the first 
+    //
+    //
+    // 9:10am 24 jun 2025 
+    // 
+    // Yesterday
+    // I find that the flowrates iterated oscillated between 
+    // 7.105e-13 and -5.684e-13 kg/s 
+    // which is essentially zero 
+    // The pressure change oscillates between -5053.0145 kg/s
+    //
+    // When I decrease tolerance to 1e-12
+    // the mass flowrates oscillate between 
+    // 7.105e-13 and 
+    // -1.87583e-12 kg/s 
+    //
+    // the oscillations depend on tolerance..
+    //
+    // from reading the Brent Dekker algorithm 
+    // this oscillating behaviour is chiefly due to 
+    // the fact that tolerances play a role as to when the algorithm 
+    // switches to bisection. 
+    //
+    // In this case, lower tolerances result in oscillations of lower 
+    // magnitude (we are essentially around zero and already want 
+    // to accept this).
+    //
+    // in that case, I want to hard code a mass flowrate tolerance,
+    // that we can physically barely detect. 
+    // like for salt flows, perhaps a +/- 2% flowrate measurement error 
+    // is acceptable 
+    // or a 1mm uncertainty in meniscus
+    //
+    // perhaps a 1e-12 kg/s (1 nanogram per second) tolerance will do. 
+    // If that is found, set the error to zero in the 
+    // pressure_change_from_mass_flowrate_root
     //
     
     let pressure_change_pascals_result_user_specified_flow
