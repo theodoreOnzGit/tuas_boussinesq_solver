@@ -1312,7 +1312,7 @@ pub trait FluidComponentSuperCollectionParallelAssociatedFunctions {
             max_iter: 70
         };
 
-        let pressure_change_pascals_result_user_specified_flow
+        let mut pressure_change_pascals_result_user_specified_flow
             = find_root_brent(
                 user_specified_pressure_upper_bound.value,
                 user_specified_pressure_lower_bound.value,
@@ -1346,10 +1346,7 @@ pub trait FluidComponentSuperCollectionParallelAssociatedFunctions {
             },
         }
 
-        let pressure_change_pascals_user_specified_flow: f64 = 
-            pressure_change_pascals_result_user_specified_flow.unwrap();
-
-        return Pressure::new::<pascal>(pressure_change_pascals_user_specified_flow);
+        todo!("debugging: all root finding methods used not successful");
     }
 
     /// This function takes a mass flowrate and applies it to each
