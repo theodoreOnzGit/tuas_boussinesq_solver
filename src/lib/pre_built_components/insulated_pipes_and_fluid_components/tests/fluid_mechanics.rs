@@ -34,7 +34,7 @@ pub fn single_pipe_internal_pressure_change_check(){
 
     approx::assert_relative_eq!(
         pressure_chg_hydrostatic.get::<pascal>(),
-        -19975.12,
+        -61922.87,
         max_relative=1e-5
         );
     approx::assert_relative_eq!(

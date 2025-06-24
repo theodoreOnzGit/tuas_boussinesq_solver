@@ -106,6 +106,12 @@ pub fn four_branch_pri_loop_flowrates_parallel_debug(
 ///
 /// this code handles the solution procedure
 /// using the tuas_boussinesq_solver library code
+///
+/// I have tested that even with the change in the code 
+/// the tests still pass: 
+/// 
+/// took 40 mins on my aftershock desktop
+/// note that the coupled 
 pub fn four_branch_pri_loop_flowrates_parallel_debug_library(
     pump_pressure: Pressure,
     // reactor branch
