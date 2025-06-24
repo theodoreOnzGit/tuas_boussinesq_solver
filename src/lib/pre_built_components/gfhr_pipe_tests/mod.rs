@@ -21,3 +21,9 @@ pub mod single_branch;
 pub mod multi_branch;
 
 
+// for building the components,
+// we should design it around the intermediate heat exchanger 
+// heat exchanger is salt to salt, STHE 
+// maybe 1200 kg/s on tube side of FLiBe 
+// and enough flowrate of HITEC on shell side to ensure that 
+// temperature settings are right
