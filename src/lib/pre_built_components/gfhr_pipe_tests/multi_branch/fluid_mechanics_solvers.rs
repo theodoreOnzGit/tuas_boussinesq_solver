@@ -602,6 +602,8 @@ pub fn calculate_iterative_mass_flowrate_across_branches_for_fhr_sim_v1(
 /// the guessed flowrate should provide an upper bound for the given 
 /// flowrate
 ///
+/// This algorithm was made more robust using the regular falsi method
+///
 #[inline]
 pub fn calculate_pressure_change_using_guessed_branch_mass_flowrate_fhr_sim_v1_custom(
     individual_branch_guess_upper_bound_mass_flowrate: MassRate,
