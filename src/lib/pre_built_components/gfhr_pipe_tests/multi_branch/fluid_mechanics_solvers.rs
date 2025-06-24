@@ -89,16 +89,26 @@ pub fn four_branch_pri_and_intermediate_loop(
     let mut intermediate_heat_exchanger_branch =
         FluidComponentCollection::new_series_component_collection();
 
-    let mut fhr_pipe_4_clone = fhr_pipe_7.clone();
-    fhr_pipe_4_clone.set_internal_pressure_source(pri_loop_pump_pressure);
-    intermediate_heat_exchanger_branch.clone_and_add_component(&fhr_pipe_4_clone);
-    //let mut fhr_pump_clone: NonInsulatedFluidComponent 
-    //    = fhr_pri_loop_pump.clone();
-    //fhr_pump_clone.set_internal_pressure_source(pump_pressure);
-    //intermediate_heat_exchanger_branch.clone_and_add_component(&fhr_pump_clone);
+    let mut fhr_pri_loop_pump_9_with_pressure_set = fhr_pri_loop_pump_9.clone();
+    fhr_pri_loop_pump_9_with_pressure_set.set_internal_pressure_source(pri_loop_pump_pressure);
+    let ihx_shell_side_6_clone = ihx_sthe_6.get_clone_of_shell_side_fluid_component();
 
-
-    
+    intermediate_heat_exchanger_branch.clone_and_add_component(
+        fhr_pipe_11);
+    intermediate_heat_exchanger_branch.clone_and_add_component(
+        fhr_pipe_10);
+    intermediate_heat_exchanger_branch.clone_and_add_component(
+        &fhr_pri_loop_pump_9_with_pressure_set);
+    intermediate_heat_exchanger_branch.clone_and_add_component(
+        fhr_pipe_8);
+    intermediate_heat_exchanger_branch.clone_and_add_component(
+        fhr_pipe_7);
+    intermediate_heat_exchanger_branch.clone_and_add_component(
+        &ihx_shell_side_6_clone);
+    intermediate_heat_exchanger_branch.clone_and_add_component(
+        fhr_pipe_5);
+    intermediate_heat_exchanger_branch.clone_and_add_component(
+        fhr_pipe_4);
 
     let mut pri_loop_branches = 
         FluidComponentSuperCollection::default();
@@ -108,6 +118,7 @@ pub fn four_branch_pri_and_intermediate_loop(
     pri_loop_branches.fluid_component_super_vector.push(reactor_branch);
     pri_loop_branches.fluid_component_super_vector.push(downcomer_branch_1);
     pri_loop_branches.fluid_component_super_vector.push(downcomer_branch_2);
+
     pri_loop_branches.fluid_component_super_vector.push(intermediate_heat_exchanger_branch);
 
     let pressure_change_across_each_branch = 

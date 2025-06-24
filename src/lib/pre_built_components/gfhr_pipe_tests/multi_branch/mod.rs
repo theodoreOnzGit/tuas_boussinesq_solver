@@ -45,7 +45,7 @@ pub mod regression;
 /// this test checks if the internal library is functioning correctly 
 /// so as to give correct mass flowrates
 #[test]
-pub fn test_fhr_four_branch_solver_debug_library(){
+pub fn test_fhr_four_branch_solver_pri_and_intrmd_loop(){
 
     let initial_temperature_pri_loop = 
         ThermodynamicTemperature::new::<degree_celsius>(500.0);
