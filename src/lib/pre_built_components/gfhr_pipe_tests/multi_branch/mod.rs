@@ -1,8 +1,11 @@
 /// contains code for fluid mechanics solvers 
 /// for the gFHR branches
 pub mod fluid_mechanics_solvers;
-
 use fluid_mechanics_solvers::four_branch_pri_loop_flowrates_parallel;
+
+/// contains code iterative solution across multiple branches
+pub mod multi_branch_solvers;
+
 use uom::si::{mass_rate::kilogram_per_second, pressure::kilopascal};
 use uom::si::thermodynamic_temperature::degree_celsius;
 

@@ -8,6 +8,24 @@ in development and not fully featured yet.
 Bugfix: setting internal pressure source in InsulatedFluidComponents should 
 work correctly now.
 
+Bugfix: for flows in gFHR, brent-dekker solver may not be 
+exactly appropriate as there are large quantities of flow involved 
+induced by relatively small pressure drop. Hence calculating 
+pressure change across multiple branches so that zero mass flowrate 
+goes through them as a whole was difficult to converge. With 
+an error tolerance of 1e-15, the solver was oscillating between 
+7.105e-13 kg/s and -5.684e-13 kg/s. For all intents and purposes, 
+either solution could be considered a zero flowrate. Nevertheless,
+it does not converge. Reducing error tolerance to 1e-12 or 1e-9 
+(can't remember), the pressure across four branches oscillates 
+between -5053.0145 and -5010, whereas mass flowrate oscillates 
+between 7.105e-13 kg/s and -50.059 kg/s. Thus, with higher 
+error tolerance set, the brent Dekker algorithm yielded a larger error.
+After some reading of the Brent Dekker algorithm, I found that the 
+switch between secant method and bisection method was controlled by the 
+tolerance itself. For a more stable solution method, 
+
+
 The crate contains many useful traits and examples of how to use 
 those traits for your own projects.
 
