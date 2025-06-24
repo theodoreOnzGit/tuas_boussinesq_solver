@@ -8,6 +8,8 @@ use crate::array_control_vol_and_fluid_component_collections::fluid_component_co
 use crate::pre_built_components::insulated_pipes_and_fluid_components::InsulatedFluidComponent;
 use crate::pre_built_components::non_insulated_fluid_components::NonInsulatedFluidComponent;
 use roots::find_root_brent;
+use roots::find_root_inverse_quadratic;
+use roots::find_root_regula_falsi;
 use roots::SimpleConvergency;
 use uom::si::mass_rate::kilogram_per_day;
 use uom::si::mass_rate::kilogram_per_hour;
@@ -760,7 +762,7 @@ pub fn calculate_pressure_change_using_guessed_branch_mass_flowrate_fhr_sim_v1_c
 
     // i can't use a convergency value too strict, perhaps 1e-9 will do!
     //
-    let debugging = false;
+    let debugging = true;
     let mut convergency = SimpleConvergency { 
         eps:1e-15_f64, 
         max_iter: 70
@@ -770,7 +772,7 @@ pub fn calculate_pressure_change_using_guessed_branch_mass_flowrate_fhr_sim_v1_c
         // the system is quite stiff here... 
         // think the secant method may not work
         convergency = SimpleConvergency { 
-            eps:1e-12_f64, 
+            eps:1e-15_f64, 
             max_iter: 70
         };
     }
@@ -843,6 +845,75 @@ pub fn calculate_pressure_change_using_guessed_branch_mass_flowrate_fhr_sim_v1_c
     // pressure_change_from_mass_flowrate_root
     //
     
+
+    // last ditch resort, use other root finding algos is this false 
+    if debugging {
+
+        let mut pressure_change_pascals_result_user_specified_flow
+            = find_root_brent(
+                user_specified_pressure_upper_bound.value,
+                user_specified_pressure_lower_bound.value,
+                &pressure_change_from_mass_flowrate_root,
+                &mut convergency);
+
+        match pressure_change_pascals_result_user_specified_flow {
+            Ok(pressure_change_pascals_user_specified_flow) => {
+                dbg!("Brent Dekker algo successful");
+                return Pressure::new::<pascal>(pressure_change_pascals_user_specified_flow);
+            },
+            Err(_error_msg) => {
+                dbg!("Brent Dekker algo failed");
+            },
+        }
+
+
+        // try inverse quadratic root if not successful
+        // with lower tolerance
+        convergency = SimpleConvergency { 
+            eps:1e-12_f64, 
+            max_iter: 70
+        };
+        
+        pressure_change_pascals_result_user_specified_flow = 
+            find_root_inverse_quadratic(
+                user_specified_pressure_upper_bound.value,
+                user_specified_pressure_lower_bound.value,
+                &pressure_change_from_mass_flowrate_root,
+                &mut convergency);
+        dbg!("inverse quadratic algo finished");
+
+        match pressure_change_pascals_result_user_specified_flow {
+            Ok(pressure_change_pascals_user_specified_flow) => {
+                dbg!("inverse quadratic algo successful");
+                return Pressure::new::<pascal>(pressure_change_pascals_user_specified_flow);
+            },
+            Err(_error_msg) => {
+                dbg!("inverse quadratic algo failed");
+            },
+        }
+
+        // try the regula falsi
+
+        pressure_change_pascals_result_user_specified_flow = 
+            find_root_regula_falsi(
+                user_specified_pressure_upper_bound.value,
+                user_specified_pressure_lower_bound.value,
+                &pressure_change_from_mass_flowrate_root,
+                &mut convergency);
+        dbg!("regula falsi algo finished");
+        match pressure_change_pascals_result_user_specified_flow {
+            Ok(pressure_change_pascals_user_specified_flow) => {
+                return Pressure::new::<pascal>(pressure_change_pascals_user_specified_flow);
+            },
+            Err(_error_msg) => {
+            },
+        }
+
+
+        todo!("debugging: all root finding methods used not successful");
+    }
+
+
     let pressure_change_pascals_result_user_specified_flow
         = find_root_brent(
             user_specified_pressure_upper_bound.value,
@@ -852,7 +923,6 @@ pub fn calculate_pressure_change_using_guessed_branch_mass_flowrate_fhr_sim_v1_c
 
     let pressure_change_pascals_user_specified_flow: f64 = 
         pressure_change_pascals_result_user_specified_flow.unwrap();
-
     return Pressure::new::<pascal>(pressure_change_pascals_user_specified_flow);
 }
 
