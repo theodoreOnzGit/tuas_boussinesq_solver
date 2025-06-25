@@ -207,7 +207,7 @@ pub fn new_downcomer_pipe_3(initial_temperature: ThermodynamicTemperature) -> In
     let flow_area = Area::new::<square_inch>(154.0);
     let incline_angle = Angle::new::<degree>(90.0);
     // not putting in ergun equation yet
-    let form_loss = Ratio::new::<ratio>(550.05);
+    let form_loss = Ratio::new::<ratio>(55.05);
     //estimated component wall roughness (doesn't matter here,
     //but i need to fill in)
     let surface_roughness = Length::new::<millimeter>(0.015);

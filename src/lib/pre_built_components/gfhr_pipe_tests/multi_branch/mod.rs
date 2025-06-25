@@ -13,7 +13,7 @@ use uom::si::pressure::megapascal;
 use uom::si::{mass_rate::kilogram_per_second, pressure::kilopascal};
 use uom::si::thermodynamic_temperature::degree_celsius;
 
-use crate::pre_built_components::gfhr_pipe_tests::components::new_reactor_vessel_pipe_1;
+use crate::pre_built_components::gfhr_pipe_tests::components::{new_fhr_pipe_4_ver_2, new_reactor_vessel_pipe_1};
 use crate::pre_built_components::gfhr_pipe_tests::components::new_downcomer_pipe_3;
 use crate::pre_built_components::gfhr_pipe_tests::components::new_fhr_pipe_7;
 use crate::pre_built_components::gfhr_pipe_tests::components::new_downcomer_pipe_2;
@@ -50,8 +50,15 @@ pub mod regression;
 /// According to KP-FHR report, 
 /// https://www.nrc.gov/docs/ML2208/ML22088A231.pdf
 /// The primary pump pressure head is 0.2 MPa during normal operation
+///
+/// for this test, we get around 733 kg/s of flow through the core
+/// at said temperature and 0.2 MPa of loop pressure drop. This is 
+/// less than the about 1200 kg/s of flow meant to go through the gFHR,
+/// but it is in the correct order of magnitude. 
+///
+/// I think this test can pass
 #[test]
-pub fn test_fhr_four_branch_solver_pri_and_intrmd_loop(){
+pub fn test_fhr_four_branch_solver_pri_and_intrmd_loop_isothermal_check(){
 
     let initial_temperature_pri_loop = 
         ThermodynamicTemperature::new::<degree_celsius>(500.0);
@@ -71,7 +78,7 @@ pub fn test_fhr_four_branch_solver_pri_and_intrmd_loop(){
     // so intial temperature of 500C is ok
     let ihx_sthe_6 = new_ihx_sthe_6_version_1(initial_temperature_pri_loop);
     let fhr_pipe_5 = new_fhr_pipe_5(initial_temperature_pri_loop);
-    let fhr_pipe_4 = new_fhr_pipe_4_ver_1(initial_temperature_pri_loop);
+    let fhr_pipe_4 = new_fhr_pipe_4_ver_2(initial_temperature_pri_loop);
 
 
     let initial_temperature_intrmd_loop = 
@@ -91,8 +98,8 @@ pub fn test_fhr_four_branch_solver_pri_and_intrmd_loop(){
     let fhr_pipe_13 = new_fhr_pipe_13(initial_temperature_intrmd_loop);
 
 
-    let pri_loop_pump_pressure = Pressure::new::<megapascal>(0.0);
-    let intrmd_loop_pump_pressure = Pressure::new::<kilopascal>(0.0);
+    let pri_loop_pump_pressure = Pressure::new::<megapascal>(-0.2);
+    let intrmd_loop_pump_pressure = Pressure::new::<kilopascal>(-150.0);
 
     let (reactor_flow, downcomer_branch_1_flow, 
         downcomer_branch_2_flow, intermediate_heat_exchanger_branch_flow,
@@ -127,32 +134,32 @@ pub fn test_fhr_four_branch_solver_pri_and_intrmd_loop(){
 
     approx::assert_relative_eq!(
         reactor_flow.get::<kilogram_per_second>(),
-        -147.871,
+        734.892,
         max_relative=1e-5
         );
     approx::assert_relative_eq!(
         downcomer_branch_1_flow.get::<kilogram_per_second>(),
-        -1.04956,
+        21.8858,
         max_relative=1e-5
         );
     approx::assert_relative_eq!(
         downcomer_branch_2_flow.get::<kilogram_per_second>(),
-        -1.04956,
+        69.0525,
         max_relative=1e-5
         );
     approx::assert_relative_eq!(
         intermediate_heat_exchanger_branch_flow.get::<kilogram_per_second>(),
-        149.9704,
+        -825.830,
         max_relative=1e-5
         );
     approx::assert_relative_eq!(
         intrmd_loop_ihx_br_flow.get::<kilogram_per_second>(),
-        149.9704,
+        781.367,
         max_relative=1e-5
         );
     approx::assert_relative_eq!(
         intrmd_loop_steam_gen_br_flow.get::<kilogram_per_second>(),
-        149.9704,
+        -781.367,
         max_relative=1e-5
         );
 }
