@@ -31,6 +31,8 @@ pub(crate) fn four_branch_pri_and_intermediate_loop_single_time_step(
     intrmd_loop_pump_pressure: Pressure,
     reactor_power: Power,
     timestep: Time,
+    // diagnostics 
+    simulation_time: Time,
     // reactor branch
     reactor_pipe_1: &mut InsulatedFluidComponent,
     // downcomer branch 1
@@ -553,6 +555,7 @@ pub(crate) fn four_branch_pri_and_intermediate_loop_single_time_step(
             intermediate_heat_exchanger_branch_flow: pri_loop_intermediate_heat_exchanger_branch_flow,
             intrmd_loop_ihx_br_flow,
             intrmd_loop_steam_gen_br_flow,
+            simulation_time,
         };
         dbg!(&fhr_state);
         return fhr_state;
@@ -584,6 +587,9 @@ pub(crate) struct FHRState {
     /// to top
     /// (between pipe 12 and pipe 13)
     pub intrmd_loop_steam_gen_br_flow: MassRate,
+
+    /// other diagnostics 
+    pub simulation_time: Time,
 
 }
 
