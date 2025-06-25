@@ -547,6 +547,20 @@ pub(crate) fn four_branch_pri_and_intermediate_loop_single_time_step(
                 .unwrap();
             println!("Advance timestep: IHX complete");
         }
+
+        // now I want reactor temperature profile 
+        let reactor_temp_profile: Vec<ThermodynamicTemperature> = 
+            reactor_pipe_1
+            .pipe_fluid_array_temperature()
+            .unwrap();
+        let reactor_temp_profile_degc: Vec<f64> = 
+            reactor_temp_profile
+            .into_iter()
+            .map(|temperature|{
+                (temperature.get::<degree_celsius>()*100.0).round()/100.0
+            })
+            .collect();
+
         
         let fhr_state = FHRState {
             reactor_branch_flow,
@@ -556,12 +570,13 @@ pub(crate) fn four_branch_pri_and_intermediate_loop_single_time_step(
             intrmd_loop_ihx_br_flow,
             intrmd_loop_steam_gen_br_flow,
             simulation_time,
+            reactor_temp_profile_degc,
         };
         dbg!(&fhr_state);
         return fhr_state;
 }
 
-#[derive(Debug,Clone, Copy)]
+#[derive(Debug,Clone)]
 pub(crate) struct FHRState {
     /// reactor branch flow (upwards through the core)
     /// note that positive flow means from bottom mixing node to top
@@ -590,6 +605,10 @@ pub(crate) struct FHRState {
 
     /// other diagnostics 
     pub simulation_time: Time,
+
+    // temperature diagnostics 
+    pub reactor_temp_profile_degc: Vec<f64>,
+
 
 }
 
