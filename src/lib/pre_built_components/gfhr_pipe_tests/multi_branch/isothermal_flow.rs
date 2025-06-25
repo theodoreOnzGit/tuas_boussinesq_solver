@@ -14,7 +14,7 @@ use crate::pre_built_components::gfhr_pipe_tests::components::new_fhr_pipe_11;
 use crate::pre_built_components::gfhr_pipe_tests::components::new_fhr_pipe_10;
 use crate::pre_built_components::gfhr_pipe_tests::components::new_fhr_intermediate_loop_steam_generator_shell_side_14;
 use crate::pre_built_components::gfhr_pipe_tests::components::new_fhr_intermediate_loop_pump_16;
-use crate::pre_built_components::gfhr_pipe_tests::multi_branch::fluid_mechanics_solvers::four_branch_pri_and_intermediate_loop_isothermal;
+use crate::pre_built_components::gfhr_pipe_tests::multi_branch::fluid_mechanics_solvers::four_branch_pri_and_intermediate_loop_fluid_mechanics_only;
 use uom::si::f64::*;
 use uom::si::thermodynamic_temperature::degree_celsius;
 use uom::si::pressure::megapascal;
@@ -83,7 +83,7 @@ pub fn test_fhr_four_branch_solver_pri_and_intrmd_loop_isothermal_check(){
         downcomer_branch_2_flow, intermediate_heat_exchanger_branch_flow,
         intrmd_loop_ihx_br_flow,
         intrmd_loop_steam_gen_br_flow)
-        = four_branch_pri_and_intermediate_loop_isothermal(
+        = four_branch_pri_and_intermediate_loop_fluid_mechanics_only(
             pri_loop_pump_pressure, 
             intrmd_loop_pump_pressure, 
             &reactor_pipe_1, 
@@ -207,7 +207,7 @@ pub fn test_fhr_four_branch_solver_pri_and_intrmd_loop_zero_flow(){
         downcomer_branch_2_flow, intermediate_heat_exchanger_branch_flow,
         intrmd_loop_ihx_br_flow,
         intrmd_loop_steam_gen_br_flow)
-        = four_branch_pri_and_intermediate_loop_isothermal(
+        = four_branch_pri_and_intermediate_loop_fluid_mechanics_only(
             pri_loop_pump_pressure, 
             intrmd_loop_pump_pressure, 
             &reactor_pipe_1, 

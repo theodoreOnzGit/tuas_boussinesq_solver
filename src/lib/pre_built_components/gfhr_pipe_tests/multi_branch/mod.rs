@@ -29,7 +29,7 @@ use crate::pre_built_components::gfhr_pipe_tests::components::new_fhr_pipe_11;
 use crate::pre_built_components::gfhr_pipe_tests::components::new_fhr_pipe_10;
 use crate::pre_built_components::gfhr_pipe_tests::components::new_fhr_intermediate_loop_steam_generator_shell_side_14;
 use crate::pre_built_components::gfhr_pipe_tests::components::new_fhr_intermediate_loop_pump_16;
-use crate::pre_built_components::gfhr_pipe_tests::multi_branch::fluid_mechanics_solvers::four_branch_pri_and_intermediate_loop_isothermal;
+use crate::pre_built_components::gfhr_pipe_tests::multi_branch::fluid_mechanics_solvers::four_branch_pri_and_intermediate_loop_fluid_mechanics_only;
 use uom::si::f64::*;
 
 /// contains legacy code used for debugging the fhr solver for four branches
@@ -60,7 +60,7 @@ pub mod isothermal_flow;
 /// but it is in the correct order of magnitude. 
 ///
 #[test]
-pub fn test_fhr_four_branch_solver_pri_and_intrmd_loop_full_th(){
+pub(crate) fn test_fhr_four_branch_solver_pri_and_intrmd_loop_full_th(){
 
     let initial_temperature_pri_loop = 
         ThermodynamicTemperature::new::<degree_celsius>(500.0);
@@ -107,7 +107,7 @@ pub fn test_fhr_four_branch_solver_pri_and_intrmd_loop_full_th(){
         downcomer_branch_2_flow, intermediate_heat_exchanger_branch_flow,
         intrmd_loop_ihx_br_flow,
         intrmd_loop_steam_gen_br_flow)
-        = four_branch_pri_and_intermediate_loop_isothermal(
+        = four_branch_pri_and_intermediate_loop_fluid_mechanics_only(
             pri_loop_pump_pressure, 
             intrmd_loop_pump_pressure, 
             &reactor_pipe_1, 

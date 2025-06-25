@@ -18,7 +18,114 @@ use uom::si::f64::*;
 /// this code handles the solution procedure
 /// using the tuas_boussinesq_solver library code
 ///
-pub fn four_branch_pri_and_intermediate_loop_isothermal(
+/// and handles fluid mechanics and heat transfer for one time step
+pub(crate) fn four_branch_pri_and_intermediate_loop_single_time_step(
+    pri_loop_pump_pressure: Pressure,
+    intrmd_loop_pump_pressure: Pressure,
+    reactor_power: Power,
+    // reactor branch
+    reactor_pipe_1: &InsulatedFluidComponent,
+    // downcomer branch 1
+    downcomer_pipe_2: &InsulatedFluidComponent,
+    // downcomer branch 2
+    downcomer_pipe_3: &InsulatedFluidComponent,
+    // Intermediate heat exchanger branch in pri loop
+    fhr_pipe_11: &InsulatedFluidComponent,
+    fhr_pipe_10: &InsulatedFluidComponent,
+    fhr_pri_loop_pump_9: &NonInsulatedFluidComponent,
+    fhr_pipe_8: &InsulatedFluidComponent,
+    fhr_pipe_7: &InsulatedFluidComponent,
+    ihx_sthe_6: &SimpleShellAndTubeHeatExchanger,
+    fhr_pipe_5: &InsulatedFluidComponent,
+    fhr_pipe_4: &InsulatedFluidComponent,
+    // intermediate loop ihx side
+    fhr_pipe_17: &InsulatedFluidComponent,
+    fhr_pipe_12: &InsulatedFluidComponent,
+    // intermediate loop steam generator side
+    fhr_intrmd_loop_pump_16: &NonInsulatedFluidComponent,
+    fhr_pipe_15: &InsulatedFluidComponent,
+    fhr_steam_generator_shell_side_14: &NonInsulatedFluidComponent,
+    fhr_pipe_13: &InsulatedFluidComponent,
+
+    ) -> FHRState {
+
+        // fluid mechnaics portion for both loops
+
+
+        let (reactor_branch_flow, downcomer_branch_1_flow,
+            downcomer_branch_2_flow, intermediate_heat_exchanger_branch_flow,
+            intrmd_loop_ihx_br_flow, intrmd_loop_steam_gen_br_flow)
+            = four_branch_pri_and_intermediate_loop_fluid_mechanics_only(
+                pri_loop_pump_pressure, 
+                intrmd_loop_pump_pressure, 
+                reactor_pipe_1, 
+                downcomer_pipe_2, 
+                downcomer_pipe_3, 
+                fhr_pipe_11, 
+                fhr_pipe_10, 
+                fhr_pri_loop_pump_9, 
+                fhr_pipe_8, 
+                fhr_pipe_7, 
+                ihx_sthe_6, 
+                fhr_pipe_5, 
+                fhr_pipe_4, 
+                fhr_pipe_17, 
+                fhr_pipe_12, 
+                fhr_intrmd_loop_pump_16, 
+                fhr_pipe_15, 
+                fhr_steam_generator_shell_side_14, 
+                fhr_pipe_13);
+
+        // thermal hydraulics part
+
+        
+        let fhr_state = FHRState {
+            reactor_branch_flow,
+            downcomer_branch_1_flow,
+            downcomer_branch_2_flow,
+            intermediate_heat_exchanger_branch_flow,
+            intrmd_loop_ihx_br_flow,
+            intrmd_loop_steam_gen_br_flow,
+        };
+        return fhr_state;
+}
+
+pub(crate) struct FHRState {
+    /// reactor branch flow (upwards through the core)
+    /// note that positive flow means from bottom mixing node to top
+    pub reactor_branch_flow: MassRate,
+    /// downcomer 1 branch flow (upwards through the core)
+    /// note that positive flow means from bottom mixing node to top
+    pub downcomer_branch_1_flow: MassRate,
+    /// downcomer 2 branch flow (upwards through the core)
+    /// note that positive flow means from bottom mixing node to top
+    pub downcomer_branch_2_flow: MassRate,
+    /// ihx branch flow 
+    /// note that positive flow means from bottom mixing node to top
+    pub intermediate_heat_exchanger_branch_flow: MassRate,
+    /// ihx branch flow 
+    /// note that positive flow means from bottom 
+    /// (between pipe 17 and pump 16) 
+    /// to top
+    /// (between pipe 12 and pipe 13)
+    pub intrmd_loop_ihx_br_flow: MassRate,
+    /// steam generator branch
+    /// note that positive flow means from bottom 
+    /// (between pipe 17 and pump 16) 
+    /// to top
+    /// (between pipe 12 and pipe 13)
+    pub intrmd_loop_steam_gen_br_flow: MassRate,
+
+}
+
+/// for the gFHR primary loop, and intermediate loop 
+/// there are four branches that need to be solved for flowrate 
+///
+/// this code handles the solution procedure
+/// using the tuas_boussinesq_solver library code
+///
+/// and only handles fluid mechanics (isothermal)
+pub fn four_branch_pri_and_intermediate_loop_fluid_mechanics_only(
     pri_loop_pump_pressure: Pressure,
     intrmd_loop_pump_pressure: Pressure,
     // reactor branch
@@ -132,47 +239,6 @@ pub fn four_branch_pri_and_intermediate_loop_isothermal(
         intrmd_loop_steam_generator_branch.clone_and_add_component(
             fhr_pipe_13);
 
-        let zero_mass_flow = MassRate::ZERO;
-
-        let debugging = true;
-        if debugging {
-            let pressure_chg_pipe_13 = 
-                fhr_pipe_13.get_pressure_change_immutable(
-                    zero_mass_flow);
-            dbg!(&pressure_chg_pipe_13);
-            let pressure_chg_pipe_14 = 
-                fhr_steam_generator_shell_side_14.get_pressure_change_immutable(
-                    zero_mass_flow);
-            dbg!(&pressure_chg_pipe_14);
-
-
-            let pressure_chg_pipe_17 = 
-                fhr_pipe_17.get_pressure_change_immutable(
-                    zero_mass_flow);
-            dbg!(&pressure_chg_pipe_17);
-            let pressure_chg_pipe_6 = 
-                &ihx_sthe_6
-                .get_clone_of_tube_side_parallel_tube_fluid_component()
-                .get_pressure_change_immutable(
-                    zero_mass_flow);
-
-
-            dbg!(&pressure_chg_pipe_6);
-            let ihx_tube_side_6 = 
-                ihx_sthe_6.get_clone_of_tube_side_parallel_tube_fluid_component();
-
-            dbg!(&ihx_tube_side_6);
-
-            let pressure_chg_pipe_12 = 
-                fhr_pipe_12.get_pressure_change_immutable(zero_mass_flow);
-            dbg!(&pressure_chg_pipe_12);
-            let pressure_chg_pipe_16 = 
-                fhr_intrmd_loop_pump_16_with_pressure_set.get_pressure_change_immutable(zero_mass_flow);
-            dbg!(&pressure_chg_pipe_16);
-            let pressure_chg_pipe_15 = 
-                fhr_pipe_15.get_pressure_change_immutable(zero_mass_flow);
-            dbg!(&pressure_chg_pipe_15);
-        }
 
         // calculate pri loop side fluid mechanics
         let mut pri_loop_branches = 
@@ -242,7 +308,7 @@ pub fn four_branch_pri_loop_flowrates_parallel_debug(
     // Intermediate heat exchanger branch 
     fhr_pipe_7: &InsulatedFluidComponent,
     _fhr_pri_loop_pump: &NonInsulatedFluidComponent
-    ) -> (MassRate, MassRate, MassRate, MassRate,){
+) -> (MassRate, MassRate, MassRate, MassRate,){
 
     // note: this crashes due to non convergency issues...
     //thread '<unnamed>' panicked at C:\Users\fifad\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\tuas_boussinesq_solver-0.0.7\src\lib\array_control_vol_an
@@ -295,7 +361,7 @@ pub fn four_branch_pri_loop_flowrates_parallel_debug(
     //intermediate_heat_exchanger_branch.clone_and_add_component(&fhr_pump_clone);
 
 
-    
+
 
     let mut pri_loop_branches = 
         FluidComponentSuperCollection::default();
@@ -338,7 +404,7 @@ pub fn four_branch_pri_loop_flowrates_parallel_debug_library(
     // Intermediate heat exchanger branch 
     fhr_pipe_7: &InsulatedFluidComponent,
     _fhr_pri_loop_pump: &NonInsulatedFluidComponent
-    ) -> (MassRate, MassRate, MassRate, MassRate,){
+) -> (MassRate, MassRate, MassRate, MassRate,){
 
     // note: this crashes due to non convergency issues...
     //thread '<unnamed>' panicked at C:\Users\fifad\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\tuas_boussinesq_solver-0.0.7\src\lib\array_control_vol_an
@@ -391,7 +457,7 @@ pub fn four_branch_pri_loop_flowrates_parallel_debug_library(
     //intermediate_heat_exchanger_branch.clone_and_add_component(&fhr_pump_clone);
 
 
-    
+
 
     let mut pri_loop_branches = 
         FluidComponentSuperCollection::default();
@@ -406,7 +472,7 @@ pub fn four_branch_pri_loop_flowrates_parallel_debug_library(
     let pressure_change_across_each_branch = 
         pri_loop_branches.get_pressure_change(MassRate::ZERO);
 
-    
+
     let mass_rate_vector 
         = pri_loop_branches.get_mass_flowrate_across_each_parallel_branch(
             pressure_change_across_each_branch);
@@ -644,7 +710,7 @@ pub fn calculate_iterative_mass_flowrate_across_branches_for_fhr_sim_v1(
                         &*fluid_component_pointer_collection;
 
 
-                    
+
                     dbg!("calculating mass flowrate for...");
                     dbg!(&fluid_component_collection);
 
@@ -672,7 +738,7 @@ pub fn calculate_iterative_mass_flowrate_across_branches_for_fhr_sim_v1(
                     mass_flowrate_vector[index] = 
                         fluid_component_mass_flowrate;
 
-            }
+                }
 
             // for fhr, sim specifically, we have 4 branches
 

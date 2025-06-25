@@ -37,6 +37,10 @@ Bugfix: another failure to converge due to too tight tolerance was
 getting mass flowrate from pressure change for single branch. There was 
 some failure to converge.
 
+Feature added: added regression tests for some pipes in the correct 
+order of magnitude of mass flowrate and pressure drop for gFHR like 
+reactors. HITEC in secondary loop, FLiBe in primary loop.
+
 ## v 0.0.8 
 
 Updating regression testing for CIET coupled natural circulation. This will 

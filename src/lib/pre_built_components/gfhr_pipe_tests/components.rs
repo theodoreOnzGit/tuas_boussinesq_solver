@@ -5,6 +5,7 @@ use crate::heat_transfer_correlations::nusselt_number_correlations::input_struct
 use crate::pre_built_components::insulated_pipes_and_fluid_components::InsulatedFluidComponent;
 use crate::pre_built_components::non_insulated_fluid_components::NonInsulatedFluidComponent;
 use crate::pre_built_components::shell_and_tube_heat_exchanger::SimpleShellAndTubeHeatExchanger;
+use crate::prelude::beta_testing::HeatTransferEntity;
 use uom::si::angle::degree;
 use uom::si::area::{square_centimeter, square_inch};
 use uom::si::f64::*;
@@ -1143,4 +1144,17 @@ pub fn new_fhr_pipe_13(initial_temperature: ThermodynamicTemperature) -> Insulat
         surface_roughness);
 
     insulated_component
+}
+
+/// creates a mixing node for the bottom of the reactor (start) 
+pub fn gfhr_bottom_mixing_node(initial_temperature: ThermodynamicTemperature)
+    -> HeatTransferEntity {
+
+        todo!()
+}
+/// creates a mixing node for the top of the reactor (end)
+pub fn gfhr_top_mixing_node(initial_temperature: ThermodynamicTemperature)
+    -> HeatTransferEntity {
+
+        todo!()
 }
