@@ -1148,7 +1148,7 @@ pub fn new_fhr_pipe_13(initial_temperature: ThermodynamicTemperature) -> Insulat
 }
 
 /// creates a mixing node for the bottom of the reactor (start) 
-pub fn gfhr_bottom_mixing_node(initial_temperature: ThermodynamicTemperature)
+pub fn gfhr_bottom_mixing_node_pri_loop(initial_temperature: ThermodynamicTemperature)
     -> HeatTransferEntity {
 
         let mixing_node_diameter = Length::new::<inch>(14.0);
@@ -1163,11 +1163,43 @@ pub fn gfhr_bottom_mixing_node(initial_temperature: ThermodynamicTemperature)
         return mixing_node.into();
 }
 /// creates a mixing node for the top of the reactor (end)
-pub fn gfhr_top_mixing_node(initial_temperature: ThermodynamicTemperature)
+pub fn gfhr_top_mixing_node_pri_loop(initial_temperature: ThermodynamicTemperature)
     -> HeatTransferEntity {
 
         let mixing_node_diameter = Length::new::<inch>(14.0);
         let mixing_node_material = LiquidMaterial::FLiBe;
+        let mixing_node_pressure = Pressure::new::<atmosphere>(1.0);
+        let mixing_node = SingleCVNode::new_sphere(
+            mixing_node_diameter, 
+            mixing_node_material.into(), 
+            initial_temperature, 
+            mixing_node_pressure).
+            unwrap();
+        return mixing_node.into();
+}
+
+
+/// creates a mixing node for the bottom of the intermediate loop (start) 
+pub fn gfhr_bottom_mixing_node_intrmd_loop(initial_temperature: ThermodynamicTemperature)
+    -> HeatTransferEntity {
+
+        let mixing_node_diameter = Length::new::<inch>(14.0);
+        let mixing_node_material = LiquidMaterial::HITEC;
+        let mixing_node_pressure = Pressure::new::<atmosphere>(1.0);
+        let mixing_node = SingleCVNode::new_sphere(
+            mixing_node_diameter, 
+            mixing_node_material.into(), 
+            initial_temperature, 
+            mixing_node_pressure).
+            unwrap();
+        return mixing_node.into();
+}
+/// creates a mixing node for the top of the intermediate loop (end)
+pub fn gfhr_top_mixing_node_intrmd_loop(initial_temperature: ThermodynamicTemperature)
+    -> HeatTransferEntity {
+
+        let mixing_node_diameter = Length::new::<inch>(14.0);
+        let mixing_node_material = LiquidMaterial::HITEC;
         let mixing_node_pressure = Pressure::new::<atmosphere>(1.0);
         let mixing_node = SingleCVNode::new_sphere(
             mixing_node_diameter, 

@@ -17,7 +17,7 @@ use uom::si::{mass_rate::kilogram_per_second, pressure::kilopascal};
 use uom::si::thermodynamic_temperature::degree_celsius;
 use uom::ConstZero;
 
-use crate::pre_built_components::gfhr_pipe_tests::components::{gfhr_bottom_mixing_node, gfhr_top_mixing_node, new_fhr_pipe_4_ver_2, new_reactor_vessel_pipe_1};
+use crate::pre_built_components::gfhr_pipe_tests::components::{gfhr_bottom_mixing_node_intrmd_loop, gfhr_bottom_mixing_node_pri_loop, gfhr_top_mixing_node_intrmd_loop, gfhr_top_mixing_node_pri_loop, new_fhr_pipe_4_ver_2, new_reactor_vessel_pipe_1};
 use crate::pre_built_components::gfhr_pipe_tests::components::new_downcomer_pipe_3;
 use crate::pre_built_components::gfhr_pipe_tests::components::new_fhr_pipe_7;
 use crate::pre_built_components::gfhr_pipe_tests::components::new_downcomer_pipe_2;
@@ -87,7 +87,7 @@ pub(crate) fn test_fhr_four_branch_solver_pri_and_intrmd_loop_full_th(){
     let mut fhr_pipe_4 = new_fhr_pipe_4_ver_2(initial_temperature_pri_loop);
 
 
-    let mut initial_temperature_intrmd_loop = 
+    let initial_temperature_intrmd_loop = 
         ThermodynamicTemperature::new::<degree_celsius>(500.0);
     // intermediate loop ihx side 
     // (excluding sthe)
@@ -109,9 +109,14 @@ pub(crate) fn test_fhr_four_branch_solver_pri_and_intrmd_loop_full_th(){
 
     // mixing nodes for pri loop 
     let mut bottom_mixing_node_pri_loop = 
-        gfhr_bottom_mixing_node(initial_temperature_pri_loop);
+        gfhr_bottom_mixing_node_pri_loop(initial_temperature_pri_loop);
     let mut top_mixing_node_pri_loop = 
-        gfhr_top_mixing_node(initial_temperature_pri_loop);
+        gfhr_top_mixing_node_pri_loop(initial_temperature_pri_loop);
+    // mixing nodes for intermediate loop 
+    let mut bottom_mixing_node_intrmd_loop = 
+        gfhr_bottom_mixing_node_intrmd_loop(initial_temperature_intrmd_loop);
+    let mut top_mixing_node_intrmd_loop = 
+        gfhr_top_mixing_node_intrmd_loop(initial_temperature_intrmd_loop);
 
 
     // timestep settings
@@ -190,7 +195,9 @@ pub(crate) fn test_fhr_four_branch_solver_pri_and_intrmd_loop_full_th(){
             &mut fhr_intrmd_loop_pump_16, 
             &mut fhr_pipe_15, 
             &mut fhr_steam_generator_shell_side_14, 
-            &mut fhr_pipe_13);
+            &mut fhr_pipe_13,
+            &mut bottom_mixing_node_intrmd_loop,
+            &mut top_mixing_node_intrmd_loop);
 
 
         simulation_time += timestep;

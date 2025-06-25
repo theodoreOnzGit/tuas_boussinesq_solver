@@ -33,7 +33,7 @@ pub(crate) fn four_branch_pri_and_intermediate_loop_single_time_step(
     downcomer_pipe_2: &mut InsulatedFluidComponent,
     // downcomer branch 2
     downcomer_pipe_3: &mut InsulatedFluidComponent,
-    // mixing nodes 
+    // mixing nodes for pri loop
     bottom_mixing_node_pri_loop: &mut HeatTransferEntity,
     top_mixing_node_pri_loop: &mut HeatTransferEntity,
     // Intermediate heat exchanger branch in pri loop
@@ -53,6 +53,9 @@ pub(crate) fn four_branch_pri_and_intermediate_loop_single_time_step(
     fhr_pipe_15: &mut InsulatedFluidComponent,
     fhr_steam_generator_shell_side_14: &mut NonInsulatedFluidComponent,
     fhr_pipe_13: &mut InsulatedFluidComponent,
+    // mixing nodes for intermediate loop
+    bottom_mixing_node_intrmd_loop: &mut HeatTransferEntity,
+    top_mixing_node_intrmd_loop: &mut HeatTransferEntity,
 
     ) -> FHRState {
 
@@ -220,6 +223,59 @@ pub(crate) fn four_branch_pri_and_intermediate_loop_single_time_step(
             fhr_pipe_4.pipe_fluid_array.link_to_front(
                 top_mixing_node_pri_loop, 
                 ihx_advection_heat_transfer_interaction)
+                .unwrap();
+        }
+
+        // intermediate loop ihx branch 
+        {
+
+            bottom_mixing_node_intrmd_loop.link_to_front(
+                &mut fhr_pipe_17.pipe_fluid_array, 
+                intrmd_loop_ihx_br_heat_transfer_interaction)
+                .unwrap();
+
+            ihx_sthe_6.shell_side_fluid_array.link_to_back(
+                &mut fhr_pipe_17.pipe_fluid_array, 
+                intrmd_loop_ihx_br_heat_transfer_interaction)
+                .unwrap();
+
+            ihx_sthe_6.shell_side_fluid_array.link_to_front(
+                &mut fhr_pipe_12.pipe_fluid_array, 
+                intrmd_loop_ihx_br_heat_transfer_interaction)
+                .unwrap();
+
+            fhr_pipe_12.pipe_fluid_array.link_to_front(
+                top_mixing_node_intrmd_loop, 
+                intrmd_loop_ihx_br_heat_transfer_interaction)
+                .unwrap();
+
+        }
+
+        {
+
+            bottom_mixing_node_intrmd_loop.link_to_front(
+                &mut fhr_intrmd_loop_pump_16.pipe_fluid_array, 
+                intrmd_loop_steam_gen_br_heat_transfer_interaction)
+                .unwrap();
+
+            fhr_intrmd_loop_pump_16.pipe_fluid_array.link_to_front(
+                &mut fhr_pipe_15.pipe_fluid_array, 
+                intrmd_loop_steam_gen_br_heat_transfer_interaction)
+                .unwrap();
+
+            fhr_pipe_15.pipe_fluid_array.link_to_front(
+                &mut fhr_steam_generator_shell_side_14.pipe_fluid_array, 
+                intrmd_loop_steam_gen_br_heat_transfer_interaction)
+                .unwrap();
+
+            fhr_steam_generator_shell_side_14.pipe_fluid_array.link_to_front(
+                &mut fhr_pipe_13.pipe_fluid_array, 
+                intrmd_loop_steam_gen_br_heat_transfer_interaction)
+                .unwrap();
+
+            fhr_pipe_13.pipe_fluid_array.link_to_front(
+                top_mixing_node_intrmd_loop, 
+                intrmd_loop_steam_gen_br_heat_transfer_interaction)
                 .unwrap();
         }
         
