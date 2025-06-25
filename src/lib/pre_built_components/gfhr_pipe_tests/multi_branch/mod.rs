@@ -233,6 +233,7 @@ pub fn test_fhr_four_branch_solver_pri_and_intrmd_loop_zero_flow(){
             &ihx_sthe_6, 
             &fhr_pipe_5, 
             &fhr_pipe_4, 
+            // intermediate loop
             &fhr_pipe_17, 
             &fhr_pipe_12, 
             &fhr_int_loop_pump_16, 

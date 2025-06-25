@@ -122,9 +122,7 @@ pub fn new_downcomer_pipe_2(initial_temperature: ThermodynamicTemperature) -> In
     let ambient_temperature = ThermodynamicTemperature::new::<degree_celsius>(20.0);
     let fluid_pressure = Pressure::new::<atmosphere>(1.0);
     let solid_pressure = Pressure::new::<atmosphere>(1.0);
-    let hydraulic_diameter = Length::new::<centimeter>(5.0);
     let pipe_length = Length::new::<meter>(3.10);
-    let flow_area = Area::new::<square_centimeter>(100.0);
     let hydraulic_diameter = Length::new::<inch>(14.0);
     let flow_area = Area::new::<square_inch>(154.0);
     let incline_angle = Angle::new::<degree>(90.0);
@@ -204,9 +202,7 @@ pub fn new_downcomer_pipe_3(initial_temperature: ThermodynamicTemperature) -> In
     let ambient_temperature = ThermodynamicTemperature::new::<degree_celsius>(20.0);
     let fluid_pressure = Pressure::new::<atmosphere>(1.0);
     let solid_pressure = Pressure::new::<atmosphere>(1.0);
-    let hydraulic_diameter = Length::new::<centimeter>(5.0);
     let pipe_length = Length::new::<meter>(3.10);
-    let flow_area = Area::new::<square_centimeter>(100.0);
     let hydraulic_diameter = Length::new::<inch>(14.0);
     let flow_area = Area::new::<square_inch>(154.0);
     let incline_angle = Angle::new::<degree>(90.0);

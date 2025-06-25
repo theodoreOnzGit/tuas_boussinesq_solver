@@ -132,6 +132,29 @@ pub fn four_branch_pri_and_intermediate_loop(
         intrmd_loop_steam_generator_branch.clone_and_add_component(
             fhr_pipe_13);
 
+        let zero_mass_flow = MassRate::ZERO;
+
+        let pressure_chg_pipe_13 = 
+            fhr_pipe_13.get_pressure_change_immutable(
+                zero_mass_flow);
+        dbg!(&pressure_chg_pipe_13);
+        let pressure_chg_pipe_14 = 
+            fhr_steam_generator_shell_side_14.get_pressure_change_immutable(
+                zero_mass_flow);
+        dbg!(&pressure_chg_pipe_14);
+
+
+        let pressure_chg_pipe_17 = 
+            fhr_pipe_17.get_pressure_change_immutable(
+                zero_mass_flow);
+        dbg!(&pressure_chg_pipe_17);
+        let pressure_chg_pipe_6 = 
+            &ihx_sthe_6
+            .get_clone_of_tube_side_parallel_tube_fluid_component()
+            .get_pressure_change_immutable(
+                zero_mass_flow);
+        dbg!(&pressure_chg_pipe_6);
+
 
         // calculate pri loop side fluid mechanics
         let mut pri_loop_branches = 
