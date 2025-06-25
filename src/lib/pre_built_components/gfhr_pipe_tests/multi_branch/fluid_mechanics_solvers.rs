@@ -184,6 +184,7 @@ pub(crate) fn four_branch_pri_and_intermediate_loop_single_time_step(
                 .unwrap();
             dbg!("downcomer br 2 linking complete");
         }
+        // pri loop 
         // ihx branch 
         {
 
@@ -242,12 +243,12 @@ pub(crate) fn four_branch_pri_and_intermediate_loop_single_time_step(
                 intrmd_loop_ihx_br_heat_transfer_interaction)
                 .unwrap();
 
-            ihx_sthe_6.shell_side_fluid_array.link_to_back(
+            ihx_sthe_6.tube_side_fluid_array_for_single_tube.link_to_back(
                 &mut fhr_pipe_17.pipe_fluid_array, 
                 intrmd_loop_ihx_br_heat_transfer_interaction)
                 .unwrap();
 
-            ihx_sthe_6.shell_side_fluid_array.link_to_front(
+            ihx_sthe_6.tube_side_fluid_array_for_single_tube.link_to_front(
                 &mut fhr_pipe_12.pipe_fluid_array, 
                 intrmd_loop_ihx_br_heat_transfer_interaction)
                 .unwrap();
@@ -365,7 +366,7 @@ pub(crate) fn four_branch_pri_and_intermediate_loop_single_time_step(
                 downcomer_branch_2_flow, 
                 zero_power)
                 .unwrap();
-            dbg!("Advance timestep: reactor and downcomer branches complete");
+            dbg!("lateral linking: reactor and downcomer branches complete");
         }
 
         // this is the pri loop ihx branch
@@ -407,7 +408,7 @@ pub(crate) fn four_branch_pri_and_intermediate_loop_single_time_step(
                 pri_loop_intermediate_heat_exchanger_branch_flow, 
                 zero_power)
                 .unwrap();
-            dbg!("Advance timestep: pri loop ihx branches complete");
+            dbg!("lateral linking: pri loop ihx branches complete");
         }
 
         // ihx 
@@ -421,7 +422,7 @@ pub(crate) fn four_branch_pri_and_intermediate_loop_single_time_step(
                 prandtl_wall_correction_setting, 
                 tube_side_total_mass_flowrate, 
                 shell_side_total_mass_flowrate).unwrap();
-            dbg!("Advance timestep: IHX complete");
+            dbg!("lateral linking: IHX complete");
 
         }
         // hitec intrmd loop 
@@ -461,7 +462,7 @@ pub(crate) fn four_branch_pri_and_intermediate_loop_single_time_step(
                 intrmd_loop_steam_gen_br_flow, 
                 zero_power)
                 .unwrap();
-            dbg!("Advance timestep: intermediate loop IHX Branch complete");
+            dbg!("lateral linking: intermediate loop IHX Branch complete");
         }
 
         // timestep advance for all heat transfer entities
@@ -476,13 +477,13 @@ pub(crate) fn four_branch_pri_and_intermediate_loop_single_time_step(
             downcomer_pipe_3
                 .advance_timestep(timestep)
                 .unwrap();
+
+            dbg!("Advance timestep: Reactor and Downcomer branches complete");
+
             fhr_pipe_4
                 .advance_timestep(timestep)
                 .unwrap();
             fhr_pipe_5
-                .advance_timestep(timestep)
-                .unwrap();
-            ihx_sthe_6
                 .advance_timestep(timestep)
                 .unwrap();
             fhr_pipe_7
@@ -500,11 +501,16 @@ pub(crate) fn four_branch_pri_and_intermediate_loop_single_time_step(
             fhr_pipe_11
                 .advance_timestep(timestep)
                 .unwrap();
+            dbg!("Advance timestep: pri loop complete except for IHX");
 
             // intermediate branch (less ihx)
             fhr_pipe_12
                 .advance_timestep(timestep)
                 .unwrap();
+            fhr_pipe_17
+                .advance_timestep(timestep)
+                .unwrap();
+            dbg!("Advance timestep: intermediate loop IHX Branch complete");
             fhr_pipe_13
                 .advance_timestep(timestep)
                 .unwrap();
@@ -515,9 +521,6 @@ pub(crate) fn four_branch_pri_and_intermediate_loop_single_time_step(
                 .advance_timestep(timestep)
                 .unwrap();
             fhr_intrmd_loop_pump_16
-                .advance_timestep(timestep)
-                .unwrap();
-            fhr_pipe_17
                 .advance_timestep(timestep)
                 .unwrap();
             dbg!("Advance timestep: intermediate loop SG Branch complete");
@@ -536,6 +539,11 @@ pub(crate) fn four_branch_pri_and_intermediate_loop_single_time_step(
                 .advance_timestep_mut_self(timestep)
                 .unwrap();
             dbg!("Advance timestep: Mixing Nodes complete");
+
+            ihx_sthe_6
+                .advance_timestep(timestep)
+                .unwrap();
+            dbg!("Advance timestep: IHX complete");
         }
         
         let fhr_state = FHRState {
