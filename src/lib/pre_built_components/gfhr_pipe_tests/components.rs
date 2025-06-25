@@ -6,10 +6,10 @@ use crate::pre_built_components::insulated_pipes_and_fluid_components::Insulated
 use crate::pre_built_components::non_insulated_fluid_components::NonInsulatedFluidComponent;
 use crate::pre_built_components::shell_and_tube_heat_exchanger::SimpleShellAndTubeHeatExchanger;
 use uom::si::angle::degree;
-use uom::si::area::{square_centimeter, square_meter};
+use uom::si::area::{square_centimeter, square_inch};
 use uom::si::f64::*;
 use uom::si::heat_transfer::watt_per_square_meter_kelvin;
-use uom::si::length::{centimeter, meter, millimeter};
+use uom::si::length::{centimeter, inch, meter, millimeter};
 use uom::si::ratio::ratio;
 use uom::si::thermodynamic_temperature::degree_celsius;
 use uom::si::pressure::atmosphere;
@@ -52,7 +52,7 @@ pub fn new_reactor_vessel_pipe_1(initial_temperature: ThermodynamicTemperature) 
     let flow_area = Area::new::<square_centimeter>(4500.0);
     let incline_angle = Angle::new::<degree>(90.0);
     // not putting in ergun equation yet
-    let form_loss = Ratio::new::<ratio>(550.05);
+    let form_loss = Ratio::new::<ratio>(5.05);
     //estimated component wall roughness (doesn't matter here,
     //but i need to fill in)
     let surface_roughness = Length::new::<millimeter>(0.015);
@@ -125,9 +125,11 @@ pub fn new_downcomer_pipe_2(initial_temperature: ThermodynamicTemperature) -> In
     let hydraulic_diameter = Length::new::<centimeter>(5.0);
     let pipe_length = Length::new::<meter>(3.10);
     let flow_area = Area::new::<square_centimeter>(100.0);
+    let hydraulic_diameter = Length::new::<inch>(14.0);
+    let flow_area = Area::new::<square_inch>(154.0);
     let incline_angle = Angle::new::<degree>(90.0);
     // not putting in ergun equation yet
-    let form_loss = Ratio::new::<ratio>(5505.05);
+    let form_loss = Ratio::new::<ratio>(550.05);
     //estimated component wall roughness (doesn't matter here,
     //but i need to fill in)
     let surface_roughness = Length::new::<millimeter>(0.015);
@@ -205,9 +207,11 @@ pub fn new_downcomer_pipe_3(initial_temperature: ThermodynamicTemperature) -> In
     let hydraulic_diameter = Length::new::<centimeter>(5.0);
     let pipe_length = Length::new::<meter>(3.10);
     let flow_area = Area::new::<square_centimeter>(100.0);
+    let hydraulic_diameter = Length::new::<inch>(14.0);
+    let flow_area = Area::new::<square_inch>(154.0);
     let incline_angle = Angle::new::<degree>(90.0);
     // not putting in ergun equation yet
-    let form_loss = Ratio::new::<ratio>(5505.05);
+    let form_loss = Ratio::new::<ratio>(550.05);
     //estimated component wall roughness (doesn't matter here,
     //but i need to fill in)
     let surface_roughness = Length::new::<millimeter>(0.015);
@@ -254,13 +258,19 @@ pub fn new_downcomer_pipe_3(initial_temperature: ThermodynamicTemperature) -> In
 
 /// fhr pipe 11,
 /// flow direction going downwards by 1m
+/// note that for fhr pipes, the diamter is 14 inches 
+///
+/// from KP-FHR Mechanistic Source Term Methodology Topical Report, Revision 3
+/// https://www.nrc.gov/docs/ML2208/ML22088A231.pdf
+/// page 151 of 195
+/// this makes for 14 inch diameter and 154 inch square flow area
 pub fn new_fhr_pipe_11(initial_temperature: ThermodynamicTemperature) -> InsulatedFluidComponent {
     let ambient_temperature = ThermodynamicTemperature::new::<degree_celsius>(20.0);
     let fluid_pressure = Pressure::new::<atmosphere>(1.0);
     let solid_pressure = Pressure::new::<atmosphere>(1.0);
-    let hydraulic_diameter = Length::new::<centimeter>(5.0);
     let pipe_length = Length::new::<meter>(1.0);
-    let flow_area = Area::new::<square_centimeter>(19.0);
+    let hydraulic_diameter = Length::new::<inch>(14.0);
+    let flow_area = Area::new::<square_inch>(154.0);
     let incline_angle = Angle::new::<degree>(-90.0);
     // not putting in ergun equation yet
     let form_loss = Ratio::new::<ratio>(1.05);
@@ -314,9 +324,9 @@ pub fn new_fhr_pipe_10(initial_temperature: ThermodynamicTemperature) -> Insulat
     let ambient_temperature = ThermodynamicTemperature::new::<degree_celsius>(20.0);
     let fluid_pressure = Pressure::new::<atmosphere>(1.0);
     let solid_pressure = Pressure::new::<atmosphere>(1.0);
-    let hydraulic_diameter = Length::new::<centimeter>(5.0);
     let pipe_length = Length::new::<meter>(9.64);
-    let flow_area = Area::new::<square_centimeter>(19.0);
+    let hydraulic_diameter = Length::new::<inch>(14.0);
+    let flow_area = Area::new::<square_inch>(154.0);
     let incline_angle = Angle::new::<degree>(0.0);
     // not putting in ergun equation yet
     let form_loss = Ratio::new::<ratio>(1.05);
@@ -362,9 +372,9 @@ pub fn new_fhr_pri_loop_pump_9(initial_temperature: ThermodynamicTemperature) ->
     let ambient_temperature = ThermodynamicTemperature::new::<degree_celsius>(20.0);
     let fluid_pressure = Pressure::new::<atmosphere>(1.0);
     let solid_pressure = Pressure::new::<atmosphere>(1.0);
-    let hydraulic_diameter = Length::new::<meter>(5.0);
     let component_length = Length::new::<meter>(0.36);
-    let flow_area = Area::new::<square_centimeter>(20.0);
+    let hydraulic_diameter = Length::new::<inch>(14.0);
+    let flow_area = Area::new::<square_inch>(154.0);
     let incline_angle = Angle::new::<degree>(0.0);
     let form_loss = Ratio::new::<ratio>(0.0);
     let reynolds_power = -1_f64;
@@ -413,9 +423,9 @@ pub fn new_fhr_pipe_8(initial_temperature: ThermodynamicTemperature) -> Insulate
     let ambient_temperature = ThermodynamicTemperature::new::<degree_celsius>(20.0);
     let fluid_pressure = Pressure::new::<atmosphere>(1.0);
     let solid_pressure = Pressure::new::<atmosphere>(1.0);
-    let hydraulic_diameter = Length::new::<centimeter>(5.0);
     let pipe_length = Length::new::<meter>(1.0);
-    let flow_area = Area::new::<square_centimeter>(19.0);
+    let hydraulic_diameter = Length::new::<inch>(14.0);
+    let flow_area = Area::new::<square_inch>(154.0);
     let incline_angle = Angle::new::<degree>(90.0);
     // not putting in ergun equation yet
     let form_loss = Ratio::new::<ratio>(1.05);
@@ -463,9 +473,9 @@ pub fn new_fhr_pipe_7(initial_temperature: ThermodynamicTemperature) -> Insulate
     let ambient_temperature = ThermodynamicTemperature::new::<degree_celsius>(20.0);
     let fluid_pressure = Pressure::new::<atmosphere>(1.0);
     let solid_pressure = Pressure::new::<atmosphere>(1.0);
-    let hydraulic_diameter = Length::new::<centimeter>(5.0);
     let pipe_length = Length::new::<meter>(3.1);
-    let flow_area = Area::new::<square_centimeter>(19.0);
+    let hydraulic_diameter = Length::new::<inch>(14.0);
+    let flow_area = Area::new::<square_inch>(154.0);
     let incline_angle = Angle::new::<degree>(90.0);
     // not putting in ergun equation yet
     let form_loss = Ratio::new::<ratio>(1.05);
@@ -512,86 +522,6 @@ pub fn new_fhr_pipe_7(initial_temperature: ThermodynamicTemperature) -> Insulate
     insulated_component
 }
 
-/// creates a new pipe 4 for the fhr simulator, this goes from bottom 
-/// to top of the pebble bed
-///
-/// this is supposed to be part of the forced cooling primary loop
-///
-/// it is then joined to two mixing nodes at the top and bottom of the 
-/// reactor
-///
-/// we make it roughly 
-/// 310 cm in height 
-/// 5 cm in radius
-///
-/// this is based on 
-///
-/// core barrel thickness of 2 cm 
-/// vessel thickness of 4 cm
-/// downcomer width of 5cm
-///
-/// expected mass flowrate of FLiBe is about 1173 kg/s for a 280 MWth reactor
-/// 
-/// https://kairospower.com/generic-fhr-core-model/
-///
-/// we can scale it down
-///
-/// note: i found that this had a flow area of 20 square meters... way too 
-/// big
-///
-/// Nevertheless, this component was useful for debugging
-pub fn new_fhr_pipe_7_old(initial_temperature: ThermodynamicTemperature) -> InsulatedFluidComponent {
-    let ambient_temperature = ThermodynamicTemperature::new::<degree_celsius>(20.0);
-    let fluid_pressure = Pressure::new::<atmosphere>(1.0);
-    let solid_pressure = Pressure::new::<atmosphere>(1.0);
-    let hydraulic_diameter = Length::new::<centimeter>(5.0);
-    let pipe_length = Length::new::<meter>(3.10);
-    let flow_area = Area::new::<square_meter>(20.0);
-    let incline_angle = Angle::new::<degree>(90.0);
-    // not putting in ergun equation yet
-    let form_loss = Ratio::new::<ratio>(5505.05);
-    //estimated component wall roughness (doesn't matter here,
-    //but i need to fill in)
-    let surface_roughness = Length::new::<millimeter>(0.015);
-    let shell_id = hydraulic_diameter;
-    // the pipe at this point just functions as thermal inertia 
-    // it isn't meant to conduct heat to graphite and so on, even though it 
-    // can. 
-    // It is a quick an dirty way to gprogram this
-    let pipe_thickness = Length::new::<centimeter>(4.0);
-    let shell_od = shell_id + 2.0 * pipe_thickness;
-    let insulation_thickness = Length::new::<meter>(0.0508);
-    let pipe_shell_material = SolidMaterial::SteelSS304L;
-    let insulation_material = SolidMaterial::Fiberglass;
-    let pipe_fluid = LiquidMaterial::FLiBe;
-    // I just made this side more conductive to environment
-    let htc_to_ambient = HeatTransfer::new::<watt_per_square_meter_kelvin>(20.0);
-    // we want 5 total nodes,
-    // so two outer nodes on each end, plus 3 inner nodes
-    let user_specified_inner_nodes = 3; 
-
-    let insulated_component = InsulatedFluidComponent::new_insulated_pipe(
-        initial_temperature, 
-        ambient_temperature, 
-        fluid_pressure, 
-        solid_pressure, 
-        flow_area, 
-        incline_angle, 
-        form_loss, 
-        shell_id, 
-        shell_od, 
-        insulation_thickness, 
-        pipe_length, 
-        hydraulic_diameter, 
-        pipe_shell_material, 
-        insulation_material, 
-        pipe_fluid, 
-        htc_to_ambient, 
-        user_specified_inner_nodes, 
-        surface_roughness);
-
-    insulated_component
-}
 
 
 /// constructs a new instance of the shell and tube 
@@ -611,7 +541,7 @@ pub fn new_ihx_sthe_6_version_1(initial_temperature: ThermodynamicTemperature
     // tube side
     //
     // this is labelled 6 within the pri loop and intermediate loop diagram
-    let number_of_tubes = 19;
+    let number_of_tubes = 32;
     //from Zou's publication, DHX tube side and shell side have 11 nodes 
     let number_of_inner_nodes = 11 - 2;
 
@@ -619,9 +549,10 @@ pub fn new_ihx_sthe_6_version_1(initial_temperature: ThermodynamicTemperature
     let tube_side_od = Length::new::<meter>(0.0794);
     // wall thickness is 7.95e-4 meters 
     // this is (OD-ID)/2 which i verified in Libreoffice Calc 
+    let flow_area = Area::new::<square_inch>(154.0);
     let tube_side_hydraulic_diameter = tube_side_id;
     let tube_side_flow_area_single_tube = 
-        Area::new::<square_centimeter>(80.0) / 
+        flow_area / 
         number_of_tubes as f64;
 
     let tube_side_form_loss = Ratio::new::<ratio>(3.3);
@@ -655,13 +586,16 @@ pub fn new_ihx_sthe_6_version_1(initial_temperature: ThermodynamicTemperature
 
     // shell side 
     //
-    // this is labelled 24 and within Primary loop
-    let shell_side_id = Length::new::<meter>(0.0508);
+    // labelled 6 within primary loop 
+    // note: 
+    let hydraulic_diameter = Length::new::<inch>(14.0);
+    let flow_area = Area::new::<square_inch>(154.0);
+    let shell_side_id = hydraulic_diameter;
     let shell_side_wall_thickness = Length::new::<meter>(0.0016);
     let shell_side_od = shell_side_id + 2.0 * shell_side_wall_thickness;
-    let shell_side_hydraulic_diameter = Length::new::<meter>(6.857144e-2);
-    let shell_side_flow_area = Area::new::<square_centimeter>(160.0);
-    let shell_side_form_loss = Ratio::new::<ratio>(23.9);
+    let shell_side_hydraulic_diameter = hydraulic_diameter;
+    let shell_side_flow_area = flow_area;
+    let shell_side_form_loss = Ratio::new::<ratio>(3.9);
     let shell_side_incline_angle = Angle::new::<degree>(90.0);
     let shell_side_liquid = LiquidMaterial::FLiBe;
     let outer_tube_material = steel;
@@ -747,9 +681,9 @@ pub fn new_fhr_pipe_5(initial_temperature: ThermodynamicTemperature) -> Insulate
     let ambient_temperature = ThermodynamicTemperature::new::<degree_celsius>(20.0);
     let fluid_pressure = Pressure::new::<atmosphere>(1.0);
     let solid_pressure = Pressure::new::<atmosphere>(1.0);
-    let hydraulic_diameter = Length::new::<centimeter>(5.0);
     let pipe_length = Length::new::<meter>(10.0);
-    let flow_area = Area::new::<square_centimeter>(19.0);
+    let hydraulic_diameter = Length::new::<inch>(14.0);
+    let flow_area = Area::new::<square_inch>(154.0);
     let incline_angle = Angle::new::<degree>(0.0);
     // not putting in ergun equation yet
     let form_loss = Ratio::new::<ratio>(1.05);
@@ -794,13 +728,63 @@ pub fn new_fhr_pipe_5(initial_temperature: ThermodynamicTemperature) -> Insulate
 
 /// fhr pipe 4,
 /// flow direction going downwards by 1m
-pub fn new_fhr_pipe_4(initial_temperature: ThermodynamicTemperature) -> InsulatedFluidComponent {
+/// arbitrary parameters used for regression testing
+pub fn new_fhr_pipe_4_ver_1(initial_temperature: ThermodynamicTemperature) -> InsulatedFluidComponent {
     let ambient_temperature = ThermodynamicTemperature::new::<degree_celsius>(20.0);
     let fluid_pressure = Pressure::new::<atmosphere>(1.0);
     let solid_pressure = Pressure::new::<atmosphere>(1.0);
     let hydraulic_diameter = Length::new::<centimeter>(5.0);
     let pipe_length = Length::new::<meter>(1.0);
     let flow_area = Area::new::<square_centimeter>(19.0);
+    let incline_angle = Angle::new::<degree>(-90.0);
+    // not putting in ergun equation yet
+    let form_loss = Ratio::new::<ratio>(1.05);
+    let surface_roughness = Length::new::<millimeter>(0.015);
+    let shell_id = hydraulic_diameter;
+
+    let pipe_thickness = Length::new::<centimeter>(4.0);
+    let shell_od = shell_id + 2.0 * pipe_thickness;
+    let insulation_thickness = Length::new::<meter>(0.0508);
+    let pipe_shell_material = SolidMaterial::SteelSS304L;
+    let insulation_material = SolidMaterial::Fiberglass;
+    let pipe_fluid = LiquidMaterial::FLiBe;
+    // I just made this side more conductive to environment
+    let htc_to_ambient = HeatTransfer::new::<watt_per_square_meter_kelvin>(20.0);
+    // 2 total nodes
+    // that is two outer nodes plus 1.0
+    let user_specified_inner_nodes = 0; 
+
+    let insulated_component = InsulatedFluidComponent::new_insulated_pipe(
+        initial_temperature, 
+        ambient_temperature, 
+        fluid_pressure, 
+        solid_pressure, 
+        flow_area, 
+        incline_angle, 
+        form_loss, 
+        shell_id, 
+        shell_od, 
+        insulation_thickness, 
+        pipe_length, 
+        hydraulic_diameter, 
+        pipe_shell_material, 
+        insulation_material, 
+        pipe_fluid, 
+        htc_to_ambient, 
+        user_specified_inner_nodes, 
+        surface_roughness);
+
+    insulated_component
+}
+/// fhr pipe 4,
+/// flow direction going downwards by 1m
+pub fn new_fhr_pipe_4_ver_2(initial_temperature: ThermodynamicTemperature) -> InsulatedFluidComponent {
+    let ambient_temperature = ThermodynamicTemperature::new::<degree_celsius>(20.0);
+    let fluid_pressure = Pressure::new::<atmosphere>(1.0);
+    let solid_pressure = Pressure::new::<atmosphere>(1.0);
+    let pipe_length = Length::new::<meter>(1.0);
+    let hydraulic_diameter = Length::new::<inch>(14.0);
+    let flow_area = Area::new::<square_inch>(154.0);
     let incline_angle = Angle::new::<degree>(-90.0);
     // not putting in ergun equation yet
     let form_loss = Ratio::new::<ratio>(1.05);
@@ -850,9 +834,9 @@ pub fn new_fhr_pipe_17(initial_temperature: ThermodynamicTemperature) -> Insulat
     let ambient_temperature = ThermodynamicTemperature::new::<degree_celsius>(20.0);
     let fluid_pressure = Pressure::new::<atmosphere>(1.0);
     let solid_pressure = Pressure::new::<atmosphere>(1.0);
-    let hydraulic_diameter = Length::new::<centimeter>(5.0);
     let pipe_length = Length::new::<meter>(4.1);
-    let flow_area = Area::new::<square_centimeter>(19.0);
+    let hydraulic_diameter = Length::new::<inch>(14.0);
+    let flow_area = Area::new::<square_inch>(154.0);
     let incline_angle = Angle::new::<degree>(90.0);
     // not putting in ergun equation yet
     let form_loss = Ratio::new::<ratio>(1.05);
@@ -902,9 +886,9 @@ pub fn new_fhr_pipe_12(initial_temperature: ThermodynamicTemperature) -> Insulat
     let ambient_temperature = ThermodynamicTemperature::new::<degree_celsius>(20.0);
     let fluid_pressure = Pressure::new::<atmosphere>(1.0);
     let solid_pressure = Pressure::new::<atmosphere>(1.0);
-    let hydraulic_diameter = Length::new::<centimeter>(5.0);
     let pipe_length = Length::new::<meter>(4.0);
-    let flow_area = Area::new::<square_centimeter>(19.0);
+    let hydraulic_diameter = Length::new::<inch>(14.0);
+    let flow_area = Area::new::<square_inch>(154.0);
     let incline_angle = Angle::new::<degree>(0.0);
     // not putting in ergun equation yet
     let form_loss = Ratio::new::<ratio>(1.05);
@@ -957,9 +941,9 @@ pub fn new_fhr_intermediate_loop_pump_16(initial_temperature: ThermodynamicTempe
     let ambient_temperature = ThermodynamicTemperature::new::<degree_celsius>(20.0);
     let fluid_pressure = Pressure::new::<atmosphere>(1.0);
     let solid_pressure = Pressure::new::<atmosphere>(1.0);
-    let hydraulic_diameter = Length::new::<meter>(5.0);
     let component_length = Length::new::<meter>(0.36);
-    let flow_area = Area::new::<square_centimeter>(20.0);
+    let hydraulic_diameter = Length::new::<inch>(14.0);
+    let flow_area = Area::new::<square_inch>(154.0);
     let incline_angle = Angle::new::<degree>(0.0);
     let form_loss = Ratio::new::<ratio>(0.0);
     let reynolds_power = -1_f64;
@@ -1011,9 +995,9 @@ pub fn new_fhr_pipe_15(initial_temperature: ThermodynamicTemperature) -> Insulat
     let ambient_temperature = ThermodynamicTemperature::new::<degree_celsius>(20.0);
     let fluid_pressure = Pressure::new::<atmosphere>(1.0);
     let solid_pressure = Pressure::new::<atmosphere>(1.0);
-    let hydraulic_diameter = Length::new::<centimeter>(5.0);
     let pipe_length = Length::new::<meter>(4.0 - 0.36);
-    let flow_area = Area::new::<square_centimeter>(19.0);
+    let hydraulic_diameter = Length::new::<inch>(14.0);
+    let flow_area = Area::new::<square_inch>(154.0);
     let incline_angle = Angle::new::<degree>(0.0);
     // not putting in ergun equation yet
     let form_loss = Ratio::new::<ratio>(1.05);
@@ -1065,9 +1049,9 @@ pub fn new_fhr_intermediate_loop_steam_generator_shell_side_14(initial_temperatu
     let ambient_temperature = ThermodynamicTemperature::new::<degree_celsius>(20.0);
     let fluid_pressure = Pressure::new::<atmosphere>(1.0);
     let solid_pressure = Pressure::new::<atmosphere>(1.0);
-    let hydraulic_diameter = Length::new::<meter>(5.0);
     let component_length = Length::new::<meter>(1.0);
-    let flow_area = Area::new::<square_centimeter>(20.0);
+    let hydraulic_diameter = Length::new::<inch>(14.0);
+    let flow_area = Area::new::<square_inch>(154.0);
     let incline_angle = Angle::new::<degree>(90.0);
     let form_loss = Ratio::new::<ratio>(0.0);
     let reynolds_power = -1_f64;
@@ -1121,9 +1105,9 @@ pub fn new_fhr_pipe_13(initial_temperature: ThermodynamicTemperature) -> Insulat
     let ambient_temperature = ThermodynamicTemperature::new::<degree_celsius>(20.0);
     let fluid_pressure = Pressure::new::<atmosphere>(1.0);
     let solid_pressure = Pressure::new::<atmosphere>(1.0);
-    let hydraulic_diameter = Length::new::<centimeter>(5.0);
     let pipe_length = Length::new::<meter>(4.1);
-    let flow_area = Area::new::<square_centimeter>(19.0);
+    let hydraulic_diameter = Length::new::<inch>(14.0);
+    let flow_area = Area::new::<square_inch>(154.0);
     let incline_angle = Angle::new::<degree>(90.0);
     // not putting in ergun equation yet
     let form_loss = Ratio::new::<ratio>(1.05);

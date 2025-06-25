@@ -1,12 +1,12 @@
 use uom::si::{mass_rate::kilogram_per_second, pressure::kilopascal};
 use uom::si::thermodynamic_temperature::degree_celsius;
 
-use crate::pre_built_components::gfhr_pipe_tests::components::{new_reactor_vessel_pipe_1};
 use crate::pre_built_components::gfhr_pipe_tests::components::new_fhr_pri_loop_pump_9;
-use crate::pre_built_components::gfhr_pipe_tests::components::new_fhr_pipe_7_old;
-use crate::pre_built_components::gfhr_pipe_tests::components::new_downcomer_pipe_3;
-use crate::pre_built_components::gfhr_pipe_tests::components::new_downcomer_pipe_2;
 use crate::pre_built_components::gfhr_pipe_tests::multi_branch::fluid_mechanics_solvers::four_branch_pri_loop_flowrates_parallel_debug;
+use crate::pre_built_components::gfhr_pipe_tests::multi_branch::regression::new_reactor_vessel_pipe_1_regression;
+use crate::pre_built_components::gfhr_pipe_tests::multi_branch::regression::new_fhr_pipe_7_regression;
+use crate::pre_built_components::gfhr_pipe_tests::multi_branch::regression::new_downcomer_pipe_3_regression;
+use crate::pre_built_components::gfhr_pipe_tests::multi_branch::regression::new_downcomer_pipe_2_regression;
 use uom::si::f64::*;
 /// supposing the pump applies 15 kPa of absolute pressure to this loop,
 /// solve for flow within each of the branches.
@@ -31,10 +31,10 @@ pub fn test_fhr_four_branch_solver_debug(){
 
     let initial_temperature = 
         ThermodynamicTemperature::new::<degree_celsius>(500.0);
-    let reactor_pipe_1 = new_reactor_vessel_pipe_1(initial_temperature);
-    let downcomer_pipe_2 = new_downcomer_pipe_2(initial_temperature);
-    let downcomer_pipe_3 = new_downcomer_pipe_3(initial_temperature);
-    let fhr_pipe_7 = new_fhr_pipe_7_old(initial_temperature);
+    let reactor_pipe_1 = new_reactor_vessel_pipe_1_regression(initial_temperature);
+    let downcomer_pipe_2 = new_downcomer_pipe_2_regression(initial_temperature);
+    let downcomer_pipe_3 = new_downcomer_pipe_3_regression(initial_temperature);
+    let fhr_pipe_7 = new_fhr_pipe_7_regression(initial_temperature);
     let fhr_pri_loop_pump = new_fhr_pri_loop_pump_9(initial_temperature);
 
 
