@@ -340,6 +340,7 @@ pub fn new_fhr_pipe_10(initial_temperature: ThermodynamicTemperature) -> Insulat
     let htc_to_ambient = HeatTransfer::new::<watt_per_square_meter_kelvin>(20.0);
     // we want 10 total nodes,
     // so two outer nodes on each end, plus 8 inner nodes
+    // one node per meter 
     let user_specified_inner_nodes = 8; 
 
     let insulated_component = InsulatedFluidComponent::new_insulated_pipe(
@@ -540,8 +541,8 @@ pub fn new_ihx_sthe_6_version_1(initial_temperature: ThermodynamicTemperature
     //
     // this is labelled 6 within the pri loop and intermediate loop diagram
     let number_of_tubes = 32;
-    // just have 3 inner nodes
-    let number_of_inner_nodes = 3;
+    // just have 0 inner nodes
+    let number_of_inner_nodes = 0;
 
     let tube_side_id = Length::new::<meter>(0.0635);
     let tube_side_od = Length::new::<meter>(0.0794);

@@ -598,6 +598,7 @@ pub(crate) fn four_branch_pri_and_intermediate_loop_single_time_step(
             simulation_time,
             reactor_temp_profile_degc,
             ihx_shell_side_temp_profile_degc,
+            ihx_tube_side_temp_profile_degc,
         };
         dbg!(&fhr_state);
         return fhr_state;
@@ -637,8 +638,10 @@ pub(crate) struct FHRState {
     // temperature diagnostics 
     /// shows the current reactor temperature profile in degc (2dp)
     pub reactor_temp_profile_degc: Vec<f64>,
-    /// shows the current reactor temperature profile in degc (2dp)
+    /// shows the current ihx shell side temperature profile in degc (2dp)
     pub ihx_shell_side_temp_profile_degc: Vec<f64>,
+    /// shows the current ihx tube side temperature profile in degc (2dp)
+    pub ihx_tube_side_temp_profile_degc: Vec<f64>,
 
 
 }
