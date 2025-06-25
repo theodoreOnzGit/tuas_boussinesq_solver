@@ -18,7 +18,7 @@ use uom::si::f64::*;
 /// this code handles the solution procedure
 /// using the tuas_boussinesq_solver library code
 ///
-pub fn four_branch_pri_and_intermediate_loop(
+pub fn four_branch_pri_and_intermediate_loop_isothermal(
     pri_loop_pump_pressure: Pressure,
     intrmd_loop_pump_pressure: Pressure,
     // reactor branch

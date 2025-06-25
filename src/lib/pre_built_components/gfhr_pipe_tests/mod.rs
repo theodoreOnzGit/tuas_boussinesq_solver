@@ -18,12 +18,18 @@ pub mod single_pipe_tests;
 pub mod single_branch;
 
 /// third, need to have tests across multiple branches 
+///
+/// for building the components,
+/// we should design it around the intermediate heat exchanger 
+/// heat exchanger is salt to salt, STHE 
+/// maybe 1200 kg/s on tube side of FLiBe 
+/// and enough flowrate of HITEC on shell side to ensure that 
+/// temperature settings are right
+///
+/// the flowrate through both sides is about 700-800 kg/s 
+/// this is about the right order of magnitude for gFHR. 
+/// I think the pressure drops are on the right order of magnitude 
+/// roughly
 pub mod multi_branch;
 
 
-// for building the components,
-// we should design it around the intermediate heat exchanger 
-// heat exchanger is salt to salt, STHE 
-// maybe 1200 kg/s on tube side of FLiBe 
-// and enough flowrate of HITEC on shell side to ensure that 
-// temperature settings are right
