@@ -9,8 +9,11 @@ use crate::pre_built_components::gfhr_pipe_tests::multi_branch::single_branch_so
 use crate::pre_built_components::insulated_pipes_and_fluid_components::InsulatedFluidComponent;
 use crate::pre_built_components::non_insulated_fluid_components::NonInsulatedFluidComponent;
 use crate::pre_built_components::shell_and_tube_heat_exchanger::SimpleShellAndTubeHeatExchanger;
+use crate::prelude::beta_testing::FluidArray;
 use crate::prelude::beta_testing::HeatTransferEntity;
 use crate::prelude::beta_testing::HeatTransferInteractionType;
+use ndarray::Array;
+use ndarray::Array1;
 use uom::si::mass_rate::kilogram_per_second;
 use uom::si::thermodynamic_temperature::degree_celsius;
 use uom::ConstZero;
@@ -112,7 +115,7 @@ pub(crate) fn four_branch_pri_and_intermediate_loop_single_time_step(
                 average_flibe_density, 
                 average_flibe_density);
 
-        let reactor_advection_heat_transfer_interaction = 
+        let reactor_branch_advection_heat_transfer_interaction = 
             HeatTransferInteractionType::
             new_advection_interaction(reactor_branch_flow, 
                 average_flibe_density, 
@@ -251,6 +254,7 @@ pub(crate) fn four_branch_pri_and_intermediate_loop_single_time_step(
 
         }
 
+        // intermediate loop steam generator branch
         {
 
             bottom_mixing_node_intrmd_loop.link_to_front(
@@ -277,6 +281,87 @@ pub(crate) fn four_branch_pri_and_intermediate_loop_single_time_step(
                 top_mixing_node_intrmd_loop, 
                 intrmd_loop_steam_gen_br_heat_transfer_interaction)
                 .unwrap();
+        }
+        // now for the reactor branch, we must have some kind of 
+        // power input here 
+        {
+
+            // i'll use the lateral link new power vector code 
+            //
+            // this sets the reactor power in the middle part of the 
+            // pipe
+            let number_of_temperature_nodes = 5;
+            let mut q_frac_arr: Array1<f64> = Array::default(number_of_temperature_nodes);
+            // we want the middle node to contain all the power
+            q_frac_arr[0] = 0.0;
+            q_frac_arr[1] = 0.0;
+            q_frac_arr[2] = 1.0;
+            q_frac_arr[3] = 0.0;
+            q_frac_arr[4] = 0.0;
+            
+            // now i need to get the fluid array out first 
+
+            let mut reactor_fluid_array_clone: FluidArray = 
+                reactor_pipe_1
+                .pipe_fluid_array
+                .clone()
+                .try_into()
+                .unwrap();
+
+            reactor_fluid_array_clone
+                .lateral_link_new_power_vector(
+                    reactor_power, 
+                    q_frac_arr)
+                .unwrap();
+
+            reactor_pipe_1.pipe_fluid_array = 
+                reactor_fluid_array_clone.into();
+
+            // now, add the connections
+
+            reactor_pipe_1.pipe_fluid_array.link_to_front(
+                top_mixing_node_pri_loop, 
+                reactor_branch_advection_heat_transfer_interaction)
+                .unwrap();
+            reactor_pipe_1.pipe_fluid_array.link_to_back(
+                bottom_mixing_node_pri_loop, 
+                reactor_branch_advection_heat_transfer_interaction)
+                .unwrap();
+        }
+
+        // now we are ready to advance timesteps for all components 
+        // and mixing nodes 
+
+        let zero_power = Power::ZERO;
+        // for pri loop 
+        // I'm not going to add another round of power 
+        // because I already added it to the top
+        // so i'll just add zero power
+        //
+        // this is reactor and downcomer branches
+        {
+            reactor_pipe_1
+                .lateral_and_miscellaneous_connections_no_wall_correction(
+                reactor_branch_flow, 
+                zero_power)
+                .unwrap();
+
+            downcomer_pipe_2
+                .lateral_and_miscellaneous_connections_no_wall_correction(
+                downcomer_branch_1_flow, 
+                zero_power)
+                .unwrap();
+
+            downcomer_pipe_3
+                .lateral_and_miscellaneous_connections_no_wall_correction(
+                downcomer_branch_2_flow, 
+                zero_power)
+                .unwrap();
+        }
+
+        // this is the pri loop 
+        {
+
         }
         
         let fhr_state = FHRState {
