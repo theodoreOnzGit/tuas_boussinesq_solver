@@ -8,6 +8,7 @@ use crate::pre_built_components::gfhr_pipe_tests::multi_branch::single_branch_so
 use crate::pre_built_components::insulated_pipes_and_fluid_components::InsulatedFluidComponent;
 use crate::pre_built_components::non_insulated_fluid_components::NonInsulatedFluidComponent;
 use crate::pre_built_components::shell_and_tube_heat_exchanger::SimpleShellAndTubeHeatExchanger;
+use crate::prelude::beta_testing::HeatTransferEntity;
 use uom::si::mass_rate::kilogram_per_second;
 use uom::ConstZero;
 use uom::si::f64::*;
@@ -24,28 +25,31 @@ pub(crate) fn four_branch_pri_and_intermediate_loop_single_time_step(
     intrmd_loop_pump_pressure: Pressure,
     reactor_power: Power,
     // reactor branch
-    reactor_pipe_1: &InsulatedFluidComponent,
+    reactor_pipe_1: &mut InsulatedFluidComponent,
     // downcomer branch 1
-    downcomer_pipe_2: &InsulatedFluidComponent,
+    downcomer_pipe_2: &mut InsulatedFluidComponent,
     // downcomer branch 2
-    downcomer_pipe_3: &InsulatedFluidComponent,
+    downcomer_pipe_3: &mut InsulatedFluidComponent,
+    // mixing nodes 
+    bottom_mixing_node_pri_loop: &mut HeatTransferEntity,
+    top_mixing_node_pri_loop: &mut HeatTransferEntity,
     // Intermediate heat exchanger branch in pri loop
-    fhr_pipe_11: &InsulatedFluidComponent,
-    fhr_pipe_10: &InsulatedFluidComponent,
-    fhr_pri_loop_pump_9: &NonInsulatedFluidComponent,
-    fhr_pipe_8: &InsulatedFluidComponent,
-    fhr_pipe_7: &InsulatedFluidComponent,
-    ihx_sthe_6: &SimpleShellAndTubeHeatExchanger,
-    fhr_pipe_5: &InsulatedFluidComponent,
-    fhr_pipe_4: &InsulatedFluidComponent,
+    fhr_pipe_11: &mut InsulatedFluidComponent,
+    fhr_pipe_10: &mut InsulatedFluidComponent,
+    fhr_pri_loop_pump_9: &mut NonInsulatedFluidComponent,
+    fhr_pipe_8: &mut InsulatedFluidComponent,
+    fhr_pipe_7: &mut InsulatedFluidComponent,
+    ihx_sthe_6: &mut SimpleShellAndTubeHeatExchanger,
+    fhr_pipe_5: &mut InsulatedFluidComponent,
+    fhr_pipe_4: &mut InsulatedFluidComponent,
     // intermediate loop ihx side
-    fhr_pipe_17: &InsulatedFluidComponent,
-    fhr_pipe_12: &InsulatedFluidComponent,
+    fhr_pipe_17: &mut InsulatedFluidComponent,
+    fhr_pipe_12: &mut InsulatedFluidComponent,
     // intermediate loop steam generator side
-    fhr_intrmd_loop_pump_16: &NonInsulatedFluidComponent,
-    fhr_pipe_15: &InsulatedFluidComponent,
-    fhr_steam_generator_shell_side_14: &NonInsulatedFluidComponent,
-    fhr_pipe_13: &InsulatedFluidComponent,
+    fhr_intrmd_loop_pump_16: &mut NonInsulatedFluidComponent,
+    fhr_pipe_15: &mut InsulatedFluidComponent,
+    fhr_steam_generator_shell_side_14: &mut NonInsulatedFluidComponent,
+    fhr_pipe_13: &mut InsulatedFluidComponent,
 
     ) -> FHRState {
 
@@ -78,6 +82,11 @@ pub(crate) fn four_branch_pri_and_intermediate_loop_single_time_step(
 
         // thermal hydraulics part
 
+        // note that reactor branch flow, 
+        // downcomer_branch_1_flow, 
+        // downcomer_branch_1_flow and 
+        // intermediate_heat_exchanger_branch_flow in the pri loop 
+        // all go from bottom mixing node to top mixing node
         
         let fhr_state = FHRState {
             reactor_branch_flow,
