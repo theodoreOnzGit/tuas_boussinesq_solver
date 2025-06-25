@@ -159,6 +159,7 @@ pub(crate) fn test_fhr_four_branch_solver_pri_and_intrmd_loop_full_th(){
         intrmd_loop_ihx_br_flow,
         intrmd_loop_steam_gen_br_flow,
         reactor_branch_flow,
+        simulation_time,
     };
 
     dbg!(&(reactor_branch_flow, downcomer_branch_1_flow, 
