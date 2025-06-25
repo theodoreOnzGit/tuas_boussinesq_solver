@@ -540,8 +540,8 @@ pub fn new_ihx_sthe_6_version_1(initial_temperature: ThermodynamicTemperature
     //
     // this is labelled 6 within the pri loop and intermediate loop diagram
     let number_of_tubes = 32;
-    //from Zou's publication, DHX tube side and shell side have 11 nodes 
-    let number_of_inner_nodes = 11 - 2;
+    // just have 3 inner nodes
+    let number_of_inner_nodes = 3;
 
     let tube_side_id = Length::new::<meter>(0.0635);
     let tube_side_od = Length::new::<meter>(0.0794);
@@ -633,7 +633,8 @@ pub fn new_ihx_sthe_6_version_1(initial_temperature: ThermodynamicTemperature
 
     
 
-    let gfhr_ihx_sthe_ver_1 = SimpleShellAndTubeHeatExchanger::new_custom_circular_single_pass_sthe_with_insulation(
+    let gfhr_ihx_sthe_ver_1 = 
+        SimpleShellAndTubeHeatExchanger::new_custom_circular_single_pass_sthe_with_insulation(
         number_of_tubes, 
         number_of_inner_nodes, 
         fluid_pressure,  // for the sake of fluid property calculations, not hydrostatic pressure

@@ -561,6 +561,7 @@ pub(crate) fn four_branch_pri_and_intermediate_loop_single_time_step(
             })
             .collect();
 
+        // sthe temperature profile
         let ihx_shell_side_temp_profile: Vec<ThermodynamicTemperature> = 
             ihx_sthe_6 
             .shell_side_fluid_array_temperature()
@@ -574,6 +575,18 @@ pub(crate) fn four_branch_pri_and_intermediate_loop_single_time_step(
             })
             .collect();
 
+        let ihx_tube_side_temp_profile: Vec<ThermodynamicTemperature> = 
+            ihx_sthe_6 
+            .inner_tube_fluid_array_temperature()
+            .unwrap();
+
+        let ihx_tube_side_temp_profile_degc: Vec<f64> = 
+            ihx_tube_side_temp_profile
+            .into_iter()
+            .map(|temperature|{
+                (temperature.get::<degree_celsius>()*100.0).round()/100.0
+            })
+            .collect();
         
         let fhr_state = FHRState {
             reactor_branch_flow,
