@@ -3,13 +3,16 @@ use crate::array_control_vol_and_fluid_component_collections::fluid_component_co
 use crate::array_control_vol_and_fluid_component_collections::fluid_component_collection::fluid_component_super_collection::FluidComponentSuperCollection;
 use crate::array_control_vol_and_fluid_component_collections::fluid_component_collection::fluid_component_traits::FluidComponentTrait;
 use crate::array_control_vol_and_fluid_component_collections::fluid_component_collection::super_collection_series_and_parallel_functions::FluidComponentSuperCollectionParallelAssociatedFunctions;
+use crate::boussinesq_thermophysical_properties::LiquidMaterial;
 use crate::pre_built_components::gfhr_pipe_tests::multi_branch::multi_branch_solvers::calculate_pressure_change_using_guessed_branch_mass_flowrate_fhr_sim_v1_custom;
 use crate::pre_built_components::gfhr_pipe_tests::multi_branch::single_branch_solvers::calculate_mass_flowrate_from_pressure_change_for_single_branch_fhr_sim_custom;
 use crate::pre_built_components::insulated_pipes_and_fluid_components::InsulatedFluidComponent;
 use crate::pre_built_components::non_insulated_fluid_components::NonInsulatedFluidComponent;
 use crate::pre_built_components::shell_and_tube_heat_exchanger::SimpleShellAndTubeHeatExchanger;
 use crate::prelude::beta_testing::HeatTransferEntity;
+use crate::prelude::beta_testing::HeatTransferInteractionType;
 use uom::si::mass_rate::kilogram_per_second;
+use uom::si::thermodynamic_temperature::degree_celsius;
 use uom::ConstZero;
 use uom::si::f64::*;
 
@@ -81,12 +84,144 @@ pub(crate) fn four_branch_pri_and_intermediate_loop_single_time_step(
                 fhr_pipe_13);
 
         // thermal hydraulics part
+        //
+        // first, we are going to make heat transfer interactions
+        // need rough temperature for density calcs, not super 
+        // important as we assume boussineq approximation 
+        // ie density differences only important for buoyancy calcs
+        let average_temperature_for_density_calcs_pri_loop = 
+            ThermodynamicTemperature::new::<degree_celsius>(600.0);
+
+
+        let average_flibe_density = 
+            LiquidMaterial::FLiBe.try_get_density(
+                average_temperature_for_density_calcs_pri_loop).unwrap();
+
+        let downcomer_branch_1_advection_heat_transfer_interaction = 
+            HeatTransferInteractionType::
+            new_advection_interaction(downcomer_branch_1_flow, 
+                average_flibe_density, 
+                average_flibe_density);
+
+        let downcomer_branch_2_advection_heat_transfer_interaction = 
+            HeatTransferInteractionType::
+            new_advection_interaction(downcomer_branch_2_flow, 
+                average_flibe_density, 
+                average_flibe_density);
+
+        let reactor_advection_heat_transfer_interaction = 
+            HeatTransferInteractionType::
+            new_advection_interaction(reactor_branch_flow, 
+                average_flibe_density, 
+                average_flibe_density);
+
+        let ihx_advection_heat_transfer_interaction = 
+            HeatTransferInteractionType::
+            new_advection_interaction(intermediate_heat_exchanger_branch_flow, 
+                average_flibe_density, 
+                average_flibe_density);
+        // for intermediate loop, we use lower temp, 
+        // about 450 C
+        //
+        // as it is a HITEC salt (nitrate salt)
+        let average_temperature_for_density_calcs_intrmd_loop = 
+            ThermodynamicTemperature::new::<degree_celsius>(450.0);
+
+        let average_hitec_density = 
+            LiquidMaterial::HITEC.try_get_density(
+                average_temperature_for_density_calcs_intrmd_loop).unwrap();
+
+        let intrmd_loop_ihx_br_heat_transfer_interaction = 
+            HeatTransferInteractionType::
+            new_advection_interaction(intrmd_loop_ihx_br_flow, 
+                average_hitec_density, 
+                average_hitec_density);
+        let intrmd_loop_steam_gen_br_heat_transfer_interaction = 
+            HeatTransferInteractionType::
+            new_advection_interaction(intrmd_loop_steam_gen_br_flow, 
+                average_hitec_density, 
+                average_hitec_density);
 
         // note that reactor branch flow, 
         // downcomer_branch_1_flow, 
         // downcomer_branch_1_flow and 
         // intermediate_heat_exchanger_branch_flow in the pri loop 
         // all go from bottom mixing node to top mixing node
+        //
+        // with this in mind, we now link up the components 
+
+        // downcomer 1 branch
+        {
+            bottom_mixing_node_pri_loop.link_to_front(
+                &mut downcomer_pipe_2.pipe_fluid_array, 
+                downcomer_branch_1_advection_heat_transfer_interaction)
+                .unwrap();
+
+            downcomer_pipe_2.pipe_fluid_array.link_to_front(
+                top_mixing_node_pri_loop, 
+                downcomer_branch_1_advection_heat_transfer_interaction)
+                .unwrap();
+        }
+        // downcomer 2 branch
+        {
+            bottom_mixing_node_pri_loop.link_to_front(
+                &mut downcomer_pipe_3.pipe_fluid_array, 
+                downcomer_branch_2_advection_heat_transfer_interaction)
+                .unwrap();
+            
+            downcomer_pipe_3.pipe_fluid_array.link_to_front(
+                top_mixing_node_pri_loop, 
+                downcomer_branch_2_advection_heat_transfer_interaction)
+                .unwrap();
+        }
+        // ihx branch 
+        {
+
+            bottom_mixing_node_pri_loop.link_to_front(
+                &mut fhr_pipe_11.pipe_fluid_array, 
+                ihx_advection_heat_transfer_interaction)
+                .unwrap();
+
+            fhr_pipe_11.pipe_fluid_array.link_to_front(
+                &mut fhr_pipe_10.pipe_fluid_array, 
+                ihx_advection_heat_transfer_interaction)
+                .unwrap();
+
+            fhr_pipe_10.pipe_fluid_array.link_to_front(
+                &mut fhr_pri_loop_pump_9.pipe_fluid_array, 
+                ihx_advection_heat_transfer_interaction)
+                .unwrap();
+
+            fhr_pri_loop_pump_9.pipe_fluid_array.link_to_front(
+                &mut fhr_pipe_8.pipe_fluid_array, 
+                ihx_advection_heat_transfer_interaction)
+                .unwrap();
+
+            fhr_pipe_8.pipe_fluid_array.link_to_front(
+                &mut fhr_pipe_7.pipe_fluid_array, 
+                ihx_advection_heat_transfer_interaction)
+                .unwrap();
+
+            fhr_pipe_7.pipe_fluid_array.link_to_front(
+                &mut ihx_sthe_6.shell_side_fluid_array, 
+                ihx_advection_heat_transfer_interaction)
+                .unwrap();
+
+            ihx_sthe_6.shell_side_fluid_array.link_to_front(
+                &mut fhr_pipe_5.pipe_fluid_array,
+                ihx_advection_heat_transfer_interaction)
+                .unwrap();
+
+            fhr_pipe_5.pipe_fluid_array.link_to_front(
+                &mut fhr_pipe_4.pipe_fluid_array,
+                ihx_advection_heat_transfer_interaction)
+                .unwrap();
+            
+            fhr_pipe_4.pipe_fluid_array.link_to_front(
+                top_mixing_node_pri_loop, 
+                ihx_advection_heat_transfer_interaction)
+                .unwrap();
+        }
         
         let fhr_state = FHRState {
             reactor_branch_flow,
