@@ -315,6 +315,8 @@ pub fn new_fhr_pipe_11(initial_temperature: ThermodynamicTemperature) -> Insulat
 }
 /// fhr pipe 10,
 /// flow direction going right by 10.0m - 0.36m (which is the pump length)
+/// well after sorting stability, it became
+/// flow direction going right by 10.0m - 2.0m (which is the pump length)
 ///
 /// this is 9.64m
 /// 10 total nodes
@@ -322,7 +324,7 @@ pub fn new_fhr_pipe_10(initial_temperature: ThermodynamicTemperature) -> Insulat
     let ambient_temperature = ThermodynamicTemperature::new::<degree_celsius>(20.0);
     let fluid_pressure = Pressure::new::<atmosphere>(1.0);
     let solid_pressure = Pressure::new::<atmosphere>(1.0);
-    let pipe_length = Length::new::<meter>(9.64);
+    let pipe_length = Length::new::<meter>(10.0 - 2.0);
     let hydraulic_diameter = Length::new::<inch>(14.0);
     let flow_area = Area::new::<square_inch>(154.0);
     let incline_angle = Angle::new::<degree>(0.0);
@@ -341,7 +343,7 @@ pub fn new_fhr_pipe_10(initial_temperature: ThermodynamicTemperature) -> Insulat
     // we want 10 total nodes,
     // so two outer nodes on each end, plus 8 inner nodes
     // one node per meter 
-    let user_specified_inner_nodes = 8; 
+    let user_specified_inner_nodes = 6; 
 
     let insulated_component = InsulatedFluidComponent::new_insulated_pipe(
         initial_temperature, 
@@ -367,11 +369,17 @@ pub fn new_fhr_pipe_10(initial_temperature: ThermodynamicTemperature) -> Insulat
 }
 
 /// creates a new pump component for the primary loop
+/// (was originally 0.36m, but i think there was numerical instability 
+/// at least for the FLiBe pump as temperatures fluctuated too much,
+/// As the Courant 
+/// number was too high due to high flowrates).
+///
+/// Hence, it is now 2.0m
 pub fn new_fhr_pri_loop_pump_9(initial_temperature: ThermodynamicTemperature) -> NonInsulatedFluidComponent {
     let ambient_temperature = ThermodynamicTemperature::new::<degree_celsius>(20.0);
     let fluid_pressure = Pressure::new::<atmosphere>(1.0);
     let solid_pressure = Pressure::new::<atmosphere>(1.0);
-    let component_length = Length::new::<meter>(0.36);
+    let component_length = Length::new::<meter>(2.0);
     let hydraulic_diameter = Length::new::<inch>(14.0);
     let flow_area = Area::new::<square_inch>(154.0);
     let incline_angle = Angle::new::<degree>(0.0);
@@ -933,7 +941,12 @@ pub fn new_fhr_pipe_12(initial_temperature: ThermodynamicTemperature) -> Insulat
 
 
 /// creates a new pump component for the intermediate loop
-/// goes right 0.36m
+/// goes right 2.0m
+///
+/// (was originally 0.36m, but i think there was numerical instability 
+/// at least for the FLiBe pump as temperatures fluctuated too much,
+/// suspect it is the same for intermediate loop pump too. As the Courant 
+/// number was too high due to high flowrates).
 ///
 /// note that the reference point for the intermediate loop is 
 /// between pipe 17 and pump 16
@@ -941,7 +954,7 @@ pub fn new_fhr_intermediate_loop_pump_16(initial_temperature: ThermodynamicTempe
     let ambient_temperature = ThermodynamicTemperature::new::<degree_celsius>(20.0);
     let fluid_pressure = Pressure::new::<atmosphere>(1.0);
     let solid_pressure = Pressure::new::<atmosphere>(1.0);
-    let component_length = Length::new::<meter>(0.36);
+    let component_length = Length::new::<meter>(2.00);
     let hydraulic_diameter = Length::new::<inch>(14.0);
     let flow_area = Area::new::<square_inch>(154.0);
     let incline_angle = Angle::new::<degree>(0.0);
@@ -988,14 +1001,14 @@ pub fn new_fhr_intermediate_loop_pump_16(initial_temperature: ThermodynamicTempe
 
 
 /// fhr pipe 15,
-/// flow direction going right by 4m
+/// flow direction going right by 4m (less the pump distance)
 /// this is in the intermediate loop
 /// so it contains hitec
 pub fn new_fhr_pipe_15(initial_temperature: ThermodynamicTemperature) -> InsulatedFluidComponent {
     let ambient_temperature = ThermodynamicTemperature::new::<degree_celsius>(20.0);
     let fluid_pressure = Pressure::new::<atmosphere>(1.0);
     let solid_pressure = Pressure::new::<atmosphere>(1.0);
-    let pipe_length = Length::new::<meter>(4.0 - 0.36);
+    let pipe_length = Length::new::<meter>(2.0);
     let hydraulic_diameter = Length::new::<inch>(14.0);
     let flow_area = Area::new::<square_inch>(154.0);
     let incline_angle = Angle::new::<degree>(0.0);
