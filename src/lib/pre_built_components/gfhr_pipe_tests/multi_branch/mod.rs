@@ -177,6 +177,7 @@ pub(crate) fn test_fhr_four_branch_solver_pri_and_intrmd_loop_full_th(){
             pri_loop_pump_pressure, 
             intrmd_loop_pump_pressure, 
             reactor_power, 
+            timestep,
             &mut reactor_pipe_1, 
             &mut downcomer_pipe_2, 
             &mut downcomer_pipe_3, 

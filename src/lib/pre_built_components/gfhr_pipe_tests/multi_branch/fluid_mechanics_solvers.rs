@@ -30,6 +30,7 @@ pub(crate) fn four_branch_pri_and_intermediate_loop_single_time_step(
     pri_loop_pump_pressure: Pressure,
     intrmd_loop_pump_pressure: Pressure,
     reactor_power: Power,
+    timestep: Time,
     // reactor branch
     reactor_pipe_1: &mut InsulatedFluidComponent,
     // downcomer branch 1
@@ -66,7 +67,7 @@ pub(crate) fn four_branch_pri_and_intermediate_loop_single_time_step(
 
 
         let (reactor_branch_flow, downcomer_branch_1_flow,
-            downcomer_branch_2_flow, intermediate_heat_exchanger_branch_flow,
+            downcomer_branch_2_flow, pri_loop_intermediate_heat_exchanger_branch_flow,
             intrmd_loop_ihx_br_flow, intrmd_loop_steam_gen_br_flow)
             = four_branch_pri_and_intermediate_loop_fluid_mechanics_only(
                 pri_loop_pump_pressure, 
@@ -123,7 +124,7 @@ pub(crate) fn four_branch_pri_and_intermediate_loop_single_time_step(
 
         let ihx_advection_heat_transfer_interaction = 
             HeatTransferInteractionType::
-            new_advection_interaction(intermediate_heat_exchanger_branch_flow, 
+            new_advection_interaction(pri_loop_intermediate_heat_exchanger_branch_flow, 
                 average_flibe_density, 
                 average_flibe_density);
         // for intermediate loop, we use lower temp, 
@@ -359,22 +360,183 @@ pub(crate) fn four_branch_pri_and_intermediate_loop_single_time_step(
                 .unwrap();
         }
 
-        // this is the pri loop 
+        // this is the pri loop ihx branch
+        // except for the ihx itself
         {
 
+            fhr_pipe_11
+                .lateral_and_miscellaneous_connections_no_wall_correction(
+                pri_loop_intermediate_heat_exchanger_branch_flow, 
+                zero_power)
+                .unwrap();
+            fhr_pipe_10
+                .lateral_and_miscellaneous_connections_no_wall_correction(
+                pri_loop_intermediate_heat_exchanger_branch_flow, 
+                zero_power)
+                .unwrap();
+            fhr_pri_loop_pump_9
+                .lateral_and_miscellaneous_connections_no_wall_correction(
+                pri_loop_intermediate_heat_exchanger_branch_flow, 
+                zero_power)
+                .unwrap();
+            fhr_pipe_8
+                .lateral_and_miscellaneous_connections_no_wall_correction(
+                pri_loop_intermediate_heat_exchanger_branch_flow, 
+                zero_power)
+                .unwrap();
+            fhr_pipe_7
+                .lateral_and_miscellaneous_connections_no_wall_correction(
+                pri_loop_intermediate_heat_exchanger_branch_flow, 
+                zero_power)
+                .unwrap();
+            fhr_pipe_5
+                .lateral_and_miscellaneous_connections_no_wall_correction(
+                pri_loop_intermediate_heat_exchanger_branch_flow, 
+                zero_power)
+                .unwrap();
+            fhr_pipe_4
+                .lateral_and_miscellaneous_connections_no_wall_correction(
+                pri_loop_intermediate_heat_exchanger_branch_flow, 
+                zero_power)
+                .unwrap();
+        }
+
+        // ihx 
+        {
+
+            let prandtl_wall_correction_setting = true; 
+            let tube_side_total_mass_flowrate = intrmd_loop_ihx_br_flow;
+            let shell_side_total_mass_flowrate = pri_loop_intermediate_heat_exchanger_branch_flow;
+
+            ihx_sthe_6.lateral_and_miscellaneous_connections(
+                prandtl_wall_correction_setting, 
+                tube_side_total_mass_flowrate, 
+                shell_side_total_mass_flowrate).unwrap();
+        }
+        // hitec intrmd loop 
+        //
+        // except for ihx itself
+        {
+            // ihx branch
+            fhr_pipe_17
+                .lateral_and_miscellaneous_connections_no_wall_correction(
+                intrmd_loop_ihx_br_flow, 
+                zero_power)
+                .unwrap();
+            fhr_pipe_12
+                .lateral_and_miscellaneous_connections_no_wall_correction(
+                intrmd_loop_ihx_br_flow, 
+                zero_power)
+                .unwrap();
+
+            // steam gen branch
+            fhr_intrmd_loop_pump_16
+                .lateral_and_miscellaneous_connections_no_wall_correction(
+                intrmd_loop_steam_gen_br_flow, 
+                zero_power)
+                .unwrap();
+            fhr_pipe_15
+                .lateral_and_miscellaneous_connections_no_wall_correction(
+                intrmd_loop_steam_gen_br_flow, 
+                zero_power)
+                .unwrap();
+            fhr_steam_generator_shell_side_14
+                .lateral_and_miscellaneous_connections_no_wall_correction(
+                intrmd_loop_steam_gen_br_flow, 
+                zero_power)
+                .unwrap();
+            fhr_pipe_13
+                .lateral_and_miscellaneous_connections_no_wall_correction(
+                intrmd_loop_steam_gen_br_flow, 
+                zero_power)
+                .unwrap();
+        }
+
+        // timestep advance for all heat transfer entities
+        {
+            // pri loop (with ihx)
+            reactor_pipe_1
+                .advance_timestep(timestep)
+                .unwrap();
+            downcomer_pipe_2
+                .advance_timestep(timestep)
+                .unwrap();
+            downcomer_pipe_3
+                .advance_timestep(timestep)
+                .unwrap();
+            fhr_pipe_4
+                .advance_timestep(timestep)
+                .unwrap();
+            fhr_pipe_5
+                .advance_timestep(timestep)
+                .unwrap();
+            ihx_sthe_6
+                .advance_timestep(timestep)
+                .unwrap();
+            fhr_pipe_7
+                .advance_timestep(timestep)
+                .unwrap();
+            fhr_pipe_8
+                .advance_timestep(timestep)
+                .unwrap();
+            fhr_pri_loop_pump_9
+                .advance_timestep(timestep)
+                .unwrap();
+            fhr_pipe_10
+                .advance_timestep(timestep)
+                .unwrap();
+            fhr_pipe_11
+                .advance_timestep(timestep)
+                .unwrap();
+
+            // intermediate branch (less ihx)
+            fhr_pipe_12
+                .advance_timestep(timestep)
+                .unwrap();
+            fhr_pipe_13
+                .advance_timestep(timestep)
+                .unwrap();
+            fhr_steam_generator_shell_side_14
+                .advance_timestep(timestep)
+                .unwrap();
+            fhr_pipe_15
+                .advance_timestep(timestep)
+                .unwrap();
+            fhr_intrmd_loop_pump_16
+                .advance_timestep(timestep)
+                .unwrap();
+            fhr_pipe_17
+                .advance_timestep(timestep)
+                .unwrap();
+
+            // all mixing nodes
+            top_mixing_node_pri_loop
+                .advance_timestep_mut_self(timestep)
+                .unwrap();
+            bottom_mixing_node_pri_loop
+                .advance_timestep_mut_self(timestep)
+                .unwrap();
+            top_mixing_node_intrmd_loop
+                .advance_timestep_mut_self(timestep)
+                .unwrap();
+            bottom_mixing_node_intrmd_loop
+                .advance_timestep_mut_self(timestep)
+                .unwrap();
         }
         
         let fhr_state = FHRState {
             reactor_branch_flow,
             downcomer_branch_1_flow,
             downcomer_branch_2_flow,
-            intermediate_heat_exchanger_branch_flow,
+            intermediate_heat_exchanger_branch_flow: pri_loop_intermediate_heat_exchanger_branch_flow,
             intrmd_loop_ihx_br_flow,
             intrmd_loop_steam_gen_br_flow,
         };
+        dbg!(&fhr_state);
         return fhr_state;
 }
 
+#[derive(Debug,Clone, Copy)]
 pub(crate) struct FHRState {
     /// reactor branch flow (upwards through the core)
     /// note that positive flow means from bottom mixing node to top

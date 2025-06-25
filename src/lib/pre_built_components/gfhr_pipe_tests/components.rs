@@ -68,7 +68,7 @@ pub fn new_reactor_vessel_pipe_1(initial_temperature: ThermodynamicTemperature) 
     let shell_od = shell_id + 2.0 * pipe_thickness;
     let insulation_thickness = Length::new::<meter>(0.0508);
     let pipe_shell_material = SolidMaterial::SteelSS304L;
-    let insulation_material = SolidMaterial::Fiberglass;
+    let insulation_material = SolidMaterial::SteelSS304L;
     let pipe_fluid = LiquidMaterial::FLiBe;
     // insulate the pipe totally from environment
     let htc_to_ambient = HeatTransfer::new::<watt_per_square_meter_kelvin>(0.0);
@@ -142,7 +142,7 @@ pub fn new_downcomer_pipe_2(initial_temperature: ThermodynamicTemperature) -> In
     let shell_od = shell_id + 2.0 * pipe_thickness;
     let insulation_thickness = Length::new::<meter>(0.0508);
     let pipe_shell_material = SolidMaterial::SteelSS304L;
-    let insulation_material = SolidMaterial::Fiberglass;
+    let insulation_material = SolidMaterial::SteelSS304L;
     let pipe_fluid = LiquidMaterial::FLiBe;
     let htc_to_ambient = HeatTransfer::new::<watt_per_square_meter_kelvin>(20.0);
     // we want 5 total nodes,
@@ -222,7 +222,7 @@ pub fn new_downcomer_pipe_3(initial_temperature: ThermodynamicTemperature) -> In
     let shell_od = shell_id + 2.0 * pipe_thickness;
     let insulation_thickness = Length::new::<meter>(0.0508);
     let pipe_shell_material = SolidMaterial::SteelSS304L;
-    let insulation_material = SolidMaterial::Fiberglass;
+    let insulation_material = SolidMaterial::SteelSS304L;
     let pipe_fluid = LiquidMaterial::FLiBe;
     // I just made this side more conductive to environment
     let htc_to_ambient = HeatTransfer::new::<watt_per_square_meter_kelvin>(200.0);
@@ -284,7 +284,7 @@ pub fn new_fhr_pipe_11(initial_temperature: ThermodynamicTemperature) -> Insulat
     let shell_od = shell_id + 2.0 * pipe_thickness;
     let insulation_thickness = Length::new::<meter>(0.0508);
     let pipe_shell_material = SolidMaterial::SteelSS304L;
-    let insulation_material = SolidMaterial::Fiberglass;
+    let insulation_material = SolidMaterial::SteelSS304L;
     let pipe_fluid = LiquidMaterial::FLiBe;
     // I just made this side more conductive to environment
     let htc_to_ambient = HeatTransfer::new::<watt_per_square_meter_kelvin>(20.0);
@@ -334,7 +334,7 @@ pub fn new_fhr_pipe_10(initial_temperature: ThermodynamicTemperature) -> Insulat
     let shell_od = shell_id + 2.0 * pipe_thickness;
     let insulation_thickness = Length::new::<meter>(0.0508);
     let pipe_shell_material = SolidMaterial::SteelSS304L;
-    let insulation_material = SolidMaterial::Fiberglass;
+    let insulation_material = SolidMaterial::SteelSS304L;
     let pipe_fluid = LiquidMaterial::FLiBe;
     // I just made this side more conductive to environment
     let htc_to_ambient = HeatTransfer::new::<watt_per_square_meter_kelvin>(20.0);
@@ -434,7 +434,7 @@ pub fn new_fhr_pipe_8(initial_temperature: ThermodynamicTemperature) -> Insulate
     let shell_od = shell_id + 2.0 * pipe_thickness;
     let insulation_thickness = Length::new::<meter>(0.0508);
     let pipe_shell_material = SolidMaterial::SteelSS304L;
-    let insulation_material = SolidMaterial::Fiberglass;
+    let insulation_material = SolidMaterial::SteelSS304L;
     let pipe_fluid = LiquidMaterial::FLiBe;
     // I just made this side more conductive to environment
     let htc_to_ambient = HeatTransfer::new::<watt_per_square_meter_kelvin>(20.0);
@@ -489,7 +489,7 @@ pub fn new_fhr_pipe_7(initial_temperature: ThermodynamicTemperature) -> Insulate
     let shell_od = shell_id + 2.0 * pipe_thickness;
     let insulation_thickness = Length::new::<meter>(0.0508);
     let pipe_shell_material = SolidMaterial::SteelSS304L;
-    let insulation_material = SolidMaterial::Fiberglass;
+    let insulation_material = SolidMaterial::SteelSS304L;
     let pipe_fluid = LiquidMaterial::FLiBe;
     // I just made this side more conductive to environment
     let htc_to_ambient = HeatTransfer::new::<watt_per_square_meter_kelvin>(20.0);
@@ -621,7 +621,7 @@ pub fn new_ihx_sthe_6_version_1(initial_temperature: ThermodynamicTemperature
             shell_side_gnielinski_data);
 
     // insulation side, accounts for parasitic heat loss
-    let insulation_material = SolidMaterial::Fiberglass;
+    let insulation_material = SolidMaterial::SteelSS304L;
     let ambient_temperature = ThermodynamicTemperature::new::<degree_celsius>(21.67);
     let heat_transfer_to_ambient = HeatTransfer::new::<watt_per_square_meter_kelvin>(20.0);
     // for heat losses, I use the same Gnielinksi correlation 
@@ -692,7 +692,7 @@ pub fn new_fhr_pipe_5(initial_temperature: ThermodynamicTemperature) -> Insulate
     let shell_od = shell_id + 2.0 * pipe_thickness;
     let insulation_thickness = Length::new::<meter>(0.0508);
     let pipe_shell_material = SolidMaterial::SteelSS304L;
-    let insulation_material = SolidMaterial::Fiberglass;
+    let insulation_material = SolidMaterial::SteelSS304L;
     let pipe_fluid = LiquidMaterial::FLiBe;
     // I just made this side more conductive to environment
     let htc_to_ambient = HeatTransfer::new::<watt_per_square_meter_kelvin>(20.0);
@@ -744,7 +744,7 @@ pub fn new_fhr_pipe_4_ver_1(initial_temperature: ThermodynamicTemperature) -> In
     let shell_od = shell_id + 2.0 * pipe_thickness;
     let insulation_thickness = Length::new::<meter>(0.0508);
     let pipe_shell_material = SolidMaterial::SteelSS304L;
-    let insulation_material = SolidMaterial::Fiberglass;
+    let insulation_material = SolidMaterial::SteelSS304L;
     let pipe_fluid = LiquidMaterial::FLiBe;
     // I just made this side more conductive to environment
     let htc_to_ambient = HeatTransfer::new::<watt_per_square_meter_kelvin>(20.0);
@@ -793,7 +793,7 @@ pub fn new_fhr_pipe_4_ver_2(initial_temperature: ThermodynamicTemperature) -> In
     let shell_od = shell_id + 2.0 * pipe_thickness;
     let insulation_thickness = Length::new::<meter>(0.0508);
     let pipe_shell_material = SolidMaterial::SteelSS304L;
-    let insulation_material = SolidMaterial::Fiberglass;
+    let insulation_material = SolidMaterial::SteelSS304L;
     let pipe_fluid = LiquidMaterial::FLiBe;
     // I just made this side more conductive to environment
     let htc_to_ambient = HeatTransfer::new::<watt_per_square_meter_kelvin>(20.0);
@@ -845,7 +845,7 @@ pub fn new_fhr_pipe_17(initial_temperature: ThermodynamicTemperature) -> Insulat
     let shell_od = shell_id + 2.0 * pipe_thickness;
     let insulation_thickness = Length::new::<meter>(0.0508);
     let pipe_shell_material = SolidMaterial::SteelSS304L;
-    let insulation_material = SolidMaterial::Fiberglass;
+    let insulation_material = SolidMaterial::SteelSS304L;
     let pipe_fluid = LiquidMaterial::HITEC;
     // I just made this side more conductive to environment
     let htc_to_ambient = HeatTransfer::new::<watt_per_square_meter_kelvin>(20.0);
@@ -897,7 +897,7 @@ pub fn new_fhr_pipe_12(initial_temperature: ThermodynamicTemperature) -> Insulat
     let shell_od = shell_id + 2.0 * pipe_thickness;
     let insulation_thickness = Length::new::<meter>(0.0508);
     let pipe_shell_material = SolidMaterial::SteelSS304L;
-    let insulation_material = SolidMaterial::Fiberglass;
+    let insulation_material = SolidMaterial::SteelSS304L;
     let pipe_fluid = LiquidMaterial::HITEC;
     // I just made this side more conductive to environment
     let htc_to_ambient = HeatTransfer::new::<watt_per_square_meter_kelvin>(20.0);
@@ -1006,7 +1006,7 @@ pub fn new_fhr_pipe_15(initial_temperature: ThermodynamicTemperature) -> Insulat
     let shell_od = shell_id + 2.0 * pipe_thickness;
     let insulation_thickness = Length::new::<meter>(0.0508);
     let pipe_shell_material = SolidMaterial::SteelSS304L;
-    let insulation_material = SolidMaterial::Fiberglass;
+    let insulation_material = SolidMaterial::SteelSS304L;
     let pipe_fluid = LiquidMaterial::HITEC;
     // I just made this side more conductive to environment
     let htc_to_ambient = HeatTransfer::new::<watt_per_square_meter_kelvin>(20.0);
@@ -1116,7 +1116,7 @@ pub fn new_fhr_pipe_13(initial_temperature: ThermodynamicTemperature) -> Insulat
     let shell_od = shell_id + 2.0 * pipe_thickness;
     let insulation_thickness = Length::new::<meter>(0.0508);
     let pipe_shell_material = SolidMaterial::SteelSS304L;
-    let insulation_material = SolidMaterial::Fiberglass;
+    let insulation_material = SolidMaterial::SteelSS304L;
     let pipe_fluid = LiquidMaterial::HITEC;
     // I just made this side more conductive to environment
     let htc_to_ambient = HeatTransfer::new::<watt_per_square_meter_kelvin>(20.0);
