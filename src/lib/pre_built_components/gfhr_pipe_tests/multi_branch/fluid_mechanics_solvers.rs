@@ -168,6 +168,8 @@ pub(crate) fn four_branch_pri_and_intermediate_loop_single_time_step(
                 top_mixing_node_pri_loop, 
                 downcomer_branch_1_advection_heat_transfer_interaction)
                 .unwrap();
+
+            dbg!("downcomer br 1 linking complete");
         }
         // downcomer 2 branch
         {
@@ -180,6 +182,7 @@ pub(crate) fn four_branch_pri_and_intermediate_loop_single_time_step(
                 top_mixing_node_pri_loop, 
                 downcomer_branch_2_advection_heat_transfer_interaction)
                 .unwrap();
+            dbg!("downcomer br 2 linking complete");
         }
         // ihx branch 
         {
@@ -228,6 +231,7 @@ pub(crate) fn four_branch_pri_and_intermediate_loop_single_time_step(
                 top_mixing_node_pri_loop, 
                 ihx_advection_heat_transfer_interaction)
                 .unwrap();
+            dbg!("primary ihx br linking complete");
         }
 
         // intermediate loop ihx branch 
@@ -253,6 +257,7 @@ pub(crate) fn four_branch_pri_and_intermediate_loop_single_time_step(
                 intrmd_loop_ihx_br_heat_transfer_interaction)
                 .unwrap();
 
+            dbg!("intermediate loop ihx br linking complete");
         }
 
         // intermediate loop steam generator branch
@@ -282,6 +287,7 @@ pub(crate) fn four_branch_pri_and_intermediate_loop_single_time_step(
                 top_mixing_node_intrmd_loop, 
                 intrmd_loop_steam_gen_br_heat_transfer_interaction)
                 .unwrap();
+            dbg!("intermediate loop SteamGen br linking complete");
         }
         // now for the reactor branch, we must have some kind of 
         // power input here 
@@ -328,6 +334,7 @@ pub(crate) fn four_branch_pri_and_intermediate_loop_single_time_step(
                 bottom_mixing_node_pri_loop, 
                 reactor_branch_advection_heat_transfer_interaction)
                 .unwrap();
+            dbg!("Reactor br linking complete");
         }
 
         // now we are ready to advance timesteps for all components 
@@ -358,6 +365,7 @@ pub(crate) fn four_branch_pri_and_intermediate_loop_single_time_step(
                 downcomer_branch_2_flow, 
                 zero_power)
                 .unwrap();
+            dbg!("Advance timestep: reactor and downcomer branches complete");
         }
 
         // this is the pri loop ihx branch
@@ -399,6 +407,7 @@ pub(crate) fn four_branch_pri_and_intermediate_loop_single_time_step(
                 pri_loop_intermediate_heat_exchanger_branch_flow, 
                 zero_power)
                 .unwrap();
+            dbg!("Advance timestep: pri loop ihx branches complete");
         }
 
         // ihx 
@@ -412,6 +421,8 @@ pub(crate) fn four_branch_pri_and_intermediate_loop_single_time_step(
                 prandtl_wall_correction_setting, 
                 tube_side_total_mass_flowrate, 
                 shell_side_total_mass_flowrate).unwrap();
+            dbg!("Advance timestep: IHX complete");
+
         }
         // hitec intrmd loop 
         //
@@ -450,6 +461,7 @@ pub(crate) fn four_branch_pri_and_intermediate_loop_single_time_step(
                 intrmd_loop_steam_gen_br_flow, 
                 zero_power)
                 .unwrap();
+            dbg!("Advance timestep: intermediate loop IHX Branch complete");
         }
 
         // timestep advance for all heat transfer entities
@@ -508,6 +520,7 @@ pub(crate) fn four_branch_pri_and_intermediate_loop_single_time_step(
             fhr_pipe_17
                 .advance_timestep(timestep)
                 .unwrap();
+            dbg!("Advance timestep: intermediate loop SG Branch complete");
 
             // all mixing nodes
             top_mixing_node_pri_loop
@@ -522,6 +535,7 @@ pub(crate) fn four_branch_pri_and_intermediate_loop_single_time_step(
             bottom_mixing_node_intrmd_loop
                 .advance_timestep_mut_self(timestep)
                 .unwrap();
+            dbg!("Advance timestep: Mixing Nodes complete");
         }
         
         let fhr_state = FHRState {
