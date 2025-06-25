@@ -154,6 +154,10 @@ pub fn four_branch_pri_and_intermediate_loop(
             .get_pressure_change_immutable(
                 zero_mass_flow);
         dbg!(&pressure_chg_pipe_6);
+        let ihx_tube_side_6 = 
+            ihx_sthe_6.get_clone_of_tube_side_parallel_tube_fluid_component();
+
+        dbg!(&ihx_tube_side_6);
 
 
         // calculate pri loop side fluid mechanics
