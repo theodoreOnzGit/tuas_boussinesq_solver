@@ -134,31 +134,45 @@ pub fn four_branch_pri_and_intermediate_loop(
 
         let zero_mass_flow = MassRate::ZERO;
 
-        let pressure_chg_pipe_13 = 
-            fhr_pipe_13.get_pressure_change_immutable(
-                zero_mass_flow);
-        dbg!(&pressure_chg_pipe_13);
-        let pressure_chg_pipe_14 = 
-            fhr_steam_generator_shell_side_14.get_pressure_change_immutable(
-                zero_mass_flow);
-        dbg!(&pressure_chg_pipe_14);
+        let debugging = true;
+        if debugging {
+            let pressure_chg_pipe_13 = 
+                fhr_pipe_13.get_pressure_change_immutable(
+                    zero_mass_flow);
+            dbg!(&pressure_chg_pipe_13);
+            let pressure_chg_pipe_14 = 
+                fhr_steam_generator_shell_side_14.get_pressure_change_immutable(
+                    zero_mass_flow);
+            dbg!(&pressure_chg_pipe_14);
 
 
-        let pressure_chg_pipe_17 = 
-            fhr_pipe_17.get_pressure_change_immutable(
-                zero_mass_flow);
-        dbg!(&pressure_chg_pipe_17);
-        let pressure_chg_pipe_6 = 
-            &ihx_sthe_6
-            .get_clone_of_tube_side_parallel_tube_fluid_component()
-            .get_pressure_change_immutable(
-                zero_mass_flow);
-        dbg!(&pressure_chg_pipe_6);
-        let ihx_tube_side_6 = 
-            ihx_sthe_6.get_clone_of_tube_side_parallel_tube_fluid_component();
+            let pressure_chg_pipe_17 = 
+                fhr_pipe_17.get_pressure_change_immutable(
+                    zero_mass_flow);
+            dbg!(&pressure_chg_pipe_17);
+            let pressure_chg_pipe_6 = 
+                &ihx_sthe_6
+                .get_clone_of_tube_side_parallel_tube_fluid_component()
+                .get_pressure_change_immutable(
+                    zero_mass_flow);
 
-        dbg!(&ihx_tube_side_6);
 
+            dbg!(&pressure_chg_pipe_6);
+            let ihx_tube_side_6 = 
+                ihx_sthe_6.get_clone_of_tube_side_parallel_tube_fluid_component();
+
+            dbg!(&ihx_tube_side_6);
+
+            let pressure_chg_pipe_12 = 
+                fhr_pipe_12.get_pressure_change_immutable(zero_mass_flow);
+            dbg!(&pressure_chg_pipe_12);
+            let pressure_chg_pipe_16 = 
+                fhr_intrmd_loop_pump_16_with_pressure_set.get_pressure_change_immutable(zero_mass_flow);
+            dbg!(&pressure_chg_pipe_16);
+            let pressure_chg_pipe_15 = 
+                fhr_pipe_15.get_pressure_change_immutable(zero_mass_flow);
+            dbg!(&pressure_chg_pipe_15);
+        }
 
         // calculate pri loop side fluid mechanics
         let mut pri_loop_branches = 

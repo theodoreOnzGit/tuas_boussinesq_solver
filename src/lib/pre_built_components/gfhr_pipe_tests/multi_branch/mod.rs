@@ -75,7 +75,7 @@ pub fn test_fhr_four_branch_solver_pri_and_intrmd_loop(){
 
 
     let initial_temperature_intrmd_loop = 
-        ThermodynamicTemperature::new::<degree_celsius>(350.0);
+        ThermodynamicTemperature::new::<degree_celsius>(500.0);
     // intermediate loop ihx side 
     // (excluding sthe)
     let fhr_pipe_17 = new_fhr_pipe_17(initial_temperature_intrmd_loop);
@@ -195,8 +195,11 @@ pub fn test_fhr_four_branch_solver_pri_and_intrmd_loop_zero_flow(){
     let fhr_pipe_4 = new_fhr_pipe_4_ver_1(initial_temperature_pri_loop);
 
 
+    // make sure intermediate loop at same temperature, because 
+    // the STHE is also at 500 C,
+    // otherwise, will have natural circulation
     let initial_temperature_intrmd_loop = 
-        ThermodynamicTemperature::new::<degree_celsius>(350.0);
+        ThermodynamicTemperature::new::<degree_celsius>(500.0);
     // intermediate loop ihx side 
     // (excluding sthe)
     let fhr_pipe_17 = new_fhr_pipe_17(initial_temperature_intrmd_loop);
