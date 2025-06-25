@@ -6,6 +6,7 @@ use crate::pre_built_components::insulated_pipes_and_fluid_components::Insulated
 use crate::pre_built_components::non_insulated_fluid_components::NonInsulatedFluidComponent;
 use crate::pre_built_components::shell_and_tube_heat_exchanger::SimpleShellAndTubeHeatExchanger;
 use crate::prelude::beta_testing::HeatTransferEntity;
+use crate::single_control_vol::SingleCVNode;
 use uom::si::angle::degree;
 use uom::si::area::{square_centimeter, square_inch};
 use uom::si::f64::*;
@@ -1150,11 +1151,29 @@ pub fn new_fhr_pipe_13(initial_temperature: ThermodynamicTemperature) -> Insulat
 pub fn gfhr_bottom_mixing_node(initial_temperature: ThermodynamicTemperature)
     -> HeatTransferEntity {
 
-        todo!()
+        let mixing_node_diameter = Length::new::<inch>(14.0);
+        let mixing_node_material = LiquidMaterial::FLiBe;
+        let mixing_node_pressure = Pressure::new::<atmosphere>(1.0);
+        let mixing_node = SingleCVNode::new_sphere(
+            mixing_node_diameter, 
+            mixing_node_material.into(), 
+            initial_temperature, 
+            mixing_node_pressure).
+            unwrap();
+        return mixing_node.into();
 }
 /// creates a mixing node for the top of the reactor (end)
 pub fn gfhr_top_mixing_node(initial_temperature: ThermodynamicTemperature)
     -> HeatTransferEntity {
 
-        todo!()
+        let mixing_node_diameter = Length::new::<inch>(14.0);
+        let mixing_node_material = LiquidMaterial::FLiBe;
+        let mixing_node_pressure = Pressure::new::<atmosphere>(1.0);
+        let mixing_node = SingleCVNode::new_sphere(
+            mixing_node_diameter, 
+            mixing_node_material.into(), 
+            initial_temperature, 
+            mixing_node_pressure).
+            unwrap();
+        return mixing_node.into();
 }
