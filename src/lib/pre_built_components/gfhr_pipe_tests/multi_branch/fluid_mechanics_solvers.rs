@@ -561,6 +561,19 @@ pub(crate) fn four_branch_pri_and_intermediate_loop_single_time_step(
             })
             .collect();
 
+        let ihx_shell_side_temp_profile: Vec<ThermodynamicTemperature> = 
+            ihx_sthe_6 
+            .shell_side_fluid_array_temperature()
+            .unwrap();
+
+        let ihx_shell_side_temp_profile_degc: Vec<f64> = 
+            ihx_shell_side_temp_profile
+            .into_iter()
+            .map(|temperature|{
+                (temperature.get::<degree_celsius>()*100.0).round()/100.0
+            })
+            .collect();
+
         
         let fhr_state = FHRState {
             reactor_branch_flow,
@@ -571,6 +584,7 @@ pub(crate) fn four_branch_pri_and_intermediate_loop_single_time_step(
             intrmd_loop_steam_gen_br_flow,
             simulation_time,
             reactor_temp_profile_degc,
+            ihx_shell_side_temp_profile_degc,
         };
         dbg!(&fhr_state);
         return fhr_state;
@@ -603,11 +617,15 @@ pub(crate) struct FHRState {
     /// (between pipe 12 and pipe 13)
     pub intrmd_loop_steam_gen_br_flow: MassRate,
 
-    /// other diagnostics 
+    // other diagnostics 
+    /// shows the current simulation time
     pub simulation_time: Time,
 
     // temperature diagnostics 
+    /// shows the current reactor temperature profile in degc (2dp)
     pub reactor_temp_profile_degc: Vec<f64>,
+    /// shows the current reactor temperature profile in degc (2dp)
+    pub ihx_shell_side_temp_profile_degc: Vec<f64>,
 
 
 }
