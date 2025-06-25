@@ -587,6 +587,21 @@ pub(crate) fn four_branch_pri_and_intermediate_loop_single_time_step(
                 (temperature.get::<degree_celsius>()*100.0).round()/100.0
             })
             .collect();
+
+        // steam generator tube side temp profile
+        let sg_shell_side_temp_profile: Vec<ThermodynamicTemperature> = 
+            fhr_steam_generator_shell_side_14 
+            .pipe_fluid_array_temperature()
+            .unwrap();
+
+        let sg_shell_side_temp_profile_degc: Vec<f64> = 
+            sg_shell_side_temp_profile
+            .into_iter()
+            .map(|temperature|{
+                (temperature.get::<degree_celsius>()*100.0).round()/100.0
+            })
+            .collect();
+
         
         let fhr_state = FHRState {
             reactor_branch_flow,
