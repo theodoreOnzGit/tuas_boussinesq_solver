@@ -1151,8 +1151,6 @@ pub trait FluidComponentSuperCollectionParallelAssociatedFunctions {
 
         let abs_mass_flowrate_for_all_branches_kg_per_s: Vec<f64>;
 
-        dbg!(&pressure_drop);
-        // TODO: buggy spot here 23 ju 2025
         abs_mass_flowrate_for_all_branches_kg_per_s = fluid_component_collection_vector
             .iter()
             .map(|branch: &FluidComponentCollection|{

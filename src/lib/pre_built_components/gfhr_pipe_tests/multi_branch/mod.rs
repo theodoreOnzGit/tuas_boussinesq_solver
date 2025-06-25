@@ -105,7 +105,7 @@ pub(crate) fn test_fhr_four_branch_solver_pri_and_intrmd_loop_full_th(){
 
 
     let pri_loop_pump_pressure = Pressure::new::<megapascal>(-0.2);
-    let intrmd_loop_pump_pressure = Pressure::new::<kilopascal>(-150.0);
+    let intrmd_loop_pump_pressure = Pressure::new::<kilopascal>(-15.0);
 
     // mixing nodes for pri loop 
     let mut bottom_mixing_node_pri_loop = 
