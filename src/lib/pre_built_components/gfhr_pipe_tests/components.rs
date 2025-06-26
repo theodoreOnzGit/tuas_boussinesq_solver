@@ -543,7 +543,7 @@ pub fn new_ihx_sthe_6_version_1(initial_temperature: ThermodynamicTemperature
     ) -> SimpleShellAndTubeHeatExchanger {
 
     let insulation_thickness: Length = Length::new::<meter>(0.0508);
-    let steel = SolidMaterial::SteelSS304L;
+    let copper = SolidMaterial::Copper;
     let fluid_pressure = Pressure::new::<atmosphere>(1.0);
     let solid_pressure = Pressure::new::<atmosphere>(1.0);
     let sthe_length = Length::new::<meter>(1.0);
@@ -567,7 +567,7 @@ pub fn new_ihx_sthe_6_version_1(initial_temperature: ThermodynamicTemperature
     let tube_side_form_loss = Ratio::new::<ratio>(3.3);
     let tube_side_incline_angle = Angle::new::<degree>(90.0);
     let tube_side_liquid = LiquidMaterial::HITEC;
-    let inner_tube_material = steel;
+    let inner_tube_material = copper;
     let tube_side_initial_temperature = initial_temperature;
     let tube_loss_correlations: DimensionlessDarcyLossCorrelations
         = DimensionlessDarcyLossCorrelations::new_pipe(
@@ -607,7 +607,7 @@ pub fn new_ihx_sthe_6_version_1(initial_temperature: ThermodynamicTemperature
     let shell_side_form_loss = Ratio::new::<ratio>(3.9);
     let shell_side_incline_angle = Angle::new::<degree>(90.0);
     let shell_side_liquid = LiquidMaterial::FLiBe;
-    let outer_tube_material = steel;
+    let outer_tube_material = copper;
     let shell_side_initial_temperature = initial_temperature;
     let shell_loss_correlations: DimensionlessDarcyLossCorrelations
         = DimensionlessDarcyLossCorrelations::new_pipe(
@@ -628,7 +628,8 @@ pub fn new_ihx_sthe_6_version_1(initial_temperature: ThermodynamicTemperature
             length_to_diameter: shell_side_length_to_diameter,
         };
     let shell_side_nusselt_correlation_to_tubes = 
-        NusseltCorrelation::IdealNusseltOneBillion;
+        NusseltCorrelation::PipeGnielinskiGeneric(
+            shell_side_gnielinski_data);
 
     // insulation side, accounts for parasitic heat loss
     let insulation_material = SolidMaterial::SteelSS304L;
