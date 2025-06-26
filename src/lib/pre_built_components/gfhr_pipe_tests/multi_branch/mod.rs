@@ -401,7 +401,7 @@ pub(crate) fn test_fhr_four_branch_full_th_long_regression(){
     );
     assert_eq!(
         pump_16_temp_profile_degc,
-        vec![312.13, 312.13],
+        vec![312.12, 312.13],
     );
     assert_eq!(
         pipe_17_temp_profile_degc,

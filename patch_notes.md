@@ -46,6 +46,12 @@ order of magnitude of mass flowrate and pressure drop for gFHR like
 reactors. HITEC in secondary loop, FLiBe in primary loop. This is under 
 gfhr pipe tests under multi\_branch solvers
 
+Caveats:
+Regression tests for coupled dracs loop of ciet NOT done 
+
+TODO: 
+documentation for regression tests need to be done to eliminate warnings
+
 ## v 0.0.8 
 
 Updating regression testing for CIET coupled natural circulation. This will 
