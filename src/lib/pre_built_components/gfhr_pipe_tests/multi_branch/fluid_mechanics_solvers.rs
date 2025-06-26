@@ -795,6 +795,33 @@ pub(crate) fn four_branch_pri_and_intermediate_loop_single_time_step(
             })
             .collect();
 
+        // downcomer_temp profile
+        let downcomer_2_temp_profile: Vec<ThermodynamicTemperature> = 
+            downcomer_pipe_2 
+            .pipe_fluid_array_temperature()
+            .unwrap();
+
+        let downcomer_2_temp_profile_degc: Vec<f64> = 
+            downcomer_2_temp_profile
+            .into_iter()
+            .map(|temperature|{
+                (temperature.get::<degree_celsius>()*100.0).round()/100.0
+            })
+            .collect();
+
+        let downcomer_3_temp_profile: Vec<ThermodynamicTemperature> = 
+            downcomer_pipe_3 
+            .pipe_fluid_array_temperature()
+            .unwrap();
+
+        let downcomer_3_temp_profile_degc: Vec<f64> = 
+            downcomer_3_temp_profile
+            .into_iter()
+            .map(|temperature|{
+                (temperature.get::<degree_celsius>()*100.0).round()/100.0
+            })
+            .collect();
+
         
         let fhr_state = FHRThermalHydraulicsState {
             reactor_branch_flow,
@@ -820,6 +847,8 @@ pub(crate) fn four_branch_pri_and_intermediate_loop_single_time_step(
             pipe_15_temp_profile_degc,
             pump_16_temp_profile_degc,
             pipe_17_temp_profile_degc,
+            downcomer_2_temp_profile_degc,
+            downcomer_3_temp_profile_degc,
         };
 
         // if one wants to monitor flow through the loop
@@ -900,6 +929,11 @@ pub(crate) struct FHRThermalHydraulicsState {
     /// shows the temperature profile of pipe_17
     pub pipe_17_temp_profile_degc: Vec<f64>,
 
+    // downcomers
+    /// shows the temperature profile of pipe_12
+    pub downcomer_2_temp_profile_degc: Vec<f64>,
+    /// shows the temperature profile of pipe_13
+    pub downcomer_3_temp_profile_degc: Vec<f64>,
 
 }
 
