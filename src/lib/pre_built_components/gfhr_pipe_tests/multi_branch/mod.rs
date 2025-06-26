@@ -181,7 +181,7 @@ pub(crate) fn test_fhr_four_branch_solver_pri_and_intrmd_loop_full_th(){
 
     while simulation_time < max_time {
 
-        let reactor_power = Power::new::<megawatt>(15.0);
+        let reactor_power = Power::new::<megawatt>(35.0);
 
         fhr_state = four_branch_pri_and_intermediate_loop_single_time_step(
             pri_loop_pump_pressure, 

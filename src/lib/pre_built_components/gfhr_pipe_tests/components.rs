@@ -1076,7 +1076,7 @@ pub fn new_fhr_intermediate_loop_steam_generator_shell_side_14(initial_temperatu
     let shell_od = shell_id + 2.0 * pipe_thickness;
     let pipe_shell_material = SolidMaterial::SteelSS304L;
     let pipe_fluid = LiquidMaterial::HITEC;
-    let htc_to_ambient = HeatTransfer::new::<watt_per_square_meter_kelvin>(2000.0);
+    let htc_to_ambient = HeatTransfer::new::<watt_per_square_meter_kelvin>(20000.0);
     // from SAM nodalisation, we have 2 nodes only, 
     // now because there are two outer nodes, we subtract 2
     let user_specified_inner_nodes = 2-2; 
