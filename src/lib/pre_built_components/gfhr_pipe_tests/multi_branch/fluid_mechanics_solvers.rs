@@ -15,7 +15,6 @@ use crate::prelude::beta_testing::HeatTransferInteractionType;
 use ndarray::Array;
 use ndarray::Array1;
 use uom::si::mass_rate::kilogram_per_second;
-use uom::si::power::megawatt;
 use uom::si::thermodynamic_temperature::degree_celsius;
 use uom::ConstZero;
 use uom::si::f64::*;

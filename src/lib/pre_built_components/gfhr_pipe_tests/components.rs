@@ -538,7 +538,6 @@ pub fn new_fhr_pipe_7(initial_temperature: ThermodynamicTemperature) -> Insulate
 ///
 /// flow direction going up by 1m on both shell and tube side
 ///
-/// TODO: likely need to increase heat transfer efficiency here
 pub fn new_ihx_sthe_6_version_1(initial_temperature: ThermodynamicTemperature
     ) -> SimpleShellAndTubeHeatExchanger {
 
