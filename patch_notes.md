@@ -1,3 +1,57 @@
+## v 0.0.9
+
+Major thing in this release is the testing of FLiBe piping for FHRs. 
+This is because flowrates in the gFHR core are about 1173 kg/s. However,
+initial tests showed that fluid mechanics calculations (ie mass flowrates 
+in parallel branches) in this flowrate range caused non convergence in the 
+solver.
+
+Hence, I've opted to use this version to do test piping components in gFHR 
+type piping.
+
+Bugfix: setting internal pressure source in InsulatedFluidComponents should 
+work correctly now.
+
+Bugfix: for flows in gFHR, brent-dekker solver may not be 
+exactly appropriate as there are large quantities of flow involved 
+induced by relatively small pressure drop. Hence calculating 
+pressure change across multiple branches so that zero mass flowrate 
+goes through them as a whole was difficult to converge. With 
+an error tolerance of 1e-15, the solver was oscillating between 
+7.105e-13 kg/s and -5.684e-13 kg/s. For all intents and purposes, 
+either solution could be considered a zero flowrate. Nevertheless,
+it does not converge. Reducing error tolerance to 1e-12 or 1e-9 
+(can't remember), the pressure across four branches oscillates 
+between -5053.0145 and -5010, whereas mass flowrate oscillates 
+between 7.105e-13 kg/s and -50.059 kg/s. Thus, with higher 
+error tolerance set, the brent Dekker algorithm yielded a larger error.
+After some reading of the Brent Dekker algorithm, I found that the 
+switch between secant method and bisection method was controlled by the 
+tolerance itself. For a more stable solution method, I added the 
+regula falsi method to ensure that the oscillations stop. This is 
+because Brent Dekker uses secant method and inverse quadratic method.
+It may cause oscillations in some cases. Regula falsi has proven more 
+stable.
+
+Bugfix: another failure to converge due to too tight tolerance was 
+getting mass flowrate from pressure change for single branch. There was 
+some failure to converge.
+
+Bugfix: getting tube side fluid array temperatures from the shell 
+and tube heat exchangers originally got the tube side solid array. 
+The we now get fluid array..
+
+Feature added: added regression tests for some pipes in the correct 
+order of magnitude of mass flowrate and pressure drop for gFHR like 
+reactors. HITEC in secondary loop, FLiBe in primary loop. This is under 
+gfhr pipe tests under multi\_branch solvers
+
+Caveats:
+Regression tests for coupled dracs loop of ciet NOT done 
+
+TODO: 
+documentation for regression tests need to be done to eliminate warnings
+
 ## v 0.0.8 
 
 Updating regression testing for CIET coupled natural circulation. This will 

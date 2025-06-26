@@ -22,7 +22,7 @@ impl SimpleShellAndTubeHeatExchanger {
     /// gets the temperature of the tube side fluid array
     pub fn inner_tube_fluid_array_temperature(&mut self) ->
         Result<Vec<ThermodynamicTemperature>,TuasLibError>{
-            self.inner_pipe_shell_array_for_single_tube.get_temperature_vector()
+            self.tube_side_fluid_array_for_single_tube.get_temperature_vector()
     }
 
     /// gets the shell side fluid array temperature
