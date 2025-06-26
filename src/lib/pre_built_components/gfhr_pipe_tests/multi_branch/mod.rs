@@ -341,89 +341,82 @@ pub(crate) fn test_fhr_four_branch_full_th_long_regression(){
     // assert temperature profiles 
     assert_eq!(
         reactor_temp_profile_degc,
-        vec![],
-    );
-    assert_eq!(
-        ihx_shell_side_temp_profile_degc,
-        vec![],
-    );
-    assert_eq!(
-        ihx_tube_side_temp_profile_degc,
-        vec![],
-    );
-    assert_eq!(
-        sg_shell_side_temp_profile_degc,
-        vec![],
+        vec![485.61, 485.62, 505.44, 505.45, 505.45],
     );
     assert_eq!(
         pipe_4_temp_profile_degc,
-        vec![],
+        vec![503.18, 503.18],
     );
     assert_eq!(
         pipe_5_temp_profile_degc,
-        vec![],
+        vec![503.13, 503.16],
     );
     assert_eq!(
         ihx_shell_side_temp_profile_degc,
-        vec![],
+        vec![485.64, 494.52],
     );
     assert_eq!(
         pipe_7_temp_profile_degc,
-        vec![],
+        vec![485.63, 485.63, 485.64, 485.64, 485.64],
     );
     assert_eq!(
         pipe_8_temp_profile_degc,
-        vec![],
+        vec![485.63, 485.63],
     );
     assert_eq!(
         pump_9_temp_profile_degc,
-        vec![],
+        vec![485.63, 485.63],
     );
     assert_eq!(
         pipe_10_temp_profile_degc,
-        vec![],
+        vec![485.60, 485.61, 485.61, 485.61, 
+        485.62, 485.62, 485.62, 485.63],
     );
     assert_eq!(
         pipe_11_temp_profile_degc,
-        vec![],
+        vec![485.60, 485.60],
     );
 
 
     // intermediate loop
     assert_eq!(
+        ihx_tube_side_temp_profile_degc,
+        vec![326.05, 339.55],
+    );
+    assert_eq!(
         pipe_12_temp_profile_degc,
-        vec![],
+        vec![339.55, 339.56],
     );
     assert_eq!(
         pipe_13_temp_profile_degc,
-        vec![],
+        vec![339.58, 339.57],
     );
     assert_eq!(
         sg_shell_side_temp_profile_degc,
-        vec![],
+        vec![312.11, 325.84],
     );
     assert_eq!(
         pipe_15_temp_profile_degc,
-        vec![],
+        vec![312.12, 312.12],
     );
     assert_eq!(
         pump_16_temp_profile_degc,
-        vec![],
+        vec![312.13, 312.13],
     );
     assert_eq!(
         pipe_17_temp_profile_degc,
-        vec![],
+        vec![312.14, 312.15],
     );
 
 
     // downcomers
     assert_eq!(
         downcomer_2_temp_profile_degc,
-        vec![],
+        vec![485.51, 485.43, 485.35, 485.27, 485.19],
     );
     assert_eq!(
         downcomer_3_temp_profile_degc,
-        vec![],
+        vec![485.35, 485.11, 484.86, 484.62, 484.38],
     );
 
 }
