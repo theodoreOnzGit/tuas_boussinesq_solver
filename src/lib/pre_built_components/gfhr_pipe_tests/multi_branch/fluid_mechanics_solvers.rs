@@ -628,6 +628,173 @@ pub(crate) fn four_branch_pri_and_intermediate_loop_single_time_step(
             })
             .collect();
 
+        // pipe 4, after reactor outlet 
+        let pipe_4_temp_profile: Vec<ThermodynamicTemperature> = 
+            fhr_pipe_4 
+            .pipe_fluid_array_temperature()
+            .unwrap();
+
+        let pipe_4_temp_profile_degc: Vec<f64> = 
+            pipe_4_temp_profile
+            .into_iter()
+            .map(|temperature|{
+                (temperature.get::<degree_celsius>()*100.0).round()/100.0
+            })
+            .collect();
+        // pipe 5, just before STHE
+        let pipe_5_temp_profile: Vec<ThermodynamicTemperature> = 
+            fhr_pipe_5 
+            .pipe_fluid_array_temperature()
+            .unwrap();
+
+        let pipe_5_temp_profile_degc: Vec<f64> = 
+            pipe_5_temp_profile
+            .into_iter()
+            .map(|temperature|{
+                (temperature.get::<degree_celsius>()*100.0).round()/100.0
+            })
+            .collect();
+        // pipe 7, just after STHE
+        let pipe_7_temp_profile: Vec<ThermodynamicTemperature> = 
+            fhr_pipe_7 
+            .pipe_fluid_array_temperature()
+            .unwrap();
+
+        let pipe_7_temp_profile_degc: Vec<f64> = 
+            pipe_7_temp_profile
+            .into_iter()
+            .map(|temperature|{
+                (temperature.get::<degree_celsius>()*100.0).round()/100.0
+            })
+            .collect();
+        // pipe 8, just before pump
+        let pipe_8_temp_profile: Vec<ThermodynamicTemperature> = 
+            fhr_pipe_8 
+            .pipe_fluid_array_temperature()
+            .unwrap();
+
+        let pipe_8_temp_profile_degc: Vec<f64> = 
+            pipe_8_temp_profile
+            .into_iter()
+            .map(|temperature|{
+                (temperature.get::<degree_celsius>()*100.0).round()/100.0
+            })
+            .collect();
+
+        // pipe 10, just after pump
+        let pipe_10_temp_profile: Vec<ThermodynamicTemperature> = 
+            fhr_pipe_10 
+            .pipe_fluid_array_temperature()
+            .unwrap();
+
+        let pipe_10_temp_profile_degc: Vec<f64> = 
+            pipe_10_temp_profile
+            .into_iter()
+            .map(|temperature|{
+                (temperature.get::<degree_celsius>()*100.0).round()/100.0
+            })
+            .collect();
+
+        // pipe 11, just before reactor inlet
+        let pipe_11_temp_profile: Vec<ThermodynamicTemperature> = 
+            fhr_pipe_11 
+            .pipe_fluid_array_temperature()
+            .unwrap();
+
+        let pipe_11_temp_profile_degc: Vec<f64> = 
+            pipe_11_temp_profile
+            .into_iter()
+            .map(|temperature|{
+                (temperature.get::<degree_celsius>()*100.0).round()/100.0
+            })
+            .collect();
+
+
+        // pipe 12, just before STHE tube side
+        let pipe_12_temp_profile: Vec<ThermodynamicTemperature> = 
+            fhr_pipe_12 
+            .pipe_fluid_array_temperature()
+            .unwrap();
+
+        let pipe_12_temp_profile_degc: Vec<f64> = 
+            pipe_12_temp_profile
+            .into_iter()
+            .map(|temperature|{
+                (temperature.get::<degree_celsius>()*100.0).round()/100.0
+            })
+            .collect();
+
+        // pipe 13, just before steam generator shell side
+        let pipe_13_temp_profile: Vec<ThermodynamicTemperature> = 
+            fhr_pipe_13 
+            .pipe_fluid_array_temperature()
+            .unwrap();
+
+        let pipe_13_temp_profile_degc: Vec<f64> = 
+            pipe_13_temp_profile
+            .into_iter()
+            .map(|temperature|{
+                (temperature.get::<degree_celsius>()*100.0).round()/100.0
+            })
+            .collect();
+
+        // pipe 15, just after steam generator shell side
+        let pipe_15_temp_profile: Vec<ThermodynamicTemperature> = 
+            fhr_pipe_15 
+            .pipe_fluid_array_temperature()
+            .unwrap();
+
+        let pipe_15_temp_profile_degc: Vec<f64> = 
+            pipe_15_temp_profile
+            .into_iter()
+            .map(|temperature|{
+                (temperature.get::<degree_celsius>()*100.0).round()/100.0
+            })
+            .collect();
+
+
+        // pipe 17, just after steam generator shell side
+        let pipe_17_temp_profile: Vec<ThermodynamicTemperature> = 
+            fhr_pipe_17 
+            .pipe_fluid_array_temperature()
+            .unwrap();
+
+        let pipe_17_temp_profile_degc: Vec<f64> = 
+            pipe_17_temp_profile
+            .into_iter()
+            .map(|temperature|{
+                (temperature.get::<degree_celsius>()*100.0).round()/100.0
+            })
+            .collect();
+
+        // pri pump
+        let pump_9_temp_profile: Vec<ThermodynamicTemperature> = 
+            fhr_pri_loop_pump_9 
+            .pipe_fluid_array_temperature()
+            .unwrap();
+
+        let pump_9_temp_profile_degc: Vec<f64> = 
+            pump_9_temp_profile
+            .into_iter()
+            .map(|temperature|{
+                (temperature.get::<degree_celsius>()*100.0).round()/100.0
+            })
+            .collect();
+
+        // intrmd pump
+        let pump_16_temp_profile: Vec<ThermodynamicTemperature> = 
+            fhr_intrmd_loop_pump_16 
+            .pipe_fluid_array_temperature()
+            .unwrap();
+
+        let pump_16_temp_profile_degc: Vec<f64> = 
+            pump_16_temp_profile
+            .into_iter()
+            .map(|temperature|{
+                (temperature.get::<degree_celsius>()*100.0).round()/100.0
+            })
+            .collect();
+
         
         let fhr_state = FHRThermalHydraulicsState {
             reactor_branch_flow,
@@ -641,6 +808,18 @@ pub(crate) fn four_branch_pri_and_intermediate_loop_single_time_step(
             ihx_shell_side_temp_profile_degc,
             ihx_tube_side_temp_profile_degc,
             sg_shell_side_temp_profile_degc,
+            pipe_4_temp_profile_degc,
+            pipe_5_temp_profile_degc,
+            pipe_7_temp_profile_degc,
+            pipe_8_temp_profile_degc,
+            pump_9_temp_profile_degc,
+            pipe_10_temp_profile_degc,
+            pipe_11_temp_profile_degc,
+            pipe_12_temp_profile_degc,
+            pipe_13_temp_profile_degc,
+            pipe_15_temp_profile_degc,
+            pump_16_temp_profile_degc,
+            pipe_17_temp_profile_degc,
         };
 
         // if one wants to monitor flow through the loop
@@ -691,6 +870,35 @@ pub(crate) struct FHRThermalHydraulicsState {
     pub ihx_tube_side_temp_profile_degc: Vec<f64>,
     /// shows the current steam generator side temperature profile in degc (2dp)
     pub sg_shell_side_temp_profile_degc: Vec<f64>,
+
+    /// shows the temperature profile of pipe_4
+    pub pipe_4_temp_profile_degc: Vec<f64>,
+    /// shows the temperature profile of pipe_5
+    pub pipe_5_temp_profile_degc: Vec<f64>,
+    /// shows the temperature profile of pipe_7
+    pub pipe_7_temp_profile_degc: Vec<f64>,
+    /// shows the temperature profile of pipe_8
+    pub pipe_8_temp_profile_degc: Vec<f64>,
+    /// shows the temperature profile of pump_9 in the primary loop
+    pub pump_9_temp_profile_degc: Vec<f64>,
+    /// shows the temperature profile of pipe_10
+    pub pipe_10_temp_profile_degc: Vec<f64>,
+    /// shows the temperature profile of pipe_11
+    pub pipe_11_temp_profile_degc: Vec<f64>,
+
+
+    // intermediate loop
+
+    /// shows the temperature profile of pipe_12
+    pub pipe_12_temp_profile_degc: Vec<f64>,
+    /// shows the temperature profile of pipe_13
+    pub pipe_13_temp_profile_degc: Vec<f64>,
+    /// shows the temperature profile of pipe_15
+    pub pipe_15_temp_profile_degc: Vec<f64>,
+    /// shows the temperature profile of pump_16 in the intermediate loop
+    pub pump_16_temp_profile_degc: Vec<f64>,
+    /// shows the temperature profile of pipe_17
+    pub pipe_17_temp_profile_degc: Vec<f64>,
 
 
 }

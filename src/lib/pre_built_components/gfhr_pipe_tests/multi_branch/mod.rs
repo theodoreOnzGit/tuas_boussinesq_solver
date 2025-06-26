@@ -180,6 +180,18 @@ pub(crate) fn test_fhr_four_branch_solver_pri_and_intrmd_loop_full_th_short_regr
         ihx_shell_side_temp_profile_degc: vec![],
         ihx_tube_side_temp_profile_degc: vec![],
         sg_shell_side_temp_profile_degc: vec![],
+        pipe_4_temp_profile_degc: vec![],
+        pipe_5_temp_profile_degc: vec![],
+        pipe_7_temp_profile_degc: vec![],
+        pipe_8_temp_profile_degc: vec![],
+        pump_9_temp_profile_degc: vec![],
+        pipe_10_temp_profile_degc: vec![],
+        pipe_11_temp_profile_degc: vec![],
+        pipe_12_temp_profile_degc: vec![],
+        pipe_13_temp_profile_degc: vec![],
+        pipe_15_temp_profile_degc: vec![],
+        pump_16_temp_profile_degc: vec![],
+        pipe_17_temp_profile_degc: vec![],
     };
 
     dbg!(&(reactor_branch_flow, downcomer_branch_1_flow, 
@@ -229,6 +241,21 @@ pub(crate) fn test_fhr_four_branch_solver_pri_and_intrmd_loop_full_th_short_regr
         simulation_time += timestep;
     }
     
+    // show fhr state in case of failure
+    dbg!(&fhr_state);
+
+    // sim time 
+    let final_simulation_time = fhr_state.simulation_time;
+
+    // temperature profile of reactor 
+    let reactor_temp_profile_degc = fhr_state.reactor_temp_profile_degc;
+
+    // temp profile of heat exchangers and steam generators
+    let ihx_shell_side_temp_profile_degc = fhr_state.ihx_shell_side_temp_profile_degc;
+    let ihx_tube_side_temp_profile_degc = fhr_state.ihx_tube_side_temp_profile_degc;
+    let sg_shell_side_temp_profile_degc = fhr_state.sg_shell_side_temp_profile_degc;
+
+    // flowrates
     reactor_branch_flow = fhr_state.reactor_branch_flow;
     downcomer_branch_1_flow = fhr_state.downcomer_branch_1_flow;
     downcomer_branch_2_flow = fhr_state.downcomer_branch_2_flow;
@@ -239,7 +266,6 @@ pub(crate) fn test_fhr_four_branch_solver_pri_and_intrmd_loop_full_th_short_regr
     intrmd_loop_steam_gen_br_flow = 
         fhr_state.intrmd_loop_steam_gen_br_flow;
 
-    dbg!(&fhr_state);
 
     approx::assert_relative_eq!(
         reactor_branch_flow.get::<kilogram_per_second>(),
@@ -402,6 +428,18 @@ pub(crate) fn test_fhr_four_branch_solver_pri_and_intrmd_loop_full_th_long_regre
         ihx_shell_side_temp_profile_degc: vec![],
         ihx_tube_side_temp_profile_degc: vec![],
         sg_shell_side_temp_profile_degc: vec![],
+        pipe_4_temp_profile_degc: vec![],
+        pipe_5_temp_profile_degc: vec![],
+        pipe_7_temp_profile_degc: vec![],
+        pipe_8_temp_profile_degc: vec![],
+        pump_9_temp_profile_degc: vec![],
+        pipe_10_temp_profile_degc: vec![],
+        pipe_11_temp_profile_degc: vec![],
+        pipe_12_temp_profile_degc: vec![],
+        pipe_13_temp_profile_degc: vec![],
+        pipe_15_temp_profile_degc: vec![],
+        pump_16_temp_profile_degc: vec![],
+        pipe_17_temp_profile_degc: vec![],
     };
 
     dbg!(&(reactor_branch_flow, downcomer_branch_1_flow, 
@@ -451,6 +489,7 @@ pub(crate) fn test_fhr_four_branch_solver_pri_and_intrmd_loop_full_th_long_regre
         simulation_time += timestep;
     }
     
+    // flowrates 
     reactor_branch_flow = fhr_state.reactor_branch_flow;
     downcomer_branch_1_flow = fhr_state.downcomer_branch_1_flow;
     downcomer_branch_2_flow = fhr_state.downcomer_branch_2_flow;
