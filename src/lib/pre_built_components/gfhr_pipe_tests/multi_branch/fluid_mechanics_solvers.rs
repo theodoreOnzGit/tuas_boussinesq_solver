@@ -295,6 +295,46 @@ pub(crate) fn four_branch_pri_and_intermediate_loop_single_time_step(
                 .unwrap();
             println!("intermediate loop SteamGen br linking complete");
         }
+        {
+
+            // for steam generator, I want to manually remove heat from it 
+            // uniformly 
+
+            let number_of_temperature_nodes_for_sg = 2;
+            let mut q_frac_arr: Array1<f64> = Array::default(number_of_temperature_nodes_for_sg);
+            // we want the middle node to contain all the power
+            q_frac_arr[0] = 0.0;
+            q_frac_arr[1] = 0.0;
+            let mut sg_fluid_array_clone: FluidArray = 
+                fhr_steam_generator_shell_side_14
+                .pipe_fluid_array
+                .clone()
+                .try_into()
+                .unwrap();
+            let steam_gen_heat_change: Power;
+
+            let temperature_diff = 
+                TemperatureInterval::new::<uom::si::temperature_interval::kelvin>(
+                    sg_fluid_array_clone.try_get_bulk_temperature()
+                    .unwrap()
+                    .get::<degree_celsius>() 
+                    - steam_generator_tube_side_temperature
+                    .get::<degree_celsius>()
+                );
+
+            // Q_added_to_destination = -UA*(T_destination - T_steam)
+            steam_gen_heat_change = -temperature_diff*steam_generator_overall_ua;
+            dbg!(&steam_gen_heat_change);
+
+            sg_fluid_array_clone
+                .lateral_link_new_power_vector(
+                    steam_gen_heat_change, 
+                    q_frac_arr)
+                .unwrap();
+
+            fhr_steam_generator_shell_side_14.pipe_fluid_array
+                = sg_fluid_array_clone.into();
+        }
         // now for the reactor branch, we must have some kind of 
         // power input here 
         {
@@ -303,8 +343,8 @@ pub(crate) fn four_branch_pri_and_intermediate_loop_single_time_step(
             //
             // this sets the reactor power in the middle part of the 
             // pipe
-            let number_of_temperature_nodes = 5;
-            let mut q_frac_arr: Array1<f64> = Array::default(number_of_temperature_nodes);
+            let number_of_temperature_nodes_for_reactor = 5;
+            let mut q_frac_arr: Array1<f64> = Array::default(number_of_temperature_nodes_for_reactor);
             // we want the middle node to contain all the power
             q_frac_arr[0] = 0.0;
             q_frac_arr[1] = 0.0;
