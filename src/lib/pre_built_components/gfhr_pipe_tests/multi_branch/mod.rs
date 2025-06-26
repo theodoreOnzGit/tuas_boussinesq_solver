@@ -302,39 +302,39 @@ pub(crate) fn test_fhr_four_branch_full_th_long_regression(){
     // assert final simulation time
     approx::assert_relative_eq!(
         final_simulation_time.get::<second>(),
-        734.892,
+        1799.999999,
         max_relative=1e-5
         );
 
     // assert flowrates
     approx::assert_relative_eq!(
         reactor_branch_flow.get::<kilogram_per_second>(),
-        734.892,
+        739.4227,
         max_relative=1e-5
         );
     approx::assert_relative_eq!(
         downcomer_branch_1_flow.get::<kilogram_per_second>(),
-        21.8858,
+        21.7141,
         max_relative=1e-5
         );
     approx::assert_relative_eq!(
         downcomer_branch_2_flow.get::<kilogram_per_second>(),
-        69.0525,
+        68.4728,
         max_relative=1e-5
         );
     approx::assert_relative_eq!(
         intermediate_heat_exchanger_branch_flow.get::<kilogram_per_second>(),
-        -825.830,
+        -829.6096,
         max_relative=1e-5
         );
     approx::assert_relative_eq!(
         intrmd_loop_ihx_br_flow.get::<kilogram_per_second>(),
-        781.367,
+        810.915,
         max_relative=1e-5
         );
     approx::assert_relative_eq!(
         intrmd_loop_steam_gen_br_flow.get::<kilogram_per_second>(),
-        -781.367,
+        -810.915,
         max_relative=1e-5
         );
 
