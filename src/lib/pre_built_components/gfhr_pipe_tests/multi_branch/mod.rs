@@ -9,7 +9,7 @@ pub mod multi_branch_solvers;
 /// contains code iterative solution for single branches 
 pub mod single_branch_solvers;
 
-use fluid_mechanics_solvers::{four_branch_pri_and_intermediate_loop_single_time_step, FHRState};
+use fluid_mechanics_solvers::{four_branch_pri_and_intermediate_loop_single_time_step, FHRThermalHydraulicsState};
 use uom::si::power::megawatt;
 use uom::si::pressure::megapascal;
 use uom::si::time::{hour, second};
@@ -110,7 +110,7 @@ pub(crate) fn test_fhr_four_branch_solver_pri_and_intrmd_loop_full_th(){
 
 
     let pri_loop_pump_pressure = Pressure::new::<megapascal>(-0.2);
-    let intrmd_loop_pump_pressure = Pressure::new::<kilopascal>(-100.0);
+    let intrmd_loop_pump_pressure = Pressure::new::<kilopascal>(-150.0);
 
     // mixing nodes for pri loop 
     let mut bottom_mixing_node_pri_loop = 
@@ -157,7 +157,7 @@ pub(crate) fn test_fhr_four_branch_solver_pri_and_intrmd_loop_full_th(){
             &fhr_steam_generator_shell_side_14, 
             &fhr_pipe_13);
 
-    let mut fhr_state = FHRState {
+    let mut fhr_state = FHRThermalHydraulicsState {
         downcomer_branch_1_flow,
         downcomer_branch_2_flow,
         intermediate_heat_exchanger_branch_flow,
@@ -168,6 +168,7 @@ pub(crate) fn test_fhr_four_branch_solver_pri_and_intrmd_loop_full_th(){
         reactor_temp_profile_degc: vec![],
         ihx_shell_side_temp_profile_degc: vec![],
         ihx_tube_side_temp_profile_degc: vec![],
+        sg_shell_side_temp_profile_degc: vec![],
     };
 
     dbg!(&(reactor_branch_flow, downcomer_branch_1_flow, 
@@ -180,7 +181,7 @@ pub(crate) fn test_fhr_four_branch_solver_pri_and_intrmd_loop_full_th(){
 
     while simulation_time < max_time {
 
-        let reactor_power = Power::new::<megawatt>(25.0);
+        let reactor_power = Power::new::<megawatt>(15.0);
 
         fhr_state = four_branch_pri_and_intermediate_loop_single_time_step(
             pri_loop_pump_pressure, 

@@ -5,7 +5,7 @@ use crate::heat_transfer_correlations::nusselt_number_correlations::input_struct
 use crate::pre_built_components::insulated_pipes_and_fluid_components::InsulatedFluidComponent;
 use crate::pre_built_components::non_insulated_fluid_components::NonInsulatedFluidComponent;
 use crate::pre_built_components::shell_and_tube_heat_exchanger::SimpleShellAndTubeHeatExchanger;
-use crate::prelude::beta_testing::HeatTransferEntity;
+use crate::prelude::beta_testing::{FluidArray, HeatTransferEntity};
 use crate::single_control_vol::SingleCVNode;
 use uom::si::angle::degree;
 use uom::si::area::{square_centimeter, square_inch};
@@ -1076,14 +1076,14 @@ pub fn new_fhr_intermediate_loop_steam_generator_shell_side_14(initial_temperatu
     let shell_od = shell_id + 2.0 * pipe_thickness;
     let pipe_shell_material = SolidMaterial::SteelSS304L;
     let pipe_fluid = LiquidMaterial::HITEC;
-    let htc_to_ambient = HeatTransfer::new::<watt_per_square_meter_kelvin>(200.0);
+    let htc_to_ambient = HeatTransfer::new::<watt_per_square_meter_kelvin>(2000.0);
     // from SAM nodalisation, we have 2 nodes only, 
     // now because there are two outer nodes, we subtract 2
     let user_specified_inner_nodes = 2-2; 
 
 
 
-    let non_insulated_component = NonInsulatedFluidComponent::
+    let mut non_insulated_component = NonInsulatedFluidComponent::
         new_custom_component(
             initial_temperature, 
             ambient_temperature, 
@@ -1102,6 +1102,30 @@ pub fn new_fhr_intermediate_loop_steam_generator_shell_side_14(initial_temperatu
             pipe_fluid, 
             htc_to_ambient, 
             user_specified_inner_nodes);
+
+    // I'm going to make the nusselt correlation in here ideal
+    // as it should be for heat exchanger 
+    // or at least 10000
+    //
+    // basically, im cloning the entire fluid array out,
+    // changing the nusselt correlation,
+    // and chugging it back into the non_insulated_component
+
+    let ideal_nusselt = NusseltCorrelation::IdealNusseltOneBillion;
+    let mut fluid_array_nusselt_adjust: FluidArray = 
+        non_insulated_component
+        .pipe_fluid_array
+        .clone()
+        .try_into()
+        .unwrap();
+
+    fluid_array_nusselt_adjust.nusselt_correlation = 
+        ideal_nusselt;
+
+    non_insulated_component.pipe_fluid_array = 
+        fluid_array_nusselt_adjust.into();
+
+
 
     non_insulated_component
 

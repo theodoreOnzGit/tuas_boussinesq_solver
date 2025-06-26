@@ -63,7 +63,7 @@ pub(crate) fn four_branch_pri_and_intermediate_loop_single_time_step(
     bottom_mixing_node_intrmd_loop: &mut HeatTransferEntity,
     top_mixing_node_intrmd_loop: &mut HeatTransferEntity,
 
-    ) -> FHRState {
+    ) -> FHRThermalHydraulicsState {
 
         // fluid mechnaics portion for both loops
 
@@ -603,7 +603,7 @@ pub(crate) fn four_branch_pri_and_intermediate_loop_single_time_step(
             .collect();
 
         
-        let fhr_state = FHRState {
+        let fhr_state = FHRThermalHydraulicsState {
             reactor_branch_flow,
             downcomer_branch_1_flow,
             downcomer_branch_2_flow,
@@ -614,13 +614,14 @@ pub(crate) fn four_branch_pri_and_intermediate_loop_single_time_step(
             reactor_temp_profile_degc,
             ihx_shell_side_temp_profile_degc,
             ihx_tube_side_temp_profile_degc,
+            sg_shell_side_temp_profile_degc,
         };
         dbg!(&fhr_state);
         return fhr_state;
 }
 
 #[derive(Debug,Clone)]
-pub(crate) struct FHRState {
+pub(crate) struct FHRThermalHydraulicsState {
     /// reactor branch flow (upwards through the core)
     /// note that positive flow means from bottom mixing node to top
     pub reactor_branch_flow: MassRate,
@@ -657,6 +658,8 @@ pub(crate) struct FHRState {
     pub ihx_shell_side_temp_profile_degc: Vec<f64>,
     /// shows the current ihx tube side temperature profile in degc (2dp)
     pub ihx_tube_side_temp_profile_degc: Vec<f64>,
+    /// shows the current steam generator side temperature profile in degc (2dp)
+    pub sg_shell_side_temp_profile_degc: Vec<f64>,
 
 
 }
