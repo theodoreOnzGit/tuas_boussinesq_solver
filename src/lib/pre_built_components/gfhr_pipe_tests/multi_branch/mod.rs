@@ -139,7 +139,7 @@ pub(crate) fn test_fhr_four_branch_solver_pri_and_intrmd_loop_full_th_short_regr
     // I made this based on UA for 35 MWth heat load, and 
     // 30 degrees steam temperature, 300 degrees salt temperature
     let steam_generator_overall_ua: ThermalConductance 
-        = ThermalConductance::new::<watt_per_kelvin>(1.3e5);
+        = ThermalConductance::new::<watt_per_kelvin>(1.2e5);
 
     // start with some initial flow rates
     let (mut reactor_branch_flow, mut downcomer_branch_1_flow, 
@@ -459,6 +459,8 @@ pub(crate) fn test_fhr_four_branch_solver_pri_and_intrmd_loop_full_th_long_regre
         fhr_state.intrmd_loop_ihx_br_flow;
     intrmd_loop_steam_gen_br_flow = 
         fhr_state.intrmd_loop_steam_gen_br_flow;
+    // checks the final state of the fhr pri and intermediate loops
+    dbg!(&fhr_state);
 
 
     approx::assert_relative_eq!(
