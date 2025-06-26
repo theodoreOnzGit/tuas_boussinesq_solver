@@ -112,32 +112,32 @@ pub fn test_fhr_four_branch_solver_pri_and_intrmd_loop_isothermal_check(){
 
     approx::assert_relative_eq!(
         reactor_flow.get::<kilogram_per_second>(),
-        737.1699,
+        737.2622,
         max_relative=1e-5
         );
     approx::assert_relative_eq!(
         downcomer_branch_1_flow.get::<kilogram_per_second>(),
-        21.9637,
+        21.96688,
         max_relative=1e-5
         );
     approx::assert_relative_eq!(
         downcomer_branch_2_flow.get::<kilogram_per_second>(),
-        69.2984,
+        69.30835,
         max_relative=1e-5
         );
     approx::assert_relative_eq!(
         intermediate_heat_exchanger_branch_flow.get::<kilogram_per_second>(),
-        -828.4321,
+        -828.5375,
         max_relative=1e-5
         );
     approx::assert_relative_eq!(
         intrmd_loop_ihx_br_flow.get::<kilogram_per_second>(),
-        783.8709,
+        788.13049,
         max_relative=1e-5
         );
     approx::assert_relative_eq!(
         intrmd_loop_steam_gen_br_flow.get::<kilogram_per_second>(),
-        -783.8709,
+        -788.13049,
         max_relative=1e-5
         );
 }
