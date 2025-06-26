@@ -1,6 +1,6 @@
 [package]
 name = "tuas_boussinesq_solver"
-version = "0.0.9"
+version = "0.0.10"
 edition = "2021"
 license = "GPL-3.0"
 description = "Thermo-hydraulic Uniphase Solver for Advection and Convection in Salt Flows (TUAS)"
