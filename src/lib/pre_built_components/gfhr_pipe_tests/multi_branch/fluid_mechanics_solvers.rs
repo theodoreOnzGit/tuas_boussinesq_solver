@@ -15,6 +15,7 @@ use crate::prelude::beta_testing::HeatTransferInteractionType;
 use ndarray::Array;
 use ndarray::Array1;
 use uom::si::mass_rate::kilogram_per_second;
+use uom::si::power::megawatt;
 use uom::si::thermodynamic_temperature::degree_celsius;
 use uom::ConstZero;
 use uom::si::f64::*;
@@ -303,8 +304,8 @@ pub(crate) fn four_branch_pri_and_intermediate_loop_single_time_step(
             let number_of_temperature_nodes_for_sg = 2;
             let mut q_frac_arr: Array1<f64> = Array::default(number_of_temperature_nodes_for_sg);
             // we want the middle node to contain all the power
-            q_frac_arr[0] = 0.0;
-            q_frac_arr[1] = 0.0;
+            q_frac_arr[0] = 0.5;
+            q_frac_arr[1] = 0.5;
             let mut sg_fluid_array_clone: FluidArray = 
                 fhr_steam_generator_shell_side_14
                 .pipe_fluid_array
@@ -324,7 +325,6 @@ pub(crate) fn four_branch_pri_and_intermediate_loop_single_time_step(
 
             // Q_added_to_destination = -UA*(T_destination - T_steam)
             steam_gen_heat_change = -temperature_diff*steam_generator_overall_ua;
-            dbg!(&steam_gen_heat_change);
 
             sg_fluid_array_clone
                 .lateral_link_new_power_vector(
