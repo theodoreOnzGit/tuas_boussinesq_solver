@@ -239,6 +239,7 @@ pub(crate) fn test_fhr_four_branch_solver_pri_and_intrmd_loop_full_th_short_regr
     intrmd_loop_steam_gen_br_flow = 
         fhr_state.intrmd_loop_steam_gen_br_flow;
 
+    dbg!(&fhr_state);
 
     approx::assert_relative_eq!(
         reactor_branch_flow.get::<kilogram_per_second>(),
