@@ -537,6 +537,8 @@ pub fn new_fhr_pipe_7(initial_temperature: ThermodynamicTemperature) -> Insulate
 /// and HITEC on tube side
 ///
 /// flow direction going up by 1m on both shell and tube side
+///
+/// TODO: likely need to increase heat transfer effciiency here
 pub fn new_ihx_sthe_6_version_1(initial_temperature: ThermodynamicTemperature
     ) -> SimpleShellAndTubeHeatExchanger {
 
@@ -589,7 +591,7 @@ pub fn new_ihx_sthe_6_version_1(initial_temperature: ThermodynamicTemperature
             length_to_diameter: tube_side_length_to_diameter,
         };
     let tube_side_nusselt_correlation = 
-        NusseltCorrelation::PipeGnielinskiGeneric(tube_side_gnielinski_data);
+        NusseltCorrelation::IdealNusseltOneBillion;
 
     // shell side 
     //
