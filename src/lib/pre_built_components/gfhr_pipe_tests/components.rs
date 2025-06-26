@@ -538,7 +538,7 @@ pub fn new_fhr_pipe_7(initial_temperature: ThermodynamicTemperature) -> Insulate
 ///
 /// flow direction going up by 1m on both shell and tube side
 ///
-/// TODO: likely need to increase heat transfer effciiency here
+/// TODO: likely need to increase heat transfer efficiency here
 pub fn new_ihx_sthe_6_version_1(initial_temperature: ThermodynamicTemperature
     ) -> SimpleShellAndTubeHeatExchanger {
 
@@ -582,7 +582,7 @@ pub fn new_ihx_sthe_6_version_1(initial_temperature: ThermodynamicTemperature
     let dummy_ratio = Ratio::new::<ratio>(0.1);
     let tube_side_length_to_diameter: Ratio = 
         sthe_length/tube_side_hydraulic_diameter;
-    let tube_side_gnielinski_data: GnielinskiData = 
+    let _tube_side_gnielinski_data: GnielinskiData = 
         GnielinskiData {
             reynolds: dummy_ratio,
             prandtl_bulk: dummy_ratio,
@@ -628,8 +628,7 @@ pub fn new_ihx_sthe_6_version_1(initial_temperature: ThermodynamicTemperature
             length_to_diameter: shell_side_length_to_diameter,
         };
     let shell_side_nusselt_correlation_to_tubes = 
-        NusseltCorrelation::PipeGnielinskiGeneric(
-            shell_side_gnielinski_data);
+        NusseltCorrelation::IdealNusseltOneBillion;
 
     // insulation side, accounts for parasitic heat loss
     let insulation_material = SolidMaterial::SteelSS304L;
