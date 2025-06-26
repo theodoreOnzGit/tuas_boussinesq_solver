@@ -62,6 +62,9 @@ pub(crate) fn four_branch_pri_and_intermediate_loop_single_time_step(
     // mixing nodes for intermediate loop
     bottom_mixing_node_intrmd_loop: &mut HeatTransferEntity,
     top_mixing_node_intrmd_loop: &mut HeatTransferEntity,
+    // steam generator settings 
+    steam_generator_tube_side_temperature: ThermodynamicTemperature,
+    steam_generator_overall_ua: ThermalConductance,
 
     ) -> FHRThermalHydraulicsState {
 

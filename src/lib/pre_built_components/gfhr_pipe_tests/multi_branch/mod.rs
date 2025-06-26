@@ -165,7 +165,8 @@ pub(crate) fn test_fhr_four_branch_solver_pri_and_intrmd_loop_full_th(){
             &fhr_intrmd_loop_pump_16, 
             &fhr_pipe_15, 
             &fhr_steam_generator_shell_side_14, 
-            &fhr_pipe_13);
+            &fhr_pipe_13,
+            );
 
     let mut fhr_state = FHRThermalHydraulicsState {
         downcomer_branch_1_flow,
@@ -219,7 +220,10 @@ pub(crate) fn test_fhr_four_branch_solver_pri_and_intrmd_loop_full_th(){
             &mut fhr_steam_generator_shell_side_14, 
             &mut fhr_pipe_13,
             &mut bottom_mixing_node_intrmd_loop,
-            &mut top_mixing_node_intrmd_loop);
+            &mut top_mixing_node_intrmd_loop,
+            steam_generator_tube_side_temperature,
+            steam_generator_overall_ua,
+            );
 
 
         simulation_time += timestep;
