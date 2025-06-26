@@ -257,8 +257,12 @@ pub(crate) fn test_fhr_four_branch_full_th_long_regression(){
     // sim time 
     let final_simulation_time = fhr_state.simulation_time;
 
-    // temperature profile of reactor 
+    // temperature profile of reactor and downcomers
     let reactor_temp_profile_degc = fhr_state.reactor_temp_profile_degc;
+    let downcomer_2_temp_profile_degc 
+        = fhr_state.downcomer_2_temp_profile_degc;
+    let downcomer_3_temp_profile_degc 
+        = fhr_state.downcomer_3_temp_profile_degc;
 
     // temp profile of heat exchangers and steam generators
     let ihx_shell_side_temp_profile_degc = fhr_state.ihx_shell_side_temp_profile_degc;
@@ -295,6 +299,13 @@ pub(crate) fn test_fhr_four_branch_full_th_long_regression(){
         = fhr_state.pipe_17_temp_profile_degc;
 
 
+    // assert final simulation time
+    approx::assert_relative_eq!(
+        final_simulation_time.get::<second>(),
+        734.892,
+        max_relative=1e-5
+        );
+
     // assert flowrates
     approx::assert_relative_eq!(
         reactor_branch_flow.get::<kilogram_per_second>(),
@@ -326,6 +337,94 @@ pub(crate) fn test_fhr_four_branch_full_th_long_regression(){
         -781.367,
         max_relative=1e-5
         );
+
+    // assert temperature profiles 
+    assert_eq!(
+        reactor_temp_profile_degc,
+        vec![],
+    );
+    assert_eq!(
+        ihx_shell_side_temp_profile_degc,
+        vec![],
+    );
+    assert_eq!(
+        ihx_tube_side_temp_profile_degc,
+        vec![],
+    );
+    assert_eq!(
+        sg_shell_side_temp_profile_degc,
+        vec![],
+    );
+    assert_eq!(
+        pipe_4_temp_profile_degc,
+        vec![],
+    );
+    assert_eq!(
+        pipe_5_temp_profile_degc,
+        vec![],
+    );
+    assert_eq!(
+        ihx_shell_side_temp_profile_degc,
+        vec![],
+    );
+    assert_eq!(
+        pipe_7_temp_profile_degc,
+        vec![],
+    );
+    assert_eq!(
+        pipe_8_temp_profile_degc,
+        vec![],
+    );
+    assert_eq!(
+        pump_9_temp_profile_degc,
+        vec![],
+    );
+    assert_eq!(
+        pipe_10_temp_profile_degc,
+        vec![],
+    );
+    assert_eq!(
+        pipe_11_temp_profile_degc,
+        vec![],
+    );
+
+
+    // intermediate loop
+    assert_eq!(
+        pipe_12_temp_profile_degc,
+        vec![],
+    );
+    assert_eq!(
+        pipe_13_temp_profile_degc,
+        vec![],
+    );
+    assert_eq!(
+        sg_shell_side_temp_profile_degc,
+        vec![],
+    );
+    assert_eq!(
+        pipe_15_temp_profile_degc,
+        vec![],
+    );
+    assert_eq!(
+        pump_16_temp_profile_degc,
+        vec![],
+    );
+    assert_eq!(
+        pipe_17_temp_profile_degc,
+        vec![],
+    );
+
+
+    // downcomers
+    assert_eq!(
+        downcomer_2_temp_profile_degc,
+        vec![],
+    );
+    assert_eq!(
+        downcomer_3_temp_profile_degc,
+        vec![],
+    );
 
 }
 
