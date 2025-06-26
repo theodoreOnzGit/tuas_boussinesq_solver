@@ -37,6 +37,10 @@ Bugfix: another failure to converge due to too tight tolerance was
 getting mass flowrate from pressure change for single branch. There was 
 some failure to converge.
 
+Bugfix: getting tube side fluid array temperatures from the shell 
+and tube heat exchangers originally got the tube side solid array. 
+The we now get fluid array..
+
 Feature added: added regression tests for some pipes in the correct 
 order of magnitude of mass flowrate and pressure drop for gFHR like 
 reactors. HITEC in secondary loop, FLiBe in primary loop.
