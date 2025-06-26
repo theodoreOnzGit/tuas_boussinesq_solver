@@ -43,7 +43,8 @@ The we now get fluid array..
 
 Feature added: added regression tests for some pipes in the correct 
 order of magnitude of mass flowrate and pressure drop for gFHR like 
-reactors. HITEC in secondary loop, FLiBe in primary loop.
+reactors. HITEC in secondary loop, FLiBe in primary loop. This is under 
+gfhr pipe tests under multi\_branch solvers
 
 ## v 0.0.8 
 

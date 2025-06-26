@@ -643,6 +643,7 @@ pub(crate) fn four_branch_pri_and_intermediate_loop_single_time_step(
             sg_shell_side_temp_profile_degc,
         };
 
+        // if one wants to monitor flow through the loop
         let debugging = false;
         if debugging {
             dbg!(&fhr_state);
