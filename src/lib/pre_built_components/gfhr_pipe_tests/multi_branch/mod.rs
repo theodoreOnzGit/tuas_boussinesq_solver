@@ -12,6 +12,7 @@ pub mod single_branch_solvers;
 use fluid_mechanics_solvers::{four_branch_pri_and_intermediate_loop_single_time_step, FHRThermalHydraulicsState};
 use uom::si::power::megawatt;
 use uom::si::pressure::megapascal;
+use uom::si::thermal_conductance::watt_per_kelvin;
 use uom::si::time::{hour, second};
 use uom::si::{mass_rate::kilogram_per_second, pressure::kilopascal};
 use uom::si::thermodynamic_temperature::degree_celsius;
@@ -130,6 +131,15 @@ pub(crate) fn test_fhr_four_branch_solver_pri_and_intrmd_loop_full_th(){
     let timestep = Time::new::<second>(0.1);
     let mut simulation_time = Time::ZERO;
     let max_time = Time::new::<hour>(0.1);
+
+    // steam generator settings 
+    let steam_generator_tube_side_temperature = 
+        ThermodynamicTemperature::new::<degree_celsius>(30.0);
+
+    // I made this based on UA for 35 MWth heat load, and 
+    // 30 degrees steam temperature, 300 degrees salt temperature
+    let steam_generator_overall_ua: ThermalConductance 
+        = ThermalConductance::new::<watt_per_kelvin>(1.3e6);
 
     // start with some initial flow rates
     let (mut reactor_branch_flow, mut downcomer_branch_1_flow, 
