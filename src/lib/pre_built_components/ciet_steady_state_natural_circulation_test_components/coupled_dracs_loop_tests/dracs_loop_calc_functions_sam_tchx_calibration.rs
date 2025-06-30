@@ -322,7 +322,7 @@ pub fn coupled_dracs_loop_link_up_components_sam_tchx_calibration(
                 HeatTransfer::ZERO;
             // changing this to direct heat addition.
             tchx_35b_2.heat_transfer_to_ambient = 
-                HeatTransfer::ZERO;
+                tchx_heat_transfer_coeff;
 
             static_mixer_60_label_36.heat_transfer_to_ambient = 
                 ambient_htc;
@@ -450,13 +450,13 @@ pub fn coupled_dracs_loop_link_up_components_sam_tchx_calibration(
                     .ambient_temperature
                     .get::<degree_celsius>()
                 );
-            let heat_addition_rate_to_tchx: Power = 
+            let _heat_addition_rate_to_tchx: Power = 
                 -ua * ctah_temperature_difference;
 
             tchx_35b_2
                 .lateral_and_miscellaneous_connections_no_wall_correction(
                     mass_flowrate_clockwise, 
-                    heat_addition_rate_to_tchx)
+                    zero_power)
                 .unwrap();
 
 
