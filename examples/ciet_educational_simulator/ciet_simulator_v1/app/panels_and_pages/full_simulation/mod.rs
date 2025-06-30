@@ -79,7 +79,7 @@ pub fn educational_ciet_loop_version_4(
     // controller for tchx 
 
     let tchx_controller_gain = Ratio::new::<ratio>(70.75);
-    let tchx_integral_time: Time = tchx_controller_gain / Frequency::new::<hertz>(5.0);
+    let tchx_integral_time: Time = tchx_controller_gain / Frequency::new::<hertz>(50.0);
     let tchx_derivative_time: Time = Time::new::<second>(1.0);
     // derivative time ratio
     let tchx_alpha: Ratio = Ratio::new::<ratio>(1.0);
@@ -736,7 +736,7 @@ pub fn educational_ciet_loop_version_4(
 
             let tchx_max_heat_transfer = 
                 HeatTransfer::new::<watt_per_square_meter_kelvin>(
-                    10000.0);
+                    30000.0);
 
             // this makes it physically realistic
             if tchx_heat_trf_output < tchx_minimum_heat_transfer {
@@ -819,7 +819,7 @@ pub fn educational_ciet_loop_version_4(
                     5.0);
             let ctah_max_heat_transfer = 
                 HeatTransfer::new::<watt_per_square_meter_kelvin>(
-                    10000.0);
+                    20000.0);
 
             // this makes it physically realistic
             if ctah_heat_trf_output < ctah_minimum_heat_transfer {
