@@ -1,3 +1,4 @@
+use uom::si::area::square_centimeter;
 use uom::si::f64::*;
 
 use crate::array_control_vol_and_fluid_component_collections::fluid_component_collection::fluid_component::FluidComponent;
@@ -318,8 +319,9 @@ pub fn coupled_dracs_loop_link_up_components_sam_tchx_calibration(
                 HeatTransfer::ZERO;
             tchx_35b_1.heat_transfer_to_ambient = 
                 HeatTransfer::ZERO;
+            // changing this to direct heat addition.
             tchx_35b_2.heat_transfer_to_ambient = 
-                tchx_heat_transfer_coeff;
+                HeatTransfer::ZERO;
 
             static_mixer_60_label_36.heat_transfer_to_ambient = 
                 ambient_htc;
@@ -398,10 +400,31 @@ pub fn coupled_dracs_loop_link_up_components_sam_tchx_calibration(
                     mass_flowrate_clockwise, 
                     zero_power)
                 .unwrap();
+
+
+            // calculate the heat transfer UA as the following: 
+            let area = Area::new::<square_centimeter>(500.0);
+            let ua: ThermalConductance = 
+                area * tchx_heat_transfer_coeff;
+            let ctah_temperature_difference = 
+                TemperatureInterval::new::<uom::si::temperature_interval::kelvin>(
+                    tchx_35b_2
+                    .pipe_fluid_array
+                    .try_get_bulk_temperature()
+                    .unwrap()
+                    .get::<degree_celsius>() 
+                    - 
+                    tchx_35b_2
+                    .ambient_temperature
+                    .get::<degree_celsius>()
+                );
+            let heat_addition_rate_to_tchx: Power = 
+                -ua * ctah_temperature_difference;
+
             tchx_35b_2
                 .lateral_and_miscellaneous_connections_no_wall_correction(
                     mass_flowrate_clockwise, 
-                    zero_power)
+                    heat_addition_rate_to_tchx)
                 .unwrap();
 
 
