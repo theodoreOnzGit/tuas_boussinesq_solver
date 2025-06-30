@@ -192,7 +192,7 @@ impl Default for CIETState {
             bottom_mixing_node_17a_17b_18_temp_degc: 21.0,
             
             // timestep settings are user settable as well
-            timestep_seconds: 0.1,
+            timestep_seconds: 0.05,
             fast_forward_settings_turned_on: false,
             slow_motion_settings_turned_on: false,
             // valve and pump settings 

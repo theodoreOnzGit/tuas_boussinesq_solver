@@ -403,7 +403,7 @@ pub fn coupled_dracs_loop_link_up_components_sam_tchx_calibration(
 
 
             // calculate the heat transfer UA as the following: 
-            let area = Area::new::<square_centimeter>(500.0);
+            let area = Area::new::<square_centimeter>(400.0);
             let ua: ThermalConductance = 
                 area * tchx_heat_transfer_coeff;
             let ctah_temperature_difference = 
