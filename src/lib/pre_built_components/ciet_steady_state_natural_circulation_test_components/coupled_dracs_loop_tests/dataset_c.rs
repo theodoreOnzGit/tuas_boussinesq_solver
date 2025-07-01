@@ -40,7 +40,7 @@ pub fn ciet_coupled_nat_circ_set_c1(){
         expt_heater_surf_temp_avg_degc,
         simulated_expected_heater_surf_temp_degc,
         heater_surface_temp_tolerance_degc) = 
-        (1.6, 86.80711,76.04,12.0);
+        (10.0, 86.80711,76.04,12.0);
 
 
     let (
@@ -128,7 +128,7 @@ pub fn ciet_coupled_nat_circ_set_c2(){
         expt_heater_surf_temp_avg_degc,
         simulated_expected_heater_surf_temp_degc,
         heater_surface_temp_tolerance_degc) = 
-        (1.6, 96.92,89.19,13.0);
+        (10.0, 96.92,89.19,13.0);
 
 
     let (
@@ -216,7 +216,7 @@ pub fn ciet_coupled_nat_circ_set_c3(){
         expt_heater_surf_temp_avg_degc,
         simulated_expected_heater_surf_temp_degc,
         heater_surface_temp_tolerance_degc) = 
-        (1.6, 105.23,99.60,12.0);
+        (10.0, 105.23,99.60,12.0);
 
 
     let (
@@ -304,7 +304,7 @@ pub fn ciet_coupled_nat_circ_set_c4(){
         expt_heater_surf_temp_avg_degc,
         simulated_expected_heater_surf_temp_degc,
         heater_surface_temp_tolerance_degc) = 
-        (1.6, 114.57,113.09,12.0);
+        (10.0, 114.57,113.09,12.0);
 
 
     let (
@@ -393,7 +393,7 @@ pub fn ciet_coupled_nat_circ_set_c5(){
         expt_heater_surf_temp_avg_degc,
         simulated_expected_heater_surf_temp_degc,
         heater_surface_temp_tolerance_degc) = 
-        (1.6, 122.82,124.94,12.0);
+        (10.0, 122.82,124.94,12.0);
 
 
     let (
@@ -481,7 +481,7 @@ pub fn ciet_coupled_nat_circ_set_c6(){
         expt_heater_surf_temp_avg_degc,
         simulated_expected_heater_surf_temp_degc,
         heater_surface_temp_tolerance_degc) = 
-        (1.6, 130.37,135.55,12.0);
+        (10.0, 130.37,135.55,12.0);
 
 
     let (
@@ -570,7 +570,7 @@ pub fn ciet_coupled_nat_circ_set_c7(){
         expt_heater_surf_temp_avg_degc,
         simulated_expected_heater_surf_temp_degc,
         heater_surface_temp_tolerance_degc) = 
-        (1.6, 138.12,144.34,12.0);
+        (10.0, 138.12,144.34,12.0);
 
 
     let (
@@ -661,7 +661,7 @@ pub fn ciet_coupled_nat_circ_set_c8(){
         expt_heater_surf_temp_avg_degc,
         simulated_expected_heater_surf_temp_degc,
         heater_surface_temp_tolerance_degc) = 
-        (1.6, 145.79,151.39,12.0);
+        (10.0, 145.79,151.39,12.0);
 
 
     let (
@@ -752,7 +752,7 @@ pub fn ciet_coupled_nat_circ_set_c9(){
         expt_heater_surf_temp_avg_degc,
         simulated_expected_heater_surf_temp_degc,
         heater_surface_temp_tolerance_degc) = 
-        (1.6, 153.29,154.50,12.0);
+        (10.0, 153.29,154.50,12.0);
 
 
     let (
@@ -1511,7 +1511,7 @@ Result<(),crate::tuas_lib_error::TuasLibError>{
     // among other temperatures
 
 
-    let assert_regression_temperatures = false;
+    let assert_regression_temperatures = true;
 
     if assert_regression_temperatures {
 
