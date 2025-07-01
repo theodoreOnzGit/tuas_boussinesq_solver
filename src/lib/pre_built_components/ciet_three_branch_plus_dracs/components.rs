@@ -104,7 +104,9 @@ NonInsulatedFluidComponent {
     let id = hydraulic_diameter;
     let pipe_thickness = Length::new::<meter>(0.000406);
     let od = id + pipe_thickness;
-    let pipe_shell_material = SolidMaterial::SteelSS304L;
+    // in v0.0.10, changed to copper
+    // as per Zweibaum's dissertation
+    let pipe_shell_material = SolidMaterial::Copper;
     let pipe_fluid = LiquidMaterial::TherminolVP1;
     let htc_to_ambient = HeatTransfer::new::<watt_per_square_meter_kelvin>(20.0);
     // from SAM nodalisation, we have 3 nodes only, 
@@ -182,7 +184,9 @@ pub fn new_active_ctah_horizontal(initial_temperature: ThermodynamicTemperature)
     let shell_id = hydraulic_diameter;
     let pipe_thickness = Length::new::<meter>(0.000406);
     let shell_od = shell_id + pipe_thickness;
-    let pipe_shell_material = SolidMaterial::SteelSS304L;
+    // in v0.0.10, changed to copper
+    // as per Zweibaum's dissertation
+    let pipe_shell_material = SolidMaterial::Copper;
     let pipe_fluid = LiquidMaterial::TherminolVP1;
     let htc_to_ambient = HeatTransfer::new::<watt_per_square_meter_kelvin>(20.0);
     // from SAM nodalisation, we have 11 nodes only, 
