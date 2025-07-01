@@ -984,7 +984,7 @@ NonInsulatedFluidComponent {
     let _relap_zweibaum_pipe_thickness = Length::new::<meter>(0.000406);
     // 
     // I'm calibrating pipe thickness down for decreased thermal resistance
-    let pipe_thickness = Length::new::<meter>(0.000203);
+    let pipe_thickness = Length::new::<meter>(0.000406 * 0.10);
     let od = id + 2.0 * pipe_thickness;
     let pipe_shell_material = SolidMaterial::Copper;
     let pipe_fluid = LiquidMaterial::TherminolVP1;
