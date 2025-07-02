@@ -372,26 +372,26 @@ pub fn parallel_bare_pipes_debugging_heat_addition(){
 }
 
 
-//
-// first thing first, heat addition 
-//
-// suppose we have 9 kW of heat into one pipe 
-// at 0.18 kg/s TherminolVP1
-//
-// whether you have the flow split into 1 single pipe or 10 parallel 
-// pipes should not matter. After a set time, the temperature should 
-// be the same. presuming of course, no heat loss to environment
-//
-// I'm taking dhx tube side 30b as a reference
-// but setting heat transfer to ambient as 1000 W/(m2 K)
-//
-//
-// then I'll do the parallel tube setup, and add 20 tubes. 
-// the mass flow and heater power is increased by 20 times. 
-//
-// the heating time is 25 s long, both outlet temperatures should be 
-// the same
-//
+///
+/// first thing first, heat addition 
+///
+/// suppose we have 9 kW of heat into one pipe 
+/// at 0.18 kg/s TherminolVP1
+///
+/// whether you have the flow split into 1 single pipe or 10 parallel 
+/// pipes should not matter. After a set time, the temperature should 
+/// be the same. presuming of course, no heat loss to environment
+///
+/// I'm taking dhx tube side 30b as a reference
+/// but setting heat transfer to ambient as 1000 W/(m2 K)
+///
+///
+/// then I'll do the parallel tube setup, and add 20 tubes. 
+/// the mass flow and heater power is increased by 20 times. 
+///
+/// the heating time is 25 s long, both outlet temperatures should be 
+/// the same
+///
 #[test]
 pub fn parallel_bare_pipes_debugging_heat_addition_with_parasitic_heat_loss(){
 
