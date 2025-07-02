@@ -71,7 +71,7 @@ pub fn ciet_coupled_nat_circ_set_a1(){
         regression_dhx_tube_outlet_temp_degc,
         regression_tchx_inlet_temp_degc,
         regression_tchx_outlet_temp_degc,
-    ) = ( 88.45, 64.72, 45.32, 43.25, 45.32, 62.29, 60.96, 46.00,);
+    ) = (61.89, 91.70, 88.45, 64.72, 45.32, 62.29, 60.96, 46.00);
 
     regression_coupled_dracs_loop_version_7(
         heater_power_watts, 
@@ -218,6 +218,30 @@ pub fn ciet_coupled_nat_circ_set_a2(){
 
 
 }
+/// regression test checked steady state and temp profile 
+/// 12:55 pm 02 jul 2025
+///
+/// From CIET Educational Simulator: 
+///
+/// Just to give a rough gauge of what to expect (sanity check)
+/// These values were taken after the temperature profiles flatlined 
+/// (were visually steady) on the graph
+/// note that there was parasitic heat loss through the heater 
+/// in CIET Educational Simulator, so the temperature profiles may 
+/// be slightly different
+///
+/// Case,heater T_in (degc),heater T_out (degc),bt65 T-in degc,bt66 T-out,pri mass flow kg/s,dracs mass flow kg/s,heat added (W),heater setting kW
+/// A3,58.79,95.25,53.64,46,0.032,0.0406,2024.488343808,2.05
+///
+/// A1,52.79,84.09,51.64,46,0.0278,0.035,1488.810236112,1.52
+/// A2,54.54,87.44,52.24,46,0.0291,0.0368,1644.979647402,1.68
+/// A4,60.73,98.69,54.27,46,0.0331,0.0422,2189.7640075272,2.23
+/// A5,63.15,102.88,55.05,46,0.0345,0.0439,2401.5803410755,2.44
+/// A6,64.31,104.86,55.42,46,0.0351,0.0447,2500.0775046585,2.54
+/// A7,66.62,108.78,56.16,46,0.0362,0.0463,2694.208104288,2.74
+
+/// test series took about 600s on AMD Ryzeon 5 5600 (12) @ 3.050 GHz
+///
 #[test] 
 pub fn ciet_coupled_nat_circ_set_a3(){
 
