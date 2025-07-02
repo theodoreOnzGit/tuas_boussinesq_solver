@@ -171,10 +171,14 @@ pub fn get_flinak_thermal_conductivity(
 
 }
 
+/// at 973K, we shld expect 0.90 W/(m K)
+/// This is read off the value at figure 2.3 page 17 of 70 of the following pdf
+/// https://inldigitallibrary.inl.gov/sites/sti/sti/4502650.pdf
+/// this test checks if the value is properly obtained in terms of units
+///
+/// Can't rmb from where
 #[test]
 pub fn test_flinak_thermal_conductivity_correlation_unit_in_kelvin(){
-    // at 973K, we shld expect 0.90 W/(m K)
-    // this test checks if the value is properly obtained in terms of units
 
     let thermal_cond_value_973_k_watt_per_meter_kelvin: f64;
 

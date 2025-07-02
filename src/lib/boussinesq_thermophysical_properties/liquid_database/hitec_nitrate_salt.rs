@@ -202,39 +202,39 @@ TuasLibError>{
 }
 
 
+/// going to perform 2 tests here
+///
+/// From
+/// Bohlmann, E. G. (1972). HEAT TRANSFER SALT FOR HIGH TEMPERATURE 
+/// STEAM GENERATION (No. ORNL-TM-3777). Oak Ridge National 
+/// Lab.(ORNL), Oak Ridge, TN (United States).
+///
+/// figure 6 page 25, the HITEC salt temperature in Fahrenheit 
+/// was given and the resulting viscosity was plotted
+///
+/// T(F), mu (cP)
+/// 346.338,10.984
+/// 653.944,2.5
+///
+/// These two temperautres were chosen because there are two 
+/// correlations used by Du 
+///
+/// first in the 440-500K range. This is where 
+/// the 346 F or 447 K temperature is used 
+///
+/// then in the 500K-800K range, where the 
+/// 653 F or 618 K temperature is used
+///
+/// No error bars were given, but based on Sohal's work 
+/// typical error bars from Janz were as high as 16% 
+///
+/// Sohal, M. S., Ebner, M. A., Sabharwall, P., & Sharpe, P. (2010). 
+/// Engineering database of liquid salt thermophysical and 
+/// thermochemical properties (No. INL/EXT-10-18297). 
+/// Idaho National Lab.(INL), Idaho Falls, ID (United States).
+///
 #[test]
 pub fn hitec_nitrate_salt_test_viscosity(){
-    // going to perform 2 tests here
-    //
-    // From
-    // Bohlmann, E. G. (1972). HEAT TRANSFER SALT FOR HIGH TEMPERATURE 
-    // STEAM GENERATION (No. ORNL-TM-3777). Oak Ridge National 
-    // Lab.(ORNL), Oak Ridge, TN (United States).
-    //
-    // figure 6 page 25, the HITEC salt temperature in Fahrenheit 
-    // was given and the resulting viscosity was plotted
-    //
-    // T(F), mu (cP)
-    // 346.338,10.984
-    // 653.944,2.5
-    //
-    // These two temperautres were chosen because there are two 
-    // correlations used by Du 
-    //
-    // first in the 440-500K range. This is where 
-    // the 346 F or 447 K temperature is used 
-    //
-    // then in the 500K-800K range, where the 
-    // 653 F or 618 K temperature is used
-    //
-    // No error bars were given, but based on Sohal's work 
-    // typical error bars from Janz were as high as 16% 
-    //
-    // Sohal, M. S., Ebner, M. A., Sabharwall, P., & Sharpe, P. (2010). 
-    // Engineering database of liquid salt thermophysical and 
-    // thermochemical properties (No. INL/EXT-10-18297). 
-    // Idaho National Lab.(INL), Idaho Falls, ID (United States).
-    //
 
     use uom::si::thermodynamic_temperature::degree_fahrenheit;
     use uom::si::dynamic_viscosity::centipoise;
