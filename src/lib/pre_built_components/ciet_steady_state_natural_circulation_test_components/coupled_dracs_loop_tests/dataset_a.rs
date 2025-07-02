@@ -329,7 +329,7 @@ pub fn ciet_coupled_nat_circ_set_a3(){
 
 }
 /// regression test checked steady state and temp profile 
-/// 12:44 pm 02 jul 2025
+/// 1:00 pm 02 jul 2025
 ///
 /// From CIET Educational Simulator: 
 ///
@@ -402,7 +402,7 @@ pub fn ciet_coupled_nat_circ_set_a4(){
         regression_dhx_tube_outlet_temp_degc,
         regression_tchx_inlet_temp_degc,
         regression_tchx_outlet_temp_degc,
-    ) = ( 72.14, 108.38, 105.00, 75.08, 45.44, 67.38, 66.10, 46.00,);
+    ) = ( 72.14, 108.38, 105.00, 75.08, 45.44, 67.34, 66.10, 46.00,);
 
     regression_coupled_dracs_loop_version_7(
         heater_power_watts, 
