@@ -1,3 +1,6 @@
+/// this test checks if FluidArrays can form adiabatic mixing joints 
+/// with single cvs 
+///
 pub mod joint_mixing;
 
 /// For the FluidComponent

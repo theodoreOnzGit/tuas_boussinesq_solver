@@ -2,7 +2,7 @@
 #[test] 
 pub fn ciet_coupled_nat_circ_set_a1(){
 
-    let max_simulation_time_seconds: f64 = 6300.0;
+    let max_simulation_time_seconds: f64 = 3000.0;
     let pri_loop_relative_tolerance = 0.061;
     let dracs_loop_relative_tolerance = 0.062;
 
@@ -88,7 +88,7 @@ pub fn ciet_coupled_nat_circ_set_a1(){
 #[test] 
 pub fn ciet_coupled_nat_circ_set_a2(){
 
-    let max_simulation_time_seconds: f64 = 6300.0;
+    let max_simulation_time_seconds: f64 = 3000.0;
     let pri_loop_relative_tolerance = 0.061;
     let dracs_loop_relative_tolerance = 0.062;
 
@@ -174,7 +174,7 @@ pub fn ciet_coupled_nat_circ_set_a2(){
 #[test] 
 pub fn ciet_coupled_nat_circ_set_a3(){
 
-    let max_simulation_time_seconds: f64 = 6300.0;
+    let max_simulation_time_seconds: f64 = 3000.0;
     let pri_loop_relative_tolerance = 0.061;
     let dracs_loop_relative_tolerance = 0.062;
 
@@ -260,7 +260,7 @@ pub fn ciet_coupled_nat_circ_set_a3(){
 #[test] 
 pub fn ciet_coupled_nat_circ_set_a4(){
 
-    let max_simulation_time_seconds: f64 = 6300.0;
+    let max_simulation_time_seconds: f64 = 3000.0;
     let pri_loop_relative_tolerance = 0.061;
     let dracs_loop_relative_tolerance = 0.062;
 
@@ -347,7 +347,7 @@ pub fn ciet_coupled_nat_circ_set_a4(){
 #[test] 
 pub fn ciet_coupled_nat_circ_set_a5(){
 
-    let max_simulation_time_seconds: f64 = 6300.0;
+    let max_simulation_time_seconds: f64 = 3000.0;
     let pri_loop_relative_tolerance = 0.061;
     let dracs_loop_relative_tolerance = 0.062;
 
@@ -434,7 +434,7 @@ pub fn ciet_coupled_nat_circ_set_a5(){
 #[test] 
 pub fn ciet_coupled_nat_circ_set_a6(){
 
-    let max_simulation_time_seconds: f64 = 6300.0;
+    let max_simulation_time_seconds: f64 = 3000.0;
     let pri_loop_relative_tolerance = 0.061;
     let dracs_loop_relative_tolerance = 0.062;
 
@@ -521,7 +521,7 @@ pub fn ciet_coupled_nat_circ_set_a6(){
 #[test] 
 pub fn ciet_coupled_nat_circ_set_a7(){
 
-    let max_simulation_time_seconds: f64 = 6300.0;
+    let max_simulation_time_seconds: f64 = 3000.0;
     let pri_loop_relative_tolerance = 0.061;
     let dracs_loop_relative_tolerance = 0.062;
 
@@ -768,7 +768,7 @@ Result<(),crate::tuas_lib_error::TuasLibError>{
     // for this timestep, the simulation fails around 185s of simulated time
     //
     // the conclusion is that this instability is almost independent of timestep
-    let timestep = Time::new::<second>(0.5);
+    let timestep = Time::new::<second>(0.1);
     let heat_rate_through_heater = input_power;
     let mut tchx_heat_transfer_coeff: HeatTransfer;
 
@@ -785,17 +785,17 @@ Result<(),crate::tuas_lib_error::TuasLibError>{
     // altered from version 4, to introduce more stability for set b9
     //
     // setting controller gain to 1.55 and 1.0 didn't work, still unstable
-    let controller_gain = Ratio::new::<ratio>(1.75);
-    let integral_time: Time = controller_gain / Frequency::new::<hertz>(1.0);
-    let derivative_time: Time = Time::new::<second>(1.0);
+    let tchx_controller_gain = Ratio::new::<ratio>(70.75);
+    let tchx_integral_time: Time = tchx_controller_gain / Frequency::new::<hertz>(50.0);
+    let tchx_derivative_time: Time = Time::new::<second>(1.0);
     // derivative time ratio
-    let alpha: Ratio = Ratio::new::<ratio>(1.0);
+    let tchx_alpha: Ratio = Ratio::new::<ratio>(1.0);
 
     let mut pid_controller: AnalogController = 
-        AnalogController::new_filtered_pid_controller(controller_gain,
-            integral_time,
-            derivative_time,
-            alpha).unwrap();
+        AnalogController::new_filtered_pid_controller(tchx_controller_gain,
+            tchx_integral_time,
+            tchx_derivative_time,
+            tchx_alpha).unwrap();
 
     // we also have a measurement delay of 0.0001 s 
     // or 0.1 ms
@@ -1358,7 +1358,7 @@ Result<(),crate::tuas_lib_error::TuasLibError>{
         max_relative=dracs_loop_relative_tolerance);
 
     // check flowrates for regression 
-    let assert_regression_mass_flowrates = false;
+    let assert_regression_mass_flowrates = true;
 
     if assert_regression_mass_flowrates {
         // this asserts the final mass flowrate against experimental flowrate 
@@ -1379,7 +1379,7 @@ Result<(),crate::tuas_lib_error::TuasLibError>{
     // among other temperatures
 
 
-    let assert_regression_temperatures = false;
+    let assert_regression_temperatures = true;
 
     if assert_regression_temperatures {
 

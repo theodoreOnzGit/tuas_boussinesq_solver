@@ -1,9 +1,6 @@
-
-
-
-
-
-
+/// check hydraulic diameter calculated by manually against 
+/// shell side hydraulic diameter 
+/// in Du et al's paper within 3%
 #[test]
 pub fn check_shell_side_fluid_hydraulic_diameter(){
     use uom::si::f64::*;

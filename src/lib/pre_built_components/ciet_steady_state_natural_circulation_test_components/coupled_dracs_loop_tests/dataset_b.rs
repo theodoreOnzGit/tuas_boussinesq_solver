@@ -1,14 +1,30 @@
-
-
-/// test series took about 250 s at timestep size 0.4s
+/// regression test checked steady state and temp profile 
+/// 10:38 am 02 jul 2025
 ///
-/// with configuration:
-/// 0.091 cm dhx loss to ambient, flowrate underpredicted by -6.21%
+/// From CIET Educational Simulator: 
 ///
+/// Just to give a rough gauge of what to expect (sanity check)
+/// These values were taken after the temperature profiles flatlined 
+/// (were visually steady) on the graph
+/// note that there was parasitic heat loss through the heater 
+/// in CIET Educational Simulator, so the temperature profiles may 
+/// be slightly different
+///
+/// Case,heater T_in (degc),heater T_out (degc),bt65 T-in degc,bt66 T-out,pri mass flow kg/s,dracs mass flow kg/s,heat added (W),heater setting kW
+/// B1,34.91,56.91,38.75,35,0.018,0.0223,652.3966152,0.67
+///
+/// B2,39.54,67.01,41.16,35,0.0231,0.0289,1058.5905141735,1.08
+/// B3,43.75,74.94,43.11,35,0.0265,0.0332,1393.0031592015,1.42
+/// B4,47.46,81.5,44.75,35,0.0291,0.0363,1683.7939701504,1.71
+/// B5,51.51,88.36,46.49,35,0.0315,0.0393,1990.9806649425,2.02
+/// B6,55.35,94.65,48.09,35,0.0335,0.0418,2276.973225,2.31
+/// B7,58.92,100.38,49.56,35.01,0.0352,0.044,2543.155471296,2.58
+/// B8,63.33,107.32,51.32,35,0.0371,0.0465,2870.1131278785,2.91
+/// B9,65.46,110.63,52.16,35.01,0.0379,0.0477,3023.7824944467,3.07
 #[test] 
 pub fn ciet_coupled_nat_circ_set_b1(){
 
-    let max_simulation_time_seconds: f64 = 6300.0;
+    let max_simulation_time_seconds: f64 = 3000.0;
     // expect overprediction of mass flowrates in both loops 
     // to about 8.5%
     let pri_loop_relative_tolerance = 0.061;
@@ -101,7 +117,7 @@ pub fn ciet_coupled_nat_circ_set_b1(){
 #[test] 
 pub fn ciet_coupled_nat_circ_set_b2(){
 
-    let max_simulation_time_seconds: f64 = 6300.0;
+    let max_simulation_time_seconds: f64 = 3000.0;
     // expect overprediction of mass flowrates in both loops 
     // to about 8.5%
     let pri_loop_relative_tolerance = 0.061;
@@ -189,7 +205,7 @@ pub fn ciet_coupled_nat_circ_set_b2(){
 #[test] 
 pub fn ciet_coupled_nat_circ_set_b3(){
 
-    let max_simulation_time_seconds: f64 = 6300.0;
+    let max_simulation_time_seconds: f64 = 3000.0;
     // expect overprediction of mass flowrates in both loops 
     // to about 8.5%
     let pri_loop_relative_tolerance = 0.061;
@@ -284,7 +300,7 @@ pub fn ciet_coupled_nat_circ_set_b3(){
 #[test] 
 pub fn ciet_coupled_nat_circ_set_b4(){
 
-    let max_simulation_time_seconds: f64 = 6300.0;
+    let max_simulation_time_seconds: f64 = 3000.0;
     // expect overprediction of mass flowrates in both loops 
     // to about 8.5%
     let pri_loop_relative_tolerance = 0.061;
@@ -373,7 +389,7 @@ pub fn ciet_coupled_nat_circ_set_b4(){
 #[test] 
 pub fn ciet_coupled_nat_circ_set_b5(){
 
-    let max_simulation_time_seconds: f64 = 6300.0;
+    let max_simulation_time_seconds: f64 = 3000.0;
     // expect overprediction of mass flowrates in both loops 
     // to about 8.5%
     let pri_loop_relative_tolerance = 0.061;
@@ -462,7 +478,7 @@ pub fn ciet_coupled_nat_circ_set_b5(){
 #[test] 
 pub fn ciet_coupled_nat_circ_set_b6(){
 
-    let max_simulation_time_seconds: f64 = 6300.0;
+    let max_simulation_time_seconds: f64 = 3000.0;
     // expect overprediction of mass flowrates in both loops 
     // to about 8.5%
     let pri_loop_relative_tolerance = 0.061;
@@ -556,7 +572,7 @@ pub fn ciet_coupled_nat_circ_set_b6(){
 #[test] 
 pub fn ciet_coupled_nat_circ_set_b7(){
 
-    let max_simulation_time_seconds: f64 = 6300.0;
+    let max_simulation_time_seconds: f64 = 3000.0;
     // expect overprediction of mass flowrates in both loops 
     // to about 8.5%
     let pri_loop_relative_tolerance = 0.061;
@@ -654,7 +670,7 @@ pub fn ciet_coupled_nat_circ_set_b7(){
 #[test] 
 pub fn ciet_coupled_nat_circ_set_b8(){
 
-    let max_simulation_time_seconds: f64 = 6300.0;
+    let max_simulation_time_seconds: f64 = 3000.0;
     // expect overprediction of mass flowrates in both loops 
     // to about 8.5%
     let pri_loop_relative_tolerance = 0.061;
@@ -745,7 +761,7 @@ pub fn ciet_coupled_nat_circ_set_b8(){
 pub fn ciet_coupled_nat_circ_set_b9(){
 
 
-    let max_simulation_time_seconds: f64 = 6300.0;
+    let max_simulation_time_seconds: f64 = 3000.0;
     let pri_loop_relative_tolerance = 0.061;
     let dracs_loop_relative_tolerance = 0.062;
 
@@ -1658,7 +1674,7 @@ Result<(),crate::tuas_lib_error::TuasLibError>{
     // for this timestep, the simulation fails around 185s of simulated time
     //
     // the conclusion is that this instability is almost independent of timestep
-    let timestep = Time::new::<second>(0.5);
+    let timestep = Time::new::<second>(0.1);
     let heat_rate_through_heater = input_power;
     let mut tchx_heat_transfer_coeff: HeatTransfer;
 
@@ -1675,17 +1691,17 @@ Result<(),crate::tuas_lib_error::TuasLibError>{
     // altered from version 4, to introduce more stability for set b9
     //
     // setting controller gain to 1.55 and 1.0 didn't work, still unstable
-    let controller_gain = Ratio::new::<ratio>(1.75);
-    let integral_time: Time = controller_gain / Frequency::new::<hertz>(1.0);
-    let derivative_time: Time = Time::new::<second>(1.0);
+    let tchx_controller_gain = Ratio::new::<ratio>(70.75);
+    let tchx_integral_time: Time = tchx_controller_gain / Frequency::new::<hertz>(50.0);
+    let tchx_derivative_time: Time = Time::new::<second>(1.0);
     // derivative time ratio
-    let alpha: Ratio = Ratio::new::<ratio>(1.0);
+    let tchx_alpha: Ratio = Ratio::new::<ratio>(1.0);
 
     let mut pid_controller: AnalogController = 
-        AnalogController::new_filtered_pid_controller(controller_gain,
-            integral_time,
-            derivative_time,
-            alpha).unwrap();
+        AnalogController::new_filtered_pid_controller(tchx_controller_gain,
+            tchx_integral_time,
+            tchx_derivative_time,
+            tchx_alpha).unwrap();
 
     // we also have a measurement delay of 0.0001 s 
     // or 0.1 ms
@@ -2248,7 +2264,7 @@ Result<(),crate::tuas_lib_error::TuasLibError>{
         max_relative=dracs_loop_relative_tolerance);
 
     // check flowrates for regression 
-    let assert_regression_mass_flowrates = false;
+    let assert_regression_mass_flowrates = true;
 
     if assert_regression_mass_flowrates {
         // this asserts the final mass flowrate against experimental flowrate 
@@ -2269,7 +2285,7 @@ Result<(),crate::tuas_lib_error::TuasLibError>{
     // among other temperatures
 
 
-    let assert_regression_temperatures = false;
+    let assert_regression_temperatures = true;
 
     if assert_regression_temperatures {
 

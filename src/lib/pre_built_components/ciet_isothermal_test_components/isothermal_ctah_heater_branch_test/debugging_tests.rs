@@ -1,9 +1,8 @@
-
-
-
-
+/// this is a isothermal pressure drop 
+/// regression test 
+/// get pressure change from mass flowrate
 #[test] 
-pub fn heater_branch_pressure_change_test(){
+pub fn heater_branch_pressure_change_regression_test(){
 
     // let's construct the branches with test pressures and obtain 
     // mass flowrates
@@ -47,8 +46,11 @@ pub fn heater_branch_pressure_change_test(){
 
 }
 
+/// this is a isothermal pressure drop 
+/// regression test 
+/// get pressure change from mass flowrate
 #[test] 
-pub fn ctah_branch_pressure_change_test(){
+pub fn ctah_branch_pressure_change_regression_test(){
 
     // let's construct the branches with test pressures and obtain 
     // mass flowrates

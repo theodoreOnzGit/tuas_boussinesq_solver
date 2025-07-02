@@ -8,6 +8,10 @@ use uom::si::pressure::pascal;
 use crate::array_control_vol_and_fluid_component_collections::fluid_component_collection::{fluid_component_collection::{FluidComponentCollection, FluidComponentCollectionMethods}, fluid_component_super_collection::FluidComponentSuperCollection};
 
 
+/// checks if the ctah branch is working correctly
+/// pressure change from mass flowrate
+/// when we add various components to a series FluidComponentCollection 
+/// this is a regression test
 #[test]
 pub fn heater_branch_with_heater_v2_test(){
 
@@ -141,6 +145,10 @@ pub fn heater_branch_with_heater_v2_test(){
 }
 
 
+/// checks if the ctah branch is working correctly
+/// pressure change from mass flowrate
+/// when we add various components to a series FluidComponentCollection 
+/// this is a regression test
 #[test]
 pub fn ctah_branch_test(){
 
@@ -201,8 +209,6 @@ pub fn ctah_branch_test(){
 
     // let's check the hydrostatic pressure, 0.0 kg/s fluid flow 
     {
-        // now let's push a 0.1kg/s fluid flow through this pipe series
-        //
         let pipe_fluid_flow = MassRate::new::<kilogram_per_second>(0.0);
 
         // and then let's get the pressure change
@@ -221,6 +227,10 @@ pub fn ctah_branch_test(){
 
 
 
+/// this is a isothermal pressure drop 
+/// validation test against experimental data for the 
+/// ctah and heater branch
+///
 #[test]
 pub fn isothermal_ctah_and_heater_branch_validation_test(){
 
@@ -404,6 +414,13 @@ pub fn isothermal_ctah_and_heater_branch_validation_test(){
 }
 
 
+/// this is a isothermal pressure drop 
+/// validation test against experimental data for the 
+/// ctah and heater branch
+///
+/// This is a regression test against older versions of 
+/// TUAS 
+///
 #[test]
 pub fn isothermal_ctah_and_heater_branch_code_to_code_verification_test(){
 

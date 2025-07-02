@@ -273,7 +273,7 @@ pub(crate) fn copper_spline_temp_attempt_2_from_specific_enthalpy(
 /// that is, temperatures from enthalpy required iterations,
 /// I'm trying to circumvent that 
 ///
-/// But I eventually decided against using it
+/// But I eventually decided against using it in the main library
 #[test]
 pub fn copper_temperature_from_enthalpy_test_spline_2(){
     // we'll test temperature at 375K 

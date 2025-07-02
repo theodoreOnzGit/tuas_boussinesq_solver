@@ -238,6 +238,14 @@ pub fn adiabatic_mixing_joint_test_link_to_front_and_back(){
 
 }
 
+/// this test checks if FluidArrays can form adiabatic mixing joints 
+/// with single cvs 
+///
+/// so let's say, two pipes with 0.05 kg/s of therminol vp1 
+/// flowing into a mixing joint (singleCV)
+///
+/// regression test, checks if linking to front function works correctly
+///
 #[cfg(test)]
 #[test]
 pub fn adiabatic_mixing_joint_test_link_to_front_only(){
