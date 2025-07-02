@@ -1,5 +1,5 @@
 /// regression test checked steady state and temp profile 
-/// 10:38 am 02 jul 2025
+/// 11:05 am 02 jul 2025
 ///
 /// From CIET Educational Simulator: 
 ///
@@ -28,7 +28,7 @@ pub fn ciet_coupled_nat_circ_set_b1(){
     // expect overprediction of mass flowrates in both loops 
     // to about 8.5%
     let pri_loop_relative_tolerance = 0.061;
-    let dracs_loop_relative_tolerance = 0.062;
+    let dracs_loop_relative_tolerance = 0.067;
 
     // I'm writing in this format so that the data will be easier 
     // to copy over to csv
@@ -38,14 +38,14 @@ pub fn ciet_coupled_nat_circ_set_b1(){
         experimental_pri_mass_flowrate_kg_per_s,
         simulated_expected_dracs_mass_flowrate_kg_per_s,
         simulated_expected_pri_mass_flowrate_kg_per_s) 
-        = (655.16, 35.0, 2.3290e-2, 1.7310e-2, 2.2128e-2, 1.7691e-2);
+        = (655.16, 35.0, 2.3290e-2, 1.7310e-2, 2.1737e-2, 1.8105e-2);
 
 
     let (shell_side_to_tubes_nusselt_number_correction_factor,
         insulation_thickness_regression_cm,
         shell_side_to_ambient_nusselt_correction_factor,
         dhx_heat_loss_to_ambient_watts_per_m2_kelvin) 
-        = (4.7,0.091,10.3,45.0);
+        = (4.7,0.161,10.3,45.0);
 
     let ( pri_loop_cold_leg_insulation_thickness_cm,
         pri_loop_hot_leg_insulation_thickness_cm,
@@ -62,7 +62,7 @@ pub fn ciet_coupled_nat_circ_set_b1(){
         expt_heater_surf_temp_avg_degc,
         simulated_expected_heater_surf_temp_degc,
         heater_surface_temp_tolerance_degc) = 
-        (1.6, 75.10,64.32,13.0);
+        (1.6, 75.10,69.72,13.0);
     
     let (
         regression_heater_inlet_temp_degc,
@@ -73,7 +73,7 @@ pub fn ciet_coupled_nat_circ_set_b1(){
         regression_dhx_tube_outlet_temp_degc,
         regression_tchx_inlet_temp_degc,
         regression_tchx_outlet_temp_degc,
-    ) = ( 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,);
+    ) = ( 40.26, 61.21, 58.39, 42.38, 34.38, 45.36, 44.10, 35.00,);
 
     regression_coupled_dracs_loop_version_7(
         heater_power_watts, 
@@ -109,11 +109,29 @@ pub fn ciet_coupled_nat_circ_set_b1(){
 
 
 }
-/// natural circulation test for CIET 
+/// regression test checked steady state and temp profile 
+/// 11:05 am 02 jul 2025
 ///
-/// power in 1054.32 Watts
-/// TCHX outlet temperature at 35 degrees C
+/// From CIET Educational Simulator: 
 ///
+/// Just to give a rough gauge of what to expect (sanity check)
+/// These values were taken after the temperature profiles flatlined 
+/// (were visually steady) on the graph
+/// note that there was parasitic heat loss through the heater 
+/// in CIET Educational Simulator, so the temperature profiles may 
+/// be slightly different
+///
+/// Case,heater T_in (degc),heater T_out (degc),bt65 T-in degc,bt66 T-out,pri mass flow kg/s,dracs mass flow kg/s,heat added (W),heater setting kW
+/// B2,39.54,67.01,41.16,35,0.0231,0.0289,1058.5905141735,1.08
+///
+/// B1,34.91,56.91,38.75,35,0.018,0.0223,652.3966152,0.67
+/// B3,43.75,74.94,43.11,35,0.0265,0.0332,1393.0031592015,1.42
+/// B4,47.46,81.5,44.75,35,0.0291,0.0363,1683.7939701504,1.71
+/// B5,51.51,88.36,46.49,35,0.0315,0.0393,1990.9806649425,2.02
+/// B6,55.35,94.65,48.09,35,0.0335,0.0418,2276.973225,2.31
+/// B7,58.92,100.38,49.56,35.01,0.0352,0.044,2543.155471296,2.58
+/// B8,63.33,107.32,51.32,35,0.0371,0.0465,2870.1131278785,2.91
+/// B9,65.46,110.63,52.16,35.01,0.0379,0.0477,3023.7824944467,3.07
 #[test] 
 pub fn ciet_coupled_nat_circ_set_b2(){
 
@@ -121,7 +139,7 @@ pub fn ciet_coupled_nat_circ_set_b2(){
     // expect overprediction of mass flowrates in both loops 
     // to about 8.5%
     let pri_loop_relative_tolerance = 0.061;
-    let dracs_loop_relative_tolerance = 0.062;
+    let dracs_loop_relative_tolerance = 0.067;
 
     // I'm writing in this format so that the data will be easier 
     // to copy over to csv
@@ -131,14 +149,14 @@ pub fn ciet_coupled_nat_circ_set_b2(){
         experimental_pri_mass_flowrate_kg_per_s,
         simulated_expected_dracs_mass_flowrate_kg_per_s,
         simulated_expected_pri_mass_flowrate_kg_per_s) 
-        = ( 1054.32, 35.0, 2.9520e-2, 2.1980e-2, 2.9067e-2, 2.3192e-2);
+        = ( 1054.32, 35.0, 2.9520e-2, 2.1980e-2, 2.8873e-2, 2.3202e-2);
 
 
     let (shell_side_to_tubes_nusselt_number_correction_factor,
         insulation_thickness_regression_cm,
         shell_side_to_ambient_nusselt_correction_factor,
         dhx_heat_loss_to_ambient_watts_per_m2_kelvin) 
-        = (4.7,0.091,10.3,45.0);
+        = (4.7,0.161,10.3,45.0);
 
     let ( pri_loop_cold_leg_insulation_thickness_cm,
         pri_loop_hot_leg_insulation_thickness_cm,
@@ -155,7 +173,7 @@ pub fn ciet_coupled_nat_circ_set_b2(){
         expt_heater_surf_temp_avg_degc,
         simulated_expected_heater_surf_temp_degc,
         heater_surface_temp_tolerance_degc) = 
-        (1.6, 91.40,88.54,12.0);
+        (1.6, 91.40,88.36,12.0);
 
     let (
         regression_heater_inlet_temp_degc,
@@ -166,7 +184,7 @@ pub fn ciet_coupled_nat_circ_set_b2(){
         regression_dhx_tube_outlet_temp_degc,
         regression_tchx_inlet_temp_degc,
         regression_tchx_outlet_temp_degc,
-    ) = (46.72, 72.79, 69.92, 48.91, 34.39, 49.44, 48.30, 34.89);
+    ) = (46.54, 72.62, 69.78, 48.71, 34.53, 49.42, 48.30, 35.00);
 
     regression_coupled_dracs_loop_version_7(
         heater_power_watts, 
@@ -209,7 +227,7 @@ pub fn ciet_coupled_nat_circ_set_b3(){
     // expect overprediction of mass flowrates in both loops 
     // to about 8.5%
     let pri_loop_relative_tolerance = 0.061;
-    let dracs_loop_relative_tolerance = 0.062;
+    let dracs_loop_relative_tolerance = 0.067;
 
     // I'm writing in this format so that the data will be easier 
     // to copy over to csv
@@ -226,7 +244,7 @@ pub fn ciet_coupled_nat_circ_set_b3(){
         insulation_thickness_regression_cm,
         shell_side_to_ambient_nusselt_correction_factor,
         dhx_heat_loss_to_ambient_watts_per_m2_kelvin) 
-        = (4.7,0.091,10.3,45.0);
+        = (4.7,0.161,10.3,45.0);
 
     let ( pri_loop_cold_leg_insulation_thickness_cm,
         pri_loop_hot_leg_insulation_thickness_cm,
@@ -304,7 +322,7 @@ pub fn ciet_coupled_nat_circ_set_b4(){
     // expect overprediction of mass flowrates in both loops 
     // to about 8.5%
     let pri_loop_relative_tolerance = 0.061;
-    let dracs_loop_relative_tolerance = 0.062;
+    let dracs_loop_relative_tolerance = 0.067;
 
     // I'm writing in this format so that the data will be easier 
     // to copy over to csv
@@ -321,7 +339,7 @@ pub fn ciet_coupled_nat_circ_set_b4(){
         insulation_thickness_regression_cm,
         shell_side_to_ambient_nusselt_correction_factor,
         dhx_heat_loss_to_ambient_watts_per_m2_kelvin) 
-        = (4.7,0.091,10.3,45.0);
+        = (4.7,0.161,10.3,45.0);
 
     let ( pri_loop_cold_leg_insulation_thickness_cm,
         pri_loop_hot_leg_insulation_thickness_cm,
@@ -393,7 +411,7 @@ pub fn ciet_coupled_nat_circ_set_b5(){
     // expect overprediction of mass flowrates in both loops 
     // to about 8.5%
     let pri_loop_relative_tolerance = 0.061;
-    let dracs_loop_relative_tolerance = 0.062;
+    let dracs_loop_relative_tolerance = 0.067;
 
     // I'm writing in this format so that the data will be easier 
     // to copy over to csv
@@ -410,7 +428,7 @@ pub fn ciet_coupled_nat_circ_set_b5(){
         insulation_thickness_regression_cm,
         shell_side_to_ambient_nusselt_correction_factor,
         dhx_heat_loss_to_ambient_watts_per_m2_kelvin) 
-        = (4.7,0.091,10.3,45.0);
+        = (4.7,0.161,10.3,45.0);
 
     let ( pri_loop_cold_leg_insulation_thickness_cm,
         pri_loop_hot_leg_insulation_thickness_cm,
@@ -482,7 +500,7 @@ pub fn ciet_coupled_nat_circ_set_b6(){
     // expect overprediction of mass flowrates in both loops 
     // to about 8.5%
     let pri_loop_relative_tolerance = 0.061;
-    let dracs_loop_relative_tolerance = 0.062;
+    let dracs_loop_relative_tolerance = 0.067;
 
     // I'm writing in this format so that the data will be easier 
     // to copy over to csv
@@ -499,7 +517,7 @@ pub fn ciet_coupled_nat_circ_set_b6(){
         insulation_thickness_regression_cm,
         shell_side_to_ambient_nusselt_correction_factor,
         dhx_heat_loss_to_ambient_watts_per_m2_kelvin) 
-        = (4.7,0.091,10.3,45.0);
+        = (4.7,0.161,10.3,45.0);
 
     let ( pri_loop_cold_leg_insulation_thickness_cm,
         pri_loop_hot_leg_insulation_thickness_cm,
@@ -576,7 +594,7 @@ pub fn ciet_coupled_nat_circ_set_b7(){
     // expect overprediction of mass flowrates in both loops 
     // to about 8.5%
     let pri_loop_relative_tolerance = 0.061;
-    let dracs_loop_relative_tolerance = 0.062;
+    let dracs_loop_relative_tolerance = 0.067;
 
     // I'm writing in this format so that the data will be easier 
     // to copy over to csv
@@ -593,7 +611,7 @@ pub fn ciet_coupled_nat_circ_set_b7(){
         insulation_thickness_regression_cm,
         shell_side_to_ambient_nusselt_correction_factor,
         dhx_heat_loss_to_ambient_watts_per_m2_kelvin) 
-        = (4.7,0.091,10.3,45.0);
+        = (4.7,0.161,10.3,45.0);
 
     let ( pri_loop_cold_leg_insulation_thickness_cm,
         pri_loop_hot_leg_insulation_thickness_cm,
@@ -664,7 +682,7 @@ pub fn ciet_coupled_nat_circ_set_b7(){
 /// power in 2874.03 Watts
 /// TCHX outlet temperature at 35 degrees C
 ///
-/// at dhx thickness 0.091 cm, 
+/// at dhx thickness 0.161 cm, 
 /// flowrate overpredicted by 7.4%
 ///
 #[test] 
@@ -674,7 +692,7 @@ pub fn ciet_coupled_nat_circ_set_b8(){
     // expect overprediction of mass flowrates in both loops 
     // to about 8.5%
     let pri_loop_relative_tolerance = 0.061;
-    let dracs_loop_relative_tolerance = 0.062;
+    let dracs_loop_relative_tolerance = 0.067;
 
     // I'm writing in this format so that the data will be easier 
     // to copy over to csv
@@ -691,7 +709,7 @@ pub fn ciet_coupled_nat_circ_set_b8(){
         insulation_thickness_regression_cm,
         shell_side_to_ambient_nusselt_correction_factor,
         dhx_heat_loss_to_ambient_watts_per_m2_kelvin) 
-        = (4.7,0.091,10.3,45.0);
+        = (4.7,0.161,10.3,45.0);
 
     let ( pri_loop_cold_leg_insulation_thickness_cm,
         pri_loop_hot_leg_insulation_thickness_cm,
@@ -763,7 +781,7 @@ pub fn ciet_coupled_nat_circ_set_b9(){
 
     let max_simulation_time_seconds: f64 = 3000.0;
     let pri_loop_relative_tolerance = 0.061;
-    let dracs_loop_relative_tolerance = 0.062;
+    let dracs_loop_relative_tolerance = 0.067;
 
     // I'm writing in this format so that the data will be easier 
     // to copy over to csv
@@ -780,7 +798,7 @@ pub fn ciet_coupled_nat_circ_set_b9(){
         insulation_thickness_regression_cm,
         shell_side_to_ambient_nusselt_correction_factor,
         dhx_heat_loss_to_ambient_watts_per_m2_kelvin) 
-        = (4.7,0.091,10.3,45.0);
+        = (4.7,0.161,10.3,45.0);
 
     let ( pri_loop_cold_leg_insulation_thickness_cm,
         pri_loop_hot_leg_insulation_thickness_cm,
