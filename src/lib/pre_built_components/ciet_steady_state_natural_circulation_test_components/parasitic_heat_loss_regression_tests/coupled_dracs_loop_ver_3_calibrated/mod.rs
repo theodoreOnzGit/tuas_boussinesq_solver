@@ -1,3 +1,10 @@
+/// c1 for
+/// version 3 of coupled DRACS loop 
+///
+/// for version 3, simple calibration is done as with version 2,
+/// but the vertical TCHX is split into two equal halves as was done in SAM,
+/// only the bottom half will have the calibrated heat transfer coefficient.
+/// The rest of the TCHX, the horizontal TCHX and 35b1, will be insulated.
 
 #[test] 
 pub fn regression_long_test_calibrated_ver3_set_c1(){
@@ -58,6 +65,13 @@ pub fn regression_long_test_calibrated_ver3_set_c1(){
 
 
 }
+/// c2 for
+/// version 3 of coupled DRACS loop 
+///
+/// for version 3, simple calibration is done as with version 2,
+/// but the vertical TCHX is split into two equal halves as was done in SAM,
+/// only the bottom half will have the calibrated heat transfer coefficient.
+/// The rest of the TCHX, the horizontal TCHX and 35b1, will be insulated.
 #[test] 
 pub fn regression_long_test_calibrated_ver3_set_c2(){
     use regression_coupled_dracs_loop_version_3::*;
@@ -117,6 +131,14 @@ pub fn regression_long_test_calibrated_ver3_set_c2(){
 
 
 }
+
+/// c3 for
+/// version 3 of coupled DRACS loop 
+///
+/// for version 3, simple calibration is done as with version 2,
+/// but the vertical TCHX is split into two equal halves as was done in SAM,
+/// only the bottom half will have the calibrated heat transfer coefficient.
+/// The rest of the TCHX, the horizontal TCHX and 35b1, will be insulated.
 #[test] 
 pub fn regression_long_test_calibrated_ver3_set_c3(){
     use regression_coupled_dracs_loop_version_3::*;
@@ -176,6 +198,13 @@ pub fn regression_long_test_calibrated_ver3_set_c3(){
 
 
 }
+/// c4 for
+/// version 3 of coupled DRACS loop 
+///
+/// for version 3, simple calibration is done as with version 2,
+/// but the vertical TCHX is split into two equal halves as was done in SAM,
+/// only the bottom half will have the calibrated heat transfer coefficient.
+/// The rest of the TCHX, the horizontal TCHX and 35b1, will be insulated.
 #[test] 
 pub fn regression_long_test_calibrated_ver3_set_c4(){
     use regression_coupled_dracs_loop_version_3::*;
@@ -236,6 +265,13 @@ pub fn regression_long_test_calibrated_ver3_set_c4(){
 
 }
 
+/// c5 for
+/// version 3 of coupled DRACS loop 
+///
+/// for version 3, simple calibration is done as with version 2,
+/// but the vertical TCHX is split into two equal halves as was done in SAM,
+/// only the bottom half will have the calibrated heat transfer coefficient.
+/// The rest of the TCHX, the horizontal TCHX and 35b1, will be insulated.
 #[test] 
 pub fn regression_long_test_calibrated_ver3_set_c5(){
     use regression_coupled_dracs_loop_version_3::*;
@@ -296,6 +332,13 @@ pub fn regression_long_test_calibrated_ver3_set_c5(){
 
 }
 /// took about 205 s on the i5-13500H 
+/// c6 for
+/// version 3 of coupled DRACS loop 
+///
+/// for version 3, simple calibration is done as with version 2,
+/// but the vertical TCHX is split into two equal halves as was done in SAM,
+/// only the bottom half will have the calibrated heat transfer coefficient.
+/// The rest of the TCHX, the horizontal TCHX and 35b1, will be insulated.
 #[test] 
 pub fn regression_long_test_calibrated_ver3_set_c6_extra_extra_extra_long(){
     use regression_coupled_dracs_loop_version_3::*;
@@ -621,6 +664,13 @@ pub fn regression_long_test_calibrated_ver3_set_c6_shorter(){
 
 }
 
+/// c7 for
+/// version 3 of coupled DRACS loop 
+///
+/// for version 3, simple calibration is done as with version 2,
+/// but the vertical TCHX is split into two equal halves as was done in SAM,
+/// only the bottom half will have the calibrated heat transfer coefficient.
+/// The rest of the TCHX, the horizontal TCHX and 35b1, will be insulated.
 #[test] 
 pub fn regression_long_test_calibrated_ver3_set_c7(){
     use regression_coupled_dracs_loop_version_3::*;
@@ -682,6 +732,13 @@ pub fn regression_long_test_calibrated_ver3_set_c7(){
 }
 //
 //
+/// c8 for
+/// version 3 of coupled DRACS loop 
+///
+/// for version 3, simple calibration is done as with version 2,
+/// but the vertical TCHX is split into two equal halves as was done in SAM,
+/// only the bottom half will have the calibrated heat transfer coefficient.
+/// The rest of the TCHX, the horizontal TCHX and 35b1, will be insulated.
 #[test] 
 pub fn regression_long_test_calibrated_ver3_set_c8(){
     use regression_coupled_dracs_loop_version_3::*;
@@ -741,8 +798,15 @@ pub fn regression_long_test_calibrated_ver3_set_c8(){
 
 
 }
-// on i7-10875H 1.5 GHz clock speed, (throttled down)
-// test time is ~177 s
+/// on i7-10875H 1.5 GHz clock speed, (throttled down)
+/// test time is ~177 s
+/// c8 for
+/// version 3 of coupled DRACS loop 
+///
+/// for version 3, simple calibration is done as with version 2,
+/// but the vertical TCHX is split into two equal halves as was done in SAM,
+/// only the bottom half will have the calibrated heat transfer coefficient.
+/// The rest of the TCHX, the horizontal TCHX and 35b1, will be insulated.
 #[test] 
 pub fn regression_long_test_calibrated_ver3_set_c9(){
     use regression_coupled_dracs_loop_version_3::*;
