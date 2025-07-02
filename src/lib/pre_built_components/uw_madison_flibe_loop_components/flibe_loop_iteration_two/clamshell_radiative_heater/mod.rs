@@ -20,7 +20,9 @@ use crate::pre_built_components::heat_transfer_entities::HeatTransferEntity;
 //use crate::boussinesq_thermophysical_properties::{LiquidMaterial, SolidMaterial};
 
 use uom::si::f64::*;
-
+/// clamshell_radiative_heater for UW madison flibe loop 
+/// NOTE: not done yet 
+/// TODO: should complete calibration and validation in future
 #[derive(Clone,Debug,PartialEq)]
 pub struct ClamshellRadiativeHeater {
 
