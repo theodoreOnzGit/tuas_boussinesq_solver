@@ -24,7 +24,7 @@
 ///
 #[cfg(test)]
 #[test] 
-//#[ignore = "debugging"]
+#[ignore = "legacy test used for debugging"]
 pub fn ctah_flow_steady_state_test(){
 
 

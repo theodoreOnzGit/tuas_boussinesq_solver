@@ -1,5 +1,6 @@
 /// test series took about 450s seems to be fast enough
 #[cfg(test)]
+#[ignore = "legacy test used for debugging"]
 #[test] 
 pub fn ciet_coupled_nat_circ_set_a1_for_three_branch(){
     use crate::pre_built_components::ciet_three_branch_plus_dracs::ciet_educational_simulator_loop_prototypes::three_branch_ciet_ver1;

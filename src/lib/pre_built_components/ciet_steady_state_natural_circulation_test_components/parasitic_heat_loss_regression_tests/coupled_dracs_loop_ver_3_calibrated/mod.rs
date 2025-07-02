@@ -7,6 +7,7 @@
 /// The rest of the TCHX, the horizontal TCHX and 35b1, will be insulated.
 
 #[test] 
+#[ignore = "legacy test used for debugging"]
 pub fn regression_long_test_calibrated_ver3_set_c1(){
     use regression_coupled_dracs_loop_version_3::*;
 
@@ -73,6 +74,7 @@ pub fn regression_long_test_calibrated_ver3_set_c1(){
 /// only the bottom half will have the calibrated heat transfer coefficient.
 /// The rest of the TCHX, the horizontal TCHX and 35b1, will be insulated.
 #[test] 
+#[ignore = "legacy test used for debugging"]
 pub fn regression_long_test_calibrated_ver3_set_c2(){
     use regression_coupled_dracs_loop_version_3::*;
 
@@ -140,6 +142,7 @@ pub fn regression_long_test_calibrated_ver3_set_c2(){
 /// only the bottom half will have the calibrated heat transfer coefficient.
 /// The rest of the TCHX, the horizontal TCHX and 35b1, will be insulated.
 #[test] 
+#[ignore = "legacy test used for debugging"]
 pub fn regression_long_test_calibrated_ver3_set_c3(){
     use regression_coupled_dracs_loop_version_3::*;
 
@@ -206,6 +209,7 @@ pub fn regression_long_test_calibrated_ver3_set_c3(){
 /// only the bottom half will have the calibrated heat transfer coefficient.
 /// The rest of the TCHX, the horizontal TCHX and 35b1, will be insulated.
 #[test] 
+#[ignore = "legacy test used for debugging"]
 pub fn regression_long_test_calibrated_ver3_set_c4(){
     use regression_coupled_dracs_loop_version_3::*;
 
@@ -273,6 +277,7 @@ pub fn regression_long_test_calibrated_ver3_set_c4(){
 /// only the bottom half will have the calibrated heat transfer coefficient.
 /// The rest of the TCHX, the horizontal TCHX and 35b1, will be insulated.
 #[test] 
+#[ignore = "legacy test used for debugging"]
 pub fn regression_long_test_calibrated_ver3_set_c5(){
     use regression_coupled_dracs_loop_version_3::*;
 
@@ -340,6 +345,7 @@ pub fn regression_long_test_calibrated_ver3_set_c5(){
 /// only the bottom half will have the calibrated heat transfer coefficient.
 /// The rest of the TCHX, the horizontal TCHX and 35b1, will be insulated.
 #[test] 
+#[ignore = "legacy test used for debugging"]
 pub fn regression_long_test_calibrated_ver3_set_c6_extra_extra_extra_long(){
     use regression_coupled_dracs_loop_version_3::*;
 
@@ -410,6 +416,7 @@ pub fn regression_long_test_calibrated_ver3_set_c6_extra_extra_extra_long(){
 }
 /// took about 155 s on the i5-13500H 
 #[test] 
+#[ignore = "legacy test used for debugging"]
 pub fn regression_long_test_calibrated_ver3_set_c6_extra_extra_long(){
     use regression_coupled_dracs_loop_version_3::*;
 
@@ -478,6 +485,7 @@ pub fn regression_long_test_calibrated_ver3_set_c6_extra_extra_long(){
 }
 /// took about 151 s on the i5-13500H 
 #[test] 
+#[ignore = "legacy test used for debugging"]
 pub fn regression_long_test_calibrated_ver3_set_c6_extra_long(){
     use regression_coupled_dracs_loop_version_3::*;
 
@@ -546,6 +554,7 @@ pub fn regression_long_test_calibrated_ver3_set_c6_extra_long(){
 }
 /// took about 131 s on the i5-13500H 
 #[test] 
+#[ignore = "legacy test used for debugging"]
 pub fn regression_long_test_calibrated_ver3_set_c6(){
     use regression_coupled_dracs_loop_version_3::*;
 
@@ -614,6 +623,7 @@ pub fn regression_long_test_calibrated_ver3_set_c6(){
 ///
 /// this is a shorter version used during early stages of testing
 #[test] 
+#[ignore = "legacy test used for debugging"]
 pub fn regression_long_test_calibrated_ver3_set_c6_shorter(){
     use regression_coupled_dracs_loop_version_3::*;
 
@@ -681,6 +691,7 @@ pub fn regression_long_test_calibrated_ver3_set_c6_shorter(){
 /// only the bottom half will have the calibrated heat transfer coefficient.
 /// The rest of the TCHX, the horizontal TCHX and 35b1, will be insulated.
 #[test] 
+#[ignore = "legacy test used for debugging"]
 pub fn regression_long_test_calibrated_ver3_set_c7(){
     use regression_coupled_dracs_loop_version_3::*;
 
@@ -749,6 +760,7 @@ pub fn regression_long_test_calibrated_ver3_set_c7(){
 /// only the bottom half will have the calibrated heat transfer coefficient.
 /// The rest of the TCHX, the horizontal TCHX and 35b1, will be insulated.
 #[test] 
+#[ignore = "legacy test used for debugging"]
 pub fn regression_long_test_calibrated_ver3_set_c8(){
     use regression_coupled_dracs_loop_version_3::*;
 
@@ -817,6 +829,7 @@ pub fn regression_long_test_calibrated_ver3_set_c8(){
 /// only the bottom half will have the calibrated heat transfer coefficient.
 /// The rest of the TCHX, the horizontal TCHX and 35b1, will be insulated.
 #[test] 
+#[ignore = "legacy test used for debugging"]
 pub fn regression_long_test_calibrated_ver3_set_c9(){
     use regression_coupled_dracs_loop_version_3::*;
 

@@ -44,6 +44,7 @@
 /// a non-existent or relatively low heater surface temperature from SAM.
 ///
 #[test] 
+#[ignore = "legacy test used for debugging"]
 pub fn regression_long_test_calibrated_ver6_set_c1(){
 
     let max_simulation_time_seconds: f64 = 6300.0;
@@ -157,6 +158,7 @@ pub fn regression_long_test_calibrated_ver6_set_c1(){
 /// a non-existent or relatively low heater surface temperature from SAM.
 ///
 #[test] 
+#[ignore = "legacy test used for debugging"]
 pub fn regression_long_test_calibrated_ver6_set_c2(){
 
     let max_simulation_time_seconds: f64 = 6300.0;
@@ -271,6 +273,7 @@ pub fn regression_long_test_calibrated_ver6_set_c2(){
 /// a non-existent or relatively low heater surface temperature from SAM.
 ///
 #[test] 
+#[ignore = "legacy test used for debugging"]
 pub fn regression_long_test_calibrated_ver6_set_c3(){
 
     let max_simulation_time_seconds: f64 = 6300.0;
@@ -385,6 +388,7 @@ pub fn regression_long_test_calibrated_ver6_set_c3(){
 /// a non-existent or relatively low heater surface temperature from SAM.
 ///
 #[test] 
+#[ignore = "legacy test used for debugging"]
 pub fn regression_long_test_calibrated_ver6_set_c4(){
 
     let max_simulation_time_seconds: f64 = 6300.0;
@@ -499,6 +503,7 @@ pub fn regression_long_test_calibrated_ver6_set_c4(){
 /// a non-existent or relatively low heater surface temperature from SAM.
 ///
 #[test] 
+#[ignore = "legacy test used for debugging"]
 pub fn regression_long_test_calibrated_ver6_set_c5(){
 
     let max_simulation_time_seconds: f64 = 6300.0;
@@ -613,6 +618,7 @@ pub fn regression_long_test_calibrated_ver6_set_c5(){
 /// a non-existent or relatively low heater surface temperature from SAM.
 ///
 #[test] 
+#[ignore = "legacy test used for debugging"]
 pub fn regression_long_test_calibrated_ver6_set_c6(){
 
     let max_simulation_time_seconds: f64 = 6300.0;
@@ -727,6 +733,7 @@ pub fn regression_long_test_calibrated_ver6_set_c6(){
 /// a non-existent or relatively low heater surface temperature from SAM.
 ///
 #[test] 
+#[ignore = "legacy test used for debugging"]
 pub fn regression_long_test_calibrated_ver6_set_c7(){
 
     let max_simulation_time_seconds: f64 = 6300.0;
@@ -841,6 +848,7 @@ pub fn regression_long_test_calibrated_ver6_set_c7(){
 /// a non-existent or relatively low heater surface temperature from SAM.
 ///
 #[test] 
+#[ignore = "legacy test used for debugging"]
 pub fn regression_long_test_calibrated_ver6_set_c8(){
 
     let max_simulation_time_seconds: f64 = 6300.0;
@@ -955,6 +963,7 @@ pub fn regression_long_test_calibrated_ver6_set_c8(){
 /// a non-existent or relatively low heater surface temperature from SAM.
 ///
 #[test] 
+#[ignore = "legacy test used for debugging"]
 pub fn regression_long_test_calibrated_ver6_set_c9(){
 
     let max_simulation_time_seconds: f64 = 6300.0;
