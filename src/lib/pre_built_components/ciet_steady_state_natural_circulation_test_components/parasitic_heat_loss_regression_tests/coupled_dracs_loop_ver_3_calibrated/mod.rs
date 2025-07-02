@@ -604,6 +604,15 @@ pub fn regression_long_test_calibrated_ver3_set_c6(){
 
 
 }
+/// c6 for
+/// version 3 of coupled DRACS loop 
+///
+/// for version 3, simple calibration is done as with version 2,
+/// but the vertical TCHX is split into two equal halves as was done in SAM,
+/// only the bottom half will have the calibrated heat transfer coefficient.
+/// The rest of the TCHX, the horizontal TCHX and 35b1, will be insulated.
+///
+/// this is a shorter version used during early stages of testing
 #[test] 
 pub fn regression_long_test_calibrated_ver3_set_c6_shorter(){
     use regression_coupled_dracs_loop_version_3::*;

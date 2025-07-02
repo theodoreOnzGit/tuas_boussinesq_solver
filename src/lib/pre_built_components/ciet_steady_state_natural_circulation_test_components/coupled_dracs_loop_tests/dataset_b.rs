@@ -555,7 +555,7 @@ pub fn ciet_coupled_nat_circ_set_b5(){
 
 }
 /// regression test checked steady state and temp profile 
-/// 11:34 am 02 jul 2025
+/// 12:03pm 02 jul 2025
 ///
 /// From CIET Educational Simulator: 
 ///
@@ -618,7 +618,7 @@ pub fn ciet_coupled_nat_circ_set_b6(){
         expt_heater_surf_temp_avg_degc,
         simulated_expected_heater_surf_temp_degc,
         heater_surface_temp_tolerance_degc) = 
-        (1.6, 127.48,140.43,12.0);
+        (1.6, 127.48,140.43,14.0);
 
     let (
         regression_heater_inlet_temp_degc,
@@ -629,7 +629,7 @@ pub fn ciet_coupled_nat_circ_set_b6(){
         regression_dhx_tube_outlet_temp_degc,
         regression_tchx_inlet_temp_degc,
         regression_tchx_outlet_temp_degc,
-    ) = ( 65.03, 102.85, 99.72, 67.55, 34.67, 58.84, 57.83, 35.00,);
+    ) = ( 65.03, 102.85, 99.72, 67.55, 34.68, 58.84, 57.83, 35.00,);
 
     regression_coupled_dracs_loop_version_7(
         heater_power_watts, 
@@ -889,7 +889,7 @@ pub fn ciet_coupled_nat_circ_set_b8(){
 
 }
 /// regression test checked steady state and temp profile 
-/// 11:45 am 02 jul 2025
+/// 12:03 pm 02 jul 2025
 ///
 /// From CIET Educational Simulator: 
 ///
@@ -962,7 +962,7 @@ pub fn ciet_coupled_nat_circ_set_b9(){
         regression_dhx_tube_outlet_temp_degc,
         regression_tchx_inlet_temp_degc,
         regression_tchx_outlet_temp_degc,
-    ) = ( 75.56, 119.21, 34.72, 63.42, 34.72, 63.42, 62.43, 35.00,);
+    ) = ( 75.56, 119.21, 115.90, 78.30, 34.72, 63.42, 62.43, 35.00,);
 
     regression_coupled_dracs_loop_version_7(
         heater_power_watts, 

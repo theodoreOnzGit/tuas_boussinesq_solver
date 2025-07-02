@@ -1,4 +1,6 @@
-
+/// This test attempted to tweak the inner tube nusselt number
+/// in order to obtain the correct dhx inlet temperature 
+/// 
 #[test]
 pub fn hot_leg_nusselt_calibration_failed(){
     // checks hot leg to ambient calibration
