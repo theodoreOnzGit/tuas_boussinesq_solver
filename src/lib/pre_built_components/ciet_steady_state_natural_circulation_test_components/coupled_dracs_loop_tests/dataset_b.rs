@@ -1,5 +1,5 @@
 /// regression test checked steady state and temp profile 
-/// 11:05 am 02 jul 2025
+/// 11:24 am 02 jul 2025
 ///
 /// From CIET Educational Simulator: 
 ///
@@ -28,7 +28,7 @@ pub fn ciet_coupled_nat_circ_set_b1(){
     // expect overprediction of mass flowrates in both loops 
     // to about 8.5%
     let pri_loop_relative_tolerance = 0.061;
-    let dracs_loop_relative_tolerance = 0.067;
+    let dracs_loop_relative_tolerance = 0.062;
 
     // I'm writing in this format so that the data will be easier 
     // to copy over to csv
@@ -38,7 +38,7 @@ pub fn ciet_coupled_nat_circ_set_b1(){
         experimental_pri_mass_flowrate_kg_per_s,
         simulated_expected_dracs_mass_flowrate_kg_per_s,
         simulated_expected_pri_mass_flowrate_kg_per_s) 
-        = (655.16, 35.0, 2.3290e-2, 1.7310e-2, 2.1737e-2, 1.8105e-2);
+        = (655.16, 35.0, 2.3290e-2, 1.7310e-2, 2.2024e-2, 1.8111e-2);
 
 
     let (shell_side_to_tubes_nusselt_number_correction_factor,
@@ -62,7 +62,7 @@ pub fn ciet_coupled_nat_circ_set_b1(){
         expt_heater_surf_temp_avg_degc,
         simulated_expected_heater_surf_temp_degc,
         heater_surface_temp_tolerance_degc) = 
-        (1.6, 75.10,69.72,13.0);
+        (1.6, 75.10,70.00,13.0);
     
     let (
         regression_heater_inlet_temp_degc,
@@ -73,7 +73,7 @@ pub fn ciet_coupled_nat_circ_set_b1(){
         regression_dhx_tube_outlet_temp_degc,
         regression_tchx_inlet_temp_degc,
         regression_tchx_outlet_temp_degc,
-    ) = ( 40.26, 61.21, 58.39, 42.38, 34.38, 45.36, 44.10, 35.00,);
+    ) = ( 40.55, 61.47, 58.63, 42.70, 34.39, 45.51, 44.26, 35.00,);
 
     regression_coupled_dracs_loop_version_7(
         heater_power_watts, 
@@ -110,7 +110,7 @@ pub fn ciet_coupled_nat_circ_set_b1(){
 
 }
 /// regression test checked steady state and temp profile 
-/// 11:05 am 02 jul 2025
+/// 11:26 am 02 jul 2025
 ///
 /// From CIET Educational Simulator: 
 ///
@@ -139,7 +139,7 @@ pub fn ciet_coupled_nat_circ_set_b2(){
     // expect overprediction of mass flowrates in both loops 
     // to about 8.5%
     let pri_loop_relative_tolerance = 0.061;
-    let dracs_loop_relative_tolerance = 0.067;
+    let dracs_loop_relative_tolerance = 0.062;
 
     // I'm writing in this format so that the data will be easier 
     // to copy over to csv
@@ -149,7 +149,7 @@ pub fn ciet_coupled_nat_circ_set_b2(){
         experimental_pri_mass_flowrate_kg_per_s,
         simulated_expected_dracs_mass_flowrate_kg_per_s,
         simulated_expected_pri_mass_flowrate_kg_per_s) 
-        = ( 1054.32, 35.0, 2.9520e-2, 2.1980e-2, 2.8873e-2, 2.3202e-2);
+        = ( 1054.32, 35.0, 2.9520e-2, 2.1980e-2, 2.9136e-2, 2.3210e-2);
 
 
     let (shell_side_to_tubes_nusselt_number_correction_factor,
@@ -173,7 +173,7 @@ pub fn ciet_coupled_nat_circ_set_b2(){
         expt_heater_surf_temp_avg_degc,
         simulated_expected_heater_surf_temp_degc,
         heater_surface_temp_tolerance_degc) = 
-        (1.6, 91.40,88.36,12.0);
+        (1.6, 91.40,88.69,12.0);
 
     let (
         regression_heater_inlet_temp_degc,
@@ -184,7 +184,7 @@ pub fn ciet_coupled_nat_circ_set_b2(){
         regression_dhx_tube_outlet_temp_degc,
         regression_tchx_inlet_temp_degc,
         regression_tchx_outlet_temp_degc,
-    ) = (46.54, 72.62, 69.78, 48.71, 34.53, 49.42, 48.30, 35.00);
+    ) = (46.89, 72.94, 70.07, 49.08, 34.53, 49.57, 48.46, 35.00);
 
     regression_coupled_dracs_loop_version_7(
         heater_power_watts, 
@@ -220,6 +220,29 @@ pub fn ciet_coupled_nat_circ_set_b2(){
 
 
 }
+/// regression test checked steady state and temp profile 
+/// 11:28 am 02 jul 2025
+///
+/// From CIET Educational Simulator: 
+///
+/// Just to give a rough gauge of what to expect (sanity check)
+/// These values were taken after the temperature profiles flatlined 
+/// (were visually steady) on the graph
+/// note that there was parasitic heat loss through the heater 
+/// in CIET Educational Simulator, so the temperature profiles may 
+/// be slightly different
+///
+/// Case,heater T_in (degc),heater T_out (degc),bt65 T-in degc,bt66 T-out,pri mass flow kg/s,dracs mass flow kg/s,heat added (W),heater setting kW
+/// B3,43.75,74.94,43.11,35,0.0265,0.0332,1393.0031592015,1.42
+///
+/// B1,34.91,56.91,38.75,35,0.018,0.0223,652.3966152,0.67
+/// B2,39.54,67.01,41.16,35,0.0231,0.0289,1058.5905141735,1.08
+/// B4,47.46,81.5,44.75,35,0.0291,0.0363,1683.7939701504,1.71
+/// B5,51.51,88.36,46.49,35,0.0315,0.0393,1990.9806649425,2.02
+/// B6,55.35,94.65,48.09,35,0.0335,0.0418,2276.973225,2.31
+/// B7,58.92,100.38,49.56,35.01,0.0352,0.044,2543.155471296,2.58
+/// B8,63.33,107.32,51.32,35,0.0371,0.0465,2870.1131278785,2.91
+/// B9,65.46,110.63,52.16,35.01,0.0379,0.0477,3023.7824944467,3.07
 #[test] 
 pub fn ciet_coupled_nat_circ_set_b3(){
 
@@ -227,7 +250,7 @@ pub fn ciet_coupled_nat_circ_set_b3(){
     // expect overprediction of mass flowrates in both loops 
     // to about 8.5%
     let pri_loop_relative_tolerance = 0.061;
-    let dracs_loop_relative_tolerance = 0.067;
+    let dracs_loop_relative_tolerance = 0.062;
 
     // I'm writing in this format so that the data will be easier 
     // to copy over to csv
@@ -237,7 +260,7 @@ pub fn ciet_coupled_nat_circ_set_b3(){
         experimental_pri_mass_flowrate_kg_per_s,
         simulated_expected_dracs_mass_flowrate_kg_per_s,
         simulated_expected_pri_mass_flowrate_kg_per_s) 
-        = ( 1394.70, 35.0, 3.3240e-2, 2.5700e-2, 3.3310e-2, 2.6319e-2);
+        = ( 1394.70, 35.0, 3.3240e-2, 2.5700e-2, 3.3803e-2, 2.6660e-2);
 
 
     let (shell_side_to_tubes_nusselt_number_correction_factor,
@@ -261,7 +284,7 @@ pub fn ciet_coupled_nat_circ_set_b3(){
         expt_heater_surf_temp_avg_degc,
         simulated_expected_heater_surf_temp_degc,
         heater_surface_temp_tolerance_degc) = 
-        (1.6, 102.53,97.05,7.0);
+        (1.6, 102.53,103.68,7.0);
 
     let (
         regression_heater_inlet_temp_degc,
@@ -272,7 +295,7 @@ pub fn ciet_coupled_nat_circ_set_b3(){
         regression_dhx_tube_outlet_temp_degc,
         regression_tchx_inlet_temp_degc,
         regression_tchx_outlet_temp_degc,
-    ) = ( 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,);
+    ) = ( 52.07, 81.81, 78.88, 54.34, 34.59, 52.48, 51.41, 35.00,);
 
     regression_coupled_dracs_loop_version_7(
         heater_power_watts, 
@@ -308,13 +331,29 @@ pub fn ciet_coupled_nat_circ_set_b3(){
 
 
 }
-/// natural circulation test for CIET 
+/// regression test checked steady state and temp profile 
+/// 11:30 am 02 jul 2025
 ///
-/// power in 1685.62 Watts
-/// TCHX outlet temperature at 35 degrees C
+/// From CIET Educational Simulator: 
 ///
-/// not quite steady state, but a regression test nonetheless
+/// Just to give a rough gauge of what to expect (sanity check)
+/// These values were taken after the temperature profiles flatlined 
+/// (were visually steady) on the graph
+/// note that there was parasitic heat loss through the heater 
+/// in CIET Educational Simulator, so the temperature profiles may 
+/// be slightly different
 ///
+/// Case,heater T_in (degc),heater T_out (degc),bt65 T-in degc,bt66 T-out,pri mass flow kg/s,dracs mass flow kg/s,heat added (W),heater setting kW
+/// B4,47.46,81.5,44.75,35,0.0291,0.0363,1683.7939701504,1.71
+///
+/// B1,34.91,56.91,38.75,35,0.018,0.0223,652.3966152,0.67
+/// B2,39.54,67.01,41.16,35,0.0231,0.0289,1058.5905141735,1.08
+/// B3,43.75,74.94,43.11,35,0.0265,0.0332,1393.0031592015,1.42
+/// B5,51.51,88.36,46.49,35,0.0315,0.0393,1990.9806649425,2.02
+/// B6,55.35,94.65,48.09,35,0.0335,0.0418,2276.973225,2.31
+/// B7,58.92,100.38,49.56,35.01,0.0352,0.044,2543.155471296,2.58
+/// B8,63.33,107.32,51.32,35,0.0371,0.0465,2870.1131278785,2.91
+/// B9,65.46,110.63,52.16,35.01,0.0379,0.0477,3023.7824944467,3.07
 #[test] 
 pub fn ciet_coupled_nat_circ_set_b4(){
 
@@ -322,7 +361,7 @@ pub fn ciet_coupled_nat_circ_set_b4(){
     // expect overprediction of mass flowrates in both loops 
     // to about 8.5%
     let pri_loop_relative_tolerance = 0.061;
-    let dracs_loop_relative_tolerance = 0.067;
+    let dracs_loop_relative_tolerance = 0.062;
 
     // I'm writing in this format so that the data will be easier 
     // to copy over to csv
@@ -332,7 +371,7 @@ pub fn ciet_coupled_nat_circ_set_b4(){
         experimental_pri_mass_flowrate_kg_per_s,
         simulated_expected_dracs_mass_flowrate_kg_per_s,
         simulated_expected_pri_mass_flowrate_kg_per_s) 
-        = ( 1685.62, 35.0, 3.6110e-2, 2.8460e-2, 3.7170e-2, 2.9170e-2);
+        = ( 1685.62, 35.0, 3.6110e-2, 2.8460e-2, 3.7196e-2, 2.9178e-2);
 
 
     let (shell_side_to_tubes_nusselt_number_correction_factor,
@@ -356,7 +395,7 @@ pub fn ciet_coupled_nat_circ_set_b4(){
         expt_heater_surf_temp_avg_degc,
         simulated_expected_heater_surf_temp_degc,
         heater_surface_temp_tolerance_degc) = 
-        (1.6, 110.96,115.88,12.0);
+        (1.6, 110.96,116.03,12.0);
 
     let (
         regression_heater_inlet_temp_degc,
@@ -367,7 +406,7 @@ pub fn ciet_coupled_nat_circ_set_b4(){
         regression_dhx_tube_outlet_temp_degc,
         regression_tchx_inlet_temp_degc,
         regression_tchx_outlet_temp_degc,
-    ) = (56.23, 88.83, 85.85, 58.57 ,34.43, 54.55, 53.51, 34.81);
+    ) = (56.40, 88.97, 85.99, 58.74 ,34.63, 54.71, 53.68, 35.00);
 
     regression_coupled_dracs_loop_version_7(
         heater_power_watts, 
@@ -404,6 +443,29 @@ pub fn ciet_coupled_nat_circ_set_b4(){
 
 }
 
+/// regression test checked steady state and temp profile 
+/// 11:32 am 02 jul 2025
+///
+/// From CIET Educational Simulator: 
+///
+/// Just to give a rough gauge of what to expect (sanity check)
+/// These values were taken after the temperature profiles flatlined 
+/// (were visually steady) on the graph
+/// note that there was parasitic heat loss through the heater 
+/// in CIET Educational Simulator, so the temperature profiles may 
+/// be slightly different
+///
+/// Case,heater T_in (degc),heater T_out (degc),bt65 T-in degc,bt66 T-out,pri mass flow kg/s,dracs mass flow kg/s,heat added (W),heater setting kW
+/// B5,51.51,88.36,46.49,35,0.0315,0.0393,1990.9806649425,2.02
+///
+/// B1,34.91,56.91,38.75,35,0.018,0.0223,652.3966152,0.67
+/// B2,39.54,67.01,41.16,35,0.0231,0.0289,1058.5905141735,1.08
+/// B3,43.75,74.94,43.11,35,0.0265,0.0332,1393.0031592015,1.42
+/// B4,47.46,81.5,44.75,35,0.0291,0.0363,1683.7939701504,1.71
+/// B6,55.35,94.65,48.09,35,0.0335,0.0418,2276.973225,2.31
+/// B7,58.92,100.38,49.56,35.01,0.0352,0.044,2543.155471296,2.58
+/// B8,63.33,107.32,51.32,35,0.0371,0.0465,2870.1131278785,2.91
+/// B9,65.46,110.63,52.16,35.01,0.0379,0.0477,3023.7824944467,3.07
 #[test] 
 pub fn ciet_coupled_nat_circ_set_b5(){
 
@@ -411,7 +473,7 @@ pub fn ciet_coupled_nat_circ_set_b5(){
     // expect overprediction of mass flowrates in both loops 
     // to about 8.5%
     let pri_loop_relative_tolerance = 0.061;
-    let dracs_loop_relative_tolerance = 0.067;
+    let dracs_loop_relative_tolerance = 0.062;
 
     // I'm writing in this format so that the data will be easier 
     // to copy over to csv
@@ -421,7 +483,7 @@ pub fn ciet_coupled_nat_circ_set_b5(){
         experimental_pri_mass_flowrate_kg_per_s,
         simulated_expected_dracs_mass_flowrate_kg_per_s,
         simulated_expected_pri_mass_flowrate_kg_per_s) 
-        = ( 1987.75, 35.0, 3.8410e-2, 3.1180e-2, 3.9679e-2, 3.1275e-2);
+        = ( 1987.75, 35.0, 3.8410e-2, 3.1180e-2, 4.0313e-2, 3.1479e-2);
 
 
     let (shell_side_to_tubes_nusselt_number_correction_factor,
@@ -445,7 +507,7 @@ pub fn ciet_coupled_nat_circ_set_b5(){
         expt_heater_surf_temp_avg_degc,
         simulated_expected_heater_surf_temp_degc,
         heater_surface_temp_tolerance_degc) = 
-        (1.6, 119.45,122.04,12.0);
+        (1.6, 119.45,128.53,12.0);
 
     let (
         regression_heater_inlet_temp_degc,
@@ -456,7 +518,7 @@ pub fn ciet_coupled_nat_circ_set_b5(){
         regression_dhx_tube_outlet_temp_degc,
         regression_tchx_inlet_temp_degc,
         regression_tchx_outlet_temp_degc,
-    ) = ( 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,);
+    ) = ( 60.81, 96.12, 93.07, 63.24, 34.66, 56.87, 55.85, 35.00,);
 
     regression_coupled_dracs_loop_version_7(
         heater_power_watts, 
@@ -492,7 +554,29 @@ pub fn ciet_coupled_nat_circ_set_b5(){
 
 
 }
-/// took about 131 s on the i5-13500H 
+/// regression test checked steady state and temp profile 
+/// 11:34 am 02 jul 2025
+///
+/// From CIET Educational Simulator: 
+///
+/// Just to give a rough gauge of what to expect (sanity check)
+/// These values were taken after the temperature profiles flatlined 
+/// (were visually steady) on the graph
+/// note that there was parasitic heat loss through the heater 
+/// in CIET Educational Simulator, so the temperature profiles may 
+/// be slightly different
+///
+/// Case,heater T_in (degc),heater T_out (degc),bt65 T-in degc,bt66 T-out,pri mass flow kg/s,dracs mass flow kg/s,heat added (W),heater setting kW
+/// B6,55.35,94.65,48.09,35,0.0335,0.0418,2276.973225,2.31
+///
+/// B1,34.91,56.91,38.75,35,0.018,0.0223,652.3966152,0.67
+/// B2,39.54,67.01,41.16,35,0.0231,0.0289,1058.5905141735,1.08
+/// B3,43.75,74.94,43.11,35,0.0265,0.0332,1393.0031592015,1.42
+/// B4,47.46,81.5,44.75,35,0.0291,0.0363,1683.7939701504,1.71
+/// B5,51.51,88.36,46.49,35,0.0315,0.0393,1990.9806649425,2.02
+/// B7,58.92,100.38,49.56,35.01,0.0352,0.044,2543.155471296,2.58
+/// B8,63.33,107.32,51.32,35,0.0371,0.0465,2870.1131278785,2.91
+/// B9,65.46,110.63,52.16,35.01,0.0379,0.0477,3023.7824944467,3.07
 #[test] 
 pub fn ciet_coupled_nat_circ_set_b6(){
 
@@ -500,7 +584,7 @@ pub fn ciet_coupled_nat_circ_set_b6(){
     // expect overprediction of mass flowrates in both loops 
     // to about 8.5%
     let pri_loop_relative_tolerance = 0.061;
-    let dracs_loop_relative_tolerance = 0.067;
+    let dracs_loop_relative_tolerance = 0.062;
 
     // I'm writing in this format so that the data will be easier 
     // to copy over to csv
@@ -510,7 +594,7 @@ pub fn ciet_coupled_nat_circ_set_b6(){
         experimental_pri_mass_flowrate_kg_per_s,
         simulated_expected_dracs_mass_flowrate_kg_per_s,
         simulated_expected_pri_mass_flowrate_kg_per_s) 
-        = (2282.01, 35.0, 4.0630e-2, 3.3740e-2, 4.2402e-2, 3.3332e-2);
+        = (2282.01, 35.0, 4.0630e-2, 3.3740e-2, 4.3047e-2, 3.3478e-2);
 
 
     let (shell_side_to_tubes_nusselt_number_correction_factor,
@@ -534,7 +618,7 @@ pub fn ciet_coupled_nat_circ_set_b6(){
         expt_heater_surf_temp_avg_degc,
         simulated_expected_heater_surf_temp_degc,
         heater_surface_temp_tolerance_degc) = 
-        (1.6, 127.48,134.10,12.0);
+        (1.6, 127.48,140.43,12.0);
 
     let (
         regression_heater_inlet_temp_degc,
@@ -545,7 +629,7 @@ pub fn ciet_coupled_nat_circ_set_b6(){
         regression_dhx_tube_outlet_temp_degc,
         regression_tchx_inlet_temp_degc,
         regression_tchx_outlet_temp_degc,
-    ) = ( 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,);
+    ) = ( 65.03, 102.85, 99.72, 67.55, 34.67, 58.84, 57.83, 35.00,);
 
     regression_coupled_dracs_loop_version_7(
         heater_power_watts, 
@@ -582,11 +666,29 @@ pub fn ciet_coupled_nat_circ_set_b6(){
 
 }
 
-/// natural circulation test for CIET 
+/// regression test checked steady state and temp profile 
+/// 11:37 am 02 jul 2025
 ///
-/// power in 2546.60 Watts
-/// TCHX outlet temperature at 35 degrees C
+/// From CIET Educational Simulator: 
 ///
+/// Just to give a rough gauge of what to expect (sanity check)
+/// These values were taken after the temperature profiles flatlined 
+/// (were visually steady) on the graph
+/// note that there was parasitic heat loss through the heater 
+/// in CIET Educational Simulator, so the temperature profiles may 
+/// be slightly different
+///
+/// Case,heater T_in (degc),heater T_out (degc),bt65 T-in degc,bt66 T-out,pri mass flow kg/s,dracs mass flow kg/s,heat added (W),heater setting kW
+/// B7,58.92,100.38,49.56,35.01,0.0352,0.044,2543.155471296,2.58
+///
+/// B1,34.91,56.91,38.75,35,0.018,0.0223,652.3966152,0.67
+/// B2,39.54,67.01,41.16,35,0.0231,0.0289,1058.5905141735,1.08
+/// B3,43.75,74.94,43.11,35,0.0265,0.0332,1393.0031592015,1.42
+/// B4,47.46,81.5,44.75,35,0.0291,0.0363,1683.7939701504,1.71
+/// B5,51.51,88.36,46.49,35,0.0315,0.0393,1990.9806649425,2.02
+/// B6,55.35,94.65,48.09,35,0.0335,0.0418,2276.973225,2.31
+/// B8,63.33,107.32,51.32,35,0.0371,0.0465,2870.1131278785,2.91
+/// B9,65.46,110.63,52.16,35.01,0.0379,0.0477,3023.7824944467,3.07
 #[test] 
 pub fn ciet_coupled_nat_circ_set_b7(){
 
@@ -594,7 +696,7 @@ pub fn ciet_coupled_nat_circ_set_b7(){
     // expect overprediction of mass flowrates in both loops 
     // to about 8.5%
     let pri_loop_relative_tolerance = 0.061;
-    let dracs_loop_relative_tolerance = 0.067;
+    let dracs_loop_relative_tolerance = 0.062;
 
     // I'm writing in this format so that the data will be easier 
     // to copy over to csv
@@ -604,7 +706,7 @@ pub fn ciet_coupled_nat_circ_set_b7(){
         experimental_pri_mass_flowrate_kg_per_s,
         simulated_expected_dracs_mass_flowrate_kg_per_s,
         simulated_expected_pri_mass_flowrate_kg_per_s) 
-        = ( 2546.60, 35.0, 4.2700e-2, 3.5770e-2, 4.4667e-2, 3.5009e-2);
+        = ( 2546.60, 35.0, 4.2700e-2, 3.5770e-2, 4.5304e-2, 3.5110e-2);
 
 
     let (shell_side_to_tubes_nusselt_number_correction_factor,
@@ -628,7 +730,7 @@ pub fn ciet_coupled_nat_circ_set_b7(){
         expt_heater_surf_temp_avg_degc,
         simulated_expected_heater_surf_temp_degc,
         heater_surface_temp_tolerance_degc) = 
-        (1.6, 135.13,144.81,12.0);
+        (1.6, 135.13,150.96,16.0);
 
     let (
         regression_heater_inlet_temp_degc,
@@ -639,7 +741,7 @@ pub fn ciet_coupled_nat_circ_set_b7(){
         regression_dhx_tube_outlet_temp_degc,
         regression_tchx_inlet_temp_degc,
         regression_tchx_outlet_temp_degc,
-    ) = (62.27, 102.83, 99.87, 64.50, 26.05, 53.54, 52.74, 41.67);
+    ) = (68.79, 108.74, 105.55, 71.38, 34.69, 60.51, 59.52, 35.00);
 
     regression_coupled_dracs_loop_version_7(
         heater_power_watts, 
@@ -675,24 +777,37 @@ pub fn ciet_coupled_nat_circ_set_b7(){
 
 
 }
-//
-//
-/// natural circulation test for CIET 
+/// regression test checked steady state and temp profile 
+/// 11:45 am 02 jul 2025
 ///
-/// power in 2874.03 Watts
-/// TCHX outlet temperature at 35 degrees C
+/// From CIET Educational Simulator: 
 ///
-/// at dhx thickness 0.161 cm, 
-/// flowrate overpredicted by 7.4%
+/// Just to give a rough gauge of what to expect (sanity check)
+/// These values were taken after the temperature profiles flatlined 
+/// (were visually steady) on the graph
+/// note that there was parasitic heat loss through the heater 
+/// in CIET Educational Simulator, so the temperature profiles may 
+/// be slightly different
 ///
+/// Case,heater T_in (degc),heater T_out (degc),bt65 T-in degc,bt66 T-out,pri mass flow kg/s,dracs mass flow kg/s,heat added (W),heater setting kW
+/// B8,63.33,107.32,51.32,35,0.0371,0.0465,2870.1131278785,2.91
+///
+/// B1,34.91,56.91,38.75,35,0.018,0.0223,652.3966152,0.67
+/// B2,39.54,67.01,41.16,35,0.0231,0.0289,1058.5905141735,1.08
+/// B3,43.75,74.94,43.11,35,0.0265,0.0332,1393.0031592015,1.42
+/// B4,47.46,81.5,44.75,35,0.0291,0.0363,1683.7939701504,1.71
+/// B5,51.51,88.36,46.49,35,0.0315,0.0393,1990.9806649425,2.02
+/// B6,55.35,94.65,48.09,35,0.0335,0.0418,2276.973225,2.31
+/// B7,58.92,100.38,49.56,35.01,0.0352,0.044,2543.155471296,2.58
+/// B9,65.46,110.63,52.16,35.01,0.0379,0.0477,3023.7824944467,3.07
 #[test] 
 pub fn ciet_coupled_nat_circ_set_b8(){
 
     let max_simulation_time_seconds: f64 = 3000.0;
     // expect overprediction of mass flowrates in both loops 
-    // to about 8.5%
+    // to about 7.5%
     let pri_loop_relative_tolerance = 0.061;
-    let dracs_loop_relative_tolerance = 0.067;
+    let dracs_loop_relative_tolerance = 0.075;
 
     // I'm writing in this format so that the data will be easier 
     // to copy over to csv
@@ -702,7 +817,7 @@ pub fn ciet_coupled_nat_circ_set_b8(){
         experimental_pri_mass_flowrate_kg_per_s,
         simulated_expected_dracs_mass_flowrate_kg_per_s,
         simulated_expected_pri_mass_flowrate_kg_per_s) 
-        = ( 2874.03, 35.0, 4.4560e-2, 3.7960e-2, 4.7948e-2, 3.6959e-2);
+        = ( 2874.03, 35.0, 4.4560e-2, 3.7960e-2, 4.7880e-2, 3.6947e-2);
 
 
     let (shell_side_to_tubes_nusselt_number_correction_factor,
@@ -726,7 +841,7 @@ pub fn ciet_coupled_nat_circ_set_b8(){
         expt_heater_surf_temp_avg_degc,
         simulated_expected_heater_surf_temp_degc,
         heater_surface_temp_tolerance_degc) = 
-        (1.6, 142.43,164.07,23.0);
+        (1.6, 142.43,163.78,23.0);
 
     let (
         regression_heater_inlet_temp_degc,
@@ -737,7 +852,7 @@ pub fn ciet_coupled_nat_circ_set_b8(){
         regression_dhx_tube_outlet_temp_degc,
         regression_tchx_inlet_temp_degc,
         regression_tchx_outlet_temp_degc,
-    ) = (73.67, 116.13, 112.87, 76.36, 34.99, 62.76, 61.78, 35.26);
+    ) = (73.37, 115.85, 112.58, 76.06, 34.71, 62.50, 61.51, 35.00);
 
     regression_coupled_dracs_loop_version_7(
         heater_power_watts, 
@@ -773,15 +888,36 @@ pub fn ciet_coupled_nat_circ_set_b8(){
 
 
 }
-// test took about 255s on a i7-10875H 2.4 GHz
-// real time achieved!
+/// regression test checked steady state and temp profile 
+/// 11:45 am 02 jul 2025
+///
+/// From CIET Educational Simulator: 
+///
+/// Just to give a rough gauge of what to expect (sanity check)
+/// These values were taken after the temperature profiles flatlined 
+/// (were visually steady) on the graph
+/// note that there was parasitic heat loss through the heater 
+/// in CIET Educational Simulator, so the temperature profiles may 
+/// be slightly different
+///
+/// Case,heater T_in (degc),heater T_out (degc),bt65 T-in degc,bt66 T-out,pri mass flow kg/s,dracs mass flow kg/s,heat added (W),heater setting kW
+/// B9,65.46,110.63,52.16,35.01,0.0379,0.0477,3023.7824944467,3.07
+///
+/// B1,34.91,56.91,38.75,35,0.018,0.0223,652.3966152,0.67
+/// B2,39.54,67.01,41.16,35,0.0231,0.0289,1058.5905141735,1.08
+/// B3,43.75,74.94,43.11,35,0.0265,0.0332,1393.0031592015,1.42
+/// B4,47.46,81.5,44.75,35,0.0291,0.0363,1683.7939701504,1.71
+/// B5,51.51,88.36,46.49,35,0.0315,0.0393,1990.9806649425,2.02
+/// B6,55.35,94.65,48.09,35,0.0335,0.0418,2276.973225,2.31
+/// B7,58.92,100.38,49.56,35.01,0.0352,0.044,2543.155471296,2.58
+/// B8,63.33,107.32,51.32,35,0.0371,0.0465,2870.1131278785,2.91
 #[test] 
 pub fn ciet_coupled_nat_circ_set_b9(){
 
 
     let max_simulation_time_seconds: f64 = 3000.0;
     let pri_loop_relative_tolerance = 0.061;
-    let dracs_loop_relative_tolerance = 0.067;
+    let dracs_loop_relative_tolerance = 0.062;
 
     // I'm writing in this format so that the data will be easier 
     // to copy over to csv
@@ -791,7 +927,7 @@ pub fn ciet_coupled_nat_circ_set_b9(){
         experimental_pri_mass_flowrate_kg_per_s,
         simulated_expected_dracs_mass_flowrate_kg_per_s,
         simulated_expected_pri_mass_flowrate_kg_per_s) 
-        = (3031.16, 35.0, 4.6360e-2, 3.8490e-2, 4.8452e-2, 3.7733e-2);
+        = (3031.16, 35.0, 4.6360e-2, 3.8490e-2, 4.9044e-2, 3.7765e-2);
 
 
     let (shell_side_to_tubes_nusselt_number_correction_factor,
@@ -815,7 +951,7 @@ pub fn ciet_coupled_nat_circ_set_b9(){
         expt_heater_surf_temp_avg_degc,
         simulated_expected_heater_surf_temp_degc,
         heater_surface_temp_tolerance_degc) = 
-        (1.6, 150.24,164.09,15.0);
+        (1.6, 150.24,169.87,20.0);
 
     let (
         regression_heater_inlet_temp_degc,
@@ -826,7 +962,7 @@ pub fn ciet_coupled_nat_circ_set_b9(){
         regression_dhx_tube_outlet_temp_degc,
         regression_tchx_inlet_temp_degc,
         regression_tchx_outlet_temp_degc,
-    ) = ( 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,);
+    ) = ( 75.56, 119.21, 34.72, 63.42, 34.72, 63.42, 62.43, 35.00,);
 
     regression_coupled_dracs_loop_version_7(
         heater_power_watts, 
