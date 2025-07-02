@@ -244,6 +244,10 @@ pub fn outer_cylinder_to_annular_end_ring_view_factor(
 
 
 
+/// basically i'm asserting that the view factors for annular cylinders 
+/// for the outer cylinder should sum to one
+///
+/// This is basic view factor algebra for radiation heat transfer
 #[cfg(test)]
 #[test]
 pub fn cocentric_cylinders_view_factor_shld_equal_one_for_outer_cyl(){

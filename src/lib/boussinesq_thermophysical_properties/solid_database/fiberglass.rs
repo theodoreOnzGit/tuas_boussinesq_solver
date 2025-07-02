@@ -253,6 +253,11 @@ pub (crate) fn fiberglass_spline_temp_attempt_1_from_specific_enthalpy(
 
 }
 
+/// test of a spline function for fibreglass
+/// that is, temperatures from enthalpy required iterations,
+/// I'm trying to circumvent that 
+///
+/// But I eventually decided against using it in the main library
 #[test]
 pub fn fiberglass_temperature_from_enthalpy_test_spline_1(){
     // we'll test temperature at 375K 
