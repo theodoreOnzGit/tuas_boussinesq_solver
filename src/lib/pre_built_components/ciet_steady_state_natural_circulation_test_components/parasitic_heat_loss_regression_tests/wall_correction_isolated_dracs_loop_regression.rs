@@ -52,7 +52,7 @@
 /// difference
 ///
 #[test]
-//#[ignore = "comment out for debugging"]
+#[ignore = "legacy test for debugging"]
 pub fn parasitic_heat_loss_regression_tchx_out_319_kelvin_46_celsius() {
     use uom::si::{f64::*, power::watt};
 

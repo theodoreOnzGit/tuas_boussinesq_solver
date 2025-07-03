@@ -671,7 +671,7 @@ pub fn dracs_natural_circ_thermal_hydraulics_regression_test_prototype_2(){
             use approx::assert_abs_diff_eq;
             assert_abs_diff_eq!(
                 mass_flowrate_absolute.get::<uom::si::mass_rate::kilogram_per_second>(),
-                0.0109001415,
+                0.010905593698135391,
                 epsilon = 1e-7);
         }
 

@@ -1,4 +1,10 @@
-
+/// c1 test for calibration set 
+///
+/// version 2 of coupled DRACS loop 
+///
+/// for version 2, simple calibration is done
+/// that is, STHE calibration and parasitic heat loss calibration over the loop 
+/// the vertical TCHX is not split into equal halves
 #[test] 
 pub fn regression_long_test_calibrated_ver2_set_c1(){
     use regression_coupled_dracs_loop_version_2::*;
@@ -58,6 +64,13 @@ pub fn regression_long_test_calibrated_ver2_set_c1(){
 
 
 }
+/// c2 test for calibration set 
+///
+/// version 2 of coupled DRACS loop 
+///
+/// for version 2, simple calibration is done
+/// that is, STHE calibration and parasitic heat loss calibration over the loop 
+/// the vertical TCHX is not split into equal halves
 #[test] 
 pub fn regression_long_test_calibrated_ver2_set_c2(){
     use regression_coupled_dracs_loop_version_2::*;
@@ -117,6 +130,13 @@ pub fn regression_long_test_calibrated_ver2_set_c2(){
 
 
 }
+/// c3 test for calibration set 
+///
+/// version 2 of coupled DRACS loop 
+///
+/// for version 2, simple calibration is done
+/// that is, STHE calibration and parasitic heat loss calibration over the loop 
+/// the vertical TCHX is not split into equal halves
 #[test] 
 pub fn regression_long_test_calibrated_ver2_set_c3(){
     use regression_coupled_dracs_loop_version_2::*;
@@ -176,6 +196,13 @@ pub fn regression_long_test_calibrated_ver2_set_c3(){
 
 
 }
+/// c4 test for calibration set 
+///
+/// version 2 of coupled DRACS loop 
+///
+/// for version 2, simple calibration is done
+/// that is, STHE calibration and parasitic heat loss calibration over the loop 
+/// the vertical TCHX is not split into equal halves
 #[test] 
 pub fn regression_long_test_calibrated_ver2_set_c4(){
     use regression_coupled_dracs_loop_version_2::*;
@@ -236,6 +263,13 @@ pub fn regression_long_test_calibrated_ver2_set_c4(){
 
 }
 
+/// c5 test for calibration set 
+///
+/// version 2 of coupled DRACS loop 
+///
+/// for version 2, simple calibration is done
+/// that is, STHE calibration and parasitic heat loss calibration over the loop 
+/// the vertical TCHX is not split into equal halves
 #[test] 
 pub fn regression_long_test_calibrated_ver2_set_c5(){
     use regression_coupled_dracs_loop_version_2::*;
@@ -295,6 +329,13 @@ pub fn regression_long_test_calibrated_ver2_set_c5(){
 
 
 }
+/// c6 test for calibration set 
+///
+/// version 2 of coupled DRACS loop 
+///
+/// for version 2, simple calibration is done
+/// that is, STHE calibration and parasitic heat loss calibration over the loop 
+/// the vertical TCHX is not split into equal halves
 #[test] 
 pub fn regression_long_test_calibrated_ver2_set_c6(){
     use regression_coupled_dracs_loop_version_2::*;
@@ -355,6 +396,13 @@ pub fn regression_long_test_calibrated_ver2_set_c6(){
 
 }
 
+/// c7 test for calibration set 
+///
+/// version 2 of coupled DRACS loop 
+///
+/// for version 2, simple calibration is done
+/// that is, STHE calibration and parasitic heat loss calibration over the loop 
+/// the vertical TCHX is not split into equal halves
 #[test] 
 pub fn regression_long_test_calibrated_ver2_set_c7(){
     use regression_coupled_dracs_loop_version_2::*;
@@ -416,6 +464,13 @@ pub fn regression_long_test_calibrated_ver2_set_c7(){
 }
 //
 //
+/// c8 test for calibration set 
+///
+/// version 2 of coupled DRACS loop 
+///
+/// for version 2, simple calibration is done
+/// that is, STHE calibration and parasitic heat loss calibration over the loop 
+/// the vertical TCHX is not split into equal halves
 #[test] 
 pub fn regression_long_test_calibrated_ver2_set_c8(){
     use regression_coupled_dracs_loop_version_2::*;
@@ -475,8 +530,15 @@ pub fn regression_long_test_calibrated_ver2_set_c8(){
 
 
 }
-// on i7-10875H 1.5 GHz clock speed, (throttled down)
-// test time is ~177 s
+/// on i7-10875H 1.5 GHz clock speed, (throttled down)
+/// test time is ~177 s
+/// c9 test for calibration set 
+///
+/// version 2 of coupled DRACS loop 
+///
+/// for version 2, simple calibration is done
+/// that is, STHE calibration and parasitic heat loss calibration over the loop 
+/// the vertical TCHX is not split into equal halves
 #[test] 
 pub fn regression_long_test_calibrated_ver2_set_c9(){
     use regression_coupled_dracs_loop_version_2::*;

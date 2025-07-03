@@ -2,7 +2,8 @@ use uom::si::length::meter;
 
 use crate::pre_built_components::ciet_isothermal_test_components::new_heated_section_version_1_label_1_without_inner_annular_pipe;
 
-
+/// contains tests for transient validation of insulated porous media 
+/// using experimental data, eg. Zweibaum's experimental data
 pub mod transient_validation;
 
 /// based on zweibaum's test data in page 46-47 of his dissertation 
@@ -414,6 +415,8 @@ pub fn regression_heater_v1_porous_and_non_porous_conductance_pipe_to_insulation
 
 }
 
+/// checks if hydraulic diameter of heater is correct 
+/// with respect to Zweibaum's paper
 #[test]
 pub fn assert_if_hydraulic_diameter_of_heater_v1_is_correct(){
 
@@ -856,6 +859,12 @@ pub fn regression_heater_v2_insulated_and_non_insulated_conductance_twisted_tape
 
 }
 
+/// checks if number of nodes function is working correctly
+/// for Zweibaum's heater
+/// regression test
+///
+/// but also tests for InsulatedPorousMediaFluidComponent 
+/// in general
 #[test] 
 pub fn check_if_number_of_nodes_is_correct(){
 

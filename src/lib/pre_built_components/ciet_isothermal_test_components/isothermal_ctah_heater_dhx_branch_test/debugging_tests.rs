@@ -1,7 +1,10 @@
 
 
+/// this is a isothermal pressure drop 
+/// regression test 
+/// get pressure change from mass flowrate
 #[test] 
-pub fn dhx_branch_pressure_change_test(){
+pub fn dhx_branch_pressure_change_regression_test(){
 
     // let's construct the branches with test pressures and obtain 
     // mass flowrates

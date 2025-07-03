@@ -1,26 +1,26 @@
 
 
-// for coupled dracs loop, first thing first is to 
-// debug parallel bare pipes 
-//
-// first thing first, heat addition 
-//
-// suppose we have 9 kW of heat into one pipe 
-// at 0.18 kg/s TherminolVP1
-//
-// whether you have the flow split into 1 single pipe or 10 parallel 
-// pipes should not matter. After a set time, the temperature should 
-// be the same. presuming of course, no heat loss to environment
-//
-// I'm taking dhx tube side 30b as a reference
-// but setting heat transfer to ambient as 0
-//
-// then I'll do the parallel tube setup, and add 20 tubes. 
-// the mass flow and heater power is increased by 20 times. 
-//
-// the heating time is 15 s long, both outlet temperatures should be 
-// the same
-//
+/// for coupled dracs loop, first thing first is to 
+/// debug parallel bare pipes 
+///
+/// first thing first, heat addition 
+///
+/// suppose we have 9 kW of heat into one pipe 
+/// at 0.18 kg/s TherminolVP1
+///
+/// whether you have the flow split into 1 single pipe or 10 parallel 
+/// pipes should not matter. After a set time, the temperature should 
+/// be the same. presuming of course, no heat loss to environment
+///
+/// I'm taking dhx tube side 30b as a reference
+/// but setting heat transfer to ambient as 0
+///
+/// then I'll do the parallel tube setup, and add 20 tubes. 
+/// the mass flow and heater power is increased by 20 times. 
+///
+/// the heating time is 15 s long, both outlet temperatures should be 
+/// the same
+///
 #[test]
 pub fn parallel_bare_pipes_debugging_heat_addition(){
 
@@ -372,26 +372,26 @@ pub fn parallel_bare_pipes_debugging_heat_addition(){
 }
 
 
-//
-// first thing first, heat addition 
-//
-// suppose we have 9 kW of heat into one pipe 
-// at 0.18 kg/s TherminolVP1
-//
-// whether you have the flow split into 1 single pipe or 10 parallel 
-// pipes should not matter. After a set time, the temperature should 
-// be the same. presuming of course, no heat loss to environment
-//
-// I'm taking dhx tube side 30b as a reference
-// but setting heat transfer to ambient as 1000 W/(m2 K)
-//
-//
-// then I'll do the parallel tube setup, and add 20 tubes. 
-// the mass flow and heater power is increased by 20 times. 
-//
-// the heating time is 25 s long, both outlet temperatures should be 
-// the same
-//
+///
+/// first thing first, heat addition 
+///
+/// suppose we have 9 kW of heat into one pipe 
+/// at 0.18 kg/s TherminolVP1
+///
+/// whether you have the flow split into 1 single pipe or 10 parallel 
+/// pipes should not matter. After a set time, the temperature should 
+/// be the same. presuming of course, no heat loss to environment
+///
+/// I'm taking dhx tube side 30b as a reference
+/// but setting heat transfer to ambient as 1000 W/(m2 K)
+///
+///
+/// then I'll do the parallel tube setup, and add 20 tubes. 
+/// the mass flow and heater power is increased by 20 times. 
+///
+/// the heating time is 25 s long, both outlet temperatures should be 
+/// the same
+///
 #[test]
 pub fn parallel_bare_pipes_debugging_heat_addition_with_parasitic_heat_loss(){
 
@@ -745,34 +745,34 @@ pub fn parallel_bare_pipes_debugging_heat_addition_with_parasitic_heat_loss(){
 }
 
 
-//
-// next, cooling
-//
-// suppose we have 0 kW of heat into one pipe 
-// at 0.18 kg/s TherminolVP1
-//
-// inlet temperature is 80C
-//
-// whether you have the flow split into 1 single pipe or 10 parallel 
-// pipes should not matter. After a set time, the temperature should 
-// be the same. presuming of course, no heat loss to environment
-//
-// I'm taking dhx tube side 30b as a reference
-// but setting heat transfer to ambient as 1000 W/(m2 K)
-//
-//
-// then I'll do the parallel tube setup, and add 20 tubes. 
-// the mass flow and heater power is increased by 20 times. 
-//
-// the heating time is 5 s long, both outlet temperatures should be 
-// the same thermal inertia wise anyway
-//
-// the previous tests worked at 25s and 15s, but not 5s
-// disparity was great, likely thermal inertia problem
-//
-// thermal inertia seems buggy, especially from 4-8s for this case.
-// After that however, steady state values seem to work out just fine
-//
+///
+/// next, cooling
+///
+/// suppose we have 0 kW of heat into one pipe 
+/// at 0.18 kg/s TherminolVP1
+///
+/// inlet temperature is 80C
+///
+/// whether you have the flow split into 1 single pipe or 10 parallel 
+/// pipes should not matter. After a set time, the temperature should 
+/// be the same. presuming of course, no heat loss to environment
+///
+/// I'm taking dhx tube side 30b as a reference
+/// but setting heat transfer to ambient as 1000 W/(m2 K)
+///
+///
+/// then I'll do the parallel tube setup, and add 20 tubes. 
+/// the mass flow and heater power is increased by 20 times. 
+///
+/// the heating time is 5 s long, both outlet temperatures should be 
+/// the same thermal inertia wise anyway
+///
+/// the previous tests worked at 25s and 15s, but not 5s
+/// disparity was great, likely thermal inertia problem
+///
+/// thermal inertia seems buggy, especially from 4-8s for this case.
+/// After that however, steady state values seem to work out just fine
+///
 #[test]
 pub fn parallel_bare_pipes_debugging_parasitic_heat_loss_thermal_inertia(){
 
@@ -1128,6 +1128,11 @@ pub fn parallel_bare_pipes_debugging_parasitic_heat_loss_thermal_inertia(){
 
 }
 
+/// regression test, checks if parallel fluid components working 
+/// correctly
+///
+/// basically getting mass flowrate from pressure change and vice versa
+/// except now we have sevearl tubes in parallel
 #[test] 
 pub fn parallel_fluid_component_test(){
 

@@ -233,15 +233,17 @@ Result<AvailableEnergy,TuasLibError>{
 
 }
 
+/// this is just test to test the custom fluid enthalpy 
+/// checks if its working properly 
+
+/// first lets get hitec salt enthalpy at 550K 
+/// this specific function 
+/// assumes a lower bound temperature of 440K 
+///
+/// I used hitec specifc heat capacity function to integrate the enthalpy 
+/// using custom fluid enthalpy
 #[test]
 pub fn test_custom_fluid_enthalpy(){
-    // this is just test to test the custom fluid enthalpy 
-    // checks if its working properly 
-
-    // first lets get hitec salt enthalpy at 550K 
-    // this specific function 
-    // assumes a lower bound temperature of 440K 
-    //
 
     
     use super::hitec_nitrate_salt::*;
@@ -373,15 +375,17 @@ impl RootFindingProblem<1, 1, (f64, f64)> for CustomFluidTemperatureFromEnthalpy
 }
 
 
+/// this is just test to test the custom fluid enthalpy 
+/// checks if its working properly 
+
+/// first lets get hitec salt enthalpy at 550K 
+/// this specific function 
+/// assumes a lower bound temperature of 440K 
+///
+/// Note that this may be computationally expensive
+///
 #[test]
 pub fn test_custom_fluid_temperature_from_enthalpy(){
-    // this is just test to test the custom fluid enthalpy 
-    // checks if its working properly 
-
-    // first lets get hitec salt enthalpy at 550K 
-    // this specific function 
-    // assumes a lower bound temperature of 440K 
-    //
 
     
     use super::hitec_nitrate_salt::*;

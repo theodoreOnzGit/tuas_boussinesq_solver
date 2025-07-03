@@ -396,6 +396,14 @@ pub fn advance_timestep_fluid_node_array_pipe_high_peclet_number(
 
 }
 
+/// basically I'm trying to set up basic pipe calculations with 
+/// solid arrays and fluid arrays before I put them together into 
+/// an insulated fluid component
+///
+/// This prints out some output, but no assertions were done
+///
+/// It's more of the temperature profiles were manually checked in 
+/// my dissertation (I think)
 #[test]
 pub fn fluid_node_calculation_initial_test(){
 
@@ -906,8 +914,15 @@ pub fn fluid_node_calculation_initial_test(){
 
 }
 
+/// basically I'm trying to set up basic pipe calculations with 
+/// solid arrays and fluid arrays before I put them together into 
+/// an insulated fluid component
+///
+/// This prints out some output, but no assertions were done
+///
+/// this one deals specifically with backflow
 #[test]
-fn fluid_node_backflow_calculation_initial_test(){
+pub fn fluid_node_backflow_calculation_initial_test(){
 
     use std::{sync::{Arc, Mutex}, time::SystemTime, ops::{Deref, DerefMut}, thread};
 

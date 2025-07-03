@@ -111,13 +111,13 @@ pub fn steel_ss_304_l_ornl_specific_heat_capacity(
         specific_heat_capacity_val))
 }
 
+/// we're going to test thermal conductivity for steel,
+/// first at 500K for both the spline and the correlation 
+/// cp, we expect at 350K 
+/// 469.4894 J/(kg K)
 #[test]
 pub fn specific_heat_capacity_test_steel(){
 
-    // we're going to test thermal conductivity for steel,
-    // first at 500K for both the spline and the correlation 
-    // cp, we expect at 350K 
-    // 469.4894 J/(kg K)
 
     let thermal_cond_spline = steel_304_l_spline_specific_heat_capacity_ciet_zweibaum(
         ThermodynamicTemperature::new::<kelvin>(350.0));
@@ -340,6 +340,13 @@ pub fn steel_surf_roughness() -> Length{
     Length::new::<millimeter>(0.0457)
 }
 
+/// From:
+/// Zou, Ling, Rui Hu, and Anne Charpentier. SAM code validation 
+/// using the compact integral effects test (CIET) experimental data. 
+/// No. ANL/NSE-19/11. 
+/// Argonne National Lab.(ANL), Argonne, IL (United States), 2019.
+///
+/// Basically, the density is a fixed value
 #[test]
 pub fn density_test_steel(){
 
@@ -443,6 +450,11 @@ pub fn steel_ss_304_l_ornl_specific_enthalpy_graves(
     steel_enthalpy
 }
 
+/// specific enthalpys test using oak ridge national lab publication
+/// wolfram gives an enthalpy (assuming enthalpy is zero at zero 
+/// degrees C, 273.15 K)
+/// this is done using the Graves et al. 1991 version for cp
+/// 37.2524 j/g
 #[test]
 pub fn specific_enthalpy_test_steel_ornl(){
     // let's test specifc enthalpy at 350K 

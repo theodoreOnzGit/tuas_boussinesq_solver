@@ -233,6 +233,8 @@ pub fn heater_check_if_four_heater_test10(){
 
 }
 
+/// parasitic heat loss dry run one
+/// TODO: not done yet
 #[cfg(test)]
 #[test]
 pub fn parasitic_heat_loss_calibration_dry_run_1(){

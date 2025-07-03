@@ -335,20 +335,30 @@ pub fn min_temp_dowtherm_a() -> ThermodynamicTemperature {
 }
 
 
+/// tests the dynamic viscosity of Dowtherm A 
+/// against a certain fixed value 
+/// That is from a data sheet here:
+///
+/// https://www.dow.com/documents/176/176-01463-01-dowtherm-a-tds.pdf?iframe=true&
+///
+/// The value agrees to within 3% of the said value
 #[test]
 pub fn dynamic_viscosity_test_dowtherm_a(){
 
     use uom::si::pressure::atmosphere;
-    use uom::si::thermodynamic_temperature::kelvin;
     use crate::prelude::beta_testing::try_get_mu_viscosity;
+    use uom::si::dynamic_viscosity::millipascal_second;
     let dowtherm_a = Material::Liquid(LiquidMaterial::DowthermA);
-    let temperature = ThermodynamicTemperature::new::<kelvin>(350.0);
+    let temperature = ThermodynamicTemperature::new::<degree_celsius>(105.0);
     let pressure = Pressure::new::<atmosphere>(1.0);
 
-    let dynamic_viscosity = try_get_mu_viscosity(dowtherm_a, temperature, pressure);
+    let dynamic_viscosity_mpa_sec = 
+        try_get_mu_viscosity(dowtherm_a, temperature, pressure)
+        .unwrap()
+        .get::<millipascal_second>();
 
     approx::assert_relative_eq!(
-        0.001237,
-        dynamic_viscosity.unwrap().value,
-        max_relative=0.01);
+        0.91,
+        dynamic_viscosity_mpa_sec,
+        max_relative=0.03);
 }

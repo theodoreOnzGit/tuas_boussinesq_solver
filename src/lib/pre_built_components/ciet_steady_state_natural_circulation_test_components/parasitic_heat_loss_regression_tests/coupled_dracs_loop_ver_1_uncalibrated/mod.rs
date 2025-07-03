@@ -1,3 +1,8 @@
+/// quick test for coupled dracs loop uncalibrated test 
+///
+/// just checks if the thermal hydraulics calculations can function 
+/// without error (redundant now though... was used during early 
+/// stages of testing where coding was less complicated)
 #[cfg(test)]
 #[test]
 pub fn quick_test_uncalibrated_dracs_loop(){
@@ -17,6 +22,11 @@ pub fn quick_test_uncalibrated_dracs_loop(){
         dracs_loop_relative_tolerance,
         ).unwrap();
 }
+/// quick test for coupled dracs loop uncalibrated test 
+///
+/// just checks if the thermal hydraulics calculations can function 
+/// without error (redundant now though... was used during early 
+/// stages of testing where coding was less complicated)
 #[cfg(test)]
 #[test]
 pub fn long_test_uncalibrated_dracs_loop(){
@@ -38,6 +48,11 @@ pub fn long_test_uncalibrated_dracs_loop(){
         dracs_loop_relative_tolerance,
         ).unwrap();
 }
+/// quick test for coupled dracs loop uncalibrated test 
+///
+/// just checks if the thermal hydraulics calculations can function 
+/// without error (redundant now though... was used during early 
+/// stages of testing where coding was less complicated)
 #[cfg(test)]
 #[test]
 pub fn regression_long_test_uncalibrated_dracs_loop_set_c(){

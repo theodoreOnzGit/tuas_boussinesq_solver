@@ -192,25 +192,25 @@ TuasLibError>{
 }
 
 
+/// going to perform 1 test
+///
+/// From
+/// Romatoski, R. R., & Hu, L. W. (2017). Fluoride salt coolant properties 
+/// for nuclear reactor applications: A review. Annals 
+/// of Nuclear Energy, 109, 635-647.
+/// properties for a custom liquid material 
+/// not covered in the database
+///
+/// Figure 3 page 7, there is a graph providing some values of viscosity
+///
+/// at roughly 900K viscosity was 7.5 cP from the graph 
+/// (didn't use graphreader)
+///
+/// I'm going to use this to test 
+///
+///
 #[test]
 pub fn flibe_salt_test_viscosity(){
-    // going to perform 1 test
-    //
-    // From
-    // Romatoski, R. R., & Hu, L. W. (2017). Fluoride salt coolant properties 
-    // for nuclear reactor applications: A review. Annals 
-    // of Nuclear Energy, 109, 635-647.
-    // properties for a custom liquid material 
-    // not covered in the database
-    //
-    // Figure 3 page 7, there is a graph providing some values of viscosity
-    //
-    // at roughly 900K viscosity was 7.5 cP from the graph 
-    // (didn't use graphreader)
-    //
-    // I'm going to use this to test 
-    //
-    //
 
     use uom::si::thermodynamic_temperature::kelvin;
     use uom::si::dynamic_viscosity::centipoise;

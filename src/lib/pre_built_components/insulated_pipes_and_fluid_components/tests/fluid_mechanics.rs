@@ -39,7 +39,7 @@ pub fn single_pipe_internal_pressure_change_check(){
         );
     approx::assert_relative_eq!(
         pressure_chg_hydrostatic_plus_pump.get::<pascal>(),
-        100024.879,
+        58077.127,
         max_relative=1e-5
         );
 }

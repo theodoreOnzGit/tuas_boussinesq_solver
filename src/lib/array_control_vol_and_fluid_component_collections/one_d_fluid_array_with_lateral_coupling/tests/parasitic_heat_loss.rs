@@ -1432,6 +1432,9 @@ pub fn parasitic_heat_loss_integration_test_with_hte_9m(){
         );
 }
 
+/// gets specific heat capacity for therminol VP-1 at 95 degrees C
+/// this is a regression test 
+///
 #[cfg(test)]
 #[test]
 pub fn cp_for_therminol_vp_1(){

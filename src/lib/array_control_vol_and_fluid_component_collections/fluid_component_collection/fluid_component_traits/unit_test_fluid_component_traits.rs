@@ -1,5 +1,10 @@
 
-
+/// tests the implementation of a custom fluid component trait 
+///
+/// checks if getting pressure loss from a specified mass flowrate works 
+/// okay
+///
+/// regression test 
 #[test]
 pub fn test_custom_fluid_component_pressure_loss() -> Result<(),
 crate::tuas_lib_error::TuasLibError>{
@@ -109,6 +114,12 @@ crate::tuas_lib_error::TuasLibError>{
     Ok(())
 }
 
+/// tests the implementation of a custom fluid component trait 
+///
+/// checks if getting mass flowrate from pressure loss 
+/// okay
+///
+/// regression test 
 #[test]
 pub fn test_custom_fluid_component_mass_flow_from_pressure_loss() -> Result<(),
 crate::tuas_lib_error::TuasLibError>{
@@ -189,7 +200,7 @@ crate::tuas_lib_error::TuasLibError>{
             fluid_density, 
             test_component_object.loss_correlation).unwrap();
 
-        // expected pressure loss is 0.2 kg/s
+        // expected mass flowrate is 0.2 kg/s
         approx::assert_relative_eq!(
             expected_fluid_mass_flowrate.get::<kilogram_per_second>(),
             mass_flowrate.get::<kilogram_per_second>(),
@@ -207,7 +218,7 @@ crate::tuas_lib_error::TuasLibError>{
             fluid_density, 
             test_component_object.loss_correlation).unwrap();
 
-        // expected pressure loss is 0.2 kg/s
+        // expected mass flowrate is 0.2 kg/s
         approx::assert_relative_eq!(
             -expected_fluid_mass_flowrate.get::<kilogram_per_second>(),
             mass_flowrate.get::<kilogram_per_second>(),
@@ -218,7 +229,12 @@ crate::tuas_lib_error::TuasLibError>{
     Ok(())
 }
 
-
+/// tests the implementation of a custom fluid component trait 
+///
+/// checks if getting pressure change from mass flowrate is okay
+/// okay
+///
+/// regression test 
 #[test]
 pub fn test_custom_fluid_component_pressure_change() -> Result<(),
 crate::tuas_lib_error::TuasLibError>{
@@ -502,6 +518,12 @@ crate::tuas_lib_error::TuasLibError>{
     Ok(())
 }
 
+/// tests the implementation of a custom fluid component trait 
+///
+/// checks if getting mass flowrate from pressure change is okay
+/// okay
+///
+/// regression test 
 #[test]
 pub fn test_custom_fluid_component_mass_flowrate_from_pressure_change() -> Result<(),
 crate::tuas_lib_error::TuasLibError>{

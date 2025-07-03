@@ -5,11 +5,13 @@
 /// basically, for all smaller unit tests mean to debug the flow simulation
 pub mod debugging_tests;
 
+/// dhx ctah and heater branch regression test
+///
+/// the main difference with validation is that this 
+/// compares the results of the present solver to that of the 
+/// previous solver
 #[test]
 pub fn isothermal_dhx_ctah_and_heater_branch_code_to_code_verification_test(){
-    /// the main difference with validation is that this 
-    /// compares the results of the present solver to that of the 
-    /// previous solver
 
     // let's construct the branches with test pressures and obtain 
     // mass flowrates

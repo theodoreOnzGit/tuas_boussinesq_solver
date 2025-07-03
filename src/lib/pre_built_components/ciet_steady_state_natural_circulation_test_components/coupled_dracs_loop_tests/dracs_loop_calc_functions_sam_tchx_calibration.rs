@@ -1,3 +1,4 @@
+use uom::si::area::square_centimeter;
 use uom::si::f64::*;
 
 use crate::array_control_vol_and_fluid_component_collections::fluid_component_collection::fluid_component::FluidComponent;
@@ -11,6 +12,7 @@ array_control_vol_and_fluid_component_collections::
 fluid_component_collection::
 fluid_component_collection::FluidComponentCollectionMethods;
 use crate::pre_built_components::shell_and_tube_heat_exchanger::SimpleShellAndTubeHeatExchanger;
+use crate::prelude::beta_testing::FluidArray;
 use uom::ConstZero;
 
 use uom::si::thermodynamic_temperature::degree_celsius;
@@ -318,6 +320,7 @@ pub fn coupled_dracs_loop_link_up_components_sam_tchx_calibration(
                 HeatTransfer::ZERO;
             tchx_35b_1.heat_transfer_to_ambient = 
                 HeatTransfer::ZERO;
+            // changing this to direct heat addition.
             tchx_35b_2.heat_transfer_to_ambient = 
                 tchx_heat_transfer_coeff;
 
@@ -398,6 +401,58 @@ pub fn coupled_dracs_loop_link_up_components_sam_tchx_calibration(
                     mass_flowrate_clockwise, 
                     zero_power)
                 .unwrap();
+
+
+            // calculate the heat transfer UA as the following: 
+            let area = Area::new::<square_centimeter>(100.0);
+            let ua: ThermalConductance = 
+                area * tchx_heat_transfer_coeff;
+
+            let tchx_outlet_temperature: ThermodynamicTemperature = {
+
+                // the front of the tchx is connected to static mixer 
+                // 60 label 36
+                let tchx_35_b2_pipe_fluid_array_clone: FluidArray = 
+                    tchx_35b_2.pipe_fluid_array
+                    .clone()
+                    .try_into()
+                    .unwrap();
+
+                // take the front single cv temperature 
+                //
+                // front single cv temperature is defunct
+                // probably need to debug this
+
+                let tchx_35_b2_front_single_cv_temperature: ThermodynamicTemperature 
+                    = tchx_35_b2_pipe_fluid_array_clone
+                    .front_single_cv
+                    .temperature;
+
+
+
+                let _tchx_35b_2_array_temperature: Vec<ThermodynamicTemperature>
+                    = tchx_35b_2
+                    .pipe_fluid_array_temperature()
+                    .unwrap();
+
+                //dbg!(&tchx_35b_array_temperature);
+
+                tchx_35_b2_front_single_cv_temperature
+
+            };
+
+            let ctah_temperature_difference = 
+                TemperatureInterval::new::<uom::si::temperature_interval::kelvin>(
+                    tchx_outlet_temperature 
+                    .get::<degree_celsius>()
+                    - 
+                    tchx_35b_2
+                    .ambient_temperature
+                    .get::<degree_celsius>()
+                );
+            let _heat_addition_rate_to_tchx: Power = 
+                -ua * ctah_temperature_difference;
+
             tchx_35b_2
                 .lateral_and_miscellaneous_connections_no_wall_correction(
                     mass_flowrate_clockwise, 
