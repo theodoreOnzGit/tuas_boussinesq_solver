@@ -1,4 +1,22 @@
 ## v 0.0.10
+
+I redid all the validation tests for coupled natural circulation in CIET,
+they did not reach steady state previously with timestep of 0.5s and 
+simulation time of 6300s. Upon debugging, I found that in the CIET 
+Educational Simulator, they reached steady state within 2000-2500s with 
+timestep of 0.1s. One likely cause is due to the analog controller in use,
+which exhibits some oscillatory instabilities at small timesteps. Courant 
+number is not likely to be the issue because simulations are stable at 
+0.5s for isolated DRACS loop natural circulation. 
+
+I did not throughly investigate the cause, but now the natural circulation 
+loops do have regression tests, and the TCHX outlet temperatures were checked 
+to be the set point temperature to within 0.01K. 
+
+Moreover, the CIET Educational Simulator is now validated using CIET 
+natural circulation experimental data for coupled DRACS loops using datasets 
+A, B and C. 
+
 ## v 0.0.9
 
 Major thing in this release is the testing of FLiBe piping for FHRs. 
