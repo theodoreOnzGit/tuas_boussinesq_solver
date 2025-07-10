@@ -2,7 +2,13 @@
 
 Firstly, I found that some of the coupled natural circulation datasets 
 in set c, b and a still had parasitic heat loss from dhx at 45 W/(m^2 K)
-I've updated those tests to reflect the correct results.
+I've updated those tests to reflect the correct results. 
+
+I found that in changing the heat transfer coefficient on the DHX surface 
+from 45 W/(m^2 K) to 33.9 W/(m^2 K) there was no appreciable difference 
+in temperature profile or mass flowrate. All regression tests passed. It 
+is likely the insulation and other layers which dominate the thermal 
+resistance.
 
 ## v 0.0.10
 
