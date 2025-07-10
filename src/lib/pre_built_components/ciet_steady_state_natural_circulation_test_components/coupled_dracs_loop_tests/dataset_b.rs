@@ -45,7 +45,7 @@ pub fn ciet_coupled_nat_circ_set_b1(){
         insulation_thickness_regression_cm,
         shell_side_to_ambient_nusselt_correction_factor,
         dhx_heat_loss_to_ambient_watts_per_m2_kelvin) 
-        = (4.7,0.161,10.3,45.0);
+        = (4.7,0.161,10.3,33.9);
 
     let ( pri_loop_cold_leg_insulation_thickness_cm,
         pri_loop_hot_leg_insulation_thickness_cm,
@@ -156,7 +156,7 @@ pub fn ciet_coupled_nat_circ_set_b2(){
         insulation_thickness_regression_cm,
         shell_side_to_ambient_nusselt_correction_factor,
         dhx_heat_loss_to_ambient_watts_per_m2_kelvin) 
-        = (4.7,0.161,10.3,45.0);
+        = (4.7,0.161,10.3,33.9);
 
     let ( pri_loop_cold_leg_insulation_thickness_cm,
         pri_loop_hot_leg_insulation_thickness_cm,
@@ -267,7 +267,7 @@ pub fn ciet_coupled_nat_circ_set_b3(){
         insulation_thickness_regression_cm,
         shell_side_to_ambient_nusselt_correction_factor,
         dhx_heat_loss_to_ambient_watts_per_m2_kelvin) 
-        = (4.7,0.161,10.3,45.0);
+        = (4.7,0.161,10.3,33.9);
 
     let ( pri_loop_cold_leg_insulation_thickness_cm,
         pri_loop_hot_leg_insulation_thickness_cm,
@@ -378,7 +378,7 @@ pub fn ciet_coupled_nat_circ_set_b4(){
         insulation_thickness_regression_cm,
         shell_side_to_ambient_nusselt_correction_factor,
         dhx_heat_loss_to_ambient_watts_per_m2_kelvin) 
-        = (4.7,0.161,10.3,45.0);
+        = (4.7,0.161,10.3,33.9);
 
     let ( pri_loop_cold_leg_insulation_thickness_cm,
         pri_loop_hot_leg_insulation_thickness_cm,
@@ -490,7 +490,7 @@ pub fn ciet_coupled_nat_circ_set_b5(){
         insulation_thickness_regression_cm,
         shell_side_to_ambient_nusselt_correction_factor,
         dhx_heat_loss_to_ambient_watts_per_m2_kelvin) 
-        = (4.7,0.161,10.3,45.0);
+        = (4.7,0.161,10.3,33.9);
 
     let ( pri_loop_cold_leg_insulation_thickness_cm,
         pri_loop_hot_leg_insulation_thickness_cm,
@@ -601,7 +601,7 @@ pub fn ciet_coupled_nat_circ_set_b6(){
         insulation_thickness_regression_cm,
         shell_side_to_ambient_nusselt_correction_factor,
         dhx_heat_loss_to_ambient_watts_per_m2_kelvin) 
-        = (4.7,0.161,10.3,45.0);
+        = (4.7,0.161,10.3,33.9);
 
     let ( pri_loop_cold_leg_insulation_thickness_cm,
         pri_loop_hot_leg_insulation_thickness_cm,
@@ -713,7 +713,7 @@ pub fn ciet_coupled_nat_circ_set_b7(){
         insulation_thickness_regression_cm,
         shell_side_to_ambient_nusselt_correction_factor,
         dhx_heat_loss_to_ambient_watts_per_m2_kelvin) 
-        = (4.7,0.161,10.3,45.0);
+        = (4.7,0.161,10.3,33.9);
 
     let ( pri_loop_cold_leg_insulation_thickness_cm,
         pri_loop_hot_leg_insulation_thickness_cm,
@@ -824,7 +824,7 @@ pub fn ciet_coupled_nat_circ_set_b8(){
         insulation_thickness_regression_cm,
         shell_side_to_ambient_nusselt_correction_factor,
         dhx_heat_loss_to_ambient_watts_per_m2_kelvin) 
-        = (4.7,0.161,10.3,45.0);
+        = (4.7,0.161,10.3,33.9);
 
     let ( pri_loop_cold_leg_insulation_thickness_cm,
         pri_loop_hot_leg_insulation_thickness_cm,
@@ -934,7 +934,7 @@ pub fn ciet_coupled_nat_circ_set_b9(){
         insulation_thickness_regression_cm,
         shell_side_to_ambient_nusselt_correction_factor,
         dhx_heat_loss_to_ambient_watts_per_m2_kelvin) 
-        = (4.7,0.161,10.3,45.0);
+        = (4.7,0.161,10.3,33.9);
 
     let ( pri_loop_cold_leg_insulation_thickness_cm,
         pri_loop_hot_leg_insulation_thickness_cm,

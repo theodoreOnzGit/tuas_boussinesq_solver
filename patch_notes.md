@@ -1,4 +1,9 @@
 ## v 0.0.11
+
+Firstly, I found that some of the coupled natural circulation datasets 
+in set c, b and a still had parasitic heat loss from dhx at 45 W/(m^2 K)
+I've updated those tests to reflect the correct results.
+
 ## v 0.0.10
 
 I redid all the validation tests for coupled natural circulation in CIET,
