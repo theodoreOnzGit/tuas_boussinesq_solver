@@ -322,3 +322,7 @@ pub mod calibration;
 /// validation and verification tests for this component 
 #[cfg(test)]
 mod tests;
+
+/// tutorials which are part of the user guide 
+#[cfg(test)]
+mod tutorials;
