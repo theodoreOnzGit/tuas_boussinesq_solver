@@ -20,11 +20,15 @@ reactor simulators such as the FHR Educational Simulator.
 I intend to make a series of tutorials and examples that cumulates in the 
 CIET Educational Simulator, explaining how TUAS is to be used. 
 
-1. The first level is to use existing pre-built components.
+1. The first level is to use existing pre-built components to construct 
+forced and natural circulation loops. Includes demos of using custom fluid 
+properties and such.
 2. The second level is to use heat transfer entities and control volumes to make your own 
 components.
 3. The third level, more advanced, is to integrate this with external libraries 
 to construct full GUI simulators such as the CIET Educational Simulator.
+
+
 
 ## v 0.0.10
 
