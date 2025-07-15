@@ -10,6 +10,12 @@ in temperature profile or mass flowrate. All regression tests passed. It
 is likely the insulation and other layers which dominate the thermal 
 resistance.
 
+Secondly, I want to introduce plenty of documentation exercises 
+plus wiki for this in addition to debugging. The debugging is important 
+because I realised some of the flow solvers do get wonky 
+again at flows in excess of 1000 kg/s. Doing all this well is crucial for 
+reactor simulators such as the FHR Educational Simulator.
+
 ## v 0.0.10
 
 I redid all the validation tests for coupled natural circulation in CIET,
