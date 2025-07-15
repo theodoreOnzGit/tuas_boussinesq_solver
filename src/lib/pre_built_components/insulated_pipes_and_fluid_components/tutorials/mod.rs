@@ -6,5 +6,10 @@ pub mod tutorial_1;
 /// and obtain mass flowrate given pressure losses
 pub mod tutorial_2;
 
-
-
+/// Tutorial 3 shows the difference between pressure  
+/// change and pressure drop. This is important to 
+/// distinguish for hydrostatic pressure calculations 
+///
+/// hydrostatic pressure is important to consider for 
+/// natural circulation
+pub mod tutorial_3;
