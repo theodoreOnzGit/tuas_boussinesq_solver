@@ -16,6 +16,16 @@ because I realised some of the flow solvers do get wonky
 again at flows in excess of 1000 kg/s. Doing all this well is crucial for 
 reactor simulators such as the FHR Educational Simulator.
 
+
+I intend to make a series of tutorials and examples that cumulates in the 
+CIET Educational Simulator, explaining how TUAS is to be used. 
+
+1. The first level is to use existing pre-built components.
+2. The second level is to use heat transfer entities and control volumes to make your own 
+components.
+3. The third level, more advanced, is to integrate this with external libraries 
+to construct full GUI simulators such as the CIET Educational Simulator.
+
 ## v 0.0.10
 
 I redid all the validation tests for coupled natural circulation in CIET,
