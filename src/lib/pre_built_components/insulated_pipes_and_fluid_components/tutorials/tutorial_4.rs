@@ -5,13 +5,14 @@ use uom::si::f64::*;
 use uom::si::heat_transfer::watt_per_square_meter_kelvin;
 use uom::si::length::{centimeter, foot, inch, meter, millimeter};
 use uom::si::mass_rate::kilogram_per_second;
-use uom::si::pressure::{atmosphere, pascal};
+use uom::si::pressure::atmosphere;
 use uom::si::ratio::ratio;
 use uom::si::thermodynamic_temperature::degree_celsius;
 
-use crate::array_control_vol_and_fluid_component_collections::fluid_component_collection::fluid_component_traits::FluidComponentTrait;
+use crate::boundary_conditions::BCType;
 use crate::boussinesq_thermophysical_properties::{LiquidMaterial, SolidMaterial};
 use crate::pre_built_components::insulated_pipes_and_fluid_components::InsulatedFluidComponent;
+use crate::prelude::beta_testing::HeatTransferEntity;
 
 
 /// Thermal hydraulics is more than just about fluid mechanics,
@@ -20,11 +21,28 @@ use crate::pre_built_components::insulated_pipes_and_fluid_components::Insulated
 /// This is done manually (you can ignore this if you just want to do 
 /// isothermal calcs)
 /// 
+/// Now, in this tutorial, we shall perform heated flow through a pipe 
+/// using assuming fluid flows in at 100 kg/s, at 80 degrees C 
+/// the pipe itself will then have a heating power of 10 MW 
+///
+/// we know from CIET, dowtherm flowing at 0.18 kg/s will be heated to 
+/// from 80 - 110 degC by about 10 kW 
+///
+/// to produce the same temperature change in 100 kg/s of flow, 
+/// we need about 10 kW * 100/0.18 =  5555.56 kW (5.56 MW)
+/// 
+/// hence, if we apply 10 MW, 
+/// we expect the temperature at the outlet to be around 130-140 degC 
+/// at steady state, assuming the specific heat capacity doesn't change 
+/// too much
+///
+/// let's get started
+///
 /// 
 #[test]
 pub fn heated_flow_through_a_pipe(){
 
-    // todo...
+    // First, we construct the pipe as usual
 
     let initial_temperature = 
         ThermodynamicTemperature::new::<degree_celsius>(50.0);
@@ -85,140 +103,73 @@ pub fn heated_flow_through_a_pipe(){
             user_specified_inner_nodes, 
             surface_roughness);
 
+    // now for heat transfer calculation, these pipes need to be connected 
+    // to boundary conditions (BC)
+
+    // for this case, the inlet BC is constant temperature,
+    // 80 degrees C 
+    // and the outlet BC is just adiabatic.
+    //
+    // let's construct them here 
+
+    let inlet_temp = ThermodynamicTemperature::new::<degree_celsius>(80.0);
+    let inlet_bc = BCType::new_const_temperature(inlet_temp);
+    let outlet_bc = BCType::new_adiabatic_bc();
+
+    // now before each BC can be connected properly, they need 
+    // to be converted into HeatTransferEntity objects first, 
+    // to do so, I do the following:
+
+    let inlet_bc_entity: HeatTransferEntity = inlet_bc.into();
+    let outlet_bc_entity: HeatTransferEntity = outlet_bc.into();
+
+    // of course, there is a more concise way to shrink these steps 
+    // together within one line, but that would be confusing for a tutorial 
+    // so for now, I'll write these out explicitly
+
+    // now, next step is to indicate that advection occurs 
+    // between the BCs and the pipe 
+    //
+    // for advection calculations, we know 
+    // that timesteps are constrained by the 
+    // courant number. Ie the ratio of the timestep to the residence 
+    // time inside the fluid volume 
+    // 
+    // if timesteps are too large, the simulation becomes unstable 
+    //
+    // to calculate courant number, 
+    // we use the ratio of volumetric flowrates into 
+    // the control volume to the volume of said control volume
+    //
+    // this is shown in the SingelCVNode part
+    //
+    // now, to get the volumetric flowrates, we need to obtain 
+    // appropriate densities. This density will change depending 
+    // on flow direction 
+    //
+    // In this case, of forward flow:
+    // (v1) ---> (v2) ---> (v3)
+    //
+    // we take the density of fluid coming from v1 as the 
+    // density of fluid flowing into v2 
+    //
+    // in the case of backflow:
+    //
+    // (v1) <--- (v2) <--- (v3) 
+    //
+    // we take the volume of v3 as the density of fluid going into 
+    // v2
+    //
+    // if we don't care about courant number calculations,
+    // we can skip just give any old density
+    //
+
+    
 
 
     let test_mass_flowrate_100_kg_per_s = 
         MassRate::new::<kilogram_per_second>(100.0);
 
-    let test_pressure_drop_from_tutorial_1 = 
-        pipe_1.get_pressure_loss_immutable(
-            test_mass_flowrate_100_kg_per_s);
-
-    let test_pressure_change = 
-        pipe_1.get_pressure_change_immutable(
-            test_mass_flowrate_100_kg_per_s);
-
-    // for a flat pipe, the pressure change and pressure drop are 
-    // identical
-    
-    // however, pressure drop is by virtue a negative value 
-    // so we have to reverse the sign to get pressure change
-    //
-    //
-    // just like if we consider mass loss from a system,
-    // a positive mass loss means a negative mass change 
-    //
-    approx::assert_relative_eq!(
-        -test_pressure_drop_from_tutorial_1.get::<pascal>(),
-        test_pressure_change.get::<pascal>(),
-        max_relative=1e-5
-        );
-
-    // let's try angling the incline up 70 degrees, and call this 
-    // pipe 2 
-
-    let pipe_2_incline_angle = 
-        Angle::new::<degree>(70.0);
-
-
-    let pipe_2 = 
-        InsulatedFluidComponent::new_insulated_pipe(
-            initial_temperature, 
-            ambient_temperature, 
-            fluid_pressure, 
-            solid_pressure, 
-            flow_area, 
-            pipe_2_incline_angle, 
-            form_loss, 
-            shell_id, 
-            shell_od, 
-            insulation_thickness, 
-            pipe_length, 
-            hydraulic_diameter, 
-            pipe_shell_material, 
-            insulation_material, 
-            pipe_fluid, 
-            htc_to_ambient, 
-            user_specified_inner_nodes, 
-            surface_roughness);
-
-    // if we get a pressure drop... 
-    // the results are the same as pipe 1, 683.38 Pa
-    //
-
-    let test_pressure_drop_for_pipe_2 = 
-        pipe_2.get_pressure_loss_immutable(
-            test_mass_flowrate_100_kg_per_s);
-
-    approx::assert_relative_eq!(
-        test_pressure_drop_from_tutorial_1.get::<pascal>(),
-        test_pressure_drop_for_pipe_2.get::<pascal>(),
-        max_relative=1e-5
-        );
-
-
-    // now the pressure change is the sum of hydrostatic pressure 
-    // change plus the contributions of pressure drop
-    // we can obtain hydrostatic pressure change from the following:
-    //
-    // this function is called getting pressure change at some 
-    // reference temperature because the hydrostatic pressure 
-    // is sensitive to temperature changes.
-    //
-    // The reference temperature in this case determines rho in:
-    // P_hydrostatic = h * rho * g 
-    //
-    // the reference temperature here is the bulk temperature of the fluid 
-
-    let hydrstatic_pressure_pipe_2 = 
-        pipe_2.
-        get_hydrostatic_pressure_change_immutable_at_ref_temperature();
-
-    // for this pipe, as it is going up, the hydrostatic change 
-    // is negative 
-    //
-    // again 
-    // Delta P_hydrostatic = Delta z * rho * g 
-    //
-    // Delta z = z_high - z_low
-    //
-    // Where z_high is the degree of descent for the high point 
-    // and z_low is the degree of descent for the low point
-    //
-    // by TUAS convention a higher height has a lower z value
-    // z is the degree of descent from some reference height
-    // so in this case z_low > z_high 
-
-    approx::assert_relative_eq!(
-        hydrstatic_pressure_pipe_2.get::<pascal>(),
-        -87285.31,
-        max_relative=1e-5
-        );
-
-    // now based on this, a 100 kg/s flow produces a 683.38 Pa pressure drop 
-    // and the hydrostatic pressure change is -87285.31
-    //
-    // the total pressure change is the sum of these two 
-
-    let total_pressure_chg_reference = 
-        hydrstatic_pressure_pipe_2 + (-test_pressure_drop_for_pipe_2);
-
-    let total_pressure_chg_test = 
-        pipe_2.get_pressure_change_immutable(
-            test_mass_flowrate_100_kg_per_s);
-
-    // we can do a quick check if these two are equal
-    //
-    // the test will pass if these two are equal
-
-    approx::assert_relative_eq!(
-        total_pressure_chg_reference.get::<pascal>(),
-        total_pressure_chg_test.get::<pascal>(),
-        max_relative=1e-5
-        );
-
-
-    // congratulations, you've finished tutorial 3
 
 
 
