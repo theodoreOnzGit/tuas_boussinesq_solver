@@ -14,5 +14,6 @@ pub mod tutorial_2;
 /// natural circulation
 pub mod tutorial_3;
 
-/// Tutorial 4 
+/// Tutorial 4 shows how to perform basic 
+/// heat transfer calculations in a pipe
 pub mod tutorial_4;
