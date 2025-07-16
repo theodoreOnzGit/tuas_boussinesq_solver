@@ -13,3 +13,6 @@ pub mod tutorial_2;
 /// hydrostatic pressure is important to consider for 
 /// natural circulation
 pub mod tutorial_3;
+
+/// Tutorial 4 
+pub mod tutorial_4;

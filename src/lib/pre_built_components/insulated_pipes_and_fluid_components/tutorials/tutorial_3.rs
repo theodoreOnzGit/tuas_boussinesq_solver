@@ -21,7 +21,7 @@ use crate::pre_built_components::insulated_pipes_and_fluid_components::Insulated
 /// pressure drops
 /// 
 #[test]
-pub fn fluid_mechanics_get_mass_flowrate_from_pressure_drop(){
+pub fn fluid_mechanics_get_mass_flowrate_from_pressure_chg(){
 
     // now, we know how to obtain pressure loss from mass flowrates, 
     // and vice versa, we can now move onto tackling elevation changes 
@@ -237,7 +237,7 @@ pub fn fluid_mechanics_get_mass_flowrate_from_pressure_drop(){
     // the test will pass if these two are equal
 
     approx::assert_relative_eq!(
-        total_pressure_chg_test.get::<pascal>(),
+        total_pressure_chg_reference.get::<pascal>(),
         total_pressure_chg_test.get::<pascal>(),
         max_relative=1e-5
         );
