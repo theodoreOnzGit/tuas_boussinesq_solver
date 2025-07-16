@@ -220,6 +220,32 @@ pub fn fluid_mechanics_get_mass_flowrate_from_pressure_drop(){
         max_relative=1e-5
         );
 
+    // now based on this, a 100 kg/s flow produces a 683.38 Pa pressure drop 
+    // and the hydrostatic pressure change is -87285.31
+    //
+    // the total pressure change is the sum of these two 
+
+    let total_pressure_chg_reference = 
+        hydrstatic_pressure_pipe_2 + (-test_pressure_drop_for_pipe_2);
+
+    let total_pressure_chg_test = 
+        pipe_2.get_pressure_change_immutable(
+            test_mass_flowrate_100_kg_per_s);
+
+    // we can do a quick check if these two are equal
+    //
+    // the test will pass if these two are equal
+
+    approx::assert_relative_eq!(
+        total_pressure_chg_test.get::<pascal>(),
+        total_pressure_chg_test.get::<pascal>(),
+        max_relative=1e-5
+        );
+
+
+    // congratulations, you've finished tutorial 3
+
+
 
 }
 
