@@ -286,14 +286,14 @@ pub fn gfhr_pipe_with_custom_graphite_material(){
             test_mass_flowrate));
     // outlet temp is around 1274 Kelvin
     approx::assert_relative_eq!(
-        outlet_temperature.get::<degree_celsius>(),
+        outlet_temperature.get::<kelvin>(),
         1274.3878112984703,
         max_relative=1e-5
         );
 
     // inlet temp is around 1274 Kelvin
     approx::assert_relative_eq!(
-        inlet_temperature.get::<degree_celsius>(),
+        inlet_temperature.get::<kelvin>(),
         1273.3269075432977,
         max_relative=1e-5
         );
