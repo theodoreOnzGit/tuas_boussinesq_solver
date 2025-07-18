@@ -26,9 +26,14 @@ use crate::prelude::beta_testing::{HeatTransferEntity, HeatTransferInteractionTy
 /// This tutorial shows how to do it without any parallelisation 
 /// of threads, hence it is called serial computation
 ///
+/// note that parallel computation is also possible where 
+/// fluid mechanics and heat transfer is computed in parallel 
+/// rather than sequentially, but it is not 
+/// necessary at this stage. So it is not shown.
+///
 /// 
 #[test]
-pub fn thermal_hydraulics_flow_through_a_pipe_serial_computation(){
+pub fn thermal_hydraulics_flow_through_a_pipe(){
 
     // First, we construct the pipe as usual
 
@@ -183,7 +188,8 @@ pub fn thermal_hydraulics_flow_through_a_pipe_serial_computation(){
     let outlet_temperature: ThermodynamicTemperature = 
         *temperature_vector.iter().last().unwrap();
 
-    // now, the outlet temperature is about 134.835C:
+    // now, the outlet temperature is about 134.835C,
+    // well not quite, but similar:
 
     approx::assert_relative_eq!(
         outlet_temperature.get::<degree_celsius>(),
@@ -197,13 +203,14 @@ pub fn thermal_hydraulics_flow_through_a_pipe_serial_computation(){
 
 
     // the inlet temperature is about 88.128C
+    // similar to previous tests
     approx::assert_relative_eq!(
         inlet_temperature.get::<degree_celsius>(),
         88.3323762765529,
         max_relative=1e-5
         );
 
-    // congratulations, you have finished tutorial 4
+    // congratulations, you have finished tutorial 5
 
 
 }
