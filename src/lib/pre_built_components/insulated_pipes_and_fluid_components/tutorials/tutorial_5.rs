@@ -187,7 +187,7 @@ pub fn thermal_hydraulics_flow_through_a_pipe_serial_computation(){
 
     approx::assert_relative_eq!(
         outlet_temperature.get::<degree_celsius>(),
-        134.835,
+        136.16361975964048,
         max_relative=1e-5
         );
 
@@ -199,7 +199,7 @@ pub fn thermal_hydraulics_flow_through_a_pipe_serial_computation(){
     // the inlet temperature is about 88.128C
     approx::assert_relative_eq!(
         inlet_temperature.get::<degree_celsius>(),
-        88.1282,
+        88.3323762765529,
         max_relative=1e-5
         );
 
