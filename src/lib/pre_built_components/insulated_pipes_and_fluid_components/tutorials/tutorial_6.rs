@@ -1,3 +1,4 @@
+
 use std::f64::consts::PI;
 
 use uom::si::angle::degree;
@@ -18,27 +19,18 @@ use crate::pre_built_components::insulated_pipes_and_fluid_components::Insulated
 use crate::prelude::beta_testing::{HeatTransferEntity, HeatTransferInteractionType};
 
 
-/// Now that you've finished tutorial 4, which talks about 
-/// calculating heat transfer through pipes, we want to move on 
-/// to calculating BOTH heat transfer and fluid mechanics in every 
-/// timestep
+/// tutorial 6 covers flow in a gFHR like system
 ///
-/// This tutorial shows how to do it without any parallelisation 
-/// of threads, hence it is called serial computation
-///
-/// note that parallel computation is also possible where 
-/// fluid mechanics and heat transfer is computed in parallel 
-/// rather than sequentially, but it is not 
-/// necessary at this stage. So it is not shown.
-///
-/// 
+/// typically, pressure drop for the loop is around 0.2 MPa, and 
+/// mass flowrate around 1200 kg/s
+/// https://www.nrc.gov/docs/ML2208/ML22088A231.pdf
 #[test]
-pub fn thermal_hydraulics_flow_through_a_pipe(){
+pub fn gfhr_pipe_with_custom_graphite_material(){
 
     // First, we construct the pipe as usual
 
     let initial_temperature = 
-        ThermodynamicTemperature::new::<degree_celsius>(50.0);
+        ThermodynamicTemperature::new::<degree_celsius>(500.0);
 
     let ambient_temperature = 
         ThermodynamicTemperature::new::<degree_celsius>(25.0);
@@ -67,7 +59,7 @@ pub fn thermal_hydraulics_flow_through_a_pipe(){
 
     let pipe_shell_material = SolidMaterial::SteelSS304L;
     let insulation_material = SolidMaterial::Fiberglass;
-    let pipe_fluid = LiquidMaterial::TherminolVP1;
+    let pipe_fluid = LiquidMaterial::FLiBe;
     let htc_to_ambient = 
         HeatTransfer::new::<watt_per_square_meter_kelvin>(20.0);
 
