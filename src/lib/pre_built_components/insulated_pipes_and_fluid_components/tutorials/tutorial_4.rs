@@ -4,6 +4,7 @@ use uom::si::angle::degree;
 use uom::si::f64::*;
 use uom::si::heat_transfer::watt_per_square_meter_kelvin;
 use uom::si::length::{centimeter, foot, inch, meter, millimeter};
+use uom::si::mass_density::kilogram_per_cubic_meter;
 use uom::si::mass_rate::kilogram_per_second;
 use uom::si::pressure::atmosphere;
 use uom::si::ratio::ratio;
@@ -12,7 +13,7 @@ use uom::si::thermodynamic_temperature::degree_celsius;
 use crate::boundary_conditions::BCType;
 use crate::boussinesq_thermophysical_properties::{LiquidMaterial, SolidMaterial};
 use crate::pre_built_components::insulated_pipes_and_fluid_components::InsulatedFluidComponent;
-use crate::prelude::beta_testing::HeatTransferEntity;
+use crate::prelude::beta_testing::{HeatTransferEntity, HeatTransferInteractionType};
 
 
 /// Thermal hydraulics is more than just about fluid mechanics,
@@ -81,8 +82,15 @@ pub fn heated_flow_through_a_pipe(){
 
     let user_specified_inner_nodes = 5;
 
+    // note that for heat transfer, pipe components need to be 
+    // mutable, after all, we expect the pipe temperatures to change 
+    // after the calculation steps right? 
+    //
+    // Therefore, the pipes themselves need to be mutable
+    //
+    // hence the mut here:
 
-    let pipe_1 = 
+    let mut pipe_1 = 
         InsulatedFluidComponent::new_insulated_pipe(
             initial_temperature, 
             ambient_temperature, 
@@ -120,12 +128,22 @@ pub fn heated_flow_through_a_pipe(){
     // to be converted into HeatTransferEntity objects first, 
     // to do so, I do the following:
 
-    let inlet_bc_entity: HeatTransferEntity = inlet_bc.into();
-    let outlet_bc_entity: HeatTransferEntity = outlet_bc.into();
-
+    let mut inlet_bc_entity: HeatTransferEntity = inlet_bc.into();
+    let mut outlet_bc_entity: HeatTransferEntity = outlet_bc.into();
     // of course, there is a more concise way to shrink these steps 
     // together within one line, but that would be confusing for a tutorial 
     // so for now, I'll write these out explicitly
+
+    // note also that for interactions, they also need to be mutable
+    // while BCs will not change during course of the calculation, 
+    // they still need to be mutable from a programming standpoint.
+    //
+    // There is a programming explanation for this, 
+    // but I'm not going to write it down yet, because it is talking about 
+    // the programming structure, of TUAS in Rust rather than based on 
+    // the underlying physics and engineering principles of the system 
+    // Just take it as it is for now, that this will need to be mutable.
+
 
     // now, next step is to indicate that advection occurs 
     // between the BCs and the pipe 
@@ -166,9 +184,57 @@ pub fn heated_flow_through_a_pipe(){
 
     
 
+    // Now, with that in mind, we know that from the boundary conditions 
+    // into the pipe, we have advection going on,
+    // so let's create the heat transfer interaction 
+    //
+    //
+    let advection_heat_transfer_interaction: HeatTransferInteractionType;
 
+    // for this we will need a mass flowrate, 
     let test_mass_flowrate_100_kg_per_s = 
         MassRate::new::<kilogram_per_second>(100.0);
+
+    // and then the densities as explained before. 
+    // However, note that this is only important for 
+    // calculating the courant number later on.
+    // Doesn't really matter as much in this tutorial
+    //
+    let dummy_therminol_density = 
+        MassDensity::new::<kilogram_per_cubic_meter>(1.0);
+
+
+    advection_heat_transfer_interaction =
+            HeatTransferInteractionType::
+            new_advection_interaction(test_mass_flowrate_100_kg_per_s, 
+                dummy_therminol_density, 
+                dummy_therminol_density);
+
+    // now that this interaction has been created, we can 
+    // link up the pipe to the boundary conditions.
+
+    // for advection heat transfer interactions, 
+    // the positive flow direction convention used in TUAS is that 
+    // flow from the "back" of the pipe to the "front" of the pipe is positive
+    //
+
+    // so the inlet bc is at the "back" and outlet bc is at the 
+    // "front"
+    //
+
+    pipe_1.pipe_fluid_array.link_to_back(
+        &mut inlet_bc_entity, 
+        advection_heat_transfer_interaction)
+        .unwrap();
+
+    pipe_1.pipe_fluid_array.link_to_front(
+        &mut outlet_bc_entity, 
+        advection_heat_transfer_interaction)
+        .unwrap();
+
+
+    
+
 
 
 
