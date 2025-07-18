@@ -17,3 +17,10 @@ pub mod tutorial_3;
 /// Tutorial 4 shows how to perform basic 
 /// heat transfer calculations in a pipe
 pub mod tutorial_4;
+
+/// Tutorial 5 explains how to do both 
+/// heat transfer calculations and 
+/// fluid mechanics calculations in one timestep.
+///
+/// Also has a case for parallel computation
+pub mod tutorial_5;
