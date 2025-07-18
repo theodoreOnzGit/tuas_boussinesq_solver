@@ -6,9 +6,11 @@ use uom::si::heat_transfer::watt_per_square_meter_kelvin;
 use uom::si::length::{centimeter, foot, inch, meter, millimeter};
 use uom::si::mass_density::kilogram_per_cubic_meter;
 use uom::si::mass_rate::kilogram_per_second;
+use uom::si::power::megawatt;
 use uom::si::pressure::atmosphere;
 use uom::si::ratio::ratio;
 use uom::si::thermodynamic_temperature::degree_celsius;
+use uom::si::time::{minute, second};
 
 use crate::boundary_conditions::BCType;
 use crate::boussinesq_thermophysical_properties::{LiquidMaterial, SolidMaterial};
@@ -231,13 +233,235 @@ pub fn heated_flow_through_a_pipe(){
         &mut outlet_bc_entity, 
         advection_heat_transfer_interaction)
         .unwrap();
+    
+    // now that the components are linked up
+    // we also need to compute the radial conduction between 
+    // the pipe fluid, metallic shell, insulation and surroundings
+    //
+    // it is also here that one inputs the power that is supplied into 
+    // the pipe shell 
+    //
+    // over here, you will also specify if you want the wall correction 
+    // for the Gnielinksi correlation to be switched on or off.
 
+    let heater_power = Power::new::<megawatt>(10.0);
 
+    pipe_1.lateral_and_miscellaneous_connections_no_wall_correction(
+        test_mass_flowrate_100_kg_per_s, 
+        heater_power)
+        .unwrap();
+
+    // now after all this, we are able to make calculations to proceed 
+    // to the next timestep, that is to update the temperatures within 
+    // the pipe based on the mass flowrates, boundary conditions, heater 
+    // power and so on.
+
+    let timestep = Time::new::<second>(0.1);
+
+    // the choice of timestep depends on Courant number, among other 
+    // timescales. 
+    //
+    // it will need to be small enough so that numerical instabilities 
+    // do not occur, and for the calculations to be sufficiently 
+    // accurate.
+
+    pipe_1.advance_timestep(timestep).unwrap();
+    inlet_bc_entity.advance_timestep_mut_self(timestep).unwrap();
+    outlet_bc_entity.advance_timestep_mut_self(timestep).unwrap();
+    
     
 
+    // after advancing the timestep, you have completed ONE 
+    // timestep only. You will need to repeat this several times 
+    // throughout the simulation.
 
+    // now, the inlet and outlet bcs don't technically need to advance 
+    // timestep, but it is good practice to just advance the timestep 
+    // of every heat transfer entity for the sake of consistency
+    //
+    // you can choose not to do it, but don't miss any component out!
+
+
+    //
+    // Suppose now we want to get this simulation to some steady 
+    // state.
+    //
+    // we can specify an estimated simulation endtime (you can do this 
+    // through trial and error) 
+
+    // and the basic structure is to use a while loop 
+
+    let simulation_endtime = Time::new::<second>(300.0);
+
+    // then let's create a variable indicating the current simulation 
+    // time, we of course start at zero
+
+    let mut current_simulation_time = Time::new::<second>(0.0);
+
+    // the setup looks like this:
+
+    while current_simulation_time < simulation_endtime {
+
+        // do your calculation steps here... 
+        //
+
+        // then at the end of the calculations, 
+        // update the current simulation time by adding the timestep
+
+        current_simulation_time += timestep;
+    }
+
+    // basically programming this way, the loop repeats until the 
+    // current_simulation_time reaches the simulation_endtime, thereabout
+
+    // now we are going to add the calculation steps,
+    // let's set the current_simulation_time
+
+    current_simulation_time = Time::new::<second>(0.0);
+
+    while current_simulation_time < simulation_endtime {
+
+        // let's do our calculation steps for each timestep 
+        //
+
+        // firstly, to link the pipe to the inlet and outlet BCs
+        pipe_1.pipe_fluid_array.link_to_back(
+            &mut inlet_bc_entity, 
+            advection_heat_transfer_interaction)
+            .unwrap();
+
+        pipe_1.pipe_fluid_array.link_to_front(
+            &mut outlet_bc_entity, 
+            advection_heat_transfer_interaction)
+            .unwrap();
+
+        // secondly, to perform calculations within the pipe for radial 
+        // (lateral)
+        // heat transfer interactions 
+        pipe_1.lateral_and_miscellaneous_connections_no_wall_correction(
+            test_mass_flowrate_100_kg_per_s, 
+            heater_power)
+            .unwrap();
+
+        // thirdly, we advance the timestep to update the temperatures 
+        // within the pipe
+        pipe_1.advance_timestep(timestep).unwrap();
+        inlet_bc_entity.advance_timestep_mut_self(timestep).unwrap();
+        outlet_bc_entity.advance_timestep_mut_self(timestep).unwrap();
+
+
+        // then at the end of the calculations, 
+        // update the current simulation time by adding the timestep
+
+        current_simulation_time += timestep;
+    }
+
+
+    // now for a bit of postprocessing,
+    // let's get the outlet temperature 
+    //
+    // first we get the temperature profile of the pipe fluid array:
+
+    let temperature_vector: Vec<ThermodynamicTemperature> = 
+        pipe_1.pipe_fluid_array.get_temperature_vector().unwrap();
+
+    // second, we get the last element of the temperature vector,
+    // which by convention, is the "front" of the pipe
+
+    let outlet_temperature: ThermodynamicTemperature = 
+        *temperature_vector.iter().last().unwrap();
+
+    // now, the outlet temperature is about 134.835C:
+
+    approx::assert_relative_eq!(
+        outlet_temperature.get::<degree_celsius>(),
+        134.835,
+        max_relative=1e-5
+        );
+
+    // we can run the test for another 10 minutes of simulation time 
+    
+    let simulation_endtime_10_min = Time::new::<minute>(10.0);
+    current_simulation_time = Time::new::<second>(0.0);
+
+    while current_simulation_time < simulation_endtime_10_min {
+
+        // let's do our calculation steps for each timestep 
+        //
+
+        // firstly, to link the pipe to the inlet and outlet BCs
+        pipe_1.pipe_fluid_array.link_to_back(
+            &mut inlet_bc_entity, 
+            advection_heat_transfer_interaction)
+            .unwrap();
+
+        pipe_1.pipe_fluid_array.link_to_front(
+            &mut outlet_bc_entity, 
+            advection_heat_transfer_interaction)
+            .unwrap();
+
+        // secondly, to perform calculations within the pipe for radial 
+        // (lateral)
+        // heat transfer interactions 
+        pipe_1.lateral_and_miscellaneous_connections_no_wall_correction(
+            test_mass_flowrate_100_kg_per_s, 
+            heater_power)
+            .unwrap();
+
+        // thirdly, we advance the timestep to update the temperatures 
+        // within the pipe
+        pipe_1.advance_timestep(timestep).unwrap();
+        inlet_bc_entity.advance_timestep_mut_self(timestep).unwrap();
+        outlet_bc_entity.advance_timestep_mut_self(timestep).unwrap();
+
+
+        // then at the end of the calculations, 
+        // update the current simulation time by adding the timestep
+
+        current_simulation_time += timestep;
+    }
+
+    // let's do postprocessing again:
+    let temperature_vector: Vec<ThermodynamicTemperature> = 
+        pipe_1.pipe_fluid_array.get_temperature_vector().unwrap();
+
+    // second, we get the last element of the temperature vector,
+    // which by convention, is the "front" of the pipe
+
+    let outlet_temperature: ThermodynamicTemperature = 
+        *temperature_vector.iter().last().unwrap();
+
+    // after 10 more minutes, the outlet temperature 
+    // is about 134.835C:
+
+    approx::assert_relative_eq!(
+        outlet_temperature.get::<degree_celsius>(),
+        134.835,
+        max_relative=1e-5
+        );
+
+    // note that the temperature of the last element of the pipe is 
+    // the outlet temperature because the control volume is well mixed. 
+    // The temperature of the fluid flow coming out of the 
+    // last control volume of the pipe is the same as the control 
+    // volume of the pipe
+
+    // now, if you want the inlet temperature, 
+    // then we get the first 
+    // element of the vector 
+    // (we can access this using index 0):
+    
+    let inlet_temperature: ThermodynamicTemperature = 
+        temperature_vector[0];
+
+
+    // the inlet temperature is about 88.128C
+    approx::assert_relative_eq!(
+        inlet_temperature.get::<degree_celsius>(),
+        88.1282,
+        max_relative=1e-5
+        );
 
 
 
 }
-
