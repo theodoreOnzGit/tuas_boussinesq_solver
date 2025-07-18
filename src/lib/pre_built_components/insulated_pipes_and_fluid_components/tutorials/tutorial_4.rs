@@ -462,6 +462,7 @@ pub fn heated_flow_through_a_pipe(){
         max_relative=1e-5
         );
 
+    // congratulations, you have finished tutorial 4
 
 
 }
