@@ -247,7 +247,6 @@ pub fn du_heat_exchanger_constructor_test(){
 /// checks whether constructor for insulated sthe
 /// is working properly
 #[test]
-#[ignore="debugging"]
 pub fn insulated_sthe_constructor_test(){
 
     use std::f64::consts::PI;
@@ -391,7 +390,7 @@ pub fn insulated_sthe_constructor_test(){
             = SolidColumn::new_cylindrical_shell(
                 pipe_length, 
                 shell_side_od, 
-                shell_side_od + dummy_insulation_thickness, 
+                shell_side_od + 2.0 * dummy_insulation_thickness,
                 inlet_temp_salt, 
                 solid_pressure, 
                 steel, 
