@@ -28,6 +28,7 @@ ndarray-linalg = { version = "0.16.0", features = ["intel-mkl-static"] }
 
 [target.'cfg(unix)'.dependencies]
 ndarray-linalg = { version = "0.16.0", features = ["openblas-system"] }
+openblas-src = { version = "0.10", features = ["system", "rustls"], default-features = false }
 
 [lib]
 name = "tuas_boussinesq_solver"
